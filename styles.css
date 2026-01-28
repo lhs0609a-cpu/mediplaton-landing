@@ -524,6 +524,48 @@ ul, ol { list-style: none; }
     gap: 20px;
     font-size: 0.875rem;
     color: var(--gray-500);
+    margin-bottom: 32px;
+}
+
+/* Hero Partner Logos */
+.hero-partners {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+}
+
+.hero-partners-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: rgba(26, 58, 143, 0.1);
+    padding: 6px 12px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hero-partners-logos {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.hero-partner-logo {
+    font-size: 1rem;
+    opacity: 0.85;
+    transition: var(--transition);
+}
+
+.hero-partner-logo:hover {
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 /* Hero Visual */
@@ -702,6 +744,101 @@ section { padding: 80px 0; }
     font-size: 1.25rem;
     color: var(--gray-500);
     line-height: 1.8;
+}
+
+/* ===== Trust Logos Section ===== */
+.trust-logos-section {
+    padding: 40px 0;
+    background: var(--gray-50);
+    overflow: hidden;
+}
+
+.trust-logos-title {
+    text-align: center;
+    font-size: 1.125rem;
+    color: var(--gray-500);
+    margin-bottom: 32px;
+}
+
+.trust-logos-title strong {
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.trust-logos-track {
+    overflow: hidden;
+    position: relative;
+}
+
+.trust-logos-track::before,
+.trust-logos-track::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 2;
+}
+
+.trust-logos-track::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--gray-50), transparent);
+}
+
+.trust-logos-track::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--gray-50), transparent);
+}
+
+.trust-logos-slide {
+    display: flex;
+    gap: 60px;
+    animation: scrollLogos 30s linear infinite;
+    width: max-content;
+}
+
+@keyframes scrollLogos {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.trust-logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+.trust-logo-item img {
+    max-height: 36px;
+    max-width: 120px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.trust-logo-item:hover img {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+.logo-fallback {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    filter: grayscale(30%);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.trust-logo-item:hover .logo-fallback {
+    filter: grayscale(0);
+    opacity: 1;
 }
 
 /* ===== About Section ===== */
@@ -1560,8 +1697,140 @@ section { padding: 80px 0; }
 }
 
 /* ===== Partners Section ===== */
-.partners-section { background: var(--white); }
+.partners-section {
+    background: var(--white);
+    padding: 100px 0;
+}
 
+.partners-subtitle {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin-bottom: 24px;
+    padding-left: 12px;
+    border-left: 4px solid var(--primary);
+}
+
+/* Main Partners */
+.main-partners {
+    margin-bottom: 60px;
+}
+
+.main-partners-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.main-partner-card {
+    background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    text-align: center;
+    position: relative;
+    transition: var(--transition);
+}
+
+.main-partner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(26, 58, 143, 0.15);
+}
+
+.main-partner-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 60px;
+    margin-bottom: 16px;
+}
+
+.main-partner-info strong {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+}
+
+.main-partner-info span {
+    font-size: 0.9375rem;
+    color: var(--gray-500);
+}
+
+.main-partner-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 4px 12px;
+    background: var(--primary);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50px;
+}
+
+/* Card Partners */
+.card-partners {
+    margin-bottom: 48px;
+}
+
+.card-partners-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+.card-partner-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 28px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 1.125rem;
+    transition: var(--transition);
+    min-width: 140px;
+}
+
+.card-partner-item:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* VAN Partners */
+.van-partners {
+    margin-bottom: 48px;
+}
+
+.van-partners-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+.van-partner-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.van-partner-item:hover {
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+/* Legacy partner styles (keep for compatibility) */
 .partners-grid {
     display: flex;
     justify-content: center;
@@ -2376,6 +2645,10 @@ section { padding: 80px 0; }
     .hero-features { justify-content: center; }
     .hero-actions { justify-content: center; }
     .hero-trust { justify-content: center; }
+    .hero-partners { justify-content: center; }
+    .hero-partners-logos { justify-content: center; }
+
+    .main-partners-grid { grid-template-columns: 1fr; }
 
     .about-content { grid-template-columns: 1fr; }
     .about-visual { order: -1; }
@@ -2415,12 +2688,27 @@ section { padding: 80px 0; }
     .hero-features { gap: 16px; }
     .hero-feature { flex: 0 0 calc(50% - 8px); }
     .feature-icon { width: 52px; height: 52px; border-radius: 14px; }
+    .hero-partners { padding: 16px; gap: 12px; }
+    .hero-partners-logos { gap: 16px; }
+    .hero-partner-logo { font-size: 0.875rem; }
 
     .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
     .stat-number { font-size: 2.5rem; }
 
     .section-title { font-size: 1.875rem; }
     .section-desc { font-size: 1.0625rem; }
+
+    .trust-logos-section { padding: 30px 0; }
+    .trust-logos-title { font-size: 1rem; margin-bottom: 20px; }
+    .trust-logos-title strong { font-size: 1.25rem; }
+    .trust-logos-slide { gap: 40px; }
+    .trust-logo-item { min-width: 100px; }
+    .logo-fallback { font-size: 1rem; }
+
+    .main-partners-grid { grid-template-columns: 1fr; }
+    .main-partner-card { padding: 24px; }
+    .card-partner-item { padding: 12px 20px; font-size: 1rem; min-width: 120px; }
+    .van-partner-item { padding: 10px 18px; font-size: 0.9375rem; }
 
     .services-grid { grid-template-columns: 1fr; }
     .products-grid { grid-template-columns: 1fr; }
