@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:1landing.vercel.app)",
+      "WebFetch(domain:www.modoovillage.co.kr)",
+      "Bash(dir \"J:\\\\내 드라이브\\\\플라톤마케팅_모두빌리지\\(PG사\\)\\\\사업소개서\" /b)",
+      "Bash(dir:*)",
+      "WebFetch(domain:blog.naver.com)",
+      "Bash(ls:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
