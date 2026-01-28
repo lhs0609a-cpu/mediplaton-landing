@@ -17,11 +17,6 @@
     <meta property="og:site_name" content="메디플라톤">
     <meta property="og:locale" content="ko_KR">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="메디플라톤 | 병의원 전문 금융 파트너">
-    <meta name="twitter:description" content="은행이 거절해도 카드매출 1억이면 1.5억 대출 가능">
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,454 +30,1145 @@
 
     <!-- Theme Color -->
     <meta name="theme-color" content="#1A3A8F">
-    <meta name="msapplication-navbutton-color" content="#1A3A8F">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#1A3A8F">
 </head>
 <body>
-    <!-- Progress Bar -->
-    <div class="progress-bar" id="progressBar"></div>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-left">
+                <span>📞 상담전화: <a href="tel:1600-0000">1600-0000</a></span>
+                <span class="divider">|</span>
+                <span>🕐 평일 09:00 ~ 18:00</span>
+            </div>
+            <div class="top-bar-right">
+                <a href="#news">공지사항</a>
+                <a href="#contact">오시는 길</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Header -->
     <header class="header" id="header">
-        <div class="header-inner">
-            <div class="logo">
-                <span class="logo-icon">🏥</span>
-                <span class="logo-text">메디플라톤</span>
+        <div class="container">
+            <div class="header-inner">
+                <a href="#" class="logo">
+                    <div class="logo-mark">
+                        <span class="logo-icon">+</span>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-main">메디플라톤</span>
+                        <span class="logo-sub">MEDIPLATON</span>
+                    </div>
+                </a>
+
+                <nav class="main-nav" id="mainNav">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#about" class="nav-link">회사소개</a>
+                            <div class="nav-dropdown">
+                                <a href="#about">메디플라톤 소개</a>
+                                <a href="#history">연혁</a>
+                                <a href="#partners">제휴기관</a>
+                                <a href="#contact">오시는 길</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#products" class="nav-link">금융상품</a>
+                            <div class="nav-dropdown">
+                                <a href="#product-loan">카드매출 담보대출</a>
+                                <a href="#product-credit">신협 데일리론</a>
+                                <a href="#product-kb">KB국민카드 특별한도</a>
+                                <a href="#product-rental">의료장비 렌탈</a>
+                                <a href="#product-deposit">임차보증금 담보</a>
+                                <a href="#product-purchase">구매자금 대출</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#process" class="nav-link">이용안내</a>
+                            <div class="nav-dropdown">
+                                <a href="#process">신청 절차</a>
+                                <a href="#qualification">자격 조건</a>
+                                <a href="#documents">필요 서류</a>
+                                <a href="#faq">자주 묻는 질문</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#cases" class="nav-link">성공사례</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#news" class="nav-link">소식</a>
+                            <div class="nav-dropdown">
+                                <a href="#news">공지사항</a>
+                                <a href="#blog">금융정보</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <a href="tel:1600-0000" class="header-phone">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        1600-0000
+                    </a>
+                    <a href="#consultation" class="header-cta">무료 상담신청</a>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </div>
-            <a href="#consultation" class="header-cta">무료 상담신청</a>
         </div>
     </header>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-inner">
+            <div class="mobile-menu-header">
+                <span class="logo-main">메디플라톤</span>
+                <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+            </div>
+            <nav class="mobile-nav">
+                <div class="mobile-nav-group">
+                    <span class="mobile-nav-title">회사소개</span>
+                    <a href="#about">메디플라톤 소개</a>
+                    <a href="#history">연혁</a>
+                    <a href="#partners">제휴기관</a>
+                    <a href="#contact">오시는 길</a>
+                </div>
+                <div class="mobile-nav-group">
+                    <span class="mobile-nav-title">금융상품</span>
+                    <a href="#product-loan">카드매출 담보대출</a>
+                    <a href="#product-credit">신협 데일리론</a>
+                    <a href="#product-kb">KB국민카드 특별한도</a>
+                    <a href="#product-rental">의료장비 렌탈</a>
+                    <a href="#product-deposit">임차보증금 담보</a>
+                    <a href="#product-purchase">구매자금 대출</a>
+                </div>
+                <div class="mobile-nav-group">
+                    <span class="mobile-nav-title">이용안내</span>
+                    <a href="#process">신청 절차</a>
+                    <a href="#qualification">자격 조건</a>
+                    <a href="#documents">필요 서류</a>
+                    <a href="#faq">자주 묻는 질문</a>
+                </div>
+                <div class="mobile-nav-group">
+                    <a href="#cases" class="mobile-nav-title single">성공사례</a>
+                </div>
+                <div class="mobile-nav-group">
+                    <span class="mobile-nav-title">소식</span>
+                    <a href="#news">공지사항</a>
+                    <a href="#blog">금융정보</a>
+                </div>
+            </nav>
+            <div class="mobile-menu-footer">
+                <a href="#consultation" class="mobile-cta">무료 상담신청</a>
+                <a href="tel:1600-0000" class="mobile-phone">📞 1600-0000</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-bg"></div>
         <div class="container">
-            <div class="hero-badges">
-                <span class="badge badge-primary">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                    신협중앙회 정식제휴
-                </span>
-                <span class="badge badge-secondary">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 12l2 2 4-4"/>
-                        <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    금융감독원 등록
-                </span>
+            <div class="hero-content">
+                <div class="hero-badges">
+                    <span class="badge badge-gold">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        신협중앙회 정식제휴
+                    </span>
+                    <span class="badge badge-light">금융감독원 등록</span>
+                </div>
+
+                <h1 class="hero-title">
+                    병의원 원장님을 위한<br>
+                    <span class="highlight">맞춤 금융 솔루션</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    은행에서 거절당하셨나요?<br>
+                    카드매출 1억이면 <strong>최대 1.5억~3억</strong>까지 추가 대출 가능합니다
+                </p>
+
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-text">
+                            <strong>최대 3억</strong>
+                            <span>한도</span>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">📉</div>
+                        <div class="feature-text">
+                            <strong>5.3%~</strong>
+                            <span>금리</span>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">🚫</div>
+                        <div class="feature-text">
+                            <strong>DSR 미반영</strong>
+                            <span>추가한도</span>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <strong>3영업일</strong>
+                            <span>입금</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="#consultation" class="btn btn-primary btn-lg">
+                        무료 상담 신청하기
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#products" class="btn btn-outline btn-lg">
+                        금융상품 보기
+                    </a>
+                </div>
+
+                <div class="hero-trust">
+                    <span>✓ 상담 무료</span>
+                    <span>✓ 개인정보 보호</span>
+                    <span>✓ 비밀 상담 가능</span>
+                </div>
             </div>
 
-            <h1 class="hero-title">
-                은행이 거절해도<br>
-                <span class="highlight">카드매출 1억이면</span><br>
-                <span class="highlight-amount">1.5억 대출</span> 가능합니다
-            </h1>
-
-            <p class="hero-subtitle">
-                병의원·약국 원장님만을 위한 <strong>특별 금융 솔루션</strong><br>
-                DSR 미반영 · 중도상환 수수료 無 · 3영업일 입금
-            </p>
-
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-value" data-count="30000">0</div>
-                    <div class="stat-unit">만원</div>
-                    <div class="stat-label">최대 한도</div>
+            <div class="hero-visual">
+                <div class="hero-card main-card">
+                    <div class="card-header">
+                        <span class="card-badge">실시간 승인</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-amount">
+                            <span class="amount-label">승인 금액</span>
+                            <span class="amount-value">150,000,000<small>원</small></span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-row">
+                                <span>상품</span>
+                                <strong>카드매출 담보대출</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>금리</span>
+                                <strong>연 5.3%</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>기간</span>
+                                <strong>700일</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-card featured">
-                    <div class="stat-icon">📉</div>
-                    <div class="stat-value">5.3<span class="stat-small">%~</span></div>
-                    <div class="stat-label">연 금리</div>
+                <div class="hero-card sub-card">
+                    <div class="mini-stat">
+                        <span class="mini-icon">📊</span>
+                        <div>
+                            <strong>2,847건</strong>
+                            <span>누적 상담</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-unit">영업일</div>
-                    <div class="stat-label">입금 완료</div>
-                </div>
-            </div>
-
-            <a href="#consultation" class="cta-button pulse">
-                <span>30초 무료 상담신청</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </a>
-
-            <div class="hero-trust">
-                <div class="trust-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 12l2 2 4-4"/>
-                        <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    <span>상담 무료</span>
-                </div>
-                <div class="trust-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 12l2 2 4-4"/>
-                        <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    <span>개인정보 보호</span>
-                </div>
-                <div class="trust-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 12l2 2 4-4"/>
-                        <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    <span>비밀 상담 가능</span>
+                <div class="hero-card sub-card-2">
+                    <div class="mini-stat">
+                        <span class="mini-icon">⭐</span>
+                        <div>
+                            <strong>98.2%</strong>
+                            <span>고객 만족도</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pain Points Section -->
-    <section class="pain-points">
+    <!-- Stats Section -->
+    <section class="stats-section">
         <div class="container">
-            <h2 class="section-title">
-                <span class="title-accent">혹시 이런 고민</span> 있으신가요?
-            </h2>
-
-            <div class="pain-grid">
-                <div class="pain-card">
-                    <div class="pain-icon">😰</div>
-                    <div class="pain-content">
-                        <h3>카드결제는 한 달 뒤인데...</h3>
-                        <p>직원 월급날은 다가오고, 현금 흐름이 맞지 않아 고민이신가요?</p>
-                    </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="2847">0</div>
+                    <div class="stat-label">누적 상담 건수</div>
                 </div>
-                <div class="pain-card">
-                    <div class="pain-icon">🏦</div>
-                    <div class="pain-content">
-                        <h3>은행에서 거절당하셨나요?</h3>
-                        <p>개인 신용만 보고 판단하는 시중은행, 답답하셨죠?</p>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="1523">0</div>
+                    <div class="stat-label">대출 실행 건수</div>
                 </div>
-                <div class="pain-card">
-                    <div class="pain-icon">📊</div>
-                    <div class="pain-content">
-                        <h3>DSR 한도가 꽉 찼나요?</h3>
-                        <p>기존 대출 때문에 추가 대출이 불가능하다는 말, 많이 들으셨죠?</p>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number">892<span class="stat-unit">억</span></div>
+                    <div class="stat-label">누적 실행 금액</div>
                 </div>
-                <div class="pain-card">
-                    <div class="pain-icon">⏰</div>
-                    <div class="pain-content">
-                        <h3>급한데 심사가 너무 오래 걸리나요?</h3>
-                        <p>장비 교체, 세금 납부... 급한 자금인데 심사만 몇 주째</p>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number">98.2<span class="stat-unit">%</span></div>
+                    <div class="stat-label">고객 만족도</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Solution Section -->
-    <section class="solution">
+    <!-- About Section -->
+    <section class="about-section" id="about">
         <div class="container">
-            <div class="solution-header">
-                <span class="section-badge">SOLUTION</span>
-                <h2 class="section-title">
-                    메디플라톤이<br><span class="title-accent">해결해 드립니다</span>
-                </h2>
+            <div class="section-header">
+                <span class="section-badge">ABOUT US</span>
+                <h2 class="section-title">메디플라톤을 소개합니다</h2>
                 <p class="section-desc">
-                    병의원 매출을 담보로 하는 특별한 금융 상품으로<br>
-                    기존 대출과 별개로 추가 자금을 확보하세요
+                    병의원 금융의 새로운 기준, 메디플라톤이 함께합니다
                 </p>
             </div>
 
-            <div class="solution-highlight">
-                <div class="highlight-box">
-                    <div class="highlight-icon">💡</div>
-                    <div class="highlight-content">
-                        <h3>핵심 포인트</h3>
-                        <p><strong>월 카드매출 1억</strong>이면 → <strong class="text-primary">최대 1.5억~2억</strong> 추가 대출 가능!</p>
-                        <p class="highlight-sub">기존 은행 대출, DSR과 완전 별개로 진행됩니다</p>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>병의원 원장님만을 위한<br><span class="text-primary">전문 금융 파트너</span></h3>
+                    <p>
+                        메디플라톤은 병원, 의원, 치과, 한의원, 약국 등 의료기관 원장님들의
+                        금융 고민을 해결하기 위해 설립된 <strong>병의원 전문 금융 서비스</strong>입니다.
+                    </p>
+                    <p>
+                        신협중앙회, KB국민카드 등 유수의 금융기관과 정식 제휴하여
+                        시중은행보다 유리한 조건의 금융상품을 제공하고 있습니다.
+                    </p>
+                    <p>
+                        특히 DSR(총부채원리금상환비율) 규제로 인해 추가 대출이 어려운
+                        원장님들께 <strong>카드매출 기반의 특별 금융 솔루션</strong>을 제공하여
+                        운영자금, 장비구매, 인테리어 등 다양한 자금 수요를 해결해 드립니다.
+                    </p>
+
+                    <div class="about-points">
+                        <div class="about-point">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <span>신협중앙회 정식 제휴 파트너</span>
+                        </div>
+                        <div class="about-point">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <span>KB국민카드 특별한도 제휴</span>
+                        </div>
+                        <div class="about-point">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <span>금융감독원 정식 등록 업체</span>
+                        </div>
+                        <div class="about-point">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <span>병의원 전문 10년+ 노하우</span>
+                        </div>
                     </div>
+                </div>
+
+                <div class="about-visual">
+                    <div class="about-image">
+                        <div class="image-placeholder">
+                            <div class="placeholder-content">
+                                <span class="placeholder-icon">🏥</span>
+                                <span class="placeholder-text">병의원 전문 금융</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-card-icon">🎯</div>
+                        <h4>우리의 미션</h4>
+                        <p>병의원 원장님의 금융 고민을 해결하고, 의료 서비스 발전에 기여합니다</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section class="services-overview">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-badge">WHY MEDIPLATON</span>
+                <h2 class="section-title">왜 메디플라톤인가요?</h2>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3>빠른 심사</h3>
+                    <p>복잡한 서류 없이 간편 심사<br><strong>최단 3영업일 내 입금</strong></p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <h3>저렴한 금리</h3>
+                    <p>대부업 대비 최대 70% 절감<br><strong>연 5.3%~6% 초저금리</strong></p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>DSR 미반영</h3>
+                    <p>기존 대출과 별개로 진행<br><strong>추가 한도 확보 가능</strong></p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>전문 상담</h3>
+                    <p>병의원 금융 전문 상담사<br><strong>1:1 맞춤 컨설팅</strong></p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h3>비밀 보장</h3>
+                    <p>직원에게 알려지지 않는<br><strong>완전 비공개 진행</strong></p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 12l2 2 4-4"/>
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <h3>중도상환 무료</h3>
+                    <p>언제든지 조기 상환 가능<br><strong>수수료 0원</strong></p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Products Section -->
-    <section class="products">
+    <section class="products-section" id="products">
         <div class="container">
-            <span class="section-badge">PRODUCTS</span>
-            <h2 class="section-title">
-                원장님 상황에 맞는<br><span class="title-accent">맞춤 금융상품</span>
-            </h2>
-
-            <div class="product-tabs">
-                <button class="tab-btn active" data-tab="new">신규개원</button>
-                <button class="tab-btn" data-tab="existing">기존병원</button>
-                <button class="tab-btn" data-tab="equipment">장비금융</button>
+            <div class="section-header center">
+                <span class="section-badge">PRODUCTS</span>
+                <h2 class="section-title">금융상품 안내</h2>
+                <p class="section-desc">원장님 상황에 맞는 최적의 금융상품을 제안해 드립니다</p>
             </div>
 
-            <div class="product-content">
-                <!-- 신규개원 -->
-                <div class="tab-panel active" id="tab-new">
-                    <div class="product-grid">
-                        <div class="product-card">
-                            <div class="product-badge">무담보</div>
-                            <h3 class="product-title">구매자금</h3>
-                            <p class="product-desc">의료장비, 인테리어, 가구 등 신규 구매 자금</p>
-                            <ul class="product-features">
-                                <li><strong>한도:</strong> 최대 3억원</li>
-                                <li><strong>기간:</strong> 12~48개월</li>
-                                <li><strong>특징:</strong> 100% 부가세 환급/비용처리</li>
-                            </ul>
-                            <a href="#consultation" class="product-cta">상담 신청</a>
-                        </div>
-                        <div class="product-card">
-                            <div class="product-badge accent">임대인 동의만</div>
-                            <h3 class="product-title">임차보증금 담보</h3>
-                            <p class="product-desc">보증금을 활용한 개원 초기 자금</p>
-                            <ul class="product-features">
-                                <li><strong>한도:</strong> 임차보증금 100%</li>
-                                <li><strong>기간:</strong> 12~48개월</li>
-                                <li><strong>특징:</strong> 임대인 권리 보호 보증보험</li>
-                            </ul>
-                            <a href="#consultation" class="product-cta">상담 신청</a>
+            <div class="products-filter">
+                <button class="filter-btn active" data-filter="all">전체</button>
+                <button class="filter-btn" data-filter="loan">대출상품</button>
+                <button class="filter-btn" data-filter="rental">렌탈/리스</button>
+                <button class="filter-btn" data-filter="card">카드상품</button>
+            </div>
+
+            <div class="products-grid">
+                <!-- 카드매출 담보대출 -->
+                <div class="product-card featured" data-category="loan" id="product-loan">
+                    <div class="product-ribbon">BEST</div>
+                    <div class="product-header">
+                        <div class="product-icon">💳</div>
+                        <div class="product-title-wrap">
+                            <h3>카드매출 담보대출</h3>
+                            <span class="product-tag">인기상품</span>
                         </div>
                     </div>
+                    <p class="product-desc">월 카드매출을 담보로 한 특별 대출 상품. 신용등급 무관, DSR 미반영으로 기존 대출이 있어도 추가 한도 확보 가능</p>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">대출한도</span>
+                            <span class="spec-value highlight">월 카드매출의 200%</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">대출금리</span>
+                            <span class="spec-value">연 8~12%</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">상환기간</span>
+                            <span class="spec-value">12~48개월</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">담보</span>
+                            <span class="spec-value">무담보 (카드매출)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">DSR</span>
+                            <span class="spec-value good">미반영</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">비용처리</span>
+                            <span class="spec-value">100% 가능</span>
+                        </div>
+                    </div>
+                    <div class="product-benefits">
+                        <span>✓ 신용등급 무관</span>
+                        <span>✓ 100% 부가세 환급</span>
+                        <span>✓ 자동 상환</span>
+                    </div>
+                    <a href="#consultation" class="product-cta">상담 신청</a>
                 </div>
 
-                <!-- 기존병원 -->
-                <div class="tab-panel" id="tab-existing">
-                    <div class="product-grid">
-                        <div class="product-card best">
-                            <div class="product-badge best">BEST 인기</div>
-                            <h3 class="product-title">카드매출 담보대출</h3>
-                            <p class="product-desc">월 카드매출 기반, 신용등급 무관</p>
-                            <ul class="product-features">
-                                <li><strong>한도:</strong> 월 카드매출의 200%</li>
-                                <li><strong>기간:</strong> 12~48개월</li>
-                                <li><strong>특징:</strong> DSR 미반영, 100% 비용처리</li>
-                            </ul>
-                            <a href="#consultation" class="product-cta">상담 신청</a>
-                        </div>
-                        <div class="product-card">
-                            <div class="product-badge primary">최저금리</div>
-                            <h3 class="product-title">신협 데일리론</h3>
-                            <p class="product-desc">신협 정식제휴, 초저금리 상품</p>
-                            <ul class="product-features">
-                                <li><strong>한도:</strong> 최대 1.5억원</li>
-                                <li><strong>금리:</strong> 연 5.3%~6%</li>
-                                <li><strong>특징:</strong> 중도상환 수수료 無, 365~700일</li>
-                            </ul>
-                            <a href="#consultation" class="product-cta">상담 신청</a>
-                        </div>
-                        <div class="product-card">
-                            <div class="product-badge">KB제휴</div>
-                            <h3 class="product-title">KB국민카드 특별한도</h3>
-                            <p class="product-desc">병원/약국 전용 특별 한도</p>
-                            <ul class="product-features">
-                                <li><strong>한도:</strong> 최대 2억원</li>
-                                <li><strong>기간:</strong> 최대 60개월</li>
-                                <li><strong>특징:</strong> 결제 후 D+5일 정산</li>
-                            </ul>
-                            <a href="#consultation" class="product-cta">상담 신청</a>
+                <!-- 신협 데일리론 -->
+                <div class="product-card" data-category="loan" id="product-credit">
+                    <div class="product-ribbon green">최저금리</div>
+                    <div class="product-header">
+                        <div class="product-icon">🏦</div>
+                        <div class="product-title-wrap">
+                            <h3>신협 데일리론</h3>
+                            <span class="product-tag">신협제휴</span>
                         </div>
                     </div>
+                    <p class="product-desc">신협중앙회 정식 제휴 상품. 초저금리로 대부업 대비 연간 수백만원 이자 절감 가능</p>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">대출한도</span>
+                            <span class="spec-value highlight">최대 1.5억원</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">대출금리</span>
+                            <span class="spec-value good">연 5.3%~6%</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">상환기간</span>
+                            <span class="spec-value">365~700일</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">상환방법</span>
+                            <span class="spec-value">카드매출 매일공제</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">DSR</span>
+                            <span class="spec-value good">미반영</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">중도상환</span>
+                            <span class="spec-value good">수수료 무료</span>
+                        </div>
+                    </div>
+                    <div class="product-benefits">
+                        <span>✓ 초저금리</span>
+                        <span>✓ 재연장 가능</span>
+                        <span>✓ 중도상환 무료</span>
+                    </div>
+                    <a href="#consultation" class="product-cta">상담 신청</a>
                 </div>
 
-                <!-- 장비금융 -->
-                <div class="tab-panel" id="tab-equipment">
-                    <div class="product-grid">
-                        <div class="product-card">
-                            <div class="product-badge">신규장비</div>
-                            <h3 class="product-title">장비 렌탈/리스</h3>
-                            <p class="product-desc">CT, MRI 등 고가 의료장비 도입</p>
-                            <ul class="product-features">
-                                <li><strong>한도:</strong> 개인 1억 / 의사 3억</li>
-                                <li><strong>심사:</strong> 약 15일</li>
-                                <li><strong>특징:</strong> DSR 미반영, 비용처리 가능</li>
-                            </ul>
-                            <a href="#consultation" class="product-cta">상담 신청</a>
-                        </div>
-                        <div class="product-card">
-                            <div class="product-badge accent">빠른입금</div>
-                            <h3 class="product-title">중고장비 매입</h3>
-                            <p class="product-desc">보유 장비 매각 후 재렌탈</p>
-                            <ul class="product-features">
-                                <li><strong>한도:</strong> 최대 1.5억원</li>
-                                <li><strong>입금:</strong> 승인 후 D+1일</li>
-                                <li><strong>특징:</strong> 카드매출 자동상환</li>
-                            </ul>
-                            <a href="#consultation" class="product-cta">상담 신청</a>
+                <!-- KB국민카드 -->
+                <div class="product-card" data-category="card" id="product-kb">
+                    <div class="product-header">
+                        <div class="product-icon">💳</div>
+                        <div class="product-title-wrap">
+                            <h3>KB국민카드 특별한도</h3>
+                            <span class="product-tag">KB제휴</span>
                         </div>
                     </div>
+                    <p class="product-desc">병원/약국 전용 특별 한도 제공. 의료장비, 인테리어 등 모든 사업장 지출에 사용 가능</p>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">특별한도</span>
+                            <span class="spec-value highlight">최대 2억원</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">할부기간</span>
+                            <span class="spec-value">최대 60개월</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">정산일</span>
+                            <span class="spec-value">결제 후 D+5일</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">대상</span>
+                            <span class="spec-value">병원/약국 개인사업자</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">DSR</span>
+                            <span class="spec-value good">미반영</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">한도상향</span>
+                            <span class="spec-value">1차 한도 후 즉시 가능</span>
+                        </div>
+                    </div>
+                    <div class="product-benefits">
+                        <span>✓ 모든 지출 사용</span>
+                        <span>✓ 빠른 한도상향</span>
+                        <span>✓ DSR 미반영</span>
+                    </div>
+                    <a href="#consultation" class="product-cta">상담 신청</a>
                 </div>
+
+                <!-- 의료장비 렌탈 -->
+                <div class="product-card" data-category="rental" id="product-rental">
+                    <div class="product-header">
+                        <div class="product-icon">🏥</div>
+                        <div class="product-title-wrap">
+                            <h3>신규장비 렌탈/리스</h3>
+                            <span class="product-tag">렌탈금융</span>
+                        </div>
+                    </div>
+                    <p class="product-desc">CT, MRI, 초음파 등 고가 의료장비 도입을 위한 렌탈/리스 상품. 100% 비용처리 가능</p>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">대출한도</span>
+                            <span class="spec-value highlight">개인 1억 / 의사 3억</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">심사기간</span>
+                            <span class="spec-value">약 15일</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">담보</span>
+                            <span class="spec-value">무담보</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">DSR</span>
+                            <span class="spec-value good">미반영</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">비용처리</span>
+                            <span class="spec-value">100% 가능</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">대상장비</span>
+                            <span class="spec-value">의료기기/전자제품/가구</span>
+                        </div>
+                    </div>
+                    <div class="product-benefits">
+                        <span>✓ 100% 비용처리</span>
+                        <span>✓ 세금 절감</span>
+                        <span>✓ 초기비용 절감</span>
+                    </div>
+                    <a href="#consultation" class="product-cta">상담 신청</a>
+                </div>
+
+                <!-- 임차보증금 담보 -->
+                <div class="product-card" data-category="loan" id="product-deposit">
+                    <div class="product-header">
+                        <div class="product-icon">🏢</div>
+                        <div class="product-title-wrap">
+                            <h3>임차보증금 담보대출</h3>
+                            <span class="product-tag">보증금활용</span>
+                        </div>
+                    </div>
+                    <p class="product-desc">임차보증금을 담보로 한 대출 상품. 비싼 보증금을 활용하여 운영자금 확보</p>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">대출한도</span>
+                            <span class="spec-value highlight">임차보증금 100%</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">상환기간</span>
+                            <span class="spec-value">12~48개월</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">필요조건</span>
+                            <span class="spec-value">임대인 동의</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">임대인보호</span>
+                            <span class="spec-value">보증보험 가입</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">소득반영</span>
+                            <span class="spec-value">소득으로 반영됨</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">DSR</span>
+                            <span class="spec-value good">미반영</span>
+                        </div>
+                    </div>
+                    <div class="product-benefits">
+                        <span>✓ 보증금 100% 활용</span>
+                        <span>✓ 임대인 권리 보호</span>
+                        <span>✓ DSR 미반영</span>
+                    </div>
+                    <a href="#consultation" class="product-cta">상담 신청</a>
+                </div>
+
+                <!-- 구매자금 -->
+                <div class="product-card" data-category="loan" id="product-purchase">
+                    <div class="product-header">
+                        <div class="product-icon">🛒</div>
+                        <div class="product-title-wrap">
+                            <h3>구매자금 대출</h3>
+                            <span class="product-tag">신규개원</span>
+                        </div>
+                    </div>
+                    <p class="product-desc">의료장비, 인테리어, 가구 등 신규 구매를 위한 무담보 대출. 개원 초기 자금 부담 해소</p>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">대출한도</span>
+                            <span class="spec-value highlight">최대 3억원</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">상환기간</span>
+                            <span class="spec-value">12~48개월</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">담보</span>
+                            <span class="spec-value">무담보</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">비용처리</span>
+                            <span class="spec-value">100% 가능</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">부가세</span>
+                            <span class="spec-value">100% 환급</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">용도</span>
+                            <span class="spec-value">장비/인테리어/가구</span>
+                        </div>
+                    </div>
+                    <div class="product-benefits">
+                        <span>✓ 무담보</span>
+                        <span>✓ 100% 비용처리</span>
+                        <span>✓ 부가세 환급</span>
+                    </div>
+                    <a href="#consultation" class="product-cta">상담 신청</a>
+                </div>
+
+                <!-- 중고장비 매입 -->
+                <div class="product-card" data-category="rental">
+                    <div class="product-header">
+                        <div class="product-icon">🔄</div>
+                        <div class="product-title-wrap">
+                            <h3>중고장비 매입</h3>
+                            <span class="product-tag">Sale & Leaseback</span>
+                        </div>
+                    </div>
+                    <p class="product-desc">보유 중인 장비를 매각 후 재렌탈하는 방식. 빠른 현금화가 필요할 때 최적의 솔루션</p>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">매입한도</span>
+                            <span class="spec-value highlight">최대 1.5억원</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">입금</span>
+                            <span class="spec-value good">승인 후 D+1일</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">상환방법</span>
+                            <span class="spec-value">카드매출 자동공제</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">담보</span>
+                            <span class="spec-value">무담보</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">DSR</span>
+                            <span class="spec-value good">미반영</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">소득반영</span>
+                            <span class="spec-value">소득으로 반영</span>
+                        </div>
+                    </div>
+                    <div class="product-benefits">
+                        <span>✓ 빠른 입금</span>
+                        <span>✓ 장비 계속 사용</span>
+                        <span>✓ 자동 상환</span>
+                    </div>
+                    <a href="#consultation" class="product-cta">상담 신청</a>
+                </div>
+            </div>
+
+            <div class="products-cta">
+                <p>어떤 상품이 맞는지 모르겠다면?</p>
+                <a href="#consultation" class="btn btn-primary">무료 상담받기</a>
             </div>
         </div>
     </section>
 
     <!-- Comparison Section -->
-    <section class="comparison">
+    <section class="comparison-section">
         <div class="container">
-            <span class="section-badge">WHY MEDIPLATON</span>
-            <h2 class="section-title">
-                대부업 vs 메디플라톤<br><span class="title-accent">얼마나 다를까요?</span>
-            </h2>
+            <div class="section-header center">
+                <span class="section-badge">COMPARISON</span>
+                <h2 class="section-title">얼마나 유리할까요?</h2>
+                <p class="section-desc">대부업 대비 메디플라톤의 금융 조건을 비교해보세요</p>
+            </div>
 
-            <div class="comparison-table-wrapper">
+            <div class="comparison-wrapper">
                 <table class="comparison-table">
                     <thead>
                         <tr>
                             <th>비교 항목</th>
-                            <th class="competitor">대부업</th>
-                            <th class="us">메디플라톤</th>
+                            <th class="col-bad">일반 대부업</th>
+                            <th class="col-good">메디플라톤</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>금리</td>
-                            <td class="competitor"><span class="bad">15~20%</span></td>
-                            <td class="us"><span class="good">5.3~6%</span></td>
+                            <td>대출 금리</td>
+                            <td class="col-bad"><span class="bad">연 15~20%</span></td>
+                            <td class="col-good"><span class="good">연 5.3~6%</span></td>
                         </tr>
                         <tr>
                             <td>DSR 반영</td>
-                            <td class="competitor"><span class="bad">반영 O</span></td>
-                            <td class="us"><span class="good">미반영</span></td>
-                        </tr>
-                        <tr>
-                            <td>심사 기간</td>
-                            <td class="competitor">1~3일</td>
-                            <td class="us"><span class="good">3영업일</span></td>
-                        </tr>
-                        <tr>
-                            <td>중도상환</td>
-                            <td class="competitor"><span class="bad">수수료 有</span></td>
-                            <td class="us"><span class="good">수수료 無</span></td>
+                            <td class="col-bad"><span class="bad">반영 (추가대출 제한)</span></td>
+                            <td class="col-good"><span class="good">미반영 (추가한도 가능)</span></td>
                         </tr>
                         <tr>
                             <td>상환 기간</td>
-                            <td class="competitor">12개월 이내</td>
-                            <td class="us"><span class="good">최대 700일</span></td>
+                            <td class="col-bad">12개월 이내</td>
+                            <td class="col-good"><span class="good">최대 700일</span></td>
                         </tr>
                         <tr>
-                            <td>제휴 기관</td>
-                            <td class="competitor">-</td>
-                            <td class="us"><span class="good">신협/KB 정식제휴</span></td>
+                            <td>중도상환 수수료</td>
+                            <td class="col-bad"><span class="bad">1~3% 부과</span></td>
+                            <td class="col-good"><span class="good">무료</span></td>
+                        </tr>
+                        <tr>
+                            <td>제휴 금융기관</td>
+                            <td class="col-bad">없음</td>
+                            <td class="col-good"><span class="good">신협/KB 정식제휴</span></td>
+                        </tr>
+                        <tr>
+                            <td>심사 기간</td>
+                            <td class="col-bad">1~3일</td>
+                            <td class="col-good">3영업일</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="saving-box">
-                <div class="saving-icon">💰</div>
-                <div class="saving-content">
-                    <h3>5천만원 대출 시 연간 이자 비교</h3>
-                    <div class="saving-comparison">
-                        <div class="saving-item bad">
-                            <span class="saving-label">대부업 (17%)</span>
-                            <span class="saving-value">850만원</span>
-                        </div>
-                        <div class="saving-arrow">→</div>
-                        <div class="saving-item good">
-                            <span class="saving-label">메디플라톤 (5.5%)</span>
-                            <span class="saving-value">275만원</span>
-                        </div>
+            <div class="savings-calculator">
+                <div class="calc-header">
+                    <h3>💰 이자 절감 시뮬레이션</h3>
+                    <p>5,000만원 대출 시 연간 이자 비교</p>
+                </div>
+                <div class="calc-content">
+                    <div class="calc-item bad">
+                        <span class="calc-label">대부업 (17%)</span>
+                        <span class="calc-value">850만원</span>
+                        <span class="calc-sub">/년</span>
                     </div>
-                    <p class="saving-result">
-                        연간 <strong class="text-primary">575만원 절약</strong> = 직원 1명 월급!
-                    </p>
+                    <div class="calc-arrow">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                    <div class="calc-item good">
+                        <span class="calc-label">메디플라톤 (5.5%)</span>
+                        <span class="calc-value">275만원</span>
+                        <span class="calc-sub">/년</span>
+                    </div>
+                </div>
+                <div class="calc-result">
+                    <strong>연간 575만원 절약</strong> = 직원 1명 월급!
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Benefits Section -->
-    <section class="benefits">
+    <!-- Process Section -->
+    <section class="process-section" id="process">
         <div class="container">
-            <h2 class="section-title">
-                메디플라톤<br><span class="title-accent">핵심 장점 4가지</span>
-            </h2>
+            <div class="section-header center">
+                <span class="section-badge">PROCESS</span>
+                <h2 class="section-title">간편한 이용 절차</h2>
+                <p class="section-desc">복잡한 서류 없이 간편하게 진행됩니다</p>
+            </div>
 
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-icon">📉</div>
-                    <h3>초저금리</h3>
-                    <p>신협 정식제휴로<br><strong>연 5.3%~6%</strong> 금리</p>
+            <div class="process-timeline">
+                <div class="process-step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <div class="step-icon">📱</div>
+                        <h3>상담 신청</h3>
+                        <p>홈페이지 또는 전화로<br>간편하게 상담 신청</p>
+                        <span class="step-time">1분 소요</span>
+                    </div>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🚫</div>
-                    <h3>DSR 미반영</h3>
-                    <p>기존 대출과 별개<br><strong>추가 한도 확보</strong></p>
+                <div class="process-line"></div>
+                <div class="process-step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <div class="step-icon">💼</div>
+                        <h3>맞춤 상담</h3>
+                        <p>전문 상담사가<br>최적 상품 안내</p>
+                        <span class="step-time">24시간 내</span>
+                    </div>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🔄</div>
-                    <h3>중복 진행 가능</h3>
-                    <p>여러 상품을<br><strong>동시에 이용</strong> 가능</p>
+                <div class="process-line"></div>
+                <div class="process-step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <div class="step-icon">📄</div>
+                        <h3>서류 접수</h3>
+                        <p>간단한 서류<br>온라인 제출</p>
+                        <span class="step-time">10분 소요</span>
+                    </div>
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">💸</div>
-                    <h3>중도상환 무료</h3>
-                    <p>조기 상환해도<br><strong>수수료 0원</strong></p>
+                <div class="process-line"></div>
+                <div class="process-step">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <div class="step-icon">✅</div>
+                        <h3>심사 및 승인</h3>
+                        <p>빠른 심사 후<br>승인 결과 안내</p>
+                        <span class="step-time">1~3영업일</span>
+                    </div>
                 </div>
+                <div class="process-line"></div>
+                <div class="process-step highlight">
+                    <div class="step-number">05</div>
+                    <div class="step-content">
+                        <div class="step-icon">💰</div>
+                        <h3>입금 완료</h3>
+                        <p>계약 체결 후<br>계좌 입금</p>
+                        <span class="step-time">당일~D+1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Qualification Section -->
+    <section class="qualification-section" id="qualification">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">신청 자격 안내</h2>
+            </div>
+
+            <div class="qual-grid">
+                <div class="qual-card yes">
+                    <div class="qual-header">
+                        <span class="qual-icon">✓</span>
+                        <h3>신청 가능 조건</h3>
+                    </div>
+                    <ul class="qual-list">
+                        <li>개업 <strong>6개월 이상</strong> 병의원/약국</li>
+                        <li><strong>개인사업자</strong> (법인 별도 문의)</li>
+                        <li>금융/세금 <strong>연체 없음</strong></li>
+                        <li>신용등급 <strong>6등급 이상</strong></li>
+                        <li>사업장 소재지: <strong>서울, 경기, 인천, 부산</strong></li>
+                    </ul>
+                </div>
+                <div class="qual-card no">
+                    <div class="qual-header">
+                        <span class="qual-icon">✕</span>
+                        <h3>신청 불가 조건</h3>
+                    </div>
+                    <ul class="qual-list">
+                        <li>개업 6개월 미만</li>
+                        <li>현재 금융/세금 연체 중</li>
+                        <li>신용회복/개인회생 진행 중</li>
+                        <li>휴업/폐업 상태</li>
+                        <li>법인사업자 (일부 상품 제외)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qual-note">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4M12 8h.01"/>
+                </svg>
+                <p>자격 조건이 애매하시면 먼저 무료 상담을 받아보세요. 상황에 맞는 최적의 상품을 안내해 드립니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documents Section -->
+    <section class="documents-section" id="documents">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-badge">DOCUMENTS</span>
+                <h2 class="section-title">필요 서류 안내</h2>
+                <p class="section-desc">대부분의 서류는 온라인으로 간편하게 제출 가능합니다</p>
+            </div>
+
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <div class="doc-icon">📋</div>
+                    <h4>기본 서류</h4>
+                    <ul>
+                        <li>사업자등록증 사본</li>
+                        <li>대표자 신분증 사본</li>
+                        <li>최근 6개월 카드매출 내역</li>
+                    </ul>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-icon">📊</div>
+                    <h4>재무 서류</h4>
+                    <ul>
+                        <li>부가세 과세표준증명</li>
+                        <li>소득금액증명원</li>
+                        <li>국세/지방세 납세증명서</li>
+                    </ul>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-icon">📑</div>
+                    <h4>추가 서류 (상품별)</h4>
+                    <ul>
+                        <li>임대차계약서 (임차보증금 담보)</li>
+                        <li>장비 견적서 (렌탈/리스)</li>
+                        <li>기타 상품별 필요서류</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="docs-tip">
+                <strong>💡 TIP</strong>
+                <p>정확한 필요 서류는 상담 시 안내드립니다. 대부분의 서류는 홈택스, 정부24에서 온라인 발급 가능합니다.</p>
             </div>
         </div>
     </section>
 
     <!-- Cases Section -->
-    <section class="cases">
+    <section class="cases-section" id="cases">
         <div class="container">
-            <span class="section-badge">SUCCESS CASES</span>
-            <h2 class="section-title">
-                실제 원장님들의<br><span class="title-accent">성공 사례</span>
-            </h2>
+            <div class="section-header center">
+                <span class="section-badge">SUCCESS CASES</span>
+                <h2 class="section-title">실제 성공 사례</h2>
+                <p class="section-desc">메디플라톤과 함께한 원장님들의 이야기</p>
+            </div>
 
-            <div class="cases-grid">
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-avatar">👨‍⚕️</div>
-                        <div class="case-info">
-                            <h3>정형외과 A원장님</h3>
-                            <span class="case-location">서울 강남구</span>
+            <div class="cases-slider">
+                <div class="cases-track">
+                    <div class="case-card">
+                        <div class="case-header">
+                            <div class="case-avatar">👨‍⚕️</div>
+                            <div class="case-info">
+                                <h4>정형외과 A원장님</h4>
+                                <span>서울 강남구 | 개원 3년차</span>
+                            </div>
+                        </div>
+                        <div class="case-problem">
+                            <strong>상황:</strong> DSR 한도 초과로 시중은행 대출 거절. 의료장비 교체 자금 필요
+                        </div>
+                        <div class="case-solution">
+                            <strong>해결:</strong> 카드매출 담보대출로 1.5억원 승인. 연 5.8% 금리로 장비 교체 완료
+                        </div>
+                        <div class="case-result">
+                            <div class="result-item">
+                                <span>실행금액</span>
+                                <strong>1억 5천만원</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>적용금리</span>
+                                <strong>연 5.8%</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>소요기간</span>
+                                <strong>3일</strong>
+                            </div>
                         </div>
                     </div>
-                    <div class="case-quote">
-                        "DSR 한도 초과로 은행에서 거절당했는데, 카드매출 1.2억으로 <strong>1.5억 승인</strong>받았습니다. 신규 장비 도입에 큰 도움이 됐어요."
-                    </div>
-                    <div class="case-result">
-                        <span class="result-label">실행 금액</span>
-                        <span class="result-value">1억 5천만원</span>
-                    </div>
-                </div>
 
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-avatar">👩‍⚕️</div>
-                        <div class="case-info">
-                            <h3>약국 B원장님</h3>
-                            <span class="case-location">경기 성남시</span>
+                    <div class="case-card">
+                        <div class="case-header">
+                            <div class="case-avatar">👩‍⚕️</div>
+                            <div class="case-info">
+                                <h4>약국 B원장님</h4>
+                                <span>경기 성남시 | 개원 5년차</span>
+                            </div>
+                        </div>
+                        <div class="case-problem">
+                            <strong>상황:</strong> 급한 의약품 매입 자금 필요. 기존 대출 있어 추가 한도 확보 어려움
+                        </div>
+                        <div class="case-solution">
+                            <strong>해결:</strong> 신협 데일리론으로 7천만원 승인. 상담 후 3일 만에 입금 완료
+                        </div>
+                        <div class="case-result">
+                            <div class="result-item">
+                                <span>실행금액</span>
+                                <strong>7천만원</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>적용금리</span>
+                                <strong>연 5.3%</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>소요기간</span>
+                                <strong>3일</strong>
+                            </div>
                         </div>
                     </div>
-                    <div class="case-quote">
-                        "상담 후 <strong>3일 만에 7천만원 입금</strong>! 급한 의약품 매입 자금 해결했습니다. 진행 속도에 정말 놀랐어요."
-                    </div>
-                    <div class="case-result">
-                        <span class="result-label">실행 금액</span>
-                        <span class="result-value">7천만원</span>
-                    </div>
-                </div>
 
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-avatar">🦷</div>
-                        <div class="case-info">
-                            <h3>치과 C원장님</h3>
-                            <span class="case-location">부산 해운대구</span>
+                    <div class="case-card">
+                        <div class="case-header">
+                            <div class="case-avatar">🦷</div>
+                            <div class="case-info">
+                                <h4>치과 C원장님</h4>
+                                <span>부산 해운대구 | 개원 2년차</span>
+                            </div>
+                        </div>
+                        <div class="case-problem">
+                            <strong>상황:</strong> CT 장비 도입 필요. 초기 자금 부담으로 구매 망설임
+                        </div>
+                        <div class="case-solution">
+                            <strong>해결:</strong> 의료장비 렌탈로 1.2억원 장비 도입. 100% 비용처리로 세금 절감 효과
+                        </div>
+                        <div class="case-result">
+                            <div class="result-item">
+                                <span>장비금액</span>
+                                <strong>1억 2천만원</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>월 렌탈료</span>
+                                <strong>약 280만원</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>절세효과</span>
+                                <strong>연 1,200만원</strong>
+                            </div>
                         </div>
                     </div>
-                    <div class="case-quote">
-                        "CT 장비 교체가 급했는데 렌탈로 부담 없이 진행했습니다. <strong>비용처리까지 되니</strong> 세금 절감 효과도 있었어요."
-                    </div>
-                    <div class="case-result">
-                        <span class="result-label">실행 금액</span>
-                        <span class="result-value">1억 2천만원</span>
+
+                    <div class="case-card">
+                        <div class="case-header">
+                            <div class="case-avatar">💉</div>
+                            <div class="case-info">
+                                <h4>피부과 D원장님</h4>
+                                <span>서울 서초구 | 개원 1년차</span>
+                            </div>
+                        </div>
+                        <div class="case-problem">
+                            <strong>상황:</strong> 인테리어 확장 공사 자금 필요. 신규 개원으로 대출 이력 부족
+                        </div>
+                        <div class="case-solution">
+                            <strong>해결:</strong> 구매자금 대출로 8천만원 승인. 100% 부가세 환급까지 받아 실질 부담 감소
+                        </div>
+                        <div class="case-result">
+                            <div class="result-item">
+                                <span>실행금액</span>
+                                <strong>8천만원</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>부가세환급</span>
+                                <strong>약 730만원</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>소요기간</span>
+                                <strong>5일</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -493,108 +1179,97 @@
         </div>
     </section>
 
-    <!-- Process Section -->
-    <section class="process">
+    <!-- Partners Section -->
+    <section class="partners-section" id="partners">
         <div class="container">
-            <span class="section-badge">PROCESS</span>
-            <h2 class="section-title">
-                간편한<br><span class="title-accent">진행 절차</span>
-            </h2>
-
-            <div class="process-steps">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <div class="step-icon">📱</div>
-                    <h3>무료 상담 신청</h3>
-                    <p>간단한 정보 입력<br>(1분 소요)</p>
-                </div>
-                <div class="process-arrow">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <div class="step-icon">💼</div>
-                    <h3>맞춤 상품 안내</h3>
-                    <p>전문 상담사가<br>최적 상품 제안</p>
-                </div>
-                <div class="process-arrow">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <div class="step-icon">✅</div>
-                    <h3>심사 및 승인</h3>
-                    <p>서류 접수 후<br>빠른 심사 진행</p>
-                </div>
-                <div class="process-arrow">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </div>
-                <div class="process-step highlight">
-                    <div class="step-number">4</div>
-                    <div class="step-icon">💰</div>
-                    <h3>입금 완료</h3>
-                    <p><strong>3영업일 이내</strong><br>계좌 입금</p>
-                </div>
+            <div class="section-header center">
+                <span class="section-badge">PARTNERS</span>
+                <h2 class="section-title">제휴 금융기관</h2>
+                <p class="section-desc">믿을 수 있는 금융기관과 함께합니다</p>
             </div>
-        </div>
-    </section>
 
-    <!-- Qualifications Section -->
-    <section class="qualifications">
-        <div class="container">
-            <h2 class="section-title">
-                <span class="title-accent">신청 자격</span> 확인
-            </h2>
-
-            <div class="qual-grid">
-                <div class="qual-card yes">
-                    <div class="qual-icon">✓</div>
-                    <h3>신청 가능</h3>
-                    <ul>
-                        <li>개업 6개월 이상 병의원/약국</li>
-                        <li>개인사업자 (법인 별도 문의)</li>
-                        <li>금융/세금 연체 없음</li>
-                        <li>신용등급 6등급 이상</li>
-                    </ul>
+            <div class="partners-grid">
+                <div class="partner-item">
+                    <div class="partner-logo">
+                        <div class="logo-placeholder">신협</div>
+                    </div>
+                    <span>신협중앙회</span>
                 </div>
-                <div class="qual-card no">
-                    <div class="qual-icon">✕</div>
-                    <h3>신청 불가</h3>
-                    <ul>
-                        <li>개업 6개월 미만</li>
-                        <li>현재 연체 중</li>
-                        <li>신용회복/개인회생 진행 중</li>
-                        <li>휴/폐업 상태</li>
-                    </ul>
+                <div class="partner-item">
+                    <div class="partner-logo">
+                        <div class="logo-placeholder kb">KB</div>
+                    </div>
+                    <span>KB국민카드</span>
+                </div>
+                <div class="partner-item">
+                    <div class="partner-logo">
+                        <div class="logo-placeholder rental">렌탈</div>
+                    </div>
+                    <span>의료장비 렌탈사</span>
+                </div>
+                <div class="partner-item">
+                    <div class="partner-logo">
+                        <div class="logo-placeholder lease">리스</div>
+                    </div>
+                    <span>할부/리스 금융사</span>
                 </div>
             </div>
 
-            <div class="qual-note">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 16v-4M12 8h.01"/>
-                </svg>
-                <p>자격 조건이 애매하시다면 먼저 무료 상담을 받아보세요. 상황에 맞는 상품을 안내해 드립니다.</p>
+            <div class="certifications">
+                <div class="cert-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                    <span>금융감독원 정식 등록</span>
+                </div>
+                <div class="cert-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span>SSL 보안 인증</span>
+                </div>
+                <div class="cert-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <span>개인정보보호 인증</span>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq">
+    <section class="faq-section" id="faq">
         <div class="container">
-            <span class="section-badge">FAQ</span>
-            <h2 class="section-title">
-                자주 묻는<br><span class="title-accent">질문</span>
-            </h2>
+            <div class="section-header center">
+                <span class="section-badge">FAQ</span>
+                <h2 class="section-title">자주 묻는 질문</h2>
+            </div>
+
+            <div class="faq-categories">
+                <button class="faq-cat-btn active" data-cat="all">전체</button>
+                <button class="faq-cat-btn" data-cat="general">일반</button>
+                <button class="faq-cat-btn" data-cat="product">상품</button>
+                <button class="faq-cat-btn" data-cat="process">절차</button>
+            </div>
 
             <div class="faq-list">
-                <div class="faq-item">
+                <div class="faq-item" data-cat="general">
+                    <button class="faq-question">
+                        <span>메디플라톤은 어떤 회사인가요?</span>
+                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>메디플라톤은 병의원, 약국 등 의료기관 원장님들을 위한 <strong>전문 금융 서비스</strong>입니다. 신협중앙회, KB국민카드 등 유수의 금융기관과 정식 제휴하여 시중은행보다 유리한 조건의 금융상품을 제공하고 있습니다. 금융감독원에 정식 등록된 합법적인 금융서비스 업체입니다.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-cat="general">
                     <button class="faq-question">
                         <span>신협이 안전한가요?</span>
                         <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -605,7 +1280,8 @@
                         <p>네, 신협은 1972년 설립된 <strong>금융감독원 감독 하의 협동조합금융기관</strong>입니다. 예금자보호법에 따라 1인당 5천만원까지 보호되며, 전국 900여개 조합에서 안전하게 운영되고 있습니다.</p>
                     </div>
                 </div>
-                <div class="faq-item">
+
+                <div class="faq-item" data-cat="product">
                     <button class="faq-question">
                         <span>기존 대출이 있어도 되나요?</span>
                         <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -613,10 +1289,11 @@
                         </svg>
                     </button>
                     <div class="faq-answer">
-                        <p>네, 대부분의 상품이 <strong>DSR(총부채원리금상환비율)에 미반영</strong>되어 기존 대출과 별개로 추가 진행이 가능합니다. 은행 대출 한도가 꽉 찬 상태에서도 이용 가능합니다.</p>
+                        <p>네, 대부분의 상품이 <strong>DSR(총부채원리금상환비율)에 미반영</strong>되어 기존 대출과 별개로 추가 진행이 가능합니다. 은행 대출 한도가 꽉 찬 상태에서도 카드매출을 기반으로 추가 한도를 확보할 수 있습니다.</p>
                     </div>
                 </div>
-                <div class="faq-item">
+
+                <div class="faq-item" data-cat="process">
                     <button class="faq-question">
                         <span>직원에게 알려지나요?</span>
                         <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -624,10 +1301,11 @@
                         </svg>
                     </button>
                     <div class="faq-answer">
-                        <p>아니요, <strong>완전 비공개로 진행</strong>됩니다. 모든 연락은 원장님 개인 연락처로만 드리며, 병원으로 연락하거나 우편물을 보내지 않습니다.</p>
+                        <p>아니요, <strong>완전 비공개로 진행</strong>됩니다. 모든 연락은 원장님 개인 연락처로만 드리며, 병원으로 연락하거나 우편물을 보내지 않습니다. 프라이버시를 철저히 보호합니다.</p>
                     </div>
                 </div>
-                <div class="faq-item">
+
+                <div class="faq-item" data-cat="product">
                     <button class="faq-question">
                         <span>상환 방식은 어떻게 되나요?</span>
                         <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -638,9 +1316,10 @@
                         <p>카드매출에서 <strong>자동 공제</strong>되는 방식입니다. 별도로 이체하실 필요 없이, 카드사 정산 시 자동으로 상환됩니다. 매출이 적은 달에는 상환액도 자동 조정되어 부담이 적습니다.</p>
                     </div>
                 </div>
-                <div class="faq-item">
+
+                <div class="faq-item" data-cat="process">
                     <button class="faq-question">
-                        <span>진행 시 비용이 드나요?</span>
+                        <span>상담 비용이 있나요?</span>
                         <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
@@ -649,255 +1328,297 @@
                         <p><strong>상담은 100% 무료</strong>입니다. 실제 대출 실행 시에만 상품별 약정 수수료가 발생하며, 상담 단계에서 정확히 안내해 드립니다. 숨겨진 비용은 없습니다.</p>
                     </div>
                 </div>
-                <div class="faq-item">
+
+                <div class="faq-item" data-cat="process">
                     <button class="faq-question">
-                        <span>서류는 뭐가 필요한가요?</span>
+                        <span>심사 기간은 얼마나 걸리나요?</span>
                         <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
                     <div class="faq-answer">
-                        <p>기본적으로 <strong>사업자등록증, 신분증, 카드매출 내역</strong>이 필요합니다. 상품에 따라 추가 서류가 있을 수 있으며, 상담 시 정확히 안내해 드립니다. 대부분 온라인으로 제출 가능합니다.</p>
+                        <p>상품에 따라 다르지만, 대부분 <strong>3영업일 이내</strong>에 심사가 완료됩니다. 신협 데일리론은 최단 당일~D+1일, 장비 렌탈은 약 15일 정도 소요됩니다. 서류가 완비되면 더 빠르게 진행됩니다.</p>
                     </div>
+                </div>
+
+                <div class="faq-item" data-cat="product">
+                    <button class="faq-question">
+                        <span>중도상환 시 수수료가 있나요?</span>
+                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>신협 데일리론을 포함한 대부분의 상품에서 <strong>중도상환 수수료가 없습니다</strong>. 자금 여유가 생기면 언제든지 조기 상환하여 이자 부담을 줄일 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-more">
+                <p>더 궁금한 점이 있으신가요?</p>
+                <div class="faq-actions">
+                    <a href="tel:1600-0000" class="btn btn-outline">📞 1600-0000</a>
+                    <a href="#consultation" class="btn btn-primary">무료 상담 신청</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Trust Section -->
-    <section class="trust-section">
+    <!-- News Section -->
+    <section class="news-section" id="news">
         <div class="container">
-            <h2 class="section-title center">
-                <span class="title-accent">믿을 수 있는</span> 파트너
-            </h2>
-            <p class="section-desc center">
-                메디플라톤은 국내 유수의 금융기관과 정식 제휴하여<br>
-                안전하고 투명한 금융 서비스를 제공합니다
-            </p>
-
-            <div class="partners-grid">
-                <div class="partner-card">
-                    <div class="partner-logo">
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="22" stroke="#1A3A8F" stroke-width="2"/>
-                            <text x="24" y="28" text-anchor="middle" fill="#1A3A8F" font-size="12" font-weight="bold">신협</text>
-                        </svg>
-                    </div>
-                    <h4>신협중앙회</h4>
-                    <p>정식 제휴 파트너</p>
+            <div class="section-header">
+                <div>
+                    <span class="section-badge">NEWS</span>
+                    <h2 class="section-title">공지사항 & 금융정보</h2>
                 </div>
-                <div class="partner-card">
-                    <div class="partner-logo">
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <rect x="4" y="12" width="40" height="24" rx="4" stroke="#FFB800" stroke-width="2"/>
-                            <text x="24" y="28" text-anchor="middle" fill="#FFB800" font-size="10" font-weight="bold">KB</text>
-                        </svg>
-                    </div>
-                    <h4>KB국민카드</h4>
-                    <p>특별한도 제휴</p>
-                </div>
-                <div class="partner-card">
-                    <div class="partner-logo">
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <path d="M24 4L4 14v20l20 10 20-10V14L24 4z" stroke="#00B894" stroke-width="2" fill="none"/>
-                            <path d="M18 24l4 4 8-8" stroke="#00B894" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h4>금융감독원</h4>
-                    <p>정식 등록 업체</p>
-                </div>
-                <div class="partner-card">
-                    <div class="partner-logo">
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="20" stroke="#6366F1" stroke-width="2"/>
-                            <path d="M16 24h16M24 16v16" stroke="#6366F1" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h4>의료장비 렌탈</h4>
-                    <p>전문 금융사 제휴</p>
-                </div>
+                <a href="#" class="view-all">전체보기 →</a>
             </div>
 
-            <div class="certifications">
-                <div class="cert-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        <path d="M9 12l2 2 4-4"/>
-                    </svg>
-                    <span>SSL 보안 인증</span>
+            <div class="news-grid">
+                <div class="news-card" id="blog">
+                    <span class="news-category">금융정보</span>
+                    <h3>2025년 병의원 대출 규제 변경사항 안내</h3>
+                    <p>올해부터 변경되는 DSR 규제와 병의원 대출에 미치는 영향을 알아봅니다.</p>
+                    <div class="news-meta">
+                        <span>2025.01.15</span>
+                        <span>조회 1,234</span>
+                    </div>
                 </div>
-                <div class="cert-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
-                    <span>개인정보 암호화</span>
+                <div class="news-card">
+                    <span class="news-category">공지사항</span>
+                    <h3>설 연휴 상담 운영 안내</h3>
+                    <p>2025년 설 연휴 기간 상담 및 심사 일정을 안내드립니다.</p>
+                    <div class="news-meta">
+                        <span>2025.01.20</span>
+                        <span>조회 892</span>
+                    </div>
                 </div>
-                <div class="cert-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 12l2 2 4-4"/>
-                        <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    <span>금융위원회 등록</span>
-                </div>
-                <div class="cert-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                        <path d="M2 17l10 5 10-5"/>
-                        <path d="M2 12l10 5 10-5"/>
-                    </svg>
-                    <span>투명한 수수료 공개</span>
+                <div class="news-card">
+                    <span class="news-category">금융정보</span>
+                    <h3>의료장비 렌탈 vs 구매, 무엇이 유리할까?</h3>
+                    <p>세금 절감 효과와 현금 흐름 관점에서 렌탈과 구매를 비교 분석합니다.</p>
+                    <div class="news-meta">
+                        <span>2025.01.10</span>
+                        <span>조회 2,156</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Consultation Section -->
-    <section class="consultation" id="consultation">
+    <section class="consultation-section" id="consultation">
         <div class="container">
-            <div class="consultation-header">
-                <div class="urgency-bar">
-                    <div class="urgency-icon">⏰</div>
-                    <div class="urgency-text">
-                        오늘 상담 마감까지 <span id="countdown">3:42:15</span>
-                    </div>
-                </div>
-                <div class="viewer-count">
-                    <div class="viewer-dot"></div>
-                    현재 <strong id="viewerCount">12</strong>명이 보고 있습니다
-                </div>
-            </div>
-
-            <div class="consultation-content">
-                <div class="consultation-left">
-                    <h2 class="section-title white">
-                        지금 바로<br><span class="title-accent-light">무료 상담</span> 신청하세요
-                    </h2>
-                    <p class="consultation-desc">
-                        전문 상담사가 원장님 상황에 맞는<br>
-                        최적의 금융 솔루션을 안내해 드립니다
-                    </p>
-
-                    <div class="consultation-benefits">
-                        <div class="consult-benefit">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"/>
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                            <span>상담 비용 무료</span>
-                        </div>
-                        <div class="consult-benefit">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"/>
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                            <span>개인정보 철저 보호</span>
-                        </div>
-                        <div class="consult-benefit">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"/>
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                            <span>24시간 내 연락</span>
-                        </div>
-                        <div class="consult-benefit">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"/>
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                            <span>부담 없는 상담</span>
-                        </div>
+            <div class="consult-wrapper">
+                <div class="consult-info">
+                    <div class="consult-header">
+                        <span class="section-badge light">CONTACT US</span>
+                        <h2>무료 상담 신청</h2>
+                        <p>전문 상담사가 원장님 상황에 맞는<br>최적의 금융 솔루션을 안내해 드립니다</p>
                     </div>
 
-                    <div class="trust-badges">
-                        <div class="trust-badge">
+                    <div class="consult-benefits">
+                        <div class="benefit-item">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
                             </svg>
                             <div>
-                                <strong>신협중앙회</strong>
-                                <span>정식제휴</span>
+                                <strong>상담 비용 무료</strong>
+                                <span>부담 없이 상담받으세요</span>
                             </div>
                         </div>
-                        <div class="trust-badge">
+                        <div class="benefit-item">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2"/>
                                 <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
                             </svg>
                             <div>
-                                <strong>금융감독원</strong>
-                                <span>정식 등록</span>
+                                <strong>개인정보 철저 보호</strong>
+                                <span>SSL 암호화 전송</span>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <div>
+                                <strong>24시간 내 연락</strong>
+                                <span>빠른 상담 진행</span>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <div>
+                                <strong>비밀 상담 가능</strong>
+                                <span>완전 비공개 진행</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="consult-contact">
+                        <div class="contact-box">
+                            <span class="contact-icon">📞</span>
+                            <div>
+                                <strong>전화 상담</strong>
+                                <a href="tel:1600-0000">1600-0000</a>
+                            </div>
+                        </div>
+                        <div class="contact-box">
+                            <span class="contact-icon">🕐</span>
+                            <div>
+                                <strong>운영 시간</strong>
+                                <span>평일 09:00 ~ 18:00</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="consultation-right">
-                    <form class="consultation-form" id="consultForm">
-                        <div class="form-group">
-                            <label for="name">성함 <span class="required">*</span></label>
-                            <input type="text" id="name" name="name" placeholder="홍길동" required>
+                <div class="consult-form-wrapper">
+                    <form class="consult-form" id="consultForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">성함 <span class="required">*</span></label>
+                                <input type="text" id="name" name="name" placeholder="홍길동" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">연락처 <span class="required">*</span></label>
+                                <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="phone">연락처 <span class="required">*</span></label>
-                            <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="business">업종 <span class="required">*</span></label>
+                                <select id="business" name="business" required>
+                                    <option value="">선택해주세요</option>
+                                    <option value="hospital">병원/의원</option>
+                                    <option value="dental">치과</option>
+                                    <option value="oriental">한의원</option>
+                                    <option value="pharmacy">약국</option>
+                                    <option value="plastic">성형외과</option>
+                                    <option value="derma">피부과</option>
+                                    <option value="eye">안과</option>
+                                    <option value="ortho">정형외과</option>
+                                    <option value="other">기타 의료</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="revenue">월 카드매출 <span class="required">*</span></label>
+                                <select id="revenue" name="revenue" required>
+                                    <option value="">선택해주세요</option>
+                                    <option value="under3000">3천만원 미만</option>
+                                    <option value="3000-5000">3천~5천만원</option>
+                                    <option value="5000-1">5천만원~1억</option>
+                                    <option value="1-2">1억~2억</option>
+                                    <option value="2-3">2억~3억</option>
+                                    <option value="over3">3억 이상</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="business">업종 <span class="required">*</span></label>
-                            <select id="business" name="business" required>
-                                <option value="">선택해주세요</option>
-                                <option value="hospital">병원/의원</option>
-                                <option value="dental">치과</option>
-                                <option value="oriental">한의원</option>
-                                <option value="pharmacy">약국</option>
-                                <option value="other">기타 의료</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="region">지역 <span class="required">*</span></label>
+                                <select id="region" name="region" required>
+                                    <option value="">선택해주세요</option>
+                                    <option value="seoul">서울</option>
+                                    <option value="gyeonggi">경기</option>
+                                    <option value="incheon">인천</option>
+                                    <option value="busan">부산</option>
+                                    <option value="daegu">대구</option>
+                                    <option value="daejeon">대전</option>
+                                    <option value="gwangju">광주</option>
+                                    <option value="other">기타 지역</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="product">관심 상품</label>
+                                <select id="product" name="product">
+                                    <option value="">선택해주세요</option>
+                                    <option value="loan">카드매출 담보대출</option>
+                                    <option value="credit">신협 데일리론</option>
+                                    <option value="kb">KB국민카드 특별한도</option>
+                                    <option value="rental">의료장비 렌탈</option>
+                                    <option value="deposit">임차보증금 담보</option>
+                                    <option value="purchase">구매자금</option>
+                                    <option value="consult">모름 (상담 필요)</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="revenue">월 카드매출 <span class="required">*</span></label>
-                            <select id="revenue" name="revenue" required>
-                                <option value="">선택해주세요</option>
-                                <option value="under5000">5천만원 미만</option>
-                                <option value="5000-1">5천만원~1억</option>
-                                <option value="1-2">1억~2억</option>
-                                <option value="2-3">2억~3억</option>
-                                <option value="over3">3억 이상</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="region">지역 <span class="required">*</span></label>
-                            <select id="region" name="region" required>
-                                <option value="">선택해주세요</option>
-                                <option value="seoul">서울</option>
-                                <option value="gyeonggi">경기</option>
-                                <option value="incheon">인천</option>
-                                <option value="busan">부산</option>
-                                <option value="other">기타 지역</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
+                        <div class="form-group full">
                             <label for="message">문의사항</label>
-                            <textarea id="message" name="message" rows="3" placeholder="궁금하신 점이나 원하시는 상품을 적어주세요"></textarea>
+                            <textarea id="message" name="message" rows="3" placeholder="궁금하신 점이나 상황을 간단히 적어주세요"></textarea>
                         </div>
                         <div class="form-agreement">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="agree" name="agree" required>
                                 <span class="checkmark"></span>
                                 <span class="agreement-text">
-                                    <a href="#" class="link">개인정보 수집·이용</a>에 동의합니다
+                                    <a href="#" class="privacy-link">개인정보 수집·이용</a>에 동의합니다 <span class="required">*</span>
                                 </span>
                             </label>
                         </div>
-                        <button type="submit" class="submit-button">
-                            <span>무료 상담 신청하기</span>
+                        <button type="submit" class="submit-btn">
+                            무료 상담 신청하기
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
                         </button>
-                        <p class="form-note">
-                            * 신청 후 24시간 내 전문 상담사가 연락드립니다
-                        </p>
+                        <p class="form-note">* 신청 후 24시간 내 전문 상담사가 연락드립니다</p>
                     </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-badge">CONTACT</span>
+                <h2 class="section-title">오시는 길</h2>
+            </div>
+
+            <div class="contact-content">
+                <div class="contact-map">
+                    <div class="map-placeholder">
+                        <span>🗺️</span>
+                        <p>지도 영역<br>(Google Maps 또는 카카오맵 연동)</p>
+                    </div>
+                </div>
+                <div class="contact-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">📍</div>
+                        <div>
+                            <strong>주소</strong>
+                            <p>서울특별시 강남구 테헤란로 000, 00층</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">📞</div>
+                        <div>
+                            <strong>대표전화</strong>
+                            <p><a href="tel:1600-0000">1600-0000</a></p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">📧</div>
+                        <div>
+                            <strong>이메일</strong>
+                            <p><a href="mailto:contact@mediplaton.co.kr">contact@mediplaton.co.kr</a></p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">🕐</div>
+                        <div>
+                            <strong>운영시간</strong>
+                            <p>평일 09:00 ~ 18:00 (주말/공휴일 휴무)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -906,58 +1627,105 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-top">
+            <div class="footer-main">
                 <div class="footer-brand">
-                    <div class="footer-logo">
-                        <span class="logo-icon">🏥</span>
-                        <span class="logo-text">메디플라톤</span>
+                    <a href="#" class="footer-logo">
+                        <div class="logo-mark light">
+                            <span class="logo-icon">+</span>
+                        </div>
+                        <div class="logo-text">
+                            <span class="logo-main">메디플라톤</span>
+                            <span class="logo-sub">MEDIPLATON</span>
+                        </div>
+                    </a>
+                    <p class="footer-desc">병의원 원장님의 금융 파트너</p>
+                    <div class="footer-certifications">
+                        <span>신협중앙회 정식제휴</span>
+                        <span>금융감독원 등록</span>
                     </div>
-                    <p class="footer-tagline">병의원 원장님의 금융 파트너</p>
                 </div>
-                <div class="footer-contact">
-                    <div class="contact-item">
-                        <strong>상담 전화</strong>
-                        <a href="tel:1600-0000">1600-0000</a>
+
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>회사소개</h4>
+                        <a href="#about">메디플라톤 소개</a>
+                        <a href="#partners">제휴기관</a>
+                        <a href="#contact">오시는 길</a>
                     </div>
-                    <div class="contact-item">
-                        <strong>운영 시간</strong>
-                        <span>평일 09:00 ~ 18:00</span>
+                    <div class="footer-col">
+                        <h4>금융상품</h4>
+                        <a href="#product-loan">카드매출 담보대출</a>
+                        <a href="#product-credit">신협 데일리론</a>
+                        <a href="#product-kb">KB국민카드 특별한도</a>
+                        <a href="#product-rental">의료장비 렌탈</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>고객지원</h4>
+                        <a href="#faq">자주 묻는 질문</a>
+                        <a href="#process">이용 절차</a>
+                        <a href="#news">공지사항</a>
+                        <a href="#consultation">상담 신청</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>고객센터</h4>
+                        <p class="footer-phone">
+                            <a href="tel:1600-0000">1600-0000</a>
+                        </p>
+                        <p class="footer-time">평일 09:00 ~ 18:00</p>
+                        <a href="#consultation" class="footer-cta">무료 상담신청</a>
                     </div>
                 </div>
             </div>
+
             <div class="footer-info">
                 <p>
                     <strong>메디플라톤</strong> | 대표: 홍길동 | 사업자등록번호: 000-00-00000<br>
-                    주소: 서울특별시 강남구 테헤란로 000, 00층
+                    주소: 서울특별시 강남구 테헤란로 000, 00층 | 대표전화: 1600-0000
                 </p>
             </div>
+
             <div class="footer-legal">
                 <p>
-                    ※ 대출 취급 시 귀하의 신용등급이 하락할 수 있습니다.<br>
                     ※ 과도한 대출은 개인신용에 부정적 영향을 미칠 수 있습니다.<br>
+                    ※ 대출 취급 시 귀하의 신용등급이 하락할 수 있습니다.<br>
                     ※ 금융소비자보호법에 따른 금융상품 유의사항을 확인하시기 바랍니다.<br>
                     ※ 대출 조건은 개인 신용도에 따라 달라질 수 있으며, 심사 결과에 따라 대출이 거절될 수 있습니다.
                 </p>
             </div>
+
             <div class="footer-bottom">
                 <p>&copy; 2025 메디플라톤. All rights reserved.</p>
+                <div class="footer-policy">
+                    <a href="#" class="privacy-link">개인정보처리방침</a>
+                    <a href="#">이용약관</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Floating CTA -->
-    <div class="floating-cta" id="floatingCta">
-        <a href="tel:1600-0000" class="floating-button phone-btn">
-            <span class="floating-icon">📞</span>
-            <span class="floating-text">전화 상담</span>
+    <!-- Floating Actions -->
+    <div class="floating-actions" id="floatingActions">
+        <a href="tel:1600-0000" class="float-btn phone">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <span>전화상담</span>
         </a>
-        <a href="#consultation" class="floating-button">
-            <span class="floating-icon">💬</span>
-            <span class="floating-text">무료 상담</span>
+        <a href="#consultation" class="float-btn consult">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>상담신청</span>
         </a>
+        <button class="float-btn top" id="scrollTop">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 15l-6-6-6 6"/>
+            </svg>
+            <span>맨위로</span>
+        </button>
     </div>
 
-    <!-- Privacy Policy Modal -->
+    <!-- Privacy Modal -->
     <div class="modal-overlay" id="privacyModal">
         <div class="modal">
             <div class="modal-header">
@@ -976,7 +1744,7 @@
                 <h4>2. 수집하는 개인정보의 항목</h4>
                 <ul>
                     <li>필수항목: 성함, 연락처, 업종, 월 카드매출, 지역</li>
-                    <li>선택항목: 문의사항</li>
+                    <li>선택항목: 관심상품, 문의사항</li>
                 </ul>
 
                 <h4>3. 개인정보의 보유 및 이용 기간</h4>
@@ -985,10 +1753,7 @@
                 <h4>4. 동의 거부권 및 불이익</h4>
                 <p>귀하는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부하실 경우 상담 서비스 이용이 제한될 수 있습니다.</p>
 
-                <h4>5. 개인정보 처리 위탁</h4>
-                <p>메디플라톤은 원활한 서비스 제공을 위해 필요한 경우 관계 법령에 따라 개인정보 처리업무를 외부에 위탁할 수 있습니다.</p>
-
-                <h4>6. 개인정보 보호책임자</h4>
+                <h4>5. 개인정보 보호책임자</h4>
                 <p>
                     성명: 홍길동<br>
                     연락처: 1600-0000<br>

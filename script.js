@@ -1,166 +1,140 @@
 // ===== DOM Elements =====
-const progressBar = document.getElementById('progressBar');
 const header = document.getElementById('header');
-const floatingCta = document.getElementById('floatingCta');
-const toastContainer = document.getElementById('toastContainer');
-const countdown = document.getElementById('countdown');
-const viewerCount = document.getElementById('viewerCount');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileMenuClose = document.getElementById('mobileMenuClose');
+const floatingActions = document.getElementById('floatingActions');
+const scrollTopBtn = document.getElementById('scrollTop');
 const consultForm = document.getElementById('consultForm');
-
-// ===== Configuration =====
-const CONFIG = {
-    toastInterval: 8000,
-    maxToasts: 3,
-    countdownHours: { min: 2, max: 5 },
-    viewerCount: { min: 8, max: 18 }
-};
-
-// ===== Sample Data =====
-const toastData = [
-    { location: '서울 강남구', type: '정형외과', time: '방금 전' },
-    { location: '경기 성남시', type: '치과', time: '1분 전' },
-    { location: '부산 해운대구', type: '약국', time: '2분 전' },
-    { location: '서울 서초구', type: '내과', time: '3분 전' },
-    { location: '인천 남동구', type: '한의원', time: '4분 전' },
-    { location: '경기 용인시', type: '피부과', time: '5분 전' },
-    { location: '서울 송파구', type: '안과', time: '6분 전' },
-    { location: '경기 고양시', type: '이비인후과', time: '7분 전' },
-    { location: '부산 수영구', type: '산부인과', time: '8분 전' },
-    { location: '서울 마포구', type: '정신건강의학과', time: '9분 전' }
-];
-
-// ===== Progress Bar =====
-function updateProgressBar() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = (scrollTop / docHeight) * 100;
-    progressBar.style.width = `${progress}%`;
-}
+const privacyModal = document.getElementById('privacyModal');
+const successModal = document.getElementById('successModal');
 
 // ===== Header Scroll Effect =====
-function handleHeaderScroll() {
+function handleScroll() {
     if (window.scrollY > 50) {
         header.classList.add('scrolled');
     } else {
         header.classList.remove('scrolled');
     }
-}
 
-// ===== Floating CTA =====
-function handleFloatingCta() {
+    // Floating actions visibility
     if (window.scrollY > 500) {
-        floatingCta.classList.add('visible');
+        floatingActions.classList.add('visible');
     } else {
-        floatingCta.classList.remove('visible');
+        floatingActions.classList.remove('visible');
     }
 }
 
-// ===== Toast Notifications =====
-let toastIndex = 0;
-let activeToasts = 0;
+window.addEventListener('scroll', handleScroll);
 
-function createToast() {
-    if (activeToasts >= CONFIG.maxToasts) return;
-
-    const data = toastData[toastIndex % toastData.length];
-    toastIndex++;
-    activeToasts++;
-
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = `
-        <span class="toast-icon">📋</span>
-        <div class="toast-content">
-            <strong>${data.location}</strong> ${data.type} 원장님이<br>
-            <span>${data.time}</span> 상담 신청하셨습니다
-        </div>
-    `;
-
-    toastContainer.appendChild(toast);
-
-    setTimeout(() => {
-        toast.remove();
-        activeToasts--;
-    }, 5000);
+// ===== Mobile Menu =====
+function openMobileMenu() {
+    mobileMenu.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
-// ===== Countdown Timer =====
-function initCountdown() {
-    const hours = Math.floor(Math.random() * (CONFIG.countdownHours.max - CONFIG.countdownHours.min + 1)) + CONFIG.countdownHours.min;
-    const minutes = Math.floor(Math.random() * 60);
-    const seconds = Math.floor(Math.random() * 60);
-
-    let totalSeconds = hours * 3600 + minutes * 60 + seconds;
-
-    function updateCountdown() {
-        if (totalSeconds <= 0) {
-            totalSeconds = CONFIG.countdownHours.min * 3600;
-        }
-
-        const h = Math.floor(totalSeconds / 3600);
-        const m = Math.floor((totalSeconds % 3600) / 60);
-        const s = totalSeconds % 60;
-
-        countdown.textContent = `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        totalSeconds--;
-    }
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+function closeMobileMenu() {
+    mobileMenu.classList.remove('active');
+    document.body.style.overflow = '';
 }
 
-// ===== Viewer Count =====
-function updateViewerCount() {
-    const base = Math.floor(Math.random() * (CONFIG.viewerCount.max - CONFIG.viewerCount.min + 1)) + CONFIG.viewerCount.min;
-    const variation = Math.floor(Math.random() * 3) - 1;
-    const newCount = Math.max(CONFIG.viewerCount.min, Math.min(CONFIG.viewerCount.max, base + variation));
-    viewerCount.textContent = newCount;
-}
+mobileMenuBtn?.addEventListener('click', openMobileMenu);
+mobileMenuClose?.addEventListener('click', closeMobileMenu);
 
-// ===== Tab Navigation =====
-function initTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabPanels = document.querySelectorAll('.tab-panel');
+// Close mobile menu when clicking links
+mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+});
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetTab = btn.dataset.tab;
+// ===== Scroll to Top =====
+scrollTopBtn?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
-            // Update buttons
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+// ===== Smooth Scroll for Anchor Links =====
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
 
-            // Update panels
-            tabPanels.forEach(panel => {
-                panel.classList.remove('active');
-                if (panel.id === `tab-${targetTab}`) {
-                    panel.classList.add('active');
-                }
+        e.preventDefault();
+        const target = document.querySelector(href);
+
+        if (target) {
+            const headerHeight = header.offsetHeight;
+            const targetPosition = target.offsetTop - headerHeight - 20;
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
             });
-        });
+        }
     });
-}
+});
 
-// ===== FAQ Accordion =====
-function initFaq() {
-    const faqItems = document.querySelectorAll('.faq-item');
+// ===== Product Filter =====
+const filterBtns = document.querySelectorAll('.filter-btn');
+const productCards = document.querySelectorAll('.product-card');
 
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
 
-        question.addEventListener('click', () => {
-            const isActive = item.classList.contains('active');
+        // Update active button
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-            // Close all items
-            faqItems.forEach(i => i.classList.remove('active'));
-
-            // Open clicked item if it wasn't active
-            if (!isActive) {
-                item.classList.add('active');
+        // Filter products
+        productCards.forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+                card.style.display = 'block';
+                card.style.animation = 'fadeIn 0.3s ease';
+            } else {
+                card.style.display = 'none';
             }
         });
     });
-}
+});
+
+// ===== FAQ Accordion =====
+const faqItems = document.querySelectorAll('.faq-item');
+
+faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    question?.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+
+        // Close all items
+        faqItems.forEach(i => i.classList.remove('active'));
+
+        // Open clicked item if it wasn't active
+        if (!isActive) {
+            item.classList.add('active');
+        }
+    });
+});
+
+// ===== FAQ Category Filter =====
+const faqCatBtns = document.querySelectorAll('.faq-cat-btn');
+
+faqCatBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const cat = btn.dataset.cat;
+
+        // Update active button
+        faqCatBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filter FAQ items
+        faqItems.forEach(item => {
+            if (cat === 'all' || item.dataset.cat === cat) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
 
 // ===== Counter Animation =====
 function animateCounters() {
@@ -198,79 +172,58 @@ function animateCounters() {
     counters.forEach(counter => observer.observe(counter));
 }
 
-// ===== Modal Handling =====
-const privacyModal = document.getElementById('privacyModal');
-const successModal = document.getElementById('successModal');
-const closeModalBtn = document.getElementById('closeModal');
-const agreeBtn = document.getElementById('agreeBtn');
-const closeSuccessModalBtn = document.getElementById('closeSuccessModal');
-const privacyLink = document.querySelector('.agreement-text .link');
-const agreeCheckbox = document.getElementById('agree');
-
+// ===== Modal Functions =====
 function openModal(modal) {
-    modal.classList.add('active');
+    modal?.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeModal(modal) {
-    modal.classList.remove('active');
+    modal?.classList.remove('active');
     document.body.style.overflow = '';
 }
 
-function initModals() {
-    // Privacy link click
-    if (privacyLink) {
-        privacyLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            openModal(privacyModal);
-        });
-    }
+// Privacy Modal
+const privacyLinks = document.querySelectorAll('.privacy-link');
+const closeModalBtn = document.getElementById('closeModal');
+const agreeBtn = document.getElementById('agreeBtn');
+const agreeCheckbox = document.getElementById('agree');
 
-    // Close modal buttons
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', () => closeModal(privacyModal));
-    }
-
-    if (closeSuccessModalBtn) {
-        closeSuccessModalBtn.addEventListener('click', () => {
-            closeModal(successModal);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-
-    // Agree button
-    if (agreeBtn) {
-        agreeBtn.addEventListener('click', () => {
-            if (agreeCheckbox) {
-                agreeCheckbox.checked = true;
-            }
-            closeModal(privacyModal);
-        });
-    }
-
-    // Close on overlay click
-    [privacyModal, successModal].forEach(modal => {
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeModal(modal);
-                }
-            });
-        }
+privacyLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(privacyModal);
     });
+});
 
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (privacyModal && privacyModal.classList.contains('active')) {
-                closeModal(privacyModal);
-            }
-            if (successModal && successModal.classList.contains('active')) {
-                closeModal(successModal);
-            }
-        }
+closeModalBtn?.addEventListener('click', () => closeModal(privacyModal));
+agreeBtn?.addEventListener('click', () => {
+    if (agreeCheckbox) agreeCheckbox.checked = true;
+    closeModal(privacyModal);
+});
+
+// Success Modal
+const closeSuccessModalBtn = document.getElementById('closeSuccessModal');
+closeSuccessModalBtn?.addEventListener('click', () => {
+    closeModal(successModal);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Close modals on overlay click
+[privacyModal, successModal].forEach(modal => {
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal(modal);
     });
-}
+});
+
+// Close on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal(privacyModal);
+        closeModal(successModal);
+        closeMobileMenu();
+    }
+});
 
 // ===== Form Handling =====
 function initForm() {
@@ -278,20 +231,18 @@ function initForm() {
 
     // Phone number formatting
     const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 11) value = value.slice(0, 11);
+    phoneInput?.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
 
-            if (value.length > 7) {
-                value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
-            } else if (value.length > 3) {
-                value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
-            }
+        if (value.length > 7) {
+            value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+        } else if (value.length > 3) {
+            value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
+        }
 
-            e.target.value = value;
-        });
-    }
+        e.target.value = value;
+    });
 
     // Form submission
     consultForm.addEventListener('submit', (e) => {
@@ -308,38 +259,32 @@ function initForm() {
             const input = document.getElementById(field);
             if (!data[field]) {
                 isValid = false;
-                if (input) {
-                    input.classList.add('error');
-                    setTimeout(() => input.classList.remove('error'), 3000);
-                }
+                input?.classList.add('error');
+                setTimeout(() => input?.classList.remove('error'), 3000);
             }
         });
 
         // Check agree checkbox
-        if (!document.getElementById('agree').checked) {
+        if (!agreeCheckbox?.checked) {
             isValid = false;
             const agreeLabel = document.querySelector('.checkbox-label');
-            if (agreeLabel) {
-                agreeLabel.style.color = 'var(--danger)';
-                setTimeout(() => agreeLabel.style.color = '', 3000);
-            }
+            agreeLabel.style.color = 'var(--danger)';
+            setTimeout(() => agreeLabel.style.color = '', 3000);
         }
 
         if (!isValid) {
-            // Show error message
-            showToastMessage('필수 항목을 모두 입력해주세요.', 'error');
+            alert('필수 항목을 모두 입력해주세요.');
             return;
         }
 
         // Simulate form submission
-        const submitBtn = consultForm.querySelector('.submit-button');
+        const submitBtn = consultForm.querySelector('.submit-btn');
         const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<span>신청 중...</span>';
+        submitBtn.innerHTML = '신청 중...';
         submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
 
         setTimeout(() => {
-            // Update success modal with submitted info
+            // Update success modal
             const successName = document.getElementById('successName');
             const successPhone = document.getElementById('successPhone');
             if (successName) successName.textContent = `성함: ${data.name}`;
@@ -352,55 +297,14 @@ function initForm() {
             consultForm.reset();
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
         }, 1500);
     });
 }
 
-// Toast message helper
-function showToastMessage(message, type = 'info') {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.style.borderLeftColor = type === 'error' ? 'var(--danger)' : 'var(--accent)';
-    toast.innerHTML = `
-        <span class="toast-icon">${type === 'error' ? '⚠️' : '✅'}</span>
-        <div class="toast-content">${message}</div>
-    `;
-
-    toastContainer.appendChild(toast);
-
-    setTimeout(() => toast.remove(), 5000);
-}
-
-// ===== Smooth Scroll =====
-function initSmoothScroll() {
-    const links = document.querySelectorAll('a[href^="#"]');
-
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            if (href === '#') return;
-
-            e.preventDefault();
-            const target = document.querySelector(href);
-
-            if (target) {
-                const headerHeight = header.offsetHeight;
-                const targetPosition = target.offsetTop - headerHeight;
-
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-}
-
-// ===== Intersection Observer for Animations =====
+// ===== Scroll Animations =====
 function initScrollAnimations() {
     const animatedElements = document.querySelectorAll(
-        '.pain-card, .product-card, .benefit-card, .case-card, .process-step, .qual-card'
+        '.service-card, .product-card, .case-card, .qual-card, .doc-card, .news-card'
     );
 
     const observerOptions = {
@@ -418,51 +322,61 @@ function initScrollAnimations() {
         });
     }, observerOptions);
 
-    animatedElements.forEach(el => {
+    animatedElements.forEach((el, index) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.transition = `opacity 0.5s ease ${index * 0.05}s, transform 0.5s ease ${index * 0.05}s`;
         observer.observe(el);
+    });
+}
+
+// ===== Navigation Dropdown (Desktop) =====
+function initNavDropdowns() {
+    const navItems = document.querySelectorAll('.nav-item');
+
+    navItems.forEach(item => {
+        const dropdown = item.querySelector('.nav-dropdown');
+        if (!dropdown) return;
+
+        item.addEventListener('mouseenter', () => {
+            dropdown.style.opacity = '1';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.transform = 'translateY(0)';
+        });
+
+        item.addEventListener('mouseleave', () => {
+            dropdown.style.opacity = '0';
+            dropdown.style.visibility = 'hidden';
+            dropdown.style.transform = 'translateY(10px)';
+        });
     });
 }
 
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
-    // Scroll handlers
-    window.addEventListener('scroll', () => {
-        updateProgressBar();
-        handleHeaderScroll();
-        handleFloatingCta();
-    });
-
-    // Initialize components
-    initTabs();
-    initFaq();
-    initForm();
-    initModals();
-    initSmoothScroll();
-    initScrollAnimations();
+    handleScroll();
     animateCounters();
-    initCountdown();
-
-    // Start toast notifications after delay
-    setTimeout(() => {
-        createToast();
-        setInterval(createToast, CONFIG.toastInterval);
-    }, 3000);
-
-    // Update viewer count periodically
-    setInterval(updateViewerCount, 10000);
-
-    // Initial calls
-    updateProgressBar();
-    handleHeaderScroll();
+    initForm();
+    initScrollAnimations();
+    initNavDropdowns();
 });
 
-// ===== Service Worker Registration (Optional) =====
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        // Uncomment to enable service worker
-        // navigator.serviceWorker.register('/sw.js');
-    });
-}
+// Add CSS animation keyframe
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .form-group input.error,
+    .form-group select.error {
+        border-color: var(--danger);
+        animation: shake 0.3s ease;
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+`;
+document.head.appendChild(style);

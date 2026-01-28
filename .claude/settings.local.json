@@ -8,7 +8,10 @@
       "WebFetch(domain:blog.naver.com)",
       "Bash(ls:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(vercel --version:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial commit: 메디플라톤 병의원 금융 랜딩페이지\n\n- 반응형 랜딩페이지 구현\n- 신협/KB 정식제휴 금융상품 소개\n- 실시간 상담 알림, 카운트다운 등 인터랙션\n- 개인정보처리방침 모달\n- SEO 메타태그 적용\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(vercel:*)"
     ]
   }
 }
