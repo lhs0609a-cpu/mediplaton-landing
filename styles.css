@@ -613,12 +613,16 @@ small, .text-sm {
 }
 
 .hero-title .highlight strong {
-    color: #1428A0;
+    color: #1428A0 !important;
     font-weight: 800;
+    /* 그라데이션 제거 - 가시성 문제 해결 */
+    /*
+    그라데이션을 원하면 아래 주석 해제:
     background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    */
 }
 
 .hero-subtitle {
