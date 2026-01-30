@@ -2972,6 +2972,10 @@
         </a>
     </div>
 
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
     <script>
         // Calculator
         function updateCalculator() {
@@ -3022,7 +3026,7 @@
             e.target.value = value;
         });
 
-        // Form submission
+        // Form submission with Supabase
         document.getElementById('partnerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -3039,14 +3043,50 @@
             btn.innerHTML = '<span class="loading-spinner"></span> 신청 중...';
             btn.disabled = true;
 
-            // Simulate submission (replace with actual endpoint)
-            setTimeout(() => {
-                console.log('Partner form data:', data);
+            try {
+                // Supabase 연동
+                if (typeof SUPABASE_CONFIG !== 'undefined' && isSupabaseConfigured()) {
+                    const supabaseClient = window.supabase.createClient(
+                        SUPABASE_CONFIG.url,
+                        SUPABASE_CONFIG.anonKey
+                    );
+
+                    const { error } = await supabaseClient
+                        .from('partners')
+                        .insert({
+                            name: data.name,
+                            phone: data.phone,
+                            hospital_name: data.occupation, // 소속/직업을 hospital_name에 저장
+                            business: data.occupation,
+                            revenue: data.expected_leads || null,
+                            message: null,
+                            status: 'new'
+                        });
+
+                    if (error) {
+                        console.error('Supabase error:', error);
+                        throw new Error('데이터 저장 오류');
+                    }
+                } else {
+                    // Supabase 미설정 시 콘솔 출력
+                    console.log('=== 파트너 신청 데이터 (Supabase 연동 필요) ===');
+                    console.log('성함:', data.name);
+                    console.log('연락처:', data.phone);
+                    console.log('소속:', data.occupation);
+                    console.log('예상 월 연결 건수:', data.expected_leads);
+                    console.warn('⚠️ config.js에 Supabase 설정을 완료하세요.');
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+
                 alert('제휴 신청이 완료되었습니다!\n담당자가 24시간 내 연락드리겠습니다.');
                 e.target.reset();
+            } catch (error) {
+                console.error('폼 제출 오류:', error);
+                alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
-            }, 1500);
+            }
         });
 
         // Mobile Sticky CTA visibility

@@ -343,39 +343,33 @@ function initForm() {
         submitBtn.disabled = true;
 
         try {
-            // [P0 FIX] 실제 백엔드 연동
-            // 옵션 1: Google Forms 연동 (GOOGLE_FORM_URL을 실제 URL로 교체)
-            // 옵션 2: 자체 API 엔드포인트 연동
-            // 옵션 3: Zapier/Make Webhook 연동
+            // Supabase 연동
+            if (typeof SUPABASE_CONFIG !== 'undefined' && isSupabaseConfigured()) {
+                const supabaseClient = window.supabase.createClient(
+                    SUPABASE_CONFIG.url,
+                    SUPABASE_CONFIG.anonKey
+                );
 
-            const FORM_ENDPOINT = consultForm.getAttribute('data-endpoint') || null;
-
-            if (FORM_ENDPOINT) {
-                // 실제 엔드포인트가 설정된 경우 데이터 전송
-                const response = await fetch(FORM_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
+                const { error } = await supabaseClient
+                    .from('consultations')
+                    .insert({
                         name: data.name,
                         phone: data.phone,
                         business: data.business,
                         revenue: data.revenue,
                         region: data.region,
-                        product: data.product || '',
-                        message: data.message || '',
-                        timestamp: new Date().toISOString(),
-                        source: window.location.href
-                    })
-                });
+                        product: data.product || null,
+                        message: data.message || null,
+                        status: 'new'
+                    });
 
-                if (!response.ok) {
-                    throw new Error('서버 응답 오류');
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw new Error('데이터 저장 오류');
                 }
             } else {
-                // [개발용] 엔드포인트 미설정 시 콘솔에 데이터 출력
-                console.log('=== 상담 신청 데이터 (백엔드 연동 필요) ===');
+                // Supabase 미설정 시 콘솔 출력
+                console.log('=== 상담 신청 데이터 (Supabase 연동 필요) ===');
                 console.log('성함:', data.name);
                 console.log('연락처:', data.phone);
                 console.log('업종:', data.business);
@@ -383,10 +377,7 @@ function initForm() {
                 console.log('지역:', data.region);
                 console.log('관심 상품:', data.product || '미선택');
                 console.log('문의사항:', data.message || '없음');
-                console.log('신청 시간:', new Date().toLocaleString('ko-KR'));
-                console.warn('⚠️ data-endpoint 속성을 설정하여 실제 백엔드에 연동하세요.');
-
-                // 개발 환경에서는 짧은 딜레이 후 성공 처리
+                console.warn('⚠️ config.js에 Supabase 설정을 완료하세요.');
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
 
