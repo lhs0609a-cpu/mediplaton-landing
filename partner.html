@@ -2,15 +2,18 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>파트너 모집 | 메디플라톤 - 고객 1명 소개로 최대 300만원</title>
-    <meta name="description" content="병의원 금융 파트너 모집. 고객 연결만 해주세요. 수수료 최대 2%, 94% 승인율, 익월 정산. 계약서 없이 바로 시작하세요.">
-    <meta name="keywords" content="병원대출 파트너, 금융 영업, 대출모집인, 부업, 고수익 영업, 병의원 영업">
+    <meta name="description" content="병의원·약국 금융 파트너 모집. 고객 연결만 해주세요. 수수료 최대 2%, 94% 승인율, 익월 정산. 계약서 없이 바로 시작하세요.">
+    <meta name="keywords" content="병원대출 파트너, 약국대출 파트너, 금융 영업, 대출모집인, 부업, 고수익 영업, 병의원·약국 영업">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="고객 1명 소개로 최대 300만원 | 메디플라톤 파트너">
-    <meta property="og:description" content="병의원 금융 연결만 해주세요. 94% 승인율, 익월 수수료 정산. 지금 바로 시작하세요.">
+    <meta property="og:description" content="병의원·약국 금융 연결만 해주세요. 94% 승인율, 익월 수수료 정산. 지금 바로 시작하세요.">
     <meta property="og:url" content="https://mediplaton.co.kr/partner">
 
     <!-- Fonts -->
@@ -25,8 +28,8 @@
     {
         "@context": "https://schema.org",
         "@type": "JobPosting",
-        "title": "병의원 금융 파트너 모집",
-        "description": "병의원 고객 연결로 수수료 수익 창출. 계약서 없이 바로 시작 가능.",
+        "title": "병의원·약국 금융 파트너 모집",
+        "description": "병의원·약국 고객 연결로 수수료 수익 창출. 계약서 없이 바로 시작 가능.",
         "employmentType": "CONTRACTOR",
         "hiringOrganization": {
             "@type": "Organization",
@@ -71,11 +74,35 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
         body {
             font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--gray-900);
             line-height: 1.6;
             background: var(--white);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* iOS 노치 대응 */
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* 스크롤 성능 최적화 */
+        .hero, .problem-section, .target-section, .calculator-section,
+        .commission-section, .why-section, .process-section,
+        .testimonial-section, .faq-section, .cta-section {
+            transform: translateZ(0);
+        }
+
+        /* 터치 스크롤 개선 */
+        .commission-table-wrap,
+        .comparison-wrap {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
         }
 
         .container {
@@ -1283,7 +1310,7 @@
         /* ===== FLOATING CTA ===== */
         .floating-cta {
             position: fixed;
-            bottom: 24px;
+            bottom: calc(24px + env(safe-area-inset-bottom));
             right: 24px;
             z-index: 999;
             display: flex;
@@ -1318,32 +1345,395 @@
             border: 1px solid var(--gray-200);
         }
 
-        /* ===== MOBILE ===== */
+        /* ===== MOBILE STICKY CTA ===== */
+        .mobile-sticky-cta {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            padding: 12px 16px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            gap: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-sticky-cta.visible {
+            transform: translateY(0);
+        }
+
+        .mobile-cta-phone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 14px 16px;
+            background: var(--success);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .mobile-cta-apply {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 20px;
+            background: var(--gradient-gold);
+            color: var(--gray-900);
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .desktop-only {
+            display: flex;
+        }
+
+        /* ===== MOBILE - 768px 이하 ===== */
         @media (max-width: 768px) {
+            /* Container */
+            .container {
+                padding: 0 16px;
+            }
+
+            /* Header */
+            .header-inner {
+                padding: 12px 0;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .header-cta {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            /* Hero */
             .hero {
-                padding: 120px 0 60px;
+                padding: 100px 0 50px;
+            }
+
+            .hero-badge {
+                font-size: 12px;
+                padding: 6px 14px;
+                margin-bottom: 16px;
+            }
+
+            .hero-title {
+                font-size: 28px;
+                margin-bottom: 12px;
+            }
+
+            .hero-subtitle {
+                font-size: 15px;
+                margin-bottom: 28px;
+                line-height: 1.7;
+            }
+
+            .hero-cta {
+                padding: 16px 32px;
+                font-size: 16px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-micro {
+                font-size: 12px;
+                gap: 8px;
+                margin-top: 16px;
             }
 
             .hero-stats {
                 flex-wrap: wrap;
-                gap: 24px;
+                gap: 16px;
+                margin-top: 40px;
+                padding-top: 24px;
             }
 
             .hero-stat {
                 flex: 1 1 45%;
             }
 
+            .hero-stat-value {
+                font-size: 24px;
+            }
+
+            .hero-stat-label {
+                font-size: 12px;
+            }
+
+            .hero-stat.featured {
+                padding: 12px;
+                margin: -12px 0;
+            }
+
+            /* Problem Section */
+            .problem-section {
+                padding: 60px 0;
+            }
+
+            .problem-title {
+                font-size: 24px;
+                margin-bottom: 32px;
+            }
+
+            .problem-grid {
+                gap: 16px;
+                margin-bottom: 40px;
+            }
+
+            .problem-item {
+                padding: 24px 20px;
+            }
+
+            .problem-icon {
+                font-size: 28px;
+                margin-bottom: 12px;
+            }
+
+            .problem-item p {
+                font-size: 14px;
+            }
+
+            .problem-solution {
+                padding: 32px 20px;
+                margin-top: 32px;
+            }
+
+            .solution-title {
+                font-size: 20px;
+            }
+
+            .solution-desc {
+                font-size: 15px;
+            }
+
+            /* Section Common */
+            .section-header {
+                margin-bottom: 40px;
+            }
+
+            .section-badge {
+                font-size: 12px;
+                padding: 5px 12px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .section-desc {
+                font-size: 15px;
+            }
+
+            /* Target Section */
+            .target-section {
+                padding: 60px 0;
+            }
+
+            .target-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .target-card {
+                padding: 20px 16px;
+            }
+
+            .target-icon {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 12px;
+            }
+
+            .target-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .target-card h3 {
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+
+            .target-card p {
+                font-size: 11px;
+            }
+
+            /* Calculator Section */
+            .calculator-section {
+                padding: 60px 0;
+            }
+
+            .calculator-wrap {
+                padding: 32px 20px;
+                border-radius: 16px;
+            }
+
+            .calc-header h2 {
+                font-size: 24px;
+            }
+
+            .calc-header p {
+                font-size: 14px;
+            }
+
             .calc-inputs {
                 grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+
+            .calc-input-group label {
+                font-size: 13px;
+            }
+
+            .calc-input-group select {
+                padding: 14px;
+                font-size: 15px;
+            }
+
+            .calc-result {
+                padding: 24px 16px;
+            }
+
+            .calc-result-label {
+                font-size: 14px;
             }
 
             .calc-result-value {
                 font-size: 40px;
             }
 
+            .calc-result-value span {
+                font-size: 20px;
+            }
+
+            .calc-result-sub {
+                font-size: 12px;
+            }
+
             .calc-result-breakdown {
                 flex-direction: column;
                 gap: 16px;
+            }
+
+            .breakdown-item strong {
+                font-size: 20px;
+            }
+
+            .calc-cta-text {
+                font-size: 13px;
+            }
+
+            /* Commission Section */
+            .commission-section {
+                padding: 60px 0;
+            }
+
+            .commission-table th,
+            .commission-table td {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            .commission-rate {
+                font-size: 18px;
+            }
+
+            .commission-example {
+                font-size: 13px;
+                padding: 4px 8px;
+            }
+
+            .commission-examples {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .example-card {
+                padding: 20px 16px;
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .example-card .input {
+                font-size: 14px;
+            }
+
+            .example-card .output {
+                font-size: 20px;
+            }
+
+            .commission-note {
+                padding: 20px 16px;
+                font-size: 13px;
+            }
+
+            /* Why Section */
+            .why-section {
+                padding: 60px 0;
+            }
+
+            .comparison-table-full th,
+            .comparison-table-full td {
+                padding: 14px 10px;
+                font-size: 13px;
+            }
+
+            .comparison-table-full td.good strong {
+                font-size: 15px;
+            }
+
+            .comparison-table-full small {
+                font-size: 11px;
+            }
+
+            .why-grid {
+                gap: 20px;
+            }
+
+            .why-card {
+                padding: 28px 20px;
+            }
+
+            .why-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 28px;
+                margin-bottom: 16px;
+            }
+
+            .why-card h3 {
+                font-size: 18px;
+            }
+
+            .why-card p {
+                font-size: 14px;
+            }
+
+            /* Process Section */
+            .process-section {
+                padding: 60px 0;
             }
 
             .process-step:not(:last-child)::after {
@@ -1353,18 +1743,377 @@
             .process-steps {
                 flex-direction: column;
                 align-items: center;
+                gap: 24px;
+            }
+
+            .process-step {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+
+            .step-title {
+                font-size: 17px;
+            }
+
+            .step-desc {
+                font-size: 13px;
+            }
+
+            .process-note {
+                margin-top: 40px;
+                padding: 24px 20px;
+            }
+
+            .process-note h4 {
+                font-size: 17px;
+            }
+
+            .process-note p {
+                font-size: 14px;
+            }
+
+            /* Testimonials */
+            .testimonial-section {
+                padding: 60px 0;
+            }
+
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .testimonial-card {
+                padding: 24px 20px;
+            }
+
+            .testimonial-avatar {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+
+            .testimonial-info h4 {
+                font-size: 15px;
+            }
+
+            .testimonial-info span {
+                font-size: 12px;
+            }
+
+            .testimonial-content {
+                font-size: 14px;
+                margin-bottom: 16px;
+            }
+
+            .testimonial-result {
+                padding: 14px 12px;
+            }
+
+            .result-item span {
+                font-size: 11px;
+            }
+
+            .result-item strong {
+                font-size: 16px;
+            }
+
+            /* FAQ Section */
+            .faq-section {
+                padding: 60px 0;
+            }
+
+            .faq-question {
+                padding: 20px 0;
+                font-size: 15px;
+            }
+
+            .faq-answer p {
+                font-size: 14px;
+                padding-bottom: 20px;
+            }
+
+            /* CTA Section */
+            .cta-section {
+                padding: 60px 0;
+            }
+
+            .cta-section h2 {
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+
+            .cta-section p {
+                font-size: 15px;
+                margin-bottom: 32px;
+            }
+
+            .cta-form {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+
+            .form-urgency {
+                padding: 14px 16px;
+                margin-bottom: 20px;
+            }
+
+            .urgency-badge {
+                font-size: 11px;
+            }
+
+            .urgency-text {
+                font-size: 13px;
+            }
+
+            .cta-form h3 {
+                font-size: 20px;
+            }
+
+            .cta-form .form-subtitle {
+                font-size: 13px;
+                margin-bottom: 24px;
             }
 
             .form-row {
                 grid-template-columns: 1fr;
             }
 
-            .cta-form {
-                padding: 32px 24px;
+            .form-group label {
+                font-size: 13px;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 14px;
+                font-size: 15px;
+            }
+
+            .form-agreement {
+                margin: 20px 0;
+            }
+
+            .form-agreement label {
+                font-size: 13px;
+            }
+
+            .submit-btn {
+                padding: 16px;
+                font-size: 16px;
+            }
+
+            .form-benefits {
+                gap: 12px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-benefit {
+                font-size: 12px;
+            }
+
+            .form-guarantee {
+                font-size: 12px;
+                padding: 14px;
+            }
+
+            /* Footer */
+            .footer {
+                padding: 40px 0 30px;
+                padding-bottom: calc(90px + env(safe-area-inset-bottom));
             }
 
             .footer-content {
                 flex-direction: column;
+                gap: 32px;
+            }
+
+            .footer-info h4 {
+                font-size: 16px;
+            }
+
+            .footer-info p {
+                font-size: 13px;
+            }
+
+            .footer-contact a {
+                font-size: 16px;
+            }
+
+            .footer-bottom {
+                font-size: 12px;
+            }
+
+            /* Hide Desktop Floating CTA */
+            .floating-cta.desktop-only {
+                display: none;
+            }
+
+            /* Show Mobile Sticky CTA */
+            .mobile-sticky-cta {
+                display: flex;
+            }
+        }
+
+        /* ===== MOBILE - 480px 이하 (작은 화면) ===== */
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 24px;
+            }
+
+            .hero-subtitle {
+                font-size: 14px;
+            }
+
+            .hero-cta {
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+
+            .hero-stat {
+                flex: 1 1 100%;
+            }
+
+            .hero-stat-value {
+                font-size: 22px;
+            }
+
+            .target-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .target-card {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                text-align: left;
+                padding: 16px;
+            }
+
+            .target-icon {
+                width: 44px;
+                height: 44px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+
+            .target-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .target-card h3 {
+                font-size: 14px;
+                margin-bottom: 2px;
+            }
+
+            .target-card p {
+                font-size: 12px;
+            }
+
+            .calc-result-value {
+                font-size: 32px;
+            }
+
+            .commission-table {
+                font-size: 12px;
+            }
+
+            .commission-table th,
+            .commission-table td {
+                padding: 10px 6px;
+            }
+
+            .commission-rate {
+                font-size: 16px;
+            }
+
+            .comparison-table-full {
+                font-size: 12px;
+            }
+
+            .comparison-table-full th,
+            .comparison-table-full td {
+                padding: 10px 6px;
+            }
+
+            .problem-title {
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .cta-section h2 {
+                font-size: 20px;
+            }
+
+            .cta-form h3 {
+                font-size: 18px;
+            }
+        }
+
+        /* ===== TABLET - 769px ~ 1024px ===== */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .hero-title {
+                font-size: 44px;
+            }
+
+            .target-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .why-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .testimonial-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== 터치 디바이스 최적화 ===== */
+        @media (hover: none) and (pointer: coarse) {
+            .target-card:hover,
+            .why-card:hover {
+                transform: none;
+                box-shadow: var(--shadow);
+            }
+
+            .hero-cta:hover {
+                transform: none;
+            }
+
+            .submit-btn:hover {
+                transform: none;
+            }
+
+            /* 터치 타겟 크기 확보 */
+            .faq-question {
+                min-height: 48px;
+            }
+
+            .form-group input,
+            .form-group select {
+                min-height: 48px;
+            }
+
+            .submit-btn {
+                min-height: 52px;
+            }
+
+            .header-cta {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
             }
         }
 
@@ -1420,7 +2169,7 @@
                     <span class="highlight">통장에 300만원이 찍혔습니다</span>
                 </h1>
                 <p class="hero-subtitle">
-                    병원 아는 분 있으세요? <strong>전화번호 하나</strong>만 주시면<br>
+                    병원이나 약국 아는 분 있으세요? <strong>전화번호 하나</strong>만 주시면<br>
                     상담, 서류, 심사 <strong>전부 저희가 합니다.</strong> 당신은 입금만 확인하세요.
                 </p>
                 <a href="#apply" class="hero-cta pulse">
@@ -1459,13 +2208,13 @@
             <div class="problem-content">
                 <span class="section-badge red">솔직히 말씀드릴게요</span>
                 <h2 class="problem-title">
-                    병원 원장님 알고 있으면서<br>
+                    병원·약국 원장님 알고 있으면서<br>
                     <span class="text-red">왜 돈을 못 벌고 계세요?</span>
                 </h2>
                 <div class="problem-grid">
                     <div class="problem-item">
                         <span class="problem-icon">😤</span>
-                        <p>"영업하면서 병원 수십 곳 다니는데<br><strong>본업 수수료만 받고 끝</strong>"</p>
+                        <p>"영업하면서 병원·약국 수십 곳 다니는데<br><strong>본업 수수료만 받고 끝</strong>"</p>
                     </div>
                     <div class="problem-item">
                         <span class="problem-icon">😩</span>
@@ -1496,7 +2245,7 @@
             <div class="section-header">
                 <span class="section-badge">WHO</span>
                 <h2 class="section-title">이런 분들께 기회입니다</h2>
-                <p class="section-desc">병의원과 연결된 분이라면 누구나 시작할 수 있습니다</p>
+                <p class="section-desc">병의원·약국과 연결된 분이라면 누구나 시작할 수 있습니다</p>
             </div>
 
             <div class="target-grid">
@@ -1507,7 +2256,7 @@
                         </svg>
                     </div>
                     <h3>대출중개모집법인</h3>
-                    <p>병의원 전문 상품 라인업 확대</p>
+                    <p>병의원·약국 전문 상품 라인업 확대</p>
                 </div>
                 <div class="target-card">
                     <div class="target-icon">
@@ -1550,7 +2299,7 @@
                         </svg>
                     </div>
                     <h3>인테리어 업체</h3>
-                    <p>병의원 시공 시 금융 연결</p>
+                    <p>병의원·약국 시공 시 금융 연결</p>
                 </div>
                 <div class="target-card">
                     <div class="target-icon">
@@ -1560,7 +2309,7 @@
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
                     </div>
-                    <h3>병원 컨설턴트</h3>
+                    <h3>병원·약국 컨설턴트</h3>
                     <p>경영 컨설팅 + 금융 원스톱</p>
                 </div>
                 <div class="target-card">
@@ -1570,7 +2319,7 @@
                         </svg>
                     </div>
                     <h3>보험설계사</h3>
-                    <p>의사/병원 고객에 금융 제안</p>
+                    <p>의사/병원·약국 고객에 금융 제안</p>
                 </div>
                 <div class="target-card">
                     <div class="target-icon">
@@ -1580,7 +2329,7 @@
                         </svg>
                     </div>
                     <h3>세무사/회계사</h3>
-                    <p>병의원 고객에 금융 솔루션</p>
+                    <p>병의원·약국 고객에 금융 솔루션</p>
                 </div>
                 <div class="target-card">
                     <div class="target-icon">
@@ -1590,7 +2339,7 @@
                         </svg>
                     </div>
                     <h3>부동산 중개사</h3>
-                    <p>병원 임대차 시 금융 연결</p>
+                    <p>병원·약국 임대차 시 금융 연결</p>
                 </div>
                 <div class="target-card">
                     <div class="target-icon">
@@ -1608,7 +2357,7 @@
                             <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
                         </svg>
                     </div>
-                    <h3>병원 마케팅 대행사</h3>
+                    <h3>병원·약국 마케팅 대행사</h3>
                     <p>마케팅 + 금융 원스톱 제안</p>
                 </div>
                 <div class="target-card">
@@ -1650,7 +2399,7 @@
                         </svg>
                     </div>
                     <h3>의료폐기물 업체</h3>
-                    <p>정기 방문 병의원에 제안</p>
+                    <p>정기 방문 병의원·약국에 제안</p>
                 </div>
                 <div class="target-card">
                     <div class="target-icon">
@@ -1660,7 +2409,7 @@
                         </svg>
                     </div>
                     <h3>기타 영업직</h3>
-                    <p>병의원 인맥이 있다면 누구나</p>
+                    <p>병의원·약국 인맥이 있다면 누구나</p>
                 </div>
             </div>
         </div>
@@ -1672,12 +2421,12 @@
             <div class="calculator-wrap">
                 <div class="calc-header">
                     <h2>🧮 당신의 인맥 = 얼마?</h2>
-                    <p>솔직히 계산해보세요. 아는 병원이 몇 곳이신가요?</p>
+                    <p>솔직히 계산해보세요. 아는 병원·약국이 몇 곳이신가요?</p>
                 </div>
 
                 <div class="calc-inputs">
                     <div class="calc-input-group">
-                        <label>월 연결 가능한 병의원 수</label>
+                        <label>월 연결 가능한 병의원·약국 수</label>
                         <select id="calcCount">
                             <option value="1">월 1곳 (보수적)</option>
                             <option value="2">월 2곳</option>
@@ -1815,7 +2564,7 @@
                         <tr>
                             <td>승인율</td>
                             <td class="bad">60~70%<br><small>일반 심사 기준</small></td>
-                            <td class="good"><strong>94%</strong><br><small>병의원 특화 노하우</small></td>
+                            <td class="good"><strong>94%</strong><br><small>병의원·약국 특화 노하우</small></td>
                         </tr>
                         <tr>
                             <td>수수료 정산</td>
@@ -1849,8 +2598,8 @@
                 </div>
                 <div class="why-card">
                     <div class="why-icon">🎯</div>
-                    <h3>병의원 특화</h3>
-                    <p>일반 대출이 아닙니다. <strong>카드매출 기반, DSR 미반영</strong> 병의원 전용 상품.</p>
+                    <h3>병의원·약국 특화</h3>
+                    <p>일반 대출이 아닙니다. <strong>카드매출 기반, DSR 미반영</strong> 병의원·약국 전용 상품.</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">🔒</div>
@@ -1874,7 +2623,7 @@
                 <div class="process-step">
                     <div class="step-number">1</div>
                     <h3 class="step-title">고객 연결</h3>
-                    <p class="step-desc">병의원 고객 정보 전달</p>
+                    <p class="step-desc">병의원·약국 고객 정보 전달</p>
                 </div>
                 <div class="process-step">
                     <div class="step-number">2</div>
@@ -1895,7 +2644,7 @@
 
             <div class="process-note">
                 <h4>✓ 영업자가 할 일</h4>
-                <p>병의원 고객 연결 (연락처 전달)<br><strong>끝! 상담, 서류, 심사는 저희가 처리합니다</strong></p>
+                <p>병의원·약국 고객 연결 (연락처 전달)<br><strong>끝! 상담, 서류, 심사는 저희가 처리합니다</strong></p>
             </div>
         </div>
     </section>
@@ -1919,7 +2668,7 @@
                         </div>
                     </div>
                     <p class="testimonial-content">
-                        "기존에 거래하던 병원에 <strong>금융 상품을 추가로 제안</strong>하니 반응이 좋았습니다. 본업에 방해 없이 추가 수익을 얻고 있어요. 무엇보다 저는 연결만 하고 나머지는 메디플라톤에서 처리해주니 편합니다."
+                        "기존에 거래하던 병원·약국에 <strong>금융 상품을 추가로 제안</strong>하니 반응이 좋았습니다. 본업에 방해 없이 추가 수익을 얻고 있어요. 무엇보다 저는 연결만 하고 나머지는 메디플라톤에서 처리해주니 편합니다."
                     </p>
                     <div class="testimonial-result">
                         <div class="result-item">
@@ -1973,7 +2722,7 @@
                         </div>
                     </div>
                     <p class="testimonial-content">
-                        "병의원 전문 상품이 없어서 아쉬웠는데, 메디플라톤 제휴 후 <strong>상품 라인업이 확장</strong>되었습니다. DSR 미반영 상품이라 기존 대출이 있는 고객도 추가 대출이 가능해서 좋습니다."
+                        "병의원·약국 전문 상품이 없어서 아쉬웠는데, 메디플라톤 제휴 후 <strong>상품 라인업이 확장</strong>되었습니다. DSR 미반영 상품이라 기존 대출이 있는 고객도 추가 대출이 가능해서 좋습니다."
                     </p>
                     <div class="testimonial-result">
                         <div class="result-item">
@@ -2055,7 +2804,7 @@
                         </svg>
                     </button>
                     <div class="faq-answer">
-                        <p><strong>운영자금이 필요한 병의원, 의료장비 구매/렌탈을 고민하는 원장님, 인테리어 확장을 계획 중인 병의원, 기존 대출로 추가 대출이 어려운 경우(DSR 미반영)</strong> 등 다양한 니즈를 가진 병의원 고객을 연결해 주시면 됩니다.</p>
+                        <p><strong>운영자금이 필요한 병의원·약국, 의료장비 구매/렌탈을 고민하는 원장님, 인테리어 확장을 계획 중인 병의원·약국, 기존 대출로 추가 대출이 어려운 경우(DSR 미반영)</strong> 등 다양한 니즈를 가진 병의원·약국 고객을 연결해 주시면 됩니다.</p>
                     </div>
                 </div>
                 <div class="faq-item">
@@ -2108,12 +2857,12 @@
                         <option value="medical-supplies">의료소모품 영업</option>
                         <option value="car-dealer">자동차 딜러</option>
                         <option value="interior">인테리어 업체</option>
-                        <option value="consultant">병원 컨설턴트</option>
+                        <option value="consultant">병원·약국 컨설턴트</option>
                         <option value="opening-consultant">개원 컨설턴트</option>
                         <option value="insurance">보험설계사</option>
                         <option value="accountant">세무사/회계사</option>
                         <option value="realtor">부동산 중개사</option>
-                        <option value="marketing">병원 마케팅 대행사</option>
+                        <option value="marketing">병원·약국 마케팅 대행사</option>
                         <option value="emr-it">EMR/의료IT 업체</option>
                         <option value="nurse">간호사/의료인</option>
                         <option value="waste">의료폐기물 업체</option>
@@ -2159,7 +2908,7 @@
                 </div>
 
                 <p class="form-guarantee">
-                    ⚠️ <strong>솔직하게 말씀드립니다.</strong> 아는 병원이 한 곳도 없으시면 신청하셔도 의미 없습니다.<br>
+                    ⚠️ <strong>솔직하게 말씀드립니다.</strong> 아는 병원·약국이 한 곳도 없으시면 신청하셔도 의미 없습니다.<br>
                     하지만 <strong>딱 한 곳이라도</strong> 있으시다면? 그 연락처가 매달 입금되는 수익원이 됩니다.
                 </p>
             </form>
@@ -2173,10 +2922,10 @@
                 <div class="footer-info">
                     <h4>메디플라톤</h4>
                     <p>
-                        병의원 전문 금융 서비스<br>
+                        병의원·약국 전문 금융 서비스<br>
                         신협중앙회·KB국민카드 정식 제휴<br><br>
-                        서울특별시 강남구<br>
-                        사업자등록번호: 000-00-00000
+                        서울특별시 서초구 양재동 257-10 4층<br>
+                        사업자등록번호: 451-22-01529
                     </p>
                 </div>
                 <div class="footer-contact">
@@ -2196,8 +2945,8 @@
         </div>
     </footer>
 
-    <!-- Floating CTA -->
-    <div class="floating-cta">
+    <!-- Floating CTA (Desktop) -->
+    <div class="floating-cta desktop-only">
         <a href="tel:010-4772-2717" class="float-btn phone" aria-label="전화 상담">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
@@ -2208,6 +2957,19 @@
                 <path d="M18 15l-6-6-6 6"/>
             </svg>
         </button>
+    </div>
+
+    <!-- Mobile Sticky CTA Bar -->
+    <div class="mobile-sticky-cta" id="mobileCta">
+        <a href="tel:010-4772-2717" class="mobile-cta-phone">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            전화상담
+        </a>
+        <a href="#apply" class="mobile-cta-apply">
+            지금 바로 파트너 신청하기
+        </a>
     </div>
 
     <script>
@@ -2285,6 +3047,48 @@
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }, 1500);
+        });
+
+        // Mobile Sticky CTA visibility
+        const mobileCta = document.getElementById('mobileCta');
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        function updateMobileCta() {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const applySection = document.getElementById('apply');
+            const applySectionTop = applySection ? applySection.offsetTop : documentHeight;
+
+            // Show after scrolling 300px, hide when near the apply section
+            if (scrollY > 300 && scrollY < applySectionTop - windowHeight + 100) {
+                mobileCta.classList.add('visible');
+            } else {
+                mobileCta.classList.remove('visible');
+            }
+
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateMobileCta);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // Initial check
+        updateMobileCta();
+
+        // Smooth scroll for mobile CTA apply button
+        document.querySelector('.mobile-cta-apply')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.getElementById('apply');
+            if (target) {
+                mobileCta.classList.remove('visible');
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     </script>
 </body>

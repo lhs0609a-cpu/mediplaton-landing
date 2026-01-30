@@ -79,7 +79,9 @@ body {
     font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.65;
+    color: #1F2937; /* 명시적 다크 컬러 - fallback */
     color: var(--gray-800);
+    background: #FFFFFF;
     background: var(--white);
     overflow-x: hidden;
     /* Improve text rendering */
@@ -164,11 +166,11 @@ small, .text-sm {
     letter-spacing: 0.01em;
 }
 
-.text-primary { color: var(--primary); }
-.text-accent { color: var(--accent); }
-.text-danger { color: var(--danger); }
-.highlight { color: var(--primary); }
-.highlight-danger { color: var(--danger); }
+.text-primary { color: #1428A0; color: var(--primary); }
+.text-accent { color: #2962FF; color: var(--accent); }
+.text-danger { color: #E53935; color: var(--danger); }
+.highlight { color: #1428A0; color: var(--primary); }
+.highlight-danger { color: #E53935; color: var(--danger); }
 
 /* Muted text - use sparingly */
 .text-muted {
@@ -258,15 +260,19 @@ small, .text-sm {
 }
 
 .badge-gold {
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
-    color: #92400e;
-    border: 1px solid #fcd34d;
+    background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
+    color: #92400e !important; /* 강제 텍스트 색상 */
+    border: 1px solid #fcd34d !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .badge-light {
-    background: var(--white);
-    color: var(--gray-700);
-    border: 1px solid var(--border);
+    background: #FFFFFF !important;
+    color: #374151 !important; /* 강제 텍스트 색상 */
+    border: 1px solid #E8ECF0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 /* ===== Section Styles - Premium ===== */
@@ -581,6 +587,7 @@ small, .text-sm {
 
 .hero-content {
     max-width: 580px;
+    color: #111827 !important; /* 기본 텍스트 색상 강제 */
 }
 
 .hero-badges {
@@ -595,14 +602,20 @@ small, .text-sm {
     font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.03em;
-    color: var(--gray-900);
+    color: #111827 !important; /* 강제 다크 컬러 */
     margin-bottom: 24px;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.hero-title .highlight {
+    color: #1428A0 !important; /* 강제 프라이머리 컬러 */
 }
 
 .hero-title .highlight strong {
-    color: var(--primary);
+    color: #1428A0;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -610,9 +623,11 @@ small, .text-sm {
 
 .hero-subtitle {
     font-size: 20px;
-    color: var(--gray-600);
+    color: #4B5563 !important; /* 강제 그레이 컬러 */
     line-height: 1.75;
     margin-bottom: 20px;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .hero-features {
@@ -648,12 +663,12 @@ small, .text-sm {
     display: block;
     font-size: 18px;
     font-weight: 700;
-    color: var(--gray-900);
+    color: #111827 !important; /* 강제 다크 컬러 */
 }
 
 .feature-text span {
     font-size: 14px;
-    color: var(--gray-500);
+    color: #6B7280 !important; /* 강제 그레이 컬러 */
 }
 
 .hero-actions {
@@ -672,7 +687,7 @@ small, .text-sm {
 
 .hero-trust span {
     font-size: 14px;
-    color: var(--gray-600);
+    color: #4B5563 !important; /* 강제 그레이 컬러 */
     display: flex;
     align-items: center;
     gap: 6px;
@@ -689,6 +704,7 @@ small, .text-sm {
 .hero-partners-label {
     font-size: 13px;
     font-weight: 600;
+    color: #6B7280; /* 명시적 그레이 컬러 */
     color: var(--gray-500);
     white-space: nowrap;
     letter-spacing: 0.02em;
@@ -773,6 +789,7 @@ small, .text-sm {
 .amount-label {
     display: block;
     font-size: 14px;
+    color: #4B5563; /* 명시적 그레이 */
     color: var(--gray-600);
     margin-bottom: 4px;
 }
@@ -780,6 +797,7 @@ small, .text-sm {
 .amount-value {
     font-size: 36px;
     font-weight: 800;
+    color: #1428A0; /* 명시적 프라이머리 */
     color: var(--primary);
     letter-spacing: -0.02em;
 }
@@ -809,12 +827,14 @@ small, .text-sm {
 
 .detail-row span {
     font-size: 14px;
+    color: #4B5563; /* 명시적 그레이 */
     color: var(--gray-600);
 }
 
 .detail-row strong {
     font-size: 14px;
     font-weight: 600;
+    color: #111827; /* 명시적 다크 */
     color: var(--gray-900);
 }
 
@@ -849,11 +869,13 @@ small, .text-sm {
     display: block;
     font-size: 18px;
     font-weight: 700;
+    color: #111827; /* 명시적 다크 */
     color: var(--gray-900);
 }
 
 .mini-stat span {
     font-size: 13px;
+    color: #4B5563; /* 명시적 그레이 */
     color: var(--gray-600);
 }
 
