@@ -254,6 +254,117 @@
             margin-top: 4px;
         }
 
+        .hero-stat.featured {
+            background: rgba(245, 158, 11, 0.2);
+            padding: 16px;
+            border-radius: 12px;
+            margin: -16px 0;
+        }
+
+        .hero-micro {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.9;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== PROBLEM SECTION (PAS) ===== */
+        .problem-section {
+            padding: 100px 0;
+            background: var(--gray-900);
+            color: white;
+        }
+
+        .problem-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-badge.red {
+            background: var(--danger);
+        }
+
+        .problem-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 48px;
+        }
+
+        .text-red {
+            color: #EF4444;
+        }
+
+        .text-gold {
+            color: var(--accent);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .problem-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: left;
+        }
+
+        .problem-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .problem-item p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--gray-300);
+        }
+
+        .problem-item strong {
+            color: white;
+        }
+
+        .problem-solution {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 2px solid var(--accent);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-top: 40px;
+        }
+
+        .solution-intro {
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .solution-title {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .solution-desc {
+            font-size: 18px;
+            color: var(--gray-300);
+            line-height: 1.8;
+        }
+
+        .solution-desc strong {
+            color: var(--accent);
+        }
+
         /* ===== TARGET SECTION ===== */
         .target-section {
             padding: 100px 0;
@@ -980,6 +1091,150 @@
             color: var(--success);
         }
 
+        /* Form Urgency */
+        .form-urgency {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .urgency-badge {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .urgency-text {
+            font-size: 14px;
+            color: var(--gray-700);
+            margin: 0;
+        }
+
+        .form-guarantee {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--gray-600);
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        /* Calculator CTA Text */
+        .calc-cta-text {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 15px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .calc-cta-text strong {
+            color: var(--accent);
+        }
+
+        /* Commission Note */
+        .commission-note {
+            margin-top: 40px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(26, 58, 143, 0.05) 0%, rgba(26, 58, 143, 0.1) 100%);
+            border-radius: var(--radius);
+            text-align: center;
+            font-size: 15px;
+            color: var(--gray-700);
+            line-height: 1.8;
+        }
+
+        .commission-note strong {
+            color: var(--primary);
+        }
+
+        .highlight-row {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .example-card.highlight {
+            border-color: var(--accent);
+            position: relative;
+        }
+
+        .example-label {
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            background: var(--accent);
+            color: var(--gray-900);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Comparison Table Full */
+        .comparison-wrap {
+            margin-bottom: 48px;
+            overflow-x: auto;
+        }
+
+        .comparison-table-full {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .comparison-table-full th,
+        .comparison-table-full td {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .comparison-table-full thead th {
+            background: var(--gray-100);
+            font-weight: 700;
+        }
+
+        .comparison-table-full th.bad {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .comparison-table-full th.good {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .comparison-table-full td.bad {
+            color: var(--gray-500);
+        }
+
+        .comparison-table-full td.good {
+            background: rgba(16, 185, 129, 0.05);
+            color: var(--gray-900);
+        }
+
+        .comparison-table-full td.good strong {
+            color: #059669;
+            font-size: 18px;
+        }
+
+        .comparison-table-full small {
+            display: block;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
         /* ===== FOOTER ===== */
         .footer {
             background: var(--gray-900);
@@ -1155,40 +1410,81 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section - CRO 최적화: 3초 룰, 욕망 자극 -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <div class="hero-badge">🔥 파트너 모집 중</div>
+                <div class="hero-badge">💰 이번 달 신규 파트너 47명 등록</div>
                 <h1 class="hero-title">
-                    고객 1명 소개로<br>
-                    <span class="highlight">최대 300만원</span>
+                    "연락처 하나 건넸을 뿐인데"<br>
+                    <span class="highlight">통장에 300만원이 찍혔습니다</span>
                 </h1>
-                <p class="hero-subtitle">병의원 금융 연결만 해주세요. 나머지는 저희가 합니다.</p>
+                <p class="hero-subtitle">
+                    병원 아는 분 있으세요? <strong>전화번호 하나</strong>만 주시면<br>
+                    상담, 서류, 심사 <strong>전부 저희가 합니다.</strong> 당신은 입금만 확인하세요.
+                </p>
                 <a href="#apply" class="hero-cta pulse">
-                    지금 바로 시작하기
+                    30초 만에 수익 파이프라인 만들기
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                 </a>
+                <p class="hero-micro">✓ 계약서 없음 ✓ 첫 건부터 지급 ✓ 본업 방해 제로</p>
 
                 <div class="hero-stats">
                     <div class="hero-stat">
                         <div class="hero-stat-value">1,247억+</div>
                         <div class="hero-stat-label">누적 실행액</div>
                     </div>
-                    <div class="hero-stat">
+                    <div class="hero-stat featured">
                         <div class="hero-stat-value">94%</div>
-                        <div class="hero-stat-label">승인율</div>
+                        <div class="hero-stat-label">승인율 (업계 평균 62%)</div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-value">익월</div>
-                        <div class="hero-stat-label">수수료 정산</div>
+                        <div class="hero-stat-value">D+30</div>
+                        <div class="hero-stat-label">실행 익월 정산</div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-value">6년+</div>
-                        <div class="hero-stat-label">전문 경력</div>
+                        <div class="hero-stat-value">6년</div>
+                        <div class="hero-stat-label">무사고 운영</div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section - PAS 구조: 고통 증폭 -->
+    <section class="problem-section">
+        <div class="container">
+            <div class="problem-content">
+                <span class="section-badge red">솔직히 말씀드릴게요</span>
+                <h2 class="problem-title">
+                    병원 원장님 알고 있으면서<br>
+                    <span class="text-red">왜 돈을 못 벌고 계세요?</span>
+                </h2>
+                <div class="problem-grid">
+                    <div class="problem-item">
+                        <span class="problem-icon">😤</span>
+                        <p>"영업하면서 병원 수십 곳 다니는데<br><strong>본업 수수료만 받고 끝</strong>"</p>
+                    </div>
+                    <div class="problem-item">
+                        <span class="problem-icon">😩</span>
+                        <p>"원장님이 자금 필요하다고 했는데<br><strong>소개해줄 데가 없어서 그냥 넘어감</strong>"</p>
+                    </div>
+                    <div class="problem-item">
+                        <span class="problem-icon">😰</span>
+                        <p>"부업 해보려 했는데<br><strong>시간 없고 복잡하고 귀찮아서 포기</strong>"</p>
+                    </div>
+                </div>
+                <div class="problem-solution">
+                    <p class="solution-intro">그래서 준비했습니다.</p>
+                    <h3 class="solution-title">
+                        당신의 <span class="text-gold">인맥</span>이 <span class="text-gold">현금</span>이 되는 구조
+                    </h3>
+                    <p class="solution-desc">
+                        연락처 하나 전달 → 저희가 전부 처리 → <strong>익월에 수수료 입금</strong><br>
+                        이게 끝입니다. 진짜로.
+                    </p>
                 </div>
             </div>
         </div>
@@ -1370,31 +1666,31 @@
         </div>
     </section>
 
-    <!-- Calculator Section -->
+    <!-- Calculator Section - ROI 강조 -->
     <section class="calculator-section">
         <div class="container">
             <div class="calculator-wrap">
                 <div class="calc-header">
-                    <h2>💰 내 수익 계산해보기</h2>
-                    <p>월 몇 건 연결하실 수 있나요?</p>
+                    <h2>🧮 당신의 인맥 = 얼마?</h2>
+                    <p>솔직히 계산해보세요. 아는 병원이 몇 곳이신가요?</p>
                 </div>
 
                 <div class="calc-inputs">
                     <div class="calc-input-group">
-                        <label>월 예상 연결 건수</label>
+                        <label>월 연결 가능한 병의원 수</label>
                         <select id="calcCount">
-                            <option value="1">월 1건</option>
-                            <option value="2">월 2건</option>
-                            <option value="3" selected>월 3건</option>
-                            <option value="5">월 5건</option>
-                            <option value="10">월 10건</option>
+                            <option value="1">월 1곳 (보수적)</option>
+                            <option value="2">월 2곳</option>
+                            <option value="3" selected>월 3곳 (평균)</option>
+                            <option value="5">월 5곳</option>
+                            <option value="10">월 10곳 (적극적)</option>
                         </select>
                     </div>
                     <div class="calc-input-group">
-                        <label>평균 대출 금액</label>
+                        <label>예상 평균 대출 금액</label>
                         <select id="calcAmount">
                             <option value="50000000">5천만원</option>
-                            <option value="100000000" selected>1억원</option>
+                            <option value="100000000" selected>1억원 (평균)</option>
                             <option value="150000000">1억 5천만원</option>
                             <option value="200000000">2억원</option>
                             <option value="300000000">3억원</option>
@@ -1403,32 +1699,36 @@
                 </div>
 
                 <div class="calc-result">
-                    <div class="calc-result-label">예상 연간 수수료</div>
+                    <div class="calc-result-label">당신이 1년간 놓치고 있는 돈</div>
                     <div class="calc-result-value" id="calcResult">5,400<span>만원</span></div>
-                    <div class="calc-result-sub">수수료율 1.5% 기준</div>
+                    <div class="calc-result-sub">94% 승인율 × 1.5% 수수료 기준</div>
 
                     <div class="calc-result-breakdown">
                         <div class="breakdown-item">
                             <strong id="calcMonthly">450만원</strong>
-                            <span>월 예상</span>
+                            <span>매달 입금</span>
                         </div>
                         <div class="breakdown-item">
                             <strong id="calcPerCase">150만원</strong>
-                            <span>건당 수수료</span>
+                            <span>연락처 1개 값</span>
                         </div>
                     </div>
+
+                    <p class="calc-cta-text">
+                        지금 이 순간에도 <strong>누군가는 받고 있습니다.</strong>
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Commission Section -->
+    <!-- Commission Section - 앵커링 효과 -->
     <section class="commission-section">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">COMMISSION</span>
-                <h2 class="section-title">수수료 안내</h2>
-                <p class="section-desc">대출 실행 완료 후 익월에 정산됩니다</p>
+                <span class="section-badge">💵 COMMISSION</span>
+                <h2 class="section-title">연락처 하나에 이 돈을<br>놓치고 계셨습니다</h2>
+                <p class="section-desc">실행 완료 → 익월 정산 → 통장 입금. 이게 전부입니다.</p>
             </div>
 
             <div class="commission-table-wrap">
@@ -1437,93 +1737,125 @@
                         <tr>
                             <th>상품</th>
                             <th>수수료율</th>
-                            <th>예시 (1억 실행)</th>
-                            <th>정산 시기</th>
+                            <th>💰 1억 실행 시</th>
+                            <th>정산</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>카드매출 담보대출</strong></td>
+                            <td><strong>카드매출 담보대출</strong><br><small style="color:#6B7280">가장 많이 실행</small></td>
                             <td><span class="commission-rate">1.5%</span></td>
                             <td><span class="commission-example">150만원</span></td>
-                            <td>실행 익월</td>
+                            <td>익월 입금</td>
                         </tr>
                         <tr>
-                            <td><strong>신협 데일리론</strong></td>
+                            <td><strong>신협 데일리론</strong><br><small style="color:#6B7280">초저금리 5.3%~</small></td>
                             <td><span class="commission-rate">1.5%</span></td>
                             <td><span class="commission-example">150만원</span></td>
-                            <td>실행 익월</td>
+                            <td>익월 입금</td>
                         </tr>
-                        <tr>
-                            <td><strong>의료장비 렌탈</strong></td>
+                        <tr class="highlight-row">
+                            <td><strong>의료장비 렌탈</strong><br><small style="color:#F59E0B">⭐ 수수료 최고</small></td>
                             <td><span class="commission-rate">2.0%</span></td>
                             <td><span class="commission-example">200만원</span></td>
-                            <td>계약 익월</td>
+                            <td>익월 입금</td>
                         </tr>
                         <tr>
-                            <td><strong>구매자금 대출</strong></td>
+                            <td><strong>구매자금 대출</strong><br><small style="color:#6B7280">인테리어/장비용</small></td>
                             <td><span class="commission-rate">1.5%</span></td>
                             <td><span class="commission-example">150만원</span></td>
-                            <td>실행 익월</td>
+                            <td>익월 입금</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="commission-examples">
-                <div class="example-card">
-                    <span class="input">2억원 카드매출 담보대출 실행</span>
+                <div class="example-card highlight">
+                    <div class="example-label">실제 사례</div>
+                    <span class="input">2억원 카드매출 담보대출</span>
                     <span class="arrow">→</span>
-                    <span class="output">300만원</span>
+                    <span class="output">300만원 입금</span>
                 </div>
-                <div class="example-card">
-                    <span class="input">3억원 의료장비 렌탈 계약</span>
+                <div class="example-card highlight">
+                    <div class="example-label">실제 사례</div>
+                    <span class="input">3억원 의료장비 렌탈</span>
                     <span class="arrow">→</span>
-                    <span class="output">600만원</span>
+                    <span class="output">600만원 입금</span>
                 </div>
             </div>
+
+            <p class="commission-note">
+                ※ 여기서 끝이 아닙니다. 한 번 연결한 고객이 <strong>추가 대출, 장비 렌탈</strong>을 하면?<br>
+                <strong>그때도 수수료가 나옵니다.</strong> 인맥이 자산이 되는 구조입니다.
+            </p>
         </div>
     </section>
 
-    <!-- Why Section -->
+    <!-- Why Section - 비교 우위 강조 -->
     <section class="why-section">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">WHY US</span>
-                <h2 class="section-title">왜 메디플라톤인가요?</h2>
-                <p class="section-desc">6년 노하우로 검증된 파트너십</p>
+                <span class="section-badge">🆚 COMPARISON</span>
+                <h2 class="section-title">"다른 데서 해봤는데 안 됐어요"<br>그거 아마 여기 때문입니다</h2>
+                <p class="section-desc">같은 고객을 연결해도 결과가 다른 이유</p>
+            </div>
+
+            <!-- 비교표 -->
+            <div class="comparison-wrap">
+                <table class="comparison-table-full">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="bad">일반 대출중개</th>
+                            <th class="good">메디플라톤</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>승인율</td>
+                            <td class="bad">60~70%<br><small>일반 심사 기준</small></td>
+                            <td class="good"><strong>94%</strong><br><small>병의원 특화 노하우</small></td>
+                        </tr>
+                        <tr>
+                            <td>수수료 정산</td>
+                            <td class="bad">2~3개월 후<br><small>또는 불투명</small></td>
+                            <td class="good"><strong>익월 정산</strong><br><small>입금 확인 가능</small></td>
+                        </tr>
+                        <tr>
+                            <td>영업자 업무량</td>
+                            <td class="bad">상담+서류+follow-up<br><small>본업에 지장</small></td>
+                            <td class="good"><strong>연락처만 전달</strong><br><small>나머지 100% 대행</small></td>
+                        </tr>
+                        <tr>
+                            <td>최소 실적</td>
+                            <td class="bad">월 N건 이상 필수<br><small>못 채우면 수수료 삭감</small></td>
+                            <td class="good"><strong>조건 없음</strong><br><small>첫 건부터 지급</small></td>
+                        </tr>
+                        <tr>
+                            <td>시작 절차</td>
+                            <td class="bad">계약서, 교육, 심사<br><small>2~4주 소요</small></td>
+                            <td class="good"><strong>계약서 없이 즉시</strong><br><small>전화 한 통으로 시작</small></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <div class="why-grid">
                 <div class="why-card">
-                    <div class="why-icon">📈</div>
-                    <h3>94% 승인율</h3>
-                    <p>6년간 축적된 노하우로 <span class="why-highlight">업계 최고 수준의 승인율</span>을 달성합니다. 연결해주신 고객이 승인될 확률이 높습니다.</p>
-                </div>
-                <div class="why-card">
-                    <div class="why-icon">⚡</div>
-                    <h3>익월 정산</h3>
-                    <p>대출 실행 완료 후 <span class="why-highlight">익월에 수수료를 정산</span>해 드립니다. 빠른 수익 실현이 가능합니다.</p>
-                </div>
-                <div class="why-card">
-                    <div class="why-icon">🤝</div>
-                    <h3>전담 지원</h3>
-                    <p>고객 연결만 해주시면 <span class="why-highlight">상담부터 실행까지 저희가 전담</span> 처리합니다. 영업에만 집중하세요.</p>
-                </div>
-                <div class="why-card">
                     <div class="why-icon">🏦</div>
-                    <h3>정식 제휴</h3>
-                    <p><span class="why-highlight">신협중앙회, KB국민카드</span> 등 유수 금융기관과 정식 제휴한 안정적인 파트너입니다.</p>
-                </div>
-                <div class="why-card">
-                    <div class="why-icon">📝</div>
-                    <h3>계약서 불필요</h3>
-                    <p><span class="why-highlight">별도 계약서 없이 바로 시작</span> 가능합니다. 부담 없이 시작하세요.</p>
+                    <h3>정식 제휴 금융사</h3>
+                    <p><strong>신협중앙회, KB국민카드</strong> 등 정식 제휴. 사기 아닙니다. 6년간 1,247억 실행.</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">🎯</div>
-                    <h3>첫 건부터 지급</h3>
-                    <p>최소 실적 조건 없이 <span class="why-highlight">첫 건부터 수수료 지급</span>됩니다. 바로 수익을 시작하세요.</p>
+                    <h3>병의원 특화</h3>
+                    <p>일반 대출이 아닙니다. <strong>카드매출 기반, DSR 미반영</strong> 병의원 전용 상품.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🔒</div>
+                    <h3>리스크 제로</h3>
+                    <p>계약서 없음, 위약금 없음, 초기비용 없음. <strong>안 되면 그냥 안 하시면 됩니다.</strong></p>
                 </div>
             </div>
         </div>
@@ -1741,15 +2073,19 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- CTA Section - 긴급성 + 손실 회피 -->
     <section class="cta-section" id="apply">
         <div class="container">
-            <h2>지금 바로 시작하세요</h2>
-            <p>계약서 없이 바로 시작, 첫 건부터 수수료 지급</p>
+            <h2>여기까지 읽으셨으면<br>이미 마음은 정해지셨죠?</h2>
+            <p>고민하는 사이에 <strong>다른 사람이 당신의 인맥으로 돈 벌고 있습니다.</strong></p>
 
             <form class="cta-form" id="partnerForm">
-                <h3>파트너 제휴 신청</h3>
-                <p class="form-subtitle">담당자가 24시간 내 연락드립니다</p>
+                <div class="form-urgency">
+                    <span class="urgency-badge">🔥 이번 달 신규 등록 47명</span>
+                    <p class="urgency-text">오늘 신청하시면 <strong>내일 바로 영업 시작</strong> 가능합니다</p>
+                </div>
+                <h3>30초 만에 수익 파이프라인 만들기</h3>
+                <p class="form-subtitle">신청 후 담당자가 1시간 내 연락드립니다 (업무시간 기준)</p>
 
                 <div class="form-row">
                     <div class="form-group">
@@ -1803,22 +2139,29 @@
                     </label>
                 </div>
 
-                <button type="submit" class="submit-btn">제휴 신청하기</button>
+                <button type="submit" class="submit-btn">
+                    💰 지금 바로 수익 파이프라인 연결하기
+                </button>
 
                 <div class="form-benefits">
                     <span class="form-benefit">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 12l2 2 4-4"/></svg>
-                        계약서 불필요
+                        계약서 없이 시작
                     </span>
                     <span class="form-benefit">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 12l2 2 4-4"/></svg>
-                        첫 건부터 수수료
+                        첫 건부터 지급
                     </span>
                     <span class="form-benefit">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 12l2 2 4-4"/></svg>
-                        익월 정산
+                        안 되면 그만 (리스크 0)
                     </span>
                 </div>
+
+                <p class="form-guarantee">
+                    ⚠️ <strong>솔직하게 말씀드립니다.</strong> 아는 병원이 한 곳도 없으시면 신청하셔도 의미 없습니다.<br>
+                    하지만 <strong>딱 한 곳이라도</strong> 있으시다면? 그 연락처가 매달 입금되는 수익원이 됩니다.
+                </p>
             </form>
         </div>
     </section>
