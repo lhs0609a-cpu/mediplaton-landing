@@ -458,6 +458,31 @@ small, .text-sm {
     background: var(--gray-50);
 }
 
+/* 파트너 모집 링크 강조 스타일 */
+.nav-item.highlight .nav-link.partner-link {
+    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+    color: var(--gray-900);
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.nav-item.highlight .nav-link.partner-link:hover {
+    background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.mobile-nav-group.partner-highlight .partner-link {
+    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+    color: var(--gray-900) !important;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: center;
+    margin-top: 8px;
+}
+
 .nav-dropdown {
     position: absolute;
     top: 100%;

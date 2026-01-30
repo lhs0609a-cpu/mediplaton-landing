@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파트너 모집 | 메디플라톤 - 고객 1명 소개로 최대 300만원</title>
+    <meta name="description" content="병의원 금융 파트너 모집. 고객 연결만 해주세요. 수수료 최대 2%, 94% 승인율, 익월 정산. 계약서 없이 바로 시작하세요.">
+    <meta name="keywords" content="병원대출 파트너, 금융 영업, 대출모집인, 부업, 고수익 영업, 병의원 영업">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="고객 1명 소개로 최대 300만원 | 메디플라톤 파트너">
+    <meta property="og:description" content="병의원 금융 연결만 해주세요. 94% 승인율, 익월 수수료 정산. 지금 바로 시작하세요.">
+    <meta property="og:url" content="https://mediplaton.co.kr/partner">
+
+    <!-- Fonts -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" as="style">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1A3A8F">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        "title": "병의원 금융 파트너 모집",
+        "description": "병의원 고객 연결로 수수료 수익 창출. 계약서 없이 바로 시작 가능.",
+        "employmentType": "CONTRACTOR",
+        "hiringOrganization": {
+            "@type": "Organization",
+            "name": "메디플라톤"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #1A3A8F;
+            --primary-dark: #0F2557;
+            --primary-light: #2E5BC5;
+            --accent: #F59E0B;
+            --accent-dark: #D97706;
+            --success: #10B981;
+            --danger: #EF4444;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --gradient-primary: linear-gradient(135deg, #1A3A8F 0%, #2E5BC5 100%);
+            --gradient-gold: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 40px -10px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-900);
+            line-height: 1.6;
+            background: var(--white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--gray-500);
+            letter-spacing: 1px;
+        }
+
+        .header-cta {
+            background: var(--gradient-gold);
+            color: var(--gray-900);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .header-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 140px 0 80px;
+            background: var(--gradient-primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .hero-title .highlight {
+            color: var(--accent);
+            display: block;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--gradient-gold);
+            color: var(--gray-900);
+            padding: 20px 48px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.5);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* ===== TARGET SECTION ===== */
+        .target-section {
+            padding: 100px 0;
+            background: var(--gray-50);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            color: var(--gray-600);
+        }
+
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .target-card {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .target-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .target-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .target-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: white;
+        }
+
+        .target-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--gray-900);
+        }
+
+        .target-card p {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        /* ===== CALCULATOR SECTION ===== */
+        .calculator-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .calculator-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            color: white;
+        }
+
+        .calc-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .calc-header h2 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .calc-header p {
+            opacity: 0.9;
+        }
+
+        .calc-inputs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .calc-input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .calc-input-group select {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .calc-input-group select option {
+            color: var(--gray-900);
+        }
+
+        .calc-result {
+            background: rgba(255,255,255,0.15);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+        }
+
+        .calc-result-label {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .calc-result-value {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .calc-result-value span {
+            font-size: 24px;
+        }
+
+        .calc-result-sub {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 12px;
+        }
+
+        .calc-result-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .breakdown-item {
+            text-align: center;
+        }
+
+        .breakdown-item strong {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .breakdown-item span {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        /* ===== COMMISSION TABLE ===== */
+        .commission-section {
+            padding: 100px 0;
+            background: var(--gray-50);
+        }
+
+        .commission-table-wrap {
+            overflow-x: auto;
+        }
+
+        .commission-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .commission-table th,
+        .commission-table td {
+            padding: 20px 24px;
+            text-align: left;
+        }
+
+        .commission-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .commission-table th {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .commission-table tbody tr {
+            border-bottom: 1px solid var(--gray-100);
+            transition: background 0.2s;
+        }
+
+        .commission-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .commission-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .commission-table td {
+            font-size: 15px;
+            color: var(--gray-700);
+        }
+
+        .commission-rate {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .commission-example {
+            background: var(--accent);
+            color: var(--gray-900);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .commission-examples {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .example-card {
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .example-card .arrow {
+            font-size: 24px;
+            color: var(--accent);
+        }
+
+        .example-card .input {
+            color: var(--gray-600);
+        }
+
+        .example-card .output {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* ===== WHY US SECTION ===== */
+        .why-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .why-card {
+            text-align: center;
+            padding: 40px 32px;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--gray-100);
+            transition: all 0.3s;
+        }
+
+        .why-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .why-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+        }
+
+        .why-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--gray-900);
+        }
+
+        .why-card p {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .why-highlight {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ===== PROCESS SECTION ===== */
+        .process-section {
+            padding: 100px 0;
+            background: var(--gray-900);
+            color: white;
+        }
+
+        .process-section .section-badge {
+            background: var(--accent);
+            color: var(--gray-900);
+        }
+
+        .process-section .section-title {
+            color: white;
+        }
+
+        .process-section .section-desc {
+            color: var(--gray-400);
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .process-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 40px;
+            font-size: 24px;
+            color: var(--accent);
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        .process-note {
+            margin-top: 60px;
+            text-align: center;
+            padding: 32px;
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .process-note h4 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+
+        .process-note p {
+            color: var(--gray-300);
+            font-size: 16px;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonial-section {
+            padding: 100px 0;
+            background: var(--gray-50);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .testimonial-info h4 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .testimonial-info span {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .testimonial-content {
+            font-size: 15px;
+            color: var(--gray-700);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-result {
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .result-item {
+            text-align: center;
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+
+        .result-item strong {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* ===== FAQ ===== */
+        .faq-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .faq-question svg {
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+
+        .faq-item.active .faq-question svg {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            padding-bottom: 24px;
+            color: var(--gray-600);
+            line-height: 1.8;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            padding: 100px 0;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 48px;
+        }
+
+        .cta-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            color: var(--gray-900);
+        }
+
+        .cta-form h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .cta-form .form-subtitle {
+            text-align: center;
+            color: var(--gray-500);
+            margin-bottom: 32px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gray-700);
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-agreement {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 24px 0;
+        }
+
+        .form-agreement input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .form-agreement label {
+            font-size: 14px;
+            color: var(--gray-600);
+            cursor: pointer;
+        }
+
+        .form-agreement a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient-gold);
+            color: var(--gray-900);
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+        }
+
+        .form-benefits {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .form-benefit {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+
+        .form-benefit svg {
+            color: var(--success);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--gray-900);
+            color: var(--gray-400);
+            padding: 60px 0 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-info h4 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .footer-info p {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .footer-contact a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--gray-800);
+            padding-top: 24px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* ===== FLOATING CTA ===== */
+        .floating-cta {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .float-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.2s;
+        }
+
+        .float-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .float-btn.phone {
+            background: var(--success);
+            color: white;
+        }
+
+        .float-btn.top {
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 0 60px;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 24px;
+            }
+
+            .hero-stat {
+                flex: 1 1 45%;
+            }
+
+            .calc-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .calc-result-value {
+                font-size: 40px;
+            }
+
+            .calc-result-breakdown {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .process-step:not(:last-child)::after {
+                display: none;
+            }
+
+            .process-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-form {
+                padding: 32px 24px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--gray-900);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">+</div>
+                    <div class="logo-text">
+                        메디플라톤
+                        <span>PARTNER</span>
+                    </div>
+                </a>
+                <a href="#apply" class="header-cta">파트너 신청하기</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">🔥 파트너 모집 중</div>
+                <h1 class="hero-title">
+                    고객 1명 소개로<br>
+                    <span class="highlight">최대 300만원</span>
+                </h1>
+                <p class="hero-subtitle">병의원 금융 연결만 해주세요. 나머지는 저희가 합니다.</p>
+                <a href="#apply" class="hero-cta pulse">
+                    지금 바로 시작하기
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">1,247억+</div>
+                        <div class="hero-stat-label">누적 실행액</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">94%</div>
+                        <div class="hero-stat-label">승인율</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">익월</div>
+                        <div class="hero-stat-label">수수료 정산</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">6년+</div>
+                        <div class="hero-stat-label">전문 경력</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Section -->
+    <section class="target-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">WHO</span>
+                <h2 class="section-title">이런 분들께 기회입니다</h2>
+                <p class="section-desc">병의원과 연결된 분이라면 누구나 시작할 수 있습니다</p>
+            </div>
+
+            <div class="target-grid">
+                <div class="target-card">
+                    <div class="target-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3>대출중개모집법인</h3>
+                    <p>병의원 전문 상품 라인업 확대</p>
+                </div>
+                <div class="target-card">
+                    <div class="target-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="10" rx="2"/>
+                            <circle cx="12" cy="5" r="2"/>
+                            <path d="M12 7v4"/>
+                        </svg>
+                    </div>
+                    <h3>제약사 영업사원</h3>
+                    <p>기존 거래처에 추가 수익원</p>
+                </div>
+                <div class="target-card">
+                    <div class="target-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6M16 13H8M16 17H8"/>
+                        </svg>
+                    </div>
+                    <h3>의료기기 영업</h3>
+                    <p>장비 제안과 함께 금융 연결</p>
+                </div>
+                <div class="target-card">
+                    <div class="target-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="3" width="15" height="13"/>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                            <circle cx="5.5" cy="18.5" r="2.5"/>
+                            <circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                    </div>
+                    <h3>자동차 딜러</h3>
+                    <p>의사 고객 네트워크 활용</p>
+                </div>
+                <div class="target-card">
+                    <div class="target-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                    </div>
+                    <h3>인테리어 업체</h3>
+                    <p>병의원 시공 시 금융 연결</p>
+                </div>
+                <div class="target-card">
+                    <div class="target-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>병원 컨설턴트</h3>
+                    <p>경영 컨설팅 + 금융 원스톱</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-wrap">
+                <div class="calc-header">
+                    <h2>💰 내 수익 계산해보기</h2>
+                    <p>월 몇 건 연결하실 수 있나요?</p>
+                </div>
+
+                <div class="calc-inputs">
+                    <div class="calc-input-group">
+                        <label>월 예상 연결 건수</label>
+                        <select id="calcCount">
+                            <option value="1">월 1건</option>
+                            <option value="2">월 2건</option>
+                            <option value="3" selected>월 3건</option>
+                            <option value="5">월 5건</option>
+                            <option value="10">월 10건</option>
+                        </select>
+                    </div>
+                    <div class="calc-input-group">
+                        <label>평균 대출 금액</label>
+                        <select id="calcAmount">
+                            <option value="50000000">5천만원</option>
+                            <option value="100000000" selected>1억원</option>
+                            <option value="150000000">1억 5천만원</option>
+                            <option value="200000000">2억원</option>
+                            <option value="300000000">3억원</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-result">
+                    <div class="calc-result-label">예상 연간 수수료</div>
+                    <div class="calc-result-value" id="calcResult">5,400<span>만원</span></div>
+                    <div class="calc-result-sub">수수료율 1.5% 기준</div>
+
+                    <div class="calc-result-breakdown">
+                        <div class="breakdown-item">
+                            <strong id="calcMonthly">450만원</strong>
+                            <span>월 예상</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <strong id="calcPerCase">150만원</strong>
+                            <span>건당 수수료</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Commission Section -->
+    <section class="commission-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">COMMISSION</span>
+                <h2 class="section-title">수수료 안내</h2>
+                <p class="section-desc">대출 실행 완료 후 익월에 정산됩니다</p>
+            </div>
+
+            <div class="commission-table-wrap">
+                <table class="commission-table">
+                    <thead>
+                        <tr>
+                            <th>상품</th>
+                            <th>수수료율</th>
+                            <th>예시 (1억 실행)</th>
+                            <th>정산 시기</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>카드매출 담보대출</strong></td>
+                            <td><span class="commission-rate">1.5%</span></td>
+                            <td><span class="commission-example">150만원</span></td>
+                            <td>실행 익월</td>
+                        </tr>
+                        <tr>
+                            <td><strong>신협 데일리론</strong></td>
+                            <td><span class="commission-rate">1.5%</span></td>
+                            <td><span class="commission-example">150만원</span></td>
+                            <td>실행 익월</td>
+                        </tr>
+                        <tr>
+                            <td><strong>의료장비 렌탈</strong></td>
+                            <td><span class="commission-rate">2.0%</span></td>
+                            <td><span class="commission-example">200만원</span></td>
+                            <td>계약 익월</td>
+                        </tr>
+                        <tr>
+                            <td><strong>구매자금 대출</strong></td>
+                            <td><span class="commission-rate">1.5%</span></td>
+                            <td><span class="commission-example">150만원</span></td>
+                            <td>실행 익월</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="commission-examples">
+                <div class="example-card">
+                    <span class="input">2억원 카드매출 담보대출 실행</span>
+                    <span class="arrow">→</span>
+                    <span class="output">300만원</span>
+                </div>
+                <div class="example-card">
+                    <span class="input">3억원 의료장비 렌탈 계약</span>
+                    <span class="arrow">→</span>
+                    <span class="output">600만원</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Section -->
+    <section class="why-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">WHY US</span>
+                <h2 class="section-title">왜 메디플라톤인가요?</h2>
+                <p class="section-desc">6년 노하우로 검증된 파트너십</p>
+            </div>
+
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon">📈</div>
+                    <h3>94% 승인율</h3>
+                    <p>6년간 축적된 노하우로 <span class="why-highlight">업계 최고 수준의 승인율</span>을 달성합니다. 연결해주신 고객이 승인될 확률이 높습니다.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">⚡</div>
+                    <h3>익월 정산</h3>
+                    <p>대출 실행 완료 후 <span class="why-highlight">익월에 수수료를 정산</span>해 드립니다. 빠른 수익 실현이 가능합니다.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🤝</div>
+                    <h3>전담 지원</h3>
+                    <p>고객 연결만 해주시면 <span class="why-highlight">상담부터 실행까지 저희가 전담</span> 처리합니다. 영업에만 집중하세요.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🏦</div>
+                    <h3>정식 제휴</h3>
+                    <p><span class="why-highlight">신협중앙회, KB국민카드</span> 등 유수 금융기관과 정식 제휴한 안정적인 파트너입니다.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">📝</div>
+                    <h3>계약서 불필요</h3>
+                    <p><span class="why-highlight">별도 계약서 없이 바로 시작</span> 가능합니다. 부담 없이 시작하세요.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🎯</div>
+                    <h3>첫 건부터 지급</h3>
+                    <p>최소 실적 조건 없이 <span class="why-highlight">첫 건부터 수수료 지급</span>됩니다. 바로 수익을 시작하세요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">PROCESS</span>
+                <h2 class="section-title">이렇게 진행됩니다</h2>
+                <p class="section-desc">고객 연결만 해주시면 됩니다</p>
+            </div>
+
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">고객 연결</h3>
+                    <p class="step-desc">병의원 고객 정보 전달</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">상담 진행</h3>
+                    <p class="step-desc">저희가 직접 상담</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">대출 실행</h3>
+                    <p class="step-desc">심사 후 입금</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">수수료 정산</h3>
+                    <p class="step-desc">익월 지급</p>
+                </div>
+            </div>
+
+            <div class="process-note">
+                <h4>✓ 영업자가 할 일</h4>
+                <p>병의원 고객 연결 (연락처 전달)<br><strong>끝! 상담, 서류, 심사는 저희가 처리합니다</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonial-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">PARTNER STORY</span>
+                <h2 class="section-title">파트너 후기</h2>
+                <p class="section-desc">함께 성장하고 있는 파트너들의 이야기</p>
+            </div>
+
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">김</div>
+                        <div class="testimonial-info">
+                            <h4>김OO 파트너님</h4>
+                            <span>제약회사 영업 | 제휴 8개월</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-content">
+                        "기존에 거래하던 병원에 <strong>금융 상품을 추가로 제안</strong>하니 반응이 좋았습니다. 본업에 방해 없이 추가 수익을 얻고 있어요. 무엇보다 저는 연결만 하고 나머지는 메디플라톤에서 처리해주니 편합니다."
+                    </p>
+                    <div class="testimonial-result">
+                        <div class="result-item">
+                            <span>월 평균 연결</span>
+                            <strong>4건</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>월 평균 수익</span>
+                            <strong>480만원</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>누적 수익</span>
+                            <strong>3,840만원</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">박</div>
+                        <div class="testimonial-info">
+                            <h4>박OO 파트너님</h4>
+                            <span>의료기기 영업 | 제휴 1년 2개월</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-content">
+                        "의료장비 판매할 때 <strong>렌탈 금융을 함께 제안</strong>하니 클로징률이 높아졌습니다. 장비 수수료에 금융 수수료까지, 일석이조입니다. 승인율이 높아서 고객한테 자신있게 권할 수 있어요."
+                    </p>
+                    <div class="testimonial-result">
+                        <div class="result-item">
+                            <span>월 평균 연결</span>
+                            <strong>2건</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>월 평균 수익</span>
+                            <strong>320만원</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>누적 수익</span>
+                            <strong>4,480만원</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">이</div>
+                        <div class="testimonial-info">
+                            <h4>이OO 파트너님</h4>
+                            <span>대출중개법인 | 제휴 6개월</span>
+                        </div>
+                    </div>
+                    <p class="testimonial-content">
+                        "병의원 전문 상품이 없어서 아쉬웠는데, 메디플라톤 제휴 후 <strong>상품 라인업이 확장</strong>되었습니다. DSR 미반영 상품이라 기존 대출이 있는 고객도 추가 대출이 가능해서 좋습니다."
+                    </p>
+                    <div class="testimonial-result">
+                        <div class="result-item">
+                            <span>월 평균 연결</span>
+                            <strong>8건</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>월 평균 수익</span>
+                            <strong>960만원</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>누적 수익</span>
+                            <strong>5,760만원</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">FAQ</span>
+                <h2 class="section-title">자주 묻는 질문</h2>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>계약서나 별도 서류가 필요한가요?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>아니요, <strong>별도 계약서 없이 바로 시작</strong>할 수 있습니다. 제휴 신청 후 조건 협의가 완료되면 즉시 영업을 시작하실 수 있습니다.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>최소 실적 조건이 있나요?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>없습니다. <strong>첫 건부터 수수료가 지급</strong>됩니다. 월 최소 연결 건수 등의 조건 없이 자유롭게 활동하실 수 있습니다.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>수수료는 언제 지급되나요?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>대출이 실행되면 <strong>익월에 수수료가 정산</strong>됩니다. 예를 들어 1월에 실행된 건은 2월에 수수료가 지급됩니다.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>제가 직접 상담을 해야 하나요?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>아니요, <strong>고객 연결(연락처 전달)만 해주시면 됩니다</strong>. 상담, 서류 접수, 심사, 입금까지 모든 과정은 저희 전담팀이 처리합니다.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>어떤 고객을 연결하면 되나요?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>운영자금이 필요한 병의원, 의료장비 구매/렌탈을 고민하는 원장님, 인테리어 확장을 계획 중인 병의원, 기존 대출로 추가 대출이 어려운 경우(DSR 미반영)</strong> 등 다양한 니즈를 가진 병의원 고객을 연결해 주시면 됩니다.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>승인율은 어느 정도인가요?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>6년간 축적된 노하우로 <strong>94%의 승인율</strong>을 달성하고 있습니다. 연결해주신 고객이 승인될 확률이 매우 높습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="apply">
+        <div class="container">
+            <h2>지금 바로 시작하세요</h2>
+            <p>계약서 없이 바로 시작, 첫 건부터 수수료 지급</p>
+
+            <form class="cta-form" id="partnerForm">
+                <h3>파트너 제휴 신청</h3>
+                <p class="form-subtitle">담당자가 24시간 내 연락드립니다</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>성함 <span class="required">*</span></label>
+                        <input type="text" name="name" placeholder="홍길동" required>
+                    </div>
+                    <div class="form-group">
+                        <label>연락처 <span class="required">*</span></label>
+                        <input type="tel" name="phone" id="partnerPhone" placeholder="010-0000-0000" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>소속/직업 <span class="required">*</span></label>
+                    <select name="occupation" required>
+                        <option value="">선택해주세요</option>
+                        <option value="loan-broker">대출중개모집법인</option>
+                        <option value="pharma">제약회사 영업</option>
+                        <option value="medical-device">의료기기 영업</option>
+                        <option value="car-dealer">자동차 딜러</option>
+                        <option value="interior">인테리어 업체</option>
+                        <option value="consultant">병원 컨설턴트</option>
+                        <option value="other">기타</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>예상 월 연결 건수</label>
+                    <select name="expected_leads">
+                        <option value="">선택해주세요</option>
+                        <option value="1-2">1~2건</option>
+                        <option value="3-5">3~5건</option>
+                        <option value="5-10">5~10건</option>
+                        <option value="10+">10건 이상</option>
+                    </select>
+                </div>
+
+                <div class="form-agreement">
+                    <input type="checkbox" id="partnerAgree" required>
+                    <label for="partnerAgree">
+                        <a href="#" onclick="alert('개인정보 수집·이용 동의\n\n수집항목: 성함, 연락처, 소속\n수집목적: 파트너 제휴 상담\n보유기간: 상담 완료 후 1년'); return false;">개인정보 수집·이용</a>에 동의합니다.
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">제휴 신청하기</button>
+
+                <div class="form-benefits">
+                    <span class="form-benefit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 12l2 2 4-4"/></svg>
+                        계약서 불필요
+                    </span>
+                    <span class="form-benefit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 12l2 2 4-4"/></svg>
+                        첫 건부터 수수료
+                    </span>
+                    <span class="form-benefit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 12l2 2 4-4"/></svg>
+                        익월 정산
+                    </span>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h4>메디플라톤</h4>
+                    <p>
+                        병의원 전문 금융 서비스<br>
+                        신협중앙회·KB국민카드 정식 제휴<br><br>
+                        서울특별시 강남구<br>
+                        사업자등록번호: 000-00-00000
+                    </p>
+                </div>
+                <div class="footer-contact">
+                    <a href="tel:010-4772-2717">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        010-4772-2717
+                    </a>
+                    <p>본부장 오재연</p>
+                    <p>wodus6660@naver.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 메디플라톤. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating CTA -->
+    <div class="floating-cta">
+        <a href="tel:010-4772-2717" class="float-btn phone" aria-label="전화 상담">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+        </a>
+        <button class="float-btn top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="맨 위로">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 15l-6-6-6 6"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // Calculator
+        function updateCalculator() {
+            const count = parseInt(document.getElementById('calcCount').value);
+            const amount = parseInt(document.getElementById('calcAmount').value);
+            const rate = 0.015; // 1.5%
+
+            const perCase = amount * rate;
+            const monthly = perCase * count;
+            const yearly = monthly * 12;
+
+            document.getElementById('calcResult').innerHTML =
+                (yearly / 10000).toLocaleString() + '<span>만원</span>';
+            document.getElementById('calcMonthly').textContent =
+                (monthly / 10000).toLocaleString() + '만원';
+            document.getElementById('calcPerCase').textContent =
+                (perCase / 10000).toLocaleString() + '만원';
+        }
+
+        document.getElementById('calcCount').addEventListener('change', updateCalculator);
+        document.getElementById('calcAmount').addEventListener('change', updateCalculator);
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.closest('.faq-item');
+                const isActive = item.classList.contains('active');
+
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Phone formatting
+        document.getElementById('partnerPhone').addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+
+            if (value.length > 7) {
+                value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+            } else if (value.length > 3) {
+                value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
+            }
+
+            e.target.value = value;
+        });
+
+        // Form submission
+        document.getElementById('partnerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            if (!document.getElementById('partnerAgree').checked) {
+                alert('개인정보 수집·이용에 동의해주세요.');
+                return;
+            }
+
+            const btn = e.target.querySelector('.submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="loading-spinner"></span> 신청 중...';
+            btn.disabled = true;
+
+            // Simulate submission (replace with actual endpoint)
+            setTimeout(() => {
+                console.log('Partner form data:', data);
+                alert('제휴 신청이 완료되었습니다!\n담당자가 24시간 내 연락드리겠습니다.');
+                e.target.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
