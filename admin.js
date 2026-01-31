@@ -580,7 +580,20 @@ function getRegionLabel(value) {
         'seoul': '서울',
         'gyeonggi': '경기',
         'incheon': '인천',
-        'busan': '부산'
+        'busan': '부산',
+        'daegu': '대구',
+        'daejeon': '대전',
+        'gwangju': '광주',
+        'ulsan': '울산',
+        'sejong': '세종',
+        'gangwon': '강원',
+        'chungbuk': '충북',
+        'chungnam': '충남',
+        'jeonbuk': '전북',
+        'jeonnam': '전남',
+        'gyeongbuk': '경북',
+        'gyeongnam': '경남',
+        'jeju': '제주'
     };
     return labels[value] || value || '-';
 }

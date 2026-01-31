@@ -368,17 +368,29 @@ function initForm() {
                     throw new Error('데이터 저장 오류');
                 }
             } else {
-                // Supabase 미설정 시 콘솔 출력
-                console.log('=== 상담 신청 데이터 (Supabase 연동 필요) ===');
-                console.log('성함:', data.name);
-                console.log('연락처:', data.phone);
-                console.log('업종:', data.business);
-                console.log('월 카드매출:', data.revenue);
-                console.log('지역:', data.region);
-                console.log('관심 상품:', data.product || '미선택');
-                console.log('문의사항:', data.message || '없음');
-                console.warn('⚠️ config.js에 Supabase 설정을 완료하세요.');
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                // Supabase 미설정 시 로컬 백업 저장 (데이터 유실 방지)
+                const backupData = {
+                    name: data.name,
+                    phone: data.phone,
+                    business: data.business,
+                    revenue: data.revenue,
+                    region: data.region,
+                    product: data.product || null,
+                    message: data.message || null,
+                    status: 'new'
+                };
+
+                // 로컬 스토리지에 백업
+                if (typeof saveToLocalBackup === 'function') {
+                    saveToLocalBackup('consultations', backupData);
+                }
+
+                console.log('=== 상담 신청 데이터 (로컬 백업 저장됨) ===');
+                console.table(backupData);
+                console.warn('⚠️ Supabase 미설정: config.js를 확인하세요.');
+                console.info('💡 백업 데이터 확인: 개발자 도구에서 getLocalBackup("consultations") 실행');
+
+                await new Promise(resolve => setTimeout(resolve, 500));
             }
 
             // Success

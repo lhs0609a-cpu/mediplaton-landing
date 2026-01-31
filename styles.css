@@ -269,10 +269,44 @@ small, .text-sm {
 
 .badge-light {
     background: #FFFFFF !important;
-    color: #374151 !important; /* 강제 텍스트 색상 */
+    color: #374151 !important;
     border: 1px solid #E8ECF0 !important;
     opacity: 1 !important;
     visibility: visible !important;
+}
+
+/* ===== Hero Text Colors (visibility fix) ===== */
+.hero-content {
+    color: #111827 !important;
+}
+
+.hero-title {
+    color: #111827 !important;
+}
+
+.hero-title .highlight,
+.hero-title .highlight strong {
+    color: #1428A0 !important;
+}
+
+.hero-subtitle {
+    color: #4B5563 !important;
+}
+
+.hero-subtitle strong {
+    color: #111827 !important;
+}
+
+.hero-feature .feature-text strong {
+    color: #111827 !important;
+}
+
+.hero-feature .feature-text span {
+    color: #6B7280 !important;
+}
+
+.hero-trust span {
+    color: #4B5563 !important;
 }
 
 /* ===== Section Styles - Premium ===== */

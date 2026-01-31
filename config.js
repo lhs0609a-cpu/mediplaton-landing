@@ -1,22 +1,100 @@
 /**
- * Supabase 설정 파일
+ * ============================================================
+ * 메디플라톤 Supabase 설정 파일
+ * ============================================================
  *
- * 설정 방법:
- * 1. https://supabase.com 에서 무료 프로젝트 생성
- * 2. Project Settings → API 에서 URL과 anon key 복사
- * 3. 아래 값들을 실제 값으로 교체
+ * ⚠️  중요: 이 파일을 설정하지 않으면 상담 신청 데이터가 저장되지 않습니다!
+ *
+ * ============================================================
+ * 📋 Supabase 프로젝트 생성 가이드 (5분 소요)
+ * ============================================================
+ *
+ * Step 1: Supabase 가입 및 프로젝트 생성
+ *   1. https://supabase.com 접속
+ *   2. "Start your project" 클릭 → GitHub로 로그인
+ *   3. "New Project" 클릭
+ *   4. 프로젝트 이름: mediplaton (또는 원하는 이름)
+ *   5. Database Password: 강력한 비밀번호 설정 (메모해두세요)
+ *   6. Region: Northeast Asia (Tokyo) 선택 → "Create new project"
+ *
+ * Step 2: 데이터베이스 테이블 생성
+ *   1. 왼쪽 메뉴에서 "SQL Editor" 클릭
+ *   2. "New Query" 클릭
+ *   3. 프로젝트 폴더의 supabase-schema.sql 파일 내용을 복사하여 붙여넣기
+ *   4. "Run" 버튼 클릭
+ *
+ * Step 3: API 키 가져오기
+ *   1. 왼쪽 메뉴에서 "Project Settings" (톱니바퀴 아이콘) 클릭
+ *   2. "API" 탭 클릭
+ *   3. "Project URL" 복사 → 아래 url에 붙여넣기
+ *   4. "anon public" 키 복사 → 아래 anonKey에 붙여넣기
+ *
+ * Step 4: 관리자 계정 생성 (admin.html 사용 시)
+ *   1. 왼쪽 메뉴에서 "Authentication" 클릭
+ *   2. "Users" 탭 → "Add User" → "Create new user"
+ *   3. 이메일/비밀번호 입력 후 생성
+ *
+ * ============================================================
  */
 
 const SUPABASE_CONFIG = {
-    // Supabase 프로젝트 URL (예: https://xxxxx.supabase.co)
+    // ▼▼▼ 여기에 실제 Supabase URL을 붙여넣으세요 ▼▼▼
+    // 예시: 'https://abcdefghijk.supabase.co'
     url: 'YOUR_SUPABASE_URL',
 
-    // Supabase anon/public key (예: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...)
+    // ▼▼▼ 여기에 실제 anon key를 붙여넣으세요 ▼▼▼
+    // 예시: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI...'
     anonKey: 'YOUR_SUPABASE_ANON_KEY'
 };
 
-// 설정 확인 함수
+/**
+ * Supabase 설정 여부 확인
+ * @returns {boolean} 설정되었으면 true
+ */
 function isSupabaseConfigured() {
-    return SUPABASE_CONFIG.url !== 'YOUR_SUPABASE_URL' &&
-           SUPABASE_CONFIG.anonKey !== 'YOUR_SUPABASE_ANON_KEY';
+    const isConfigured = SUPABASE_CONFIG.url !== 'YOUR_SUPABASE_URL' &&
+                         SUPABASE_CONFIG.anonKey !== 'YOUR_SUPABASE_ANON_KEY' &&
+                         SUPABASE_CONFIG.url.includes('supabase.co');
+
+    if (!isConfigured) {
+        console.warn('⚠️ [메디플라톤] Supabase가 설정되지 않았습니다!');
+        console.warn('📋 config.js 파일의 가이드를 따라 설정해주세요.');
+        console.warn('🔗 Supabase 가입: https://supabase.com');
+    }
+
+    return isConfigured;
+}
+
+/**
+ * 미설정 시 로컬 스토리지에 임시 저장 (데이터 유실 방지)
+ * - Supabase 설정 전까지 브라우저에 데이터 보관
+ * - 설정 후 관리자가 수동으로 확인 가능
+ */
+function saveToLocalBackup(type, data) {
+    try {
+        const key = `mediplaton_backup_${type}`;
+        const existing = JSON.parse(localStorage.getItem(key) || '[]');
+        existing.push({
+            ...data,
+            saved_at: new Date().toISOString(),
+            synced: false
+        });
+        localStorage.setItem(key, JSON.stringify(existing));
+        console.log(`📦 [백업] ${type} 데이터가 로컬에 임시 저장되었습니다.`);
+        return true;
+    } catch (e) {
+        console.error('로컬 백업 저장 실패:', e);
+        return false;
+    }
+}
+
+/**
+ * 로컬 백업 데이터 조회 (개발자 도구 Console에서 사용)
+ * 사용법: getLocalBackup('consultations') 또는 getLocalBackup('partners')
+ */
+function getLocalBackup(type) {
+    const key = `mediplaton_backup_${type}`;
+    const data = JSON.parse(localStorage.getItem(key) || '[]');
+    console.table(data);
+    return data;
 }
