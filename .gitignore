@@ -21,3 +21,4 @@ Thumbs.db
 # Supabase config (contains API keys)
 # config.js를 git에 포함시키되, 실제 키는 배포 후 직접 수정
 # config.js
+.env*.local
