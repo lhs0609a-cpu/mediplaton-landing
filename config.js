@@ -48,6 +48,63 @@ const SUPABASE_CONFIG = {
 };
 
 /**
+ * ============================================================
+ * 📊 Google Sheets 연동 설정
+ * ============================================================
+ *
+ * Step 1: 구글 시트 생성
+ *   1. Google Drive에서 새 스프레드시트 생성
+ *   2. 첫 번째 행에 헤더 입력: 타임스탬프 | 성함 | 연락처 | 소속 | 예상 월 연결건수
+ *
+ * Step 2: Apps Script 설정
+ *   1. 스프레드시트에서 [확장 프로그램] → [Apps Script] 클릭
+ *   2. 기존 코드 전체 삭제 후, 아래 코드를 붙여넣기:
+ *
+ * ─────────────────────────────────────────────────────────────
+ * function doPost(e) {
+ *   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+ *   var data = JSON.parse(e.postData.contents);
+ *
+ *   sheet.appendRow([
+ *     new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
+ *     data.name,
+ *     data.phone,
+ *     data.occupation,
+ *     data.expected_leads
+ *   ]);
+ *
+ *   return ContentService
+ *     .createTextOutput(JSON.stringify({result: 'success'}))
+ *     .setMimeType(ContentService.MimeType.JSON);
+ * }
+ * ─────────────────────────────────────────────────────────────
+ *
+ * Step 3: 웹 앱으로 배포
+ *   1. [배포] → [새 배포] 클릭
+ *   2. 유형 선택: "웹 앱"
+ *   3. 설명: "파트너 폼 연동" (아무거나)
+ *   4. 실행 주체: "나"
+ *   5. 액세스 권한: "모든 사용자" ← 중요!
+ *   6. [배포] 클릭 → 권한 승인
+ *   7. 웹 앱 URL 복사 → 아래 webAppUrl에 붙여넣기
+ *
+ * ============================================================
+ */
+const GOOGLE_SHEETS_CONFIG = {
+    // ▼▼▼ 여기에 Google Apps Script 웹 앱 URL을 붙여넣으세요 ▼▼▼
+    // 예시: 'https://script.google.com/macros/s/AKfycbx.../exec'
+    webAppUrl: 'YOUR_GOOGLE_SHEETS_WEB_APP_URL'
+};
+
+/**
+ * Google Sheets 설정 여부 확인
+ */
+function isGoogleSheetsConfigured() {
+    return GOOGLE_SHEETS_CONFIG.webAppUrl !== 'YOUR_GOOGLE_SHEETS_WEB_APP_URL' &&
+           GOOGLE_SHEETS_CONFIG.webAppUrl.includes('script.google.com');
+}
+
+/**
  * Supabase 설정 여부 확인
  * @returns {boolean} 설정되었으면 true
  */
