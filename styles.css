@@ -3029,12 +3029,13 @@ div.product-cta .btn {
     margin-bottom: 20px;
 }
 
-.footer-logo .logo-main { color: var(--gray-900); }
-.footer-logo .logo-sub { color: var(--gray-400); }
+.footer-logo .logo-main { color: #111827; color: var(--gray-900); }
+.footer-logo .logo-sub { color: #9CA3AF; color: var(--gray-400); }
 
 .footer-desc {
     font-size: 14px;
     margin-bottom: 20px;
+    color: #6B7280;
     color: var(--gray-500);
     line-height: 1.7;
 }
@@ -3048,9 +3049,12 @@ div.product-cta .btn {
 .footer-certifications span {
     font-size: 12px;
     padding: 8px 14px;
+    background: #FFFFFF;
     background: var(--white);
+    border: 1px solid #E8ECF0;
     border: 1px solid var(--border);
     border-radius: var(--radius-full);
+    color: #4B5563;
     color: var(--gray-600);
     font-weight: 500;
 }
@@ -3083,6 +3087,7 @@ div.product-cta .btn {
 .footer-col h4 {
     font-size: 14px;
     font-weight: 700;
+    color: #1F2937;
     color: var(--gray-800);
     margin-bottom: 20px;
     letter-spacing: 0.02em;
@@ -3091,24 +3096,28 @@ div.product-cta .btn {
 .footer-col a {
     display: block;
     font-size: 14px;
+    color: #6B7280;
     color: var(--gray-500);
     padding: 8px 0;
     transition: var(--transition);
 }
 
 .footer-col a:hover {
+    color: #1428A0;
     color: var(--primary);
 }
 
 .footer-phone a {
     font-size: 22px;
     font-weight: 700;
+    color: #111827;
     color: var(--gray-900);
 }
 
 .footer-time {
     font-size: 13px;
     margin-top: 8px;
+    color: #9CA3AF;
     color: var(--gray-400);
 }
 
@@ -3138,12 +3147,15 @@ div.product-cta .btn {
 .footer-info p {
     font-size: 13px;
     line-height: 1.8;
+    color: #374151;
     color: var(--gray-700);
 }
 
 .footer-legal {
     padding: 24px;
+    background: #FFFFFF;
     background: var(--white);
+    border: 1px solid #E8ECF0;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     margin: 28px 0;
@@ -3152,6 +3164,7 @@ div.product-cta .btn {
 .footer-legal p {
     font-size: 13px;
     line-height: 1.8;
+    color: #374151;
     color: var(--gray-700);
 }
 
@@ -3164,6 +3177,7 @@ div.product-cta .btn {
 
 .footer-bottom p {
     font-size: 13px;
+    color: #4B5563;
     color: var(--gray-600);
 }
 
@@ -3174,11 +3188,13 @@ div.product-cta .btn {
 
 .footer-policy a {
     font-size: 13px;
+    color: #4B5563;
     color: var(--gray-600);
     transition: var(--transition);
 }
 
 .footer-policy a:hover {
+    color: #1428A0;
     color: var(--primary);
 }
 
