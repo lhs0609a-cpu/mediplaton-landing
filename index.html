@@ -355,28 +355,39 @@
             </div>
 
             <div class="hero-visual">
-                <div class="hero-card main-card">
+                <div class="hero-card main-card" id="liveApprovalCard">
                     <div class="card-header">
-                        <span class="card-badge">실시간 승인</span>
+                        <span class="card-badge"><span class="live-dot"></span>실시간 승인</span>
+                        <span class="approval-time" id="approvalTime">방금 전</span>
                     </div>
                     <div class="card-body">
+                        <div class="approval-info">
+                            <span class="approval-region" id="approvalRegion">서울 강남</span>
+                            <span class="approval-divider">·</span>
+                            <span class="approval-business" id="approvalBusiness">내과의원</span>
+                        </div>
                         <div class="card-amount">
                             <span class="amount-label">승인 금액</span>
-                            <span class="amount-value">150,000,000<small>원</small></span>
+                            <span class="amount-value" id="approvalAmount">85,000,000<small>원</small></span>
                         </div>
                         <div class="card-details">
                             <div class="detail-row">
                                 <span>상품</span>
-                                <strong>카드매출 담보대출</strong>
+                                <strong id="approvalProduct">카드매출 담보대출</strong>
                             </div>
                             <div class="detail-row">
                                 <span>금리</span>
-                                <strong>연 5.3%</strong>
+                                <strong id="approvalRate">연 4.9%</strong>
                             </div>
                             <div class="detail-row">
                                 <span>기간</span>
-                                <strong>700일</strong>
+                                <strong id="approvalPeriod">36개월</strong>
                             </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="approval-progress">
+                            <div class="progress-bar"></div>
                         </div>
                     </div>
                 </div>
@@ -386,17 +397,17 @@
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="statGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" style="stop-color:#8B5CF6"/>
-                                        <stop offset="100%" style="stop-color:#7C3AED"/>
+                                        <stop offset="0%" style="stop-color:#10B981"/>
+                                        <stop offset="100%" style="stop-color:#059669"/>
                                     </linearGradient>
                                 </defs>
                                 <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#statGrad)"/>
-                                <path d="M6 18V12M10 18V9M14 18V6M18 18V10" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M8 12l2.5 2.5L16 9" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </span>
                         <div>
-                            <strong>2,847건</strong>
-                            <span>누적 상담</span>
+                            <strong id="todayApprovalCount">오늘 <span class="counter-up">23</span>건</strong>
+                            <span>승인 완료</span>
                         </div>
                     </div>
                 </div>
@@ -406,16 +417,17 @@
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" style="stop-color:#FBBF24"/>
-                                        <stop offset="100%" style="stop-color:#F59E0B"/>
+                                        <stop offset="0%" style="stop-color:#8B5CF6"/>
+                                        <stop offset="100%" style="stop-color:#7C3AED"/>
                                     </linearGradient>
                                 </defs>
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#starGrad)"/>
+                                <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#starGrad)"/>
+                                <path d="M12 6v12M6 12h12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
                             </svg>
                         </span>
                         <div>
-                            <strong>94%</strong>
-                            <span>고객 만족도</span>
+                            <strong>평균 <span class="avg-amount">1.2억</span></strong>
+                            <span>승인 금액</span>
                         </div>
                     </div>
                 </div>

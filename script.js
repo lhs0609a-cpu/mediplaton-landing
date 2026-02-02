@@ -597,6 +597,97 @@ function initLiveNotifications() {
     return;
 }
 
+// ===== Live Approval Card Animation =====
+function initLiveApprovalCard() {
+    const card = document.getElementById('liveApprovalCard');
+    if (!card) return;
+
+    // 실제감 있는 승인 사례 데이터 (랜덤 생성용 기반)
+    const regions = ['서울 강남', '서울 서초', '서울 송파', '경기 성남', '경기 용인', '부산 해운대', '대구 수성', '인천 연수'];
+    const businesses = ['내과의원', '치과의원', '피부과', '정형외과', '안과의원', '한의원', '성형외과', '소아과'];
+    const products = ['카드매출 담보대출', '의료기기 리스', '운영자금 대출', '시설자금 대출'];
+    const times = ['방금 전', '1분 전', '2분 전', '3분 전', '5분 전'];
+
+    // 자연스러운 금액 생성 (5천만 ~ 3억, 100만 단위)
+    function generateAmount() {
+        const base = Math.floor(Math.random() * 25) + 5; // 5천만 ~ 3억
+        const amount = base * 10000000;
+        return amount + Math.floor(Math.random() * 10) * 1000000; // 100만 단위 추가
+    }
+
+    // 금액 포맷팅
+    function formatAmount(num) {
+        return num.toLocaleString('ko-KR');
+    }
+
+    // 자연스러운 금리 생성 (4.5% ~ 7.9%)
+    function generateRate() {
+        const rate = (Math.random() * 3.4 + 4.5).toFixed(1);
+        return `연 ${rate}%`;
+    }
+
+    // 자연스러운 기간 생성
+    function generatePeriod() {
+        const periods = ['12개월', '24개월', '36개월', '48개월', '60개월'];
+        return periods[Math.floor(Math.random() * periods.length)];
+    }
+
+    // 랜덤 선택
+    function pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    // DOM 요소들
+    const regionEl = document.getElementById('approvalRegion');
+    const businessEl = document.getElementById('approvalBusiness');
+    const amountEl = document.getElementById('approvalAmount');
+    const productEl = document.getElementById('approvalProduct');
+    const rateEl = document.getElementById('approvalRate');
+    const periodEl = document.getElementById('approvalPeriod');
+    const timeEl = document.getElementById('approvalTime');
+
+    // 카드 데이터 업데이트
+    function updateCard() {
+        card.classList.add('fade-out');
+
+        setTimeout(() => {
+            if (regionEl) regionEl.textContent = pickRandom(regions);
+            if (businessEl) businessEl.textContent = pickRandom(businesses);
+            if (amountEl) amountEl.innerHTML = `${formatAmount(generateAmount())}<small>원</small>`;
+            if (productEl) productEl.textContent = pickRandom(products);
+            if (rateEl) rateEl.textContent = generateRate();
+            if (periodEl) periodEl.textContent = generatePeriod();
+            if (timeEl) timeEl.textContent = pickRandom(times);
+
+            card.classList.remove('fade-out');
+            card.classList.add('fade-in');
+
+            setTimeout(() => {
+                card.classList.remove('fade-in');
+            }, 300);
+        }, 300);
+    }
+
+    // 5초마다 업데이트
+    setInterval(updateCard, 5000);
+
+    // 오늘 승인 건수 업데이트 (시간에 따라 증가)
+    const todayCountEl = document.querySelector('#todayApprovalCount .counter-up');
+    if (todayCountEl) {
+        const hour = new Date().getHours();
+        const baseCount = Math.floor(hour * 1.5) + Math.floor(Math.random() * 5) + 10;
+        todayCountEl.textContent = baseCount;
+
+        // 가끔 1씩 증가
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const current = parseInt(todayCountEl.textContent);
+                todayCountEl.textContent = current + 1;
+            }
+        }, 15000);
+    }
+}
+
 // ===== [P1 FIX] Interactive Savings Calculator =====
 function initSavingsCalculator() {
     const calculator = document.getElementById('savingsCalculator');
@@ -677,6 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initButtonInteractions();
     initKeyboardNav();
     initLiveNotifications();
+    initLiveApprovalCard();
 
     // Delay non-critical initializations
     setTimeout(() => {
