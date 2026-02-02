@@ -93,7 +93,7 @@ const SUPABASE_CONFIG = {
 const GOOGLE_SHEETS_CONFIG = {
     // ▼▼▼ 여기에 Google Apps Script 웹 앱 URL을 붙여넣으세요 ▼▼▼
     // 예시: 'https://script.google.com/macros/s/AKfycbx.../exec'
-    webAppUrl: 'YOUR_GOOGLE_SHEETS_WEB_APP_URL'
+    webAppUrl: 'https://script.google.com/macros/s/AKfycbyYo5YPoeIA-3a_Vc8ILvtluU0EHCr9eZQ5mPz5eS-SHFvZNGjGgmUHGbJgi02Pj-HT/exec'
 };
 
 /**
