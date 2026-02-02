@@ -633,31 +633,55 @@ section.hero .hero-trust span {
 }
 
 .hero-title {
-    font-size: clamp(36px, 5.5vw, 54px);
+    font-size: clamp(40px, 6vw, 64px);
     font-weight: 800;
-    line-height: 1.2;
+    line-height: 1.15;
     letter-spacing: -0.03em;
-    color: #111827 !important; /* 강제 다크 컬러 */
+    color: #111827 !important;
     margin-bottom: 24px;
     opacity: 1 !important;
     visibility: visible !important;
 }
 
+.hero-title.animate-in {
+    animation: heroFadeInUp 0.8s ease-out;
+}
+
+@keyframes heroFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .hero-title .highlight {
-    color: #1428A0 !important; /* 강제 프라이머리 컬러 */
+    color: #1428A0 !important;
 }
 
 .hero-title .highlight strong {
     color: #1428A0 !important;
     font-weight: 800;
-    /* 그라데이션 제거 - 가시성 문제 해결 */
-    /*
-    그라데이션을 원하면 아래 주석 해제:
-    background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    */
+}
+
+.hero-title .highlight strong.text-danger {
+    color: #DC2626 !important;
+    position: relative;
+}
+
+.hero-title .highlight strong.text-danger::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: rgba(220, 38, 38, 0.15);
+    z-index: -1;
+    border-radius: 2px;
 }
 
 .hero-subtitle {
