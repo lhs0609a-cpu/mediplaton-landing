@@ -276,37 +276,38 @@ small, .text-sm {
 }
 
 /* ===== Hero Text Colors (visibility fix) ===== */
-.hero-content {
-    color: #111827 !important;
+/* 높은 특수성으로 !important 없이 스타일 적용 */
+section.hero .hero-content {
+    color: var(--gray-900);
 }
 
-.hero-title {
-    color: #111827 !important;
+section.hero .hero-title {
+    color: var(--gray-900);
 }
 
-.hero-title .highlight,
-.hero-title .highlight strong {
-    color: #1428A0 !important;
+section.hero .hero-title .highlight,
+section.hero .hero-title .highlight strong {
+    color: var(--primary);
 }
 
-.hero-subtitle {
-    color: #4B5563 !important;
+section.hero .hero-subtitle {
+    color: var(--gray-600);
 }
 
-.hero-subtitle strong {
-    color: #111827 !important;
+section.hero .hero-subtitle strong {
+    color: var(--gray-900);
 }
 
-.hero-feature .feature-text strong {
-    color: #111827 !important;
+section.hero .hero-feature .feature-text strong {
+    color: var(--gray-900);
 }
 
-.hero-feature .feature-text span {
-    color: #6B7280 !important;
+section.hero .hero-feature .feature-text span {
+    color: var(--gray-500);
 }
 
-.hero-trust span {
-    color: #4B5563 !important;
+section.hero .hero-trust span {
+    color: var(--gray-600);
 }
 
 /* ===== Section Styles - Premium ===== */
@@ -1056,6 +1057,16 @@ small, .text-sm {
     to { transform: scaleX(1); }
 }
 
+/* Stats Footnote */
+.stats-footnote {
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 24px;
+    position: relative;
+    z-index: 1;
+}
+
 /* Urgency Timer Box */
 .urgency-timer-box {
     margin-top: 48px;
@@ -1110,6 +1121,14 @@ small, .text-sm {
     background: var(--gray-900);
     color: #fff;
     padding: 8px 12px;
+}
+
+.countdown-item.countdown-phone {
+    font-size: 18px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--gray-900);
+    padding: 0;
     border-radius: 8px;
     min-width: 56px;
     text-align: center;
@@ -1153,6 +1172,13 @@ small, .text-sm {
     font-weight: 900;
     color: var(--danger);
     animation: blink 1s ease-in-out infinite;
+}
+
+.slots-number.slots-day {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-700);
+    animation: none;
 }
 
 @keyframes blink {
@@ -3124,9 +3150,9 @@ div.product-cta .btn {
 }
 
 .footer-legal p {
-    font-size: 12px;
-    line-height: 1.9;
-    color: var(--gray-600);
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--gray-700);
 }
 
 .footer-bottom {
@@ -5431,12 +5457,12 @@ div.product-cta .btn {
 
 .result-item span {
     display: block;
-    font-size: 10px;
-    color: var(--gray-400);
+    font-size: 11px;
+    color: var(--gray-500);
     margin-bottom: 6px;
     text-transform: uppercase;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 .result-item strong {
@@ -6282,10 +6308,10 @@ img.loaded {
     overflow-x: auto;
 }
 
-/* Urgency Box Enhanced */
+/* Urgency Box Enhanced - 상담 섹션용 (친근한 파란색 계열) */
 .urgency-box.urgent {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(249, 115, 22, 0.05));
-    border: 2px solid rgba(239, 68, 68, 0.2);
+    background: linear-gradient(135deg, var(--primary-50) 0%, #E8EAF6 100%);
+    border: 2px solid var(--primary-100);
     padding: 24px;
     border-radius: var(--radius-lg);
     flex-direction: column;
@@ -6294,11 +6320,11 @@ img.loaded {
 }
 
 .urgency-badge {
-    background: var(--danger);
+    background: var(--primary);
     color: var(--white);
     font-size: 13px;
     font-weight: 700;
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: var(--radius-full);
     margin-bottom: 16px;
 }
@@ -6836,14 +6862,17 @@ img.loaded {
         scrollbar-width: thin;
     }
 
-    .comparison-table-wrap::after,
-    .comparison-wrapper::after {
-        content: '← 좌우 스크롤 →';
+    .comparison-table-wrap::before,
+    .comparison-wrapper::before {
+        content: '← 좌우로 스크롤하세요 →';
         display: block;
         text-align: center;
-        font-size: 11px;
-        color: var(--gray-400);
-        padding: 8px 0;
+        font-size: 12px;
+        color: var(--gray-500);
+        padding: 10px 0;
+        background: var(--gray-50);
+        border-radius: var(--radius-sm);
+        margin-bottom: 12px;
     }
 
     .comparison-table {
@@ -7202,11 +7231,11 @@ img.loaded {
     }
 
     .result-item span {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .result-item strong {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .case-badge {
