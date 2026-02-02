@@ -7728,15 +7728,15 @@ p, li, td, th, label, span {
 .footer p,
 .footer span,
 .footer li {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--gray-700);
 }
 
 .footer a:hover {
-    color: var(--white);
+    color: var(--primary);
 }
 
 .footer h4 {
-    color: var(--white);
+    color: var(--gray-900);
 }
 
 /* Fix low-contrast text elements */
