@@ -3382,6 +3382,27 @@ div.product-cta .btn {
     margin-bottom: 8px;
 }
 
+.modal-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 48px;
+    background: var(--primary);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 8px;
+}
+
+.modal-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
 /* ===== Mobile Menu ===== */
 .mobile-menu {
     position: fixed;
