@@ -8053,9 +8053,26 @@ textarea:focus-visible {
     color: var(--gray-700);
 }
 
+.success-info {
+    background: var(--primary-50);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.success-info p {
+    font-size: 14px;
+    color: var(--gray-800);
+    margin-bottom: 4px;
+}
+
+.success-info p strong {
+    color: var(--gray-900);
+}
+
 .success-note {
     font-size: 12px;
-    color: var(--gray-500);
+    color: var(--gray-600);
     margin-bottom: 16px;
 }
 
