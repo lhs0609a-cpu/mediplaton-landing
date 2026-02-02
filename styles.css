@@ -8405,3 +8405,509 @@ textarea:focus-visible {
         width: 100%;
     }
 }
+
+/* ===== Comprehensive Mobile Optimization ===== */
+
+/* Tablet (768px) */
+@media (max-width: 768px) {
+    /* Hero Visual Cards */
+    .hero-visual {
+        order: 2;
+        margin-top: 32px;
+    }
+
+    .hero-card.main-card {
+        width: 100%;
+    }
+
+    .hero-card.sub-card,
+    .hero-card.sub-card-2 {
+        position: static;
+        width: calc(50% - 6px);
+    }
+
+    .hero-visual {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    /* Live Approval Card Mobile */
+    .card-header {
+        padding: 12px 16px;
+    }
+
+    .card-badge {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    .approval-time {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+
+    .approval-info {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .card-body {
+        padding: 16px;
+    }
+
+    .amount-value {
+        font-size: 28px;
+    }
+
+    .amount-value small {
+        font-size: 14px;
+    }
+
+    .detail-row {
+        padding: 10px 0;
+    }
+
+    .detail-row span,
+    .detail-row strong {
+        font-size: 13px;
+    }
+
+    /* Success Modal Mobile */
+    .success-modal {
+        padding: 24px 20px;
+    }
+
+    .success-brand {
+        margin-bottom: 20px;
+    }
+
+    .success-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 16px;
+    }
+
+    .success-modal h3 {
+        font-size: 20px;
+    }
+
+    .success-modal .success-desc {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .success-info-card {
+        padding: 14px 16px;
+    }
+
+    .success-info-card .info-row {
+        gap: 10px;
+        padding: 6px 0;
+    }
+
+    .success-info-card .info-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .success-info-card .info-label {
+        font-size: 12px;
+    }
+
+    .success-info-card .info-value {
+        font-size: 14px;
+    }
+
+    .success-timeline .timeline-steps {
+        gap: 0;
+    }
+
+    .success-timeline .step-dot {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+
+    .success-timeline .step-label {
+        font-size: 10px;
+    }
+
+    .success-timeline .timeline-line {
+        width: 16px;
+    }
+
+    .success-trust {
+        gap: 8px;
+    }
+
+    .success-trust .trust-badge {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .modal-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Mobile (480px) */
+@media (max-width: 480px) {
+    /* Hero Visual Cards */
+    .hero-visual {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hero-card.main-card {
+        width: 100%;
+    }
+
+    .hero-card.sub-card,
+    .hero-card.sub-card-2 {
+        width: 100%;
+    }
+
+    .card-header {
+        padding: 10px 14px;
+    }
+
+    .card-badge {
+        font-size: 11px;
+        padding: 4px 8px;
+        gap: 4px;
+    }
+
+    .live-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .approval-time {
+        font-size: 10px;
+    }
+
+    .approval-info {
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    .card-body {
+        padding: 14px;
+    }
+
+    .amount-label {
+        font-size: 12px;
+    }
+
+    .amount-value {
+        font-size: 24px;
+    }
+
+    .amount-value small {
+        font-size: 12px;
+    }
+
+    .card-amount {
+        margin-bottom: 16px;
+    }
+
+    .card-details {
+        gap: 8px;
+    }
+
+    .detail-row {
+        padding: 8px 0;
+    }
+
+    .detail-row span,
+    .detail-row strong {
+        font-size: 12px;
+    }
+
+    .card-footer {
+        padding: 0 14px 12px;
+    }
+
+    /* Mini Stats Cards */
+    .mini-stat {
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+        padding: 14px 16px;
+    }
+
+    .mini-stat .mini-icon {
+        margin-bottom: 0;
+    }
+
+    .mini-stat strong {
+        font-size: 15px;
+    }
+
+    .mini-stat span {
+        font-size: 12px;
+    }
+
+    /* Success Modal Mobile Small */
+    .modal-content {
+        width: 94%;
+        margin: 16px;
+        max-height: calc(100vh - 32px);
+    }
+
+    .success-modal {
+        padding: 20px 16px;
+    }
+
+    .success-brand {
+        margin-bottom: 16px;
+        gap: 6px;
+    }
+
+    .success-brand .brand-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+
+    .success-brand .brand-name {
+        font-size: 16px;
+    }
+
+    .success-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 14px;
+    }
+
+    .success-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .success-modal h3 {
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+
+    .success-modal .success-desc {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .success-info-card {
+        padding: 12px 14px;
+        margin-bottom: 16px;
+    }
+
+    .success-info-card .info-row {
+        gap: 8px;
+        padding: 5px 0;
+    }
+
+    .success-info-card .info-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .success-info-card .info-icon svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .success-info-card .info-label {
+        font-size: 11px;
+        min-width: 40px;
+    }
+
+    .success-info-card .info-value {
+        font-size: 13px;
+    }
+
+    .success-timeline {
+        margin-bottom: 16px;
+    }
+
+    .success-timeline .timeline-title {
+        font-size: 11px;
+        margin-bottom: 12px;
+    }
+
+    .success-timeline .timeline-steps {
+        justify-content: space-between;
+    }
+
+    .success-timeline .step-dot {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+    }
+
+    .success-timeline .step-label {
+        font-size: 9px;
+    }
+
+    .success-timeline .timeline-line {
+        width: 12px;
+        margin: 0 2px;
+        margin-bottom: 16px;
+    }
+
+    .success-trust {
+        margin-bottom: 16px;
+        gap: 6px;
+    }
+
+    .success-trust .trust-badge {
+        font-size: 10px;
+        padding: 4px 8px;
+        gap: 4px;
+    }
+
+    .success-actions {
+        gap: 8px;
+    }
+
+    .modal-btn {
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+
+    /* Form Section Mobile */
+    .consult-form {
+        padding: 20px 16px;
+    }
+
+    .form-header h2 {
+        font-size: 20px;
+    }
+
+    .form-header p {
+        font-size: 13px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .submit-btn {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+
+    /* Header Mobile */
+    .header-inner {
+        height: 56px;
+    }
+
+    .logo img {
+        height: 28px;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+        width: 85%;
+    }
+
+    .mobile-menu-header {
+        padding: 16px 20px;
+    }
+
+    .mobile-nav-link {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+
+    /* Footer Mobile */
+    .footer {
+        padding: 40px 0 24px;
+    }
+
+    .footer-main {
+        gap: 32px;
+    }
+
+    .footer-logo img {
+        height: 24px;
+    }
+
+    .footer-links {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .footer-link-group h4 {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .footer-link-group a {
+        font-size: 13px;
+    }
+
+    /* Mobile Floating CTA */
+    .mobile-floating-cta {
+        padding: 12px 16px;
+    }
+
+    .mobile-floating-cta .btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Extra Small Mobile (360px) */
+@media (max-width: 360px) {
+    .container {
+        padding: 0 12px;
+    }
+
+    .hero-title {
+        font-size: 20px;
+    }
+
+    .hero-title .highlight {
+        font-size: 18px;
+    }
+
+    .hero-subtitle {
+        font-size: 13px;
+    }
+
+    .amount-value {
+        font-size: 22px;
+    }
+
+    .success-modal {
+        padding: 16px 14px;
+    }
+
+    .success-modal h3 {
+        font-size: 16px;
+    }
+
+    .success-timeline .timeline-steps {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 8px;
+    }
+
+    .success-timeline .timeline-step {
+        flex-shrink: 0;
+    }
+
+    .modal-btn {
+        padding: 11px 14px;
+        font-size: 12px;
+    }
+}
