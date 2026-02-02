@@ -383,7 +383,7 @@ function initForm() {
 
         } catch (error) {
             console.error('폼 제출 오류:', error);
-            alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도하시거나,\n전화(0507-1434-3226)로 문의해 주세요.');
+            alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도하시거나,\n전화(0507-1375-2717)로 문의해 주세요.');
         } finally {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
