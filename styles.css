@@ -3352,55 +3352,234 @@ div.product-cta .btn {
     gap: 12px;
 }
 
-/* Success Modal */
-.success-modal .modal-body {
+/* Success Modal - 신뢰성 강화 디자인 */
+.success-modal {
     text-align: center;
-    padding: 48px 24px;
+    padding: 32px 28px;
+}
+
+.success-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.success-brand .brand-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: var(--white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.success-brand .brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-900);
 }
 
 .success-icon {
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     background: var(--success-light);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 24px;
-    color: var(--success);
+    margin: 0 auto 20px;
 }
 
 .success-modal h3 {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
-    margin-bottom: 12px;
+    color: var(--gray-900);
+    margin-bottom: 8px;
 }
 
-.success-modal p {
+.success-modal .success-desc {
     font-size: 15px;
-    color: var(--gray-700);
-    margin-bottom: 8px;
+    color: var(--gray-600);
+    margin-bottom: 24px;
+}
+
+/* 신청 정보 카드 */
+.success-info-card {
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.success-info-card .info-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.success-info-card .info-row:not(:last-child) {
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.success-info-card .info-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.success-info-card .info-label {
+    font-size: 13px;
+    color: var(--gray-500);
+    min-width: 50px;
+}
+
+.success-info-card .info-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-left: auto;
+}
+
+/* 진행 절차 타임라인 */
+.success-timeline {
+    margin-bottom: 24px;
+}
+
+.success-timeline .timeline-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-500);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.success-timeline .timeline-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.success-timeline .timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.success-timeline .step-dot {
+    width: 28px;
+    height: 28px;
+    background: var(--gray-200);
+    color: var(--gray-500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.success-timeline .timeline-step.active .step-dot {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.success-timeline .step-label {
+    font-size: 11px;
+    color: var(--gray-500);
+    white-space: nowrap;
+}
+
+.success-timeline .timeline-step.active .step-label {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.success-timeline .timeline-line {
+    width: 24px;
+    height: 2px;
+    background: var(--gray-200);
+    margin: 0 4px;
+    margin-bottom: 20px;
+}
+
+/* 신뢰 배지 */
+.success-trust {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.success-trust .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--primary-50);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-full);
+}
+
+/* 버튼 그룹 */
+.success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .modal-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 48px;
-    background: var(--primary);
-    color: var(--white);
-    font-size: 16px;
+    gap: 8px;
+    padding: 14px 24px;
+    font-size: 15px;
     font-weight: 600;
     border: none;
     border-radius: var(--radius);
     cursor: pointer;
     transition: var(--transition);
-    margin-top: 8px;
+    text-decoration: none;
 }
 
-.modal-btn:hover {
+.modal-btn.primary {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.modal-btn.primary:hover {
     background: var(--primary-dark);
-    transform: translateY(-2px);
+}
+
+.modal-btn.outline {
+    background: var(--white);
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
+}
+
+.modal-btn.outline:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
 }
 
 /* ===== Mobile Menu ===== */

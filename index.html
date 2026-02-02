@@ -2445,57 +2445,102 @@
         </div>
     </div>
 
-    <!-- Success Modal - [P1 FIX] 다음 단계 안내 추가 -->
+    <!-- Success Modal - 신뢰성 강화 디자인 -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-content success-modal">
+            <!-- 브랜드 로고 -->
+            <div class="success-brand">
+                <span class="brand-icon">+</span>
+                <span class="brand-name">메디플라톤</span>
+            </div>
+
+            <!-- 성공 아이콘 -->
             <div class="success-icon">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                    <defs>
-                        <linearGradient id="successGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#10B981"/>
-                            <stop offset="100%" style="stop-color:#059669"/>
-                        </linearGradient>
-                    </defs>
-                    <circle cx="12" cy="12" r="11" fill="url(#successGrad)"/>
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="11" fill="#10B981"/>
                     <path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <h3>상담 신청 완료!</h3>
-            <p>
-                <strong>3시간 이내</strong> 전문 상담사가<br>
-                원장님 휴대폰으로 직접 연락드립니다.
-            </p>
-            <div class="success-info">
-                <p><strong>신청 정보</strong></p>
-                <p id="successName"></p>
-                <p id="successPhone"></p>
+
+            <h3>상담 신청이 완료되었습니다</h3>
+            <p class="success-desc">3시간 이내 전문 상담사가 연락드립니다</p>
+
+            <!-- 신청 정보 카드 -->
+            <div class="success-info-card">
+                <div class="info-row">
+                    <span class="info-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </span>
+                    <span class="info-label">성함</span>
+                    <span class="info-value" id="successName">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </span>
+                    <span class="info-label">연락처</span>
+                    <span class="info-value" id="successPhone">-</span>
+                </div>
             </div>
 
-            <!-- [P1 FIX] 다음 단계 프로세스 안내 -->
-            <div class="success-next-steps">
-                <p class="next-steps-title">앞으로의 진행 절차</p>
-                <div class="next-steps-list">
-                    <div class="next-step">
-                        <span class="step-num">1</span>
-                        <span class="step-text">전문 상담사 연락 (3시간 내)</span>
+            <!-- 진행 절차 타임라인 -->
+            <div class="success-timeline">
+                <p class="timeline-title">진행 절차</p>
+                <div class="timeline-steps">
+                    <div class="timeline-step active">
+                        <span class="step-dot">1</span>
+                        <span class="step-label">상담사 연락</span>
                     </div>
-                    <div class="next-step">
-                        <span class="step-num">2</span>
-                        <span class="step-text">맞춤 상품 안내 및 서류 접수</span>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-step">
+                        <span class="step-dot">2</span>
+                        <span class="step-label">상품 안내</span>
                     </div>
-                    <div class="next-step">
-                        <span class="step-num">3</span>
-                        <span class="step-text">심사 진행 (1~3영업일)</span>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-step">
+                        <span class="step-dot">3</span>
+                        <span class="step-label">심사 진행</span>
                     </div>
-                    <div class="next-step">
-                        <span class="step-num">4</span>
-                        <span class="step-text">승인 후 계좌 입금</span>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-step">
+                        <span class="step-dot">4</span>
+                        <span class="step-label">계좌 입금</span>
                     </div>
                 </div>
             </div>
 
-            <p class="success-note">※ 상담 시 신용등급에 영향을 주지 않습니다</p>
-            <button class="modal-btn" id="closeSuccessModal">확인</button>
+            <!-- 신뢰 배지 -->
+            <div class="success-trust">
+                <span class="trust-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    신협중앙회 정식 제휴
+                </span>
+                <span class="trust-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    개인정보 보호
+                </span>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="success-actions">
+                <button class="modal-btn primary" id="closeSuccessModal">확인</button>
+                <a href="tel:0507-1375-2717" class="modal-btn outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    전화 상담
+                </a>
+            </div>
         </div>
     </div>
 

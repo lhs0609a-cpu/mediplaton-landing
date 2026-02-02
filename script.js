@@ -375,8 +375,8 @@ function initForm() {
             // Success
             const successName = document.getElementById('successName');
             const successPhone = document.getElementById('successPhone');
-            if (successName) successName.textContent = `성함: ${data.name}`;
-            if (successPhone) successPhone.textContent = `연락처: ${data.phone}`;
+            if (successName) successName.textContent = data.name;
+            if (successPhone) successPhone.textContent = data.phone;
 
             openModal(successModal);
             consultForm.reset();
