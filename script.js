@@ -343,53 +343,32 @@ function initForm() {
         submitBtn.disabled = true;
 
         try {
-            // Supabase 연동
-            if (typeof SUPABASE_CONFIG !== 'undefined' && isSupabaseConfigured()) {
-                const supabaseClient = window.supabase.createClient(
-                    SUPABASE_CONFIG.url,
-                    SUPABASE_CONFIG.anonKey
-                );
-
-                const { error } = await supabaseClient
-                    .from('consultations')
-                    .insert({
-                        name: data.name,
-                        phone: data.phone,
-                        business: data.business,
-                        revenue: data.revenue,
-                        region: data.region,
-                        product: data.product || null,
-                        message: data.message || null,
-                        status: 'new'
+            // Google Sheets 연동
+            if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && typeof isGoogleSheetsConfigured === 'function' && isGoogleSheetsConfigured()) {
+                try {
+                    await fetch(GOOGLE_SHEETS_CONFIG.webAppUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'consultation',
+                            name: data.name,
+                            phone: data.phone,
+                            business: data.business,
+                            revenue: data.revenue,
+                            region: data.region,
+                            product: data.product || '',
+                            message: data.message || ''
+                        })
                     });
-
-                if (error) {
-                    console.error('Supabase error:', error);
-                    throw new Error('데이터 저장 오류');
+                    console.log('✅ Google Sheets에 데이터 전송 완료');
+                } catch (sheetError) {
+                    console.error('Google Sheets 전송 오류:', sheetError);
                 }
             } else {
-                // Supabase 미설정 시 로컬 백업 저장 (데이터 유실 방지)
-                const backupData = {
-                    name: data.name,
-                    phone: data.phone,
-                    business: data.business,
-                    revenue: data.revenue,
-                    region: data.region,
-                    product: data.product || null,
-                    message: data.message || null,
-                    status: 'new'
-                };
-
-                // 로컬 스토리지에 백업
-                if (typeof saveToLocalBackup === 'function') {
-                    saveToLocalBackup('consultations', backupData);
-                }
-
-                console.log('=== 상담 신청 데이터 (로컬 백업 저장됨) ===');
-                console.table(backupData);
-                console.warn('⚠️ Supabase 미설정: config.js를 확인하세요.');
-                console.info('💡 백업 데이터 확인: 개발자 도구에서 getLocalBackup("consultations") 실행');
-
+                console.log('=== 상담 신청 데이터 (Google Sheets 연동 필요) ===');
+                console.table(data);
+                console.warn('⚠️ config.js에 GOOGLE_SHEETS_CONFIG.webAppUrl을 설정하세요.');
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
 
