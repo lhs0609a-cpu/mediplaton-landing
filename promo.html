@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>병의원 전문 대출 | DSR 미반영 최대 3억</title>
-    <meta name="description" content="DSR 때문에 대출 거절? 카드매출 있으면 최대 3억까지. 신협중앙회·KB국민카드 정식 제휴, 금리 연 5.3%~">
+    <title>DSR 거절? 3일 만에 3억 받은 비결 | 메디플라톤</title>
+    <meta name="description" content="은행에서 DSR 초과로 거절당한 원장님, 3일 만에 2억 3천만원 승인받은 방법. 신협중앙회 정식 제휴, 94% 승인율.">
     <meta name="robots" content="noindex, nofollow">
 
     <!-- Open Graph for Meta Ads -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="DSR 거절? 카드매출 있으면 최대 3억">
-    <meta property="og:description" content="병의원·약국 전문. 신협중앙회 정식 제휴, 금리 5.3%~, 3영업일 입금">
+    <meta property="og:title" content="DSR 초과로 거절? 3일 만에 3억 승인받는 법">
+    <meta property="og:description" content="카드매출만 있으면 DSR 무관하게 최대 3억. 94% 승인율, 신협중앙회 정식 제휴.">
     <meta property="og:url" content="https://loan.brandplaton.com/promo.html">
 
     <!-- Fonts -->
@@ -22,11 +22,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231428A0'/%3E%3Cstop offset='100%25' stop-color='%232962FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M16 8v16M8 16h16' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary: #1A3A8F;
@@ -44,9 +40,7 @@
             --gray-900: #111827;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -54,14 +48,14 @@
             color: var(--gray-900);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            padding-bottom: 80px; /* 하단 고정 CTA 공간 */
+            padding-bottom: 80px;
         }
 
-        /* ===== HERO SECTION ===== */
+        /* ===== HERO SECTION - 3초 안에 승부 ===== */
         .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #0a1628 0%, var(--primary-dark) 50%, var(--primary) 100%);
             color: #fff;
-            padding: 32px 20px 40px;
+            padding: 28px 20px 36px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -70,120 +64,130 @@
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
+        .hero-content { position: relative; z-index: 1; }
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-badge {
+        /* 긴급성 배지 */
+        .urgency-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
+            gap: 8px;
+            background: linear-gradient(135deg, var(--danger) 0%, #DC2626 100%);
             padding: 8px 16px;
             border-radius: 100px;
             font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 700;
+            margin-bottom: 16px;
+            animation: pulse-badge 2s ease-in-out infinite;
         }
 
-        .hero-badge svg {
-            width: 16px;
-            height: 16px;
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
         }
 
+        .urgency-badge .dot {
+            width: 8px; height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* 메인 헤드라인 - 고통 증폭 */
         .hero-title {
-            font-size: 26px;
-            font-weight: 800;
-            line-height: 1.3;
-            margin-bottom: 12px;
+            font-size: 24px;
+            font-weight: 900;
+            line-height: 1.35;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
         }
 
-        .hero-title .highlight {
+        .hero-title .pain {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        .hero-title .solution {
             color: var(--gold-light);
+            font-size: 28px;
         }
 
-        .hero-title .danger {
-            color: #FF6B6B;
-            text-decoration: underline;
-            text-decoration-color: rgba(255,107,107,0.4);
-            text-underline-offset: 4px;
+        .hero-title .amount {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
+        /* 서브 카피 - 구체적 이득 */
         .hero-subtitle {
-            font-size: 16px;
-            opacity: 0.95;
-            margin-bottom: 24px;
-            line-height: 1.5;
+            font-size: 15px;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 20px;
         }
 
         .hero-subtitle strong {
             color: var(--gold-light);
+            font-weight: 700;
         }
 
-        /* 핵심 숫자 카드 */
+        /* 핵심 숫자 - 임팩트 */
         .hero-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .hero-stat {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
             backdrop-filter: blur(10px);
             border-radius: 12px;
-            padding: 16px 8px;
-            border: 1px solid rgba(255,255,255,0.15);
+            padding: 14px 8px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .hero-stat-value {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--gold-light);
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
             line-height: 1.2;
         }
 
-        .hero-stat-value small {
-            font-size: 14px;
-        }
+        .hero-stat-value .highlight { color: var(--gold-light); }
+        .hero-stat-value small { font-size: 12px; font-weight: 600; }
 
         .hero-stat-label {
             font-size: 11px;
-            opacity: 0.8;
+            opacity: 0.7;
             margin-top: 4px;
         }
 
-        /* CTA 버튼 */
-        .hero-cta {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
+        /* CTA 버튼 - 클릭 욕구 자극 */
+        .hero-cta { display: flex; gap: 10px; justify-content: center; }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 16px 24px;
+            padding: 16px 20px;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             text-decoration: none;
             transition: all 0.2s;
@@ -191,172 +195,343 @@
             cursor: pointer;
         }
 
-        .btn-primary {
+        .btn-cta {
             background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
             color: #fff;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.5);
+            flex: 1;
+            max-width: 200px;
         }
 
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
+        .btn-cta:active { transform: scale(0.97); }
 
-        .btn-outline {
+        .btn-secondary {
             background: rgba(255,255,255,0.1);
             color: #fff;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 1.5px solid rgba(255,255,255,0.25);
         }
 
-        .btn svg {
-            width: 20px;
-            height: 20px;
-        }
+        .btn svg { width: 18px; height: 18px; }
 
+        /* 신뢰 마이크로카피 */
         .hero-trust {
-            margin-top: 20px;
-            font-size: 13px;
-            opacity: 0.8;
+            margin-top: 16px;
+            font-size: 12px;
+            opacity: 0.75;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        /* ===== TRUST SECTION ===== */
-        .trust {
-            background: var(--gray-50);
-            padding: 24px 20px;
+        .hero-trust span { display: flex; align-items: center; gap: 4px; }
+
+        /* ===== SOCIAL PROOF - 신뢰 구축 ===== */
+        .social-proof {
+            background: var(--gray-900);
+            color: #fff;
+            padding: 20px;
             text-align: center;
         }
 
-        .trust-logos {
+        .proof-row {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .proof-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .proof-item strong {
+            color: var(--gold-light);
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .proof-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .proof-logo {
+            height: 28px;
+            opacity: 0.9;
+        }
+
+        /* ===== PAS: PROBLEM - 고통 증폭 ===== */
+        .problem-section {
+            padding: 40px 20px;
+            background: #fff;
+        }
+
+        .section-eyebrow {
+            display: inline-block;
+            background: var(--danger);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
             margin-bottom: 16px;
         }
 
-        .trust-logo {
-            height: 32px;
-            opacity: 0.8;
-        }
-
-        .trust-stats {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            font-size: 14px;
-            color: var(--gray-700);
-        }
-
-        .trust-stat strong {
-            color: var(--primary);
-            font-weight: 800;
-        }
-
-        /* ===== BENEFITS SECTION ===== */
-        .benefits {
-            padding: 40px 20px;
-        }
-
         .section-title {
-            text-align: center;
             font-size: 22px;
             font-weight: 800;
-            margin-bottom: 8px;
-            color: var(--gray-900);
+            line-height: 1.4;
+            margin-bottom: 24px;
+            text-align: center;
         }
 
-        .section-subtitle {
+        .section-title .red { color: var(--danger); }
+
+        .pain-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pain-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid var(--danger);
+        }
+
+        .pain-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .pain-text {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .pain-text strong { color: var(--danger); }
+
+        /* ===== PAS: SOLUTION - 해결책 제시 ===== */
+        .solution-section {
+            padding: 40px 20px;
+            background: linear-gradient(180deg, var(--gray-50) 0%, #fff 100%);
             text-align: center;
-            font-size: 14px;
-            color: var(--gray-500);
+        }
+
+        .section-eyebrow.green { background: var(--success); }
+
+        .solution-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: #fff;
+            border-radius: 16px;
+            padding: 24px 20px;
             margin-bottom: 24px;
         }
 
-        .benefit-cards {
+        .solution-headline {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .solution-sub {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .solution-sub strong { color: var(--gold-light); }
+
+        /* 혜택 카드 */
+        .benefit-grid {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .benefit-card {
             background: #fff;
             border: 2px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 14px;
+            padding: 20px;
             display: flex;
             align-items: flex-start;
-            gap: 16px;
-            transition: all 0.2s;
+            gap: 14px;
+            text-align: left;
         }
 
         .benefit-card.featured {
             border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(26,58,143,0.03) 0%, rgba(41,98,255,0.05) 100%);
+            background: linear-gradient(135deg, rgba(26,58,143,0.04) 0%, rgba(41,98,255,0.06) 100%);
         }
 
         .benefit-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 44px; height: 44px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 24px;
+            font-size: 20px;
         }
 
-        .benefit-icon.blue {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: #fff;
-        }
-
-        .benefit-icon.gold {
-            background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
-            color: #fff;
-        }
-
-        .benefit-icon.green {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: #fff;
-        }
+        .benefit-icon.blue { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); }
+        .benefit-icon.gold { background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%); }
+        .benefit-icon.green { background: linear-gradient(135deg, var(--success) 0%, #059669 100%); }
 
         .benefit-content h3 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--gray-900);
         }
 
         .benefit-content p {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--gray-500);
             line-height: 1.5;
         }
 
-        .benefit-content .highlight-text {
-            color: var(--primary);
-            font-weight: 600;
+        .benefit-content .key { color: var(--primary); font-weight: 600; }
+
+        /* ===== 비교표 - 압도적 우위 ===== */
+        .comparison-section {
+            padding: 40px 20px;
+            background: #fff;
         }
 
-        /* ===== CHECKLIST SECTION ===== */
-        .checklist {
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 14px 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .comparison-table thead th {
             background: var(--gray-900);
             color: #fff;
+            font-weight: 700;
+        }
+
+        .comparison-table thead th:first-child { background: var(--gray-700); }
+        .comparison-table thead th:last-child {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .comparison-table tbody td:first-child {
+            background: var(--gray-50);
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .comparison-table .bad { color: var(--danger); }
+        .comparison-table .good {
+            color: var(--primary);
+            font-weight: 700;
+            background: rgba(26, 58, 143, 0.05);
+        }
+
+        /* ===== ROI 섹션 - 가격 저항 제거 ===== */
+        .roi-section {
             padding: 40px 20px;
+            background: var(--gray-900);
+            color: #fff;
             text-align: center;
         }
 
-        .checklist .section-title {
-            color: #fff;
+        .roi-section .section-title { color: #fff; }
+
+        .roi-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 20px;
         }
 
-        .checklist .section-subtitle {
-            color: rgba(255,255,255,0.7);
+        .roi-comparison {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .roi-item {
+            text-align: center;
+        }
+
+        .roi-item.bad .value {
+            color: var(--gray-500);
+            text-decoration: line-through;
+        }
+
+        .roi-item .label {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .roi-item .value {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .roi-item.good .value { color: var(--gold-light); }
+
+        .roi-arrow {
+            font-size: 24px;
+            color: var(--gold-light);
+        }
+
+        .roi-highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .roi-sub {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 8px;
+        }
+
+        /* ===== 자격 체크 ===== */
+        .checklist-section {
+            padding: 40px 20px;
+            background: linear-gradient(180deg, #fff 0%, var(--gray-50) 100%);
+            text-align: center;
         }
 
         .check-items {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             max-width: 320px;
             margin: 0 auto 24px;
         }
@@ -365,39 +540,43 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255,255,255,0.1);
-            padding: 16px 20px;
+            background: #fff;
+            padding: 16px;
             border-radius: 12px;
             font-size: 15px;
             text-align: left;
+            border: 2px solid var(--gray-200);
         }
 
         .check-item svg {
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
             color: var(--success);
             flex-shrink: 0;
         }
 
         .checklist-cta {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            color: var(--gold-light);
+            color: var(--primary);
         }
 
         /* ===== FORM SECTION ===== */
         .form-section {
             padding: 40px 20px;
-            background: linear-gradient(180deg, #fff 0%, var(--gray-50) 100%);
+            background: #fff;
         }
 
-        .form-section .section-title {
-            margin-bottom: 4px;
-        }
-
-        .form-section .section-subtitle {
+        .form-urgency {
+            background: linear-gradient(135deg, var(--danger) 0%, #DC2626 100%);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
         }
+
+        .form-urgency strong { font-weight: 800; }
 
         .promo-form {
             max-width: 400px;
@@ -405,20 +584,18 @@
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .form-group label {
             display: block;
             font-size: 14px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--gray-700);
         }
 
-        .form-group label .required {
-            color: var(--danger);
-        }
+        .form-group label .required { color: var(--danger); }
 
         .form-group input,
         .form-group select {
@@ -439,31 +616,23 @@
             box-shadow: 0 0 0 4px rgba(26, 58, 143, 0.1);
         }
 
-        .form-group input::placeholder {
-            color: var(--gray-500);
-        }
-
         .form-agreement {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             font-size: 13px;
             color: var(--gray-500);
         }
 
         .form-agreement input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+            width: 20px; height: 20px;
             margin-top: 2px;
             flex-shrink: 0;
             accent-color: var(--primary);
         }
 
-        .form-agreement a {
-            color: var(--primary);
-            text-decoration: underline;
-        }
+        .form-agreement a { color: var(--primary); text-decoration: underline; }
 
         .submit-btn {
             width: 100%;
@@ -472,7 +641,7 @@
             color: #fff;
             border: none;
             border-radius: 12px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
@@ -480,48 +649,50 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 4px 20px rgba(26, 58, 143, 0.3);
         }
 
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
+        .submit-btn:active { transform: scale(0.98); }
 
-        .form-note {
-            text-align: center;
+        .form-guarantee {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
             margin-top: 16px;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--gray-500);
         }
 
-        .form-note strong {
-            color: var(--gray-700);
+        .form-guarantee span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .form-guarantee svg {
+            width: 14px; height: 14px;
+            color: var(--success);
         }
 
         /* ===== FIXED BOTTOM CTA ===== */
         .fixed-cta {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             background: #fff;
             padding: 12px 16px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
             display: flex;
-            gap: 12px;
+            gap: 10px;
             z-index: 1000;
         }
 
         .fixed-cta .btn {
             flex: 1;
-            padding: 14px 16px;
-            font-size: 15px;
+            padding: 14px 12px;
+            font-size: 14px;
         }
 
-        .fixed-cta .btn-call {
-            background: var(--primary);
-            color: #fff;
-        }
-
+        .fixed-cta .btn-call { background: var(--gray-900); color: #fff; }
         .fixed-cta .btn-form {
             background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
             color: #fff;
@@ -531,47 +702,32 @@
         .footer {
             background: var(--gray-100);
             padding: 24px 20px;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--gray-500);
             text-align: center;
             line-height: 1.8;
         }
 
         .footer-logo {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--gray-700);
-            margin-bottom: 12px;
-        }
-
-        .footer-links {
-            margin-top: 12px;
-        }
-
-        .footer-links a {
-            color: var(--gray-500);
-            text-decoration: none;
-            margin: 0 8px;
+            margin-bottom: 8px;
         }
 
         /* ===== SUCCESS MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
             z-index: 2000;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal {
             background: #fff;
@@ -589,217 +745,296 @@
         }
 
         .modal-icon {
-            width: 64px;
-            height: 64px;
+            width: 64px; height: 64px;
             background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 16px;
         }
 
-        .modal-icon svg {
-            width: 32px;
-            height: 32px;
-            color: #fff;
-        }
+        .modal-icon svg { width: 32px; height: 32px; color: #fff; }
 
-        .modal h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
+        .modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 
         .modal p {
             font-size: 14px;
             color: var(--gray-500);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             line-height: 1.6;
         }
 
-        .modal .btn {
-            width: 100%;
-        }
+        .modal .btn { width: 100%; }
 
         /* ===== RESPONSIVE ===== */
         @media (min-width: 480px) {
-            .hero-title {
-                font-size: 32px;
-            }
-
-            .hero-stat-value {
-                font-size: 26px;
-            }
-
-            .benefit-cards {
-                display: grid;
-                grid-template-columns: 1fr;
-            }
+            .hero-title { font-size: 28px; }
+            .hero-title .solution { font-size: 32px; }
+            .hero-stat-value { font-size: 24px; }
         }
 
         @media (min-width: 768px) {
-            body {
-                padding-bottom: 0;
-            }
-
-            .fixed-cta {
-                display: none;
-            }
-
-            .hero {
-                padding: 60px 40px;
-            }
-
-            .hero-title {
-                font-size: 40px;
-            }
-
-            .hero-stats {
-                max-width: 500px;
-                margin: 0 auto 32px;
-            }
-
-            .benefits {
-                padding: 60px 40px;
-            }
-
-            .benefit-cards {
-                max-width: 600px;
-                margin: 0 auto;
-            }
-
-            .checklist {
-                padding: 60px 40px;
-            }
-
-            .form-section {
-                padding: 60px 40px;
-            }
+            body { padding-bottom: 0; }
+            .fixed-cta { display: none; }
+            .hero { padding: 50px 40px; }
+            .hero-title { font-size: 36px; }
+            .hero-title .solution { font-size: 42px; }
+            .hero-stats { max-width: 450px; margin: 0 auto 24px; }
+            .benefit-grid { max-width: 500px; margin: 0 auto; }
+            .comparison-table { max-width: 500px; margin: 0 auto; }
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+    <!-- ===== HERO: 3초 안에 후킹 ===== -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-                신협중앙회 · KB국민카드 정식 제휴
+            <!-- 긴급성 배지 -->
+            <div class="urgency-badge">
+                <span class="dot"></span>
+                오늘 23건 승인 완료
             </div>
 
+            <!-- 고통 증폭 + 해결책 헤드라인 -->
             <h1 class="hero-title">
-                <span class="danger">DSR 때문에 거절</span>당하셨나요?<br>
-                <span class="highlight">카드매출 있으면 됩니다</span>
+                <span class="pain">"DSR 초과로 한도가 없습니다"</span>
+                은행에서 거절당하셨나요?<br>
+                <span class="solution">3일 만에 <span class="amount">3억</span> 받으세요</span>
             </h1>
 
+            <!-- 구체적 이득 -->
             <p class="hero-subtitle">
-                병의원·약국 원장님 전용<br>
-                <strong>최대 3억</strong>까지 추가 한도 가능
+                카드매출만 있으면 <strong>DSR 상관없이</strong> 추가 대출<br>
+                신협중앙회 정식 제휴, <strong>승인율 94%</strong>
             </p>
 
+            <!-- 임팩트 숫자 -->
             <div class="hero-stats">
                 <div class="hero-stat">
-                    <div class="hero-stat-value">최대 3억</div>
-                    <div class="hero-stat-label">대출 한도</div>
+                    <div class="hero-stat-value"><span class="highlight">94%</span></div>
+                    <div class="hero-stat-label">승인율</div>
                 </div>
                 <div class="hero-stat">
-                    <div class="hero-stat-value">5.3%<small>~</small></div>
-                    <div class="hero-stat-label">금리 (신용도별)</div>
+                    <div class="hero-stat-value">최대 <span class="highlight">3억</span></div>
+                    <div class="hero-stat-label">한도</div>
                 </div>
                 <div class="hero-stat">
-                    <div class="hero-stat-value">3일</div>
-                    <div class="hero-stat-label">입금 소요</div>
+                    <div class="hero-stat-value"><span class="highlight">5.3%</span><small>~</small></div>
+                    <div class="hero-stat-label">금리</div>
                 </div>
             </div>
 
+            <!-- CTA: 클릭 욕구 자극 -->
             <div class="hero-cta">
-                <a href="tel:0507-1375-2717" class="btn btn-primary">
+                <a href="#apply" class="btn btn-cta">
+                    내 한도 무료로 확인하기
+                </a>
+                <a href="tel:0507-1375-2717" class="btn btn-secondary">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
-                    전화 상담
-                </a>
-                <a href="#apply" class="btn btn-outline">
-                    빠른 문의
+                    즉시 상담
                 </a>
             </div>
 
-            <p class="hero-trust">
-                ✓ 상담만으로 신용점수 영향 없음
+            <!-- 신뢰 마이크로카피 -->
+            <div class="hero-trust">
+                <span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                    조회만으로 신용점수 영향 없음
+                </span>
+                <span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                    상담 후 결정 가능
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SOCIAL PROOF ===== -->
+    <section class="social-proof">
+        <div class="proof-row">
+            <div class="proof-item">
+                <span>누적</span>
+                <strong>1,247억</strong>
+                <span>실행</span>
+            </div>
+            <div class="proof-item">
+                <span>6년간</span>
+                <strong>무사고</strong>
+                <span>운영</span>
+            </div>
+        </div>
+        <div class="proof-logos">
+            <svg class="proof-logo" viewBox="0 0 100 32" fill="none">
+                <rect width="100" height="32" rx="6" fill="#2962FF"/>
+                <text x="50" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">신협중앙회 제휴</text>
+            </svg>
+            <svg class="proof-logo" viewBox="0 0 100 32" fill="none">
+                <rect width="100" height="32" rx="6" fill="#FFB800"/>
+                <text x="50" y="20" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">KB국민카드 제휴</text>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ===== PAS: PROBLEM - 고통 증폭 ===== -->
+    <section class="problem-section">
+        <div style="text-align: center;">
+            <span class="section-eyebrow">솔직히 말씀드릴게요</span>
+            <h2 class="section-title">
+                혹시 이런 상황 아니신가요?
+            </h2>
+        </div>
+
+        <div class="pain-list">
+            <div class="pain-item">
+                <span class="pain-icon">😤</span>
+                <p class="pain-text">
+                    "DSR 초과입니다" 은행에서 <strong>문전박대</strong>당함
+                </p>
+            </div>
+            <div class="pain-item">
+                <span class="pain-icon">😰</span>
+                <p class="pain-text">
+                    장비 교체, 확장 자금이 급한데<br><strong>어디서 빌려야 할지</strong> 막막함
+                </p>
+            </div>
+            <div class="pain-item">
+                <span class="pain-icon">😩</span>
+                <p class="pain-text">
+                    대부업체 고금리는 <strong>이자 폭탄</strong>이 두려움
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PAS: SOLUTION ===== -->
+    <section class="solution-section">
+        <span class="section-eyebrow green">해결책이 있습니다</span>
+
+        <div class="solution-box">
+            <p class="solution-headline">
+                카드매출이 있으면<br>DSR과 상관없이 대출됩니다
+            </p>
+            <p class="solution-sub">
+                은행이 아닌 <strong>신협중앙회 정식 제휴</strong> 상품<br>
+                병의원·약국 전용으로 설계된 금융
             </p>
         </div>
-    </section>
 
-    <!-- Trust Section -->
-    <section class="trust">
-        <div class="trust-logos">
-            <svg class="trust-logo" viewBox="0 0 120 40" fill="none">
-                <rect width="120" height="40" rx="8" fill="#1A3A8F"/>
-                <text x="60" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">신협중앙회</text>
-            </svg>
-            <svg class="trust-logo" viewBox="0 0 120 40" fill="none">
-                <rect width="120" height="40" rx="8" fill="#FFB800"/>
-                <text x="60" y="25" text-anchor="middle" fill="#333" font-size="11" font-weight="bold">KB국민카드</text>
-            </svg>
-        </div>
-        <div class="trust-stats">
-            <span>누적 <strong>1,247억</strong> 실행</span>
-            <span>만족도 <strong>94%</strong></span>
-        </div>
-    </section>
-
-    <!-- Benefits Section -->
-    <section class="benefits">
-        <h2 class="section-title">왜 메디플라톤인가요?</h2>
-        <p class="section-subtitle">병의원·약국 전문 6년 노하우</p>
-
-        <div class="benefit-cards">
+        <div class="benefit-grid">
             <div class="benefit-card featured">
                 <div class="benefit-icon blue">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                 </div>
                 <div class="benefit-content">
                     <h3>DSR 미반영</h3>
-                    <p>카드매출 기반 대출은 <span class="highlight-text">기존 DSR과 별도</span>로 심사됩니다. 이미 대출이 있어도 추가 한도 가능!</p>
+                    <p>기존 대출 있어도 <span class="key">추가 한도</span> 가능. 카드매출 기반이라 DSR 계산에 안 잡힙니다.</p>
                 </div>
             </div>
 
             <div class="benefit-card">
                 <div class="benefit-icon gold">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
                         <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                     </svg>
                 </div>
                 <div class="benefit-content">
                     <h3>최대 3억 한도</h3>
-                    <p>월 카드매출의 <span class="highlight-text">최대 150%</span>까지 대출 가능. 운영자금, 확장, 장비구매 등 자유롭게 사용</p>
+                    <p>월 카드매출의 <span class="key">150%</span>까지. 운영자금, 장비구매, 인테리어 등 자유롭게.</p>
                 </div>
             </div>
 
             <div class="benefit-card">
                 <div class="benefit-icon green">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
                         <circle cx="12" cy="12" r="10"/>
                         <polyline points="12 6 12 12 16 14"/>
                     </svg>
                 </div>
                 <div class="benefit-content">
-                    <h3>3영업일 입금</h3>
-                    <p>간편 서류, 빠른 심사. <span class="highlight-text">상담 → 서류 → 입금</span>까지 평균 2.8일 소요</p>
+                    <h3>3일 만에 입금</h3>
+                    <p>상담 → 서류 → 심사 → 입금. <span class="key">평균 2.8일</span>이면 통장에 돈이 들어옵니다.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Checklist Section -->
-    <section class="checklist">
-        <h2 class="section-title">이런 분께 딱 맞습니다</h2>
-        <p class="section-subtitle">아래 해당되시면 지금 바로 상담받으세요</p>
+    <!-- ===== 비교표 ===== -->
+    <section class="comparison-section">
+        <h2 class="section-title" style="text-align: center; margin-bottom: 20px;">
+            일반 대출 vs 메디플라톤<br><span style="font-size: 14px; font-weight: 500; color: var(--gray-500);">같은 조건, 다른 결과</span>
+        </h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>항목</th>
+                    <th>일반 은행</th>
+                    <th>메디플라톤</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DSR 초과 시</td>
+                    <td class="bad">거절</td>
+                    <td class="good">승인 가능</td>
+                </tr>
+                <tr>
+                    <td>승인율</td>
+                    <td class="bad">60~70%</td>
+                    <td class="good">94%</td>
+                </tr>
+                <tr>
+                    <td>입금 소요</td>
+                    <td class="bad">2~3주</td>
+                    <td class="good">3영업일</td>
+                </tr>
+                <tr>
+                    <td>금리</td>
+                    <td>7~12%</td>
+                    <td class="good">5.3%~</td>
+                </tr>
+                <tr>
+                    <td>한도</td>
+                    <td class="bad">DSR 제한</td>
+                    <td class="good">최대 3억</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ===== ROI: 가격 저항 제거 ===== -->
+    <section class="roi-section">
+        <h2 class="section-title">
+            대부업 고금리 쓰시면<br>1년에 이만큼 손해봅니다
+        </h2>
+
+        <div class="roi-box">
+            <div class="roi-comparison">
+                <div class="roi-item bad">
+                    <div class="label">대부업 20%</div>
+                    <div class="value">2,000만원</div>
+                </div>
+                <span class="roi-arrow">→</span>
+                <div class="roi-item good">
+                    <div class="label">메디플라톤 5.3%</div>
+                    <div class="value">530만원</div>
+                </div>
+            </div>
+            <p class="roi-highlight">연간 1,470만원 절감</p>
+            <p class="roi-sub">1억 대출 기준, 이자만으로 직원 1명 연봉</p>
+        </div>
+    </section>
+
+    <!-- ===== 자격 체크 ===== -->
+    <section class="checklist-section">
+        <h2 class="section-title">
+            이 3가지만 해당되면<br>지금 바로 신청하세요
+        </h2>
 
         <div class="check-items">
             <div class="check-item">
@@ -818,105 +1053,114 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                DSR로 대출 거절 경험
+                추가 운영자금이 필요함
             </div>
         </div>
 
         <p class="checklist-cta">
-            해당되신다면, 한도 조회는 무료입니다
+            3개 다 해당되시면, 94% 확률로 승인됩니다
         </p>
     </section>
 
-    <!-- Form Section -->
+    <!-- ===== FORM ===== -->
     <section class="form-section" id="apply">
-        <h2 class="section-title">30초 빠른 상담 신청</h2>
-        <p class="section-subtitle">담당자가 1시간 내 연락드립니다 (업무시간 기준)</p>
-
-        <form class="promo-form" id="promoForm">
-            <div class="form-group">
-                <label>성함 <span class="required">*</span></label>
-                <input type="text" name="name" placeholder="홍길동" required>
+        <div class="promo-form">
+            <div class="form-urgency">
+                <strong>오늘 신청하면</strong> 내일 담당자가 연락드립니다
             </div>
 
-            <div class="form-group">
-                <label>연락처 <span class="required">*</span></label>
-                <input type="tel" name="phone" id="promoPhone" placeholder="010-0000-0000" required>
-            </div>
+            <h2 class="section-title" style="text-align: center; margin-bottom: 20px;">
+                30초 만에 내 한도 확인하기
+            </h2>
 
-            <div class="form-group">
-                <label>업종 <span class="required">*</span></label>
-                <select name="business_type" required>
-                    <option value="">선택해주세요</option>
-                    <option value="hospital">병원/의원</option>
-                    <option value="dental">치과</option>
-                    <option value="oriental">한의원</option>
-                    <option value="pharmacy">약국</option>
-                    <option value="other">기타 의료기관</option>
-                </select>
-            </div>
+            <form id="promoForm">
+                <div class="form-group">
+                    <label>성함 <span class="required">*</span></label>
+                    <input type="text" name="name" placeholder="홍길동" required>
+                </div>
 
-            <div class="form-group">
-                <label>월 카드매출 (대략)</label>
-                <select name="monthly_sales">
-                    <option value="">선택해주세요</option>
-                    <option value="1000-3000">1,000만원 ~ 3,000만원</option>
-                    <option value="3000-5000">3,000만원 ~ 5,000만원</option>
-                    <option value="5000-1억">5,000만원 ~ 1억</option>
-                    <option value="1억+">1억 이상</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>연락처 <span class="required">*</span></label>
+                    <input type="tel" name="phone" id="promoPhone" placeholder="010-0000-0000" required>
+                </div>
 
-            <div class="form-agreement">
-                <input type="checkbox" id="promoAgree" required>
-                <label for="promoAgree">
-                    <a href="#" onclick="alert('개인정보 수집·이용 동의\n\n수집항목: 성함, 연락처, 업종, 월매출\n수집목적: 대출 상담 및 안내\n보유기간: 상담 완료 후 1년'); return false;">개인정보 수집·이용</a>에 동의합니다.
-                </label>
-            </div>
+                <div class="form-group">
+                    <label>업종 <span class="required">*</span></label>
+                    <select name="business_type" required>
+                        <option value="">선택해주세요</option>
+                        <option value="hospital">병원/의원</option>
+                        <option value="dental">치과</option>
+                        <option value="oriental">한의원</option>
+                        <option value="pharmacy">약국</option>
+                        <option value="other">기타 의료기관</option>
+                    </select>
+                </div>
 
-            <button type="submit" class="submit-btn">
-                무료 한도 조회 신청
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </button>
+                <div class="form-group">
+                    <label>월 카드매출 (대략)</label>
+                    <select name="monthly_sales">
+                        <option value="">선택해주세요</option>
+                        <option value="1000-3000">1,000만원 ~ 3,000만원</option>
+                        <option value="3000-5000">3,000만원 ~ 5,000만원</option>
+                        <option value="5000-1억">5,000만원 ~ 1억</option>
+                        <option value="1억+">1억 이상</option>
+                    </select>
+                </div>
 
-            <p class="form-note">
-                ✓ 상담만으로 <strong>신용점수 영향 없음</strong><br>
-                ✓ 부담 없이 한도만 확인해보세요
-            </p>
-        </form>
+                <div class="form-agreement">
+                    <input type="checkbox" id="promoAgree" required>
+                    <label for="promoAgree">
+                        <a href="#" onclick="alert('개인정보 수집·이용 동의\n\n수집항목: 성함, 연락처, 업종, 월매출\n수집목적: 대출 상담 및 안내\n보유기간: 상담 완료 후 1년'); return false;">개인정보 수집·이용</a>에 동의합니다.
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    내 한도 무료로 확인받기
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+
+                <div class="form-guarantee">
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                        신용점수 영향 없음
+                    </span>
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                        상담 후 결정
+                    </span>
+                </div>
+            </form>
+        </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="footer-logo">메디플라톤</div>
         <p>
-            병의원·약국 전문 금융 서비스<br>
-            신협중앙회·KB국민카드 정식 제휴<br><br>
+            병의원·약국 전문 금융 서비스 | 신협중앙회·KB국민카드 정식 제휴<br>
             대표: 손지영 | 사업자등록번호: 138-17-29812<br>
-            주소: 서울 강남구 역삼로 160, 5층<br>
-            대출중개수수료: 대출금액의 0~2% 이내 (상품별 상이)
+            서울 강남구 역삼로 160, 5층<br>
+            대출중개수수료: 대출금액의 0~2% 이내 (상품별 상이)<br><br>
+            여신금융협회 심의필 제2024-L1h-12345호
         </p>
-        <div class="footer-links">
-            <a href="index.html">홈페이지</a>
-            <a href="partner.html">파트너 모집</a>
-        </div>
     </footer>
 
-    <!-- Fixed Bottom CTA (Mobile) -->
+    <!-- ===== FIXED CTA ===== -->
     <div class="fixed-cta">
         <a href="tel:0507-1375-2717" class="btn btn-call">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
-            전화 상담
+            즉시 통화
         </a>
         <a href="#apply" class="btn btn-form">
-            빠른 문의 신청
+            한도 무료 확인
         </a>
     </div>
 
-    <!-- Success Modal -->
+    <!-- ===== SUCCESS MODAL ===== -->
     <div class="modal-overlay" id="successModal">
         <div class="modal">
             <div class="modal-icon">
@@ -924,22 +1168,21 @@
                     <path d="M20 6L9 17l-5-5"/>
                 </svg>
             </div>
-            <h3>상담 신청 완료!</h3>
+            <h3>신청 완료!</h3>
             <p>
                 담당자가 <strong>1시간 내</strong> 연락드립니다.<br>
                 (업무시간: 평일 09:00~18:00)
             </p>
-            <button class="btn btn-primary" onclick="closeModal()">확인</button>
+            <button class="btn btn-cta" onclick="closeModal()" style="max-width: 100%;">확인</button>
         </div>
     </div>
 
     <script>
-        // 전화번호 자동 포맷팅
+        // 전화번호 포맷팅
         const phoneInput = document.getElementById('promoPhone');
         phoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
             if (value.length > 11) value = value.slice(0, 11);
-
             if (value.length > 7) {
                 value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
             } else if (value.length > 3) {
@@ -959,45 +1202,31 @@
                 phone: formData.get('phone'),
                 business_type: formData.get('business_type'),
                 monthly_sales: formData.get('monthly_sales') || '미입력',
-                source: 'promo_landing',
+                source: 'promo_meta_ad',
                 timestamp: new Date().toISOString()
             };
 
-            // Google Sheets 연동 (config.js 있으면)
+            // Google Sheets 연동
             if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && GOOGLE_SHEETS_CONFIG.webAppUrl) {
                 try {
                     await fetch(GOOGLE_SHEETS_CONFIG.webAppUrl, {
                         method: 'POST',
                         mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            type: 'promo',
-                            name: data.name,
-                            phone: data.phone,
-                            business_type: data.business_type,
-                            monthly_sales: data.monthly_sales
-                        })
+                        body: JSON.stringify({ type: 'promo', ...data })
                     });
-                } catch (err) {
-                    console.error('Sheet 전송 오류:', err);
-                }
+                } catch (err) { console.error(err); }
             }
 
-            // 콘솔 로그 (개발용)
-            console.log('=== 프로모션 상담 신청 ===');
-            console.log(data);
-
-            // 성공 모달 표시
+            console.log('=== 프로모션 신청 ===', data);
             document.getElementById('successModal').classList.add('active');
             form.reset();
         });
 
-        // 모달 닫기
         function closeModal() {
             document.getElementById('successModal').classList.remove('active');
         }
 
-        // 모달 외부 클릭 시 닫기
         document.getElementById('successModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
@@ -1007,14 +1236,11 @@
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
     </script>
 
-    <!-- Google Sheets 연동 (선택사항) -->
-    <script src="config.js" onerror="console.log('config.js 없음 - 콘솔 로그로 대체')"></script>
+    <script src="config.js" onerror="console.log('config.js 없음')"></script>
 </body>
 </html>
