@@ -5587,7 +5587,7 @@ div.product-cta .btn {
     padding: 120px 0;
     background: linear-gradient(180deg, var(--white) 0%, var(--gray-50) 100%);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .cases-section::before {
