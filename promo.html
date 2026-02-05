@@ -126,15 +126,18 @@
 
         .hero-title .pain {
             display: block;
-            font-size: 13px;
-            font-weight: 500;
-            opacity: 0.95;
-            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
 
         .hero-title .solution {
+            display: block;
             color: var(--gold-light);
-            font-size: 26px;
+            font-size: 24px;
+            line-height: 1.3;
         }
 
         .hero-title .amount {
@@ -169,27 +172,29 @@
         .hero-stat {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 12px 14px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 14px 12px;
+            border: 1px solid rgba(255,255,255,0.15);
             flex: 1;
-            max-width: 110px;
-            min-width: 90px;
+            max-width: 105px;
+            min-width: 85px;
         }
 
         .hero-stat-value {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 900;
             color: var(--gold-light);
             line-height: 1.2;
+            white-space: nowrap;
         }
 
-        .hero-stat-value small { font-size: 11px; font-weight: 600; }
+        .hero-stat-value small { font-size: 12px; font-weight: 700; }
 
         .hero-stat-label {
-            font-size: 10px;
-            opacity: 0.85;
-            margin-top: 2px;
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 4px;
+            font-weight: 500;
         }
 
         /* CTA 버튼 */
@@ -220,10 +225,16 @@
         .btn-cta {
             background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.5);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+            font-size: 15px;
         }
 
-        .btn-cta:active { transform: scale(0.97); }
+        .btn-cta:hover {
+            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-cta:active { transform: scale(0.98); }
 
         .btn-secondary {
             background: rgba(255,255,255,0.1);
@@ -285,11 +296,11 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        .proof-logo { height: 24px; opacity: 0.9; }
+        .proof-logo { height: 28px; opacity: 0.95; }
 
         /* ===== PROBLEM SECTION ===== */
         .problem-section {
-            padding: 32px 16px;
+            padding: 40px 16px;
             background: #fff;
             text-align: center;
         }
@@ -306,11 +317,12 @@
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: 21px;
             font-weight: 800;
             line-height: 1.4;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             text-align: center;
+            word-break: keep-all;
         }
 
         .pain-list {
@@ -325,10 +337,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             background: var(--gray-50);
-            padding: 16px;
-            border-radius: 12px;
+            padding: 20px 16px;
+            border-radius: 14px;
             border: 2px solid var(--gray-100);
         }
 
@@ -376,7 +388,7 @@
 
         /* ===== SOLUTION SECTION ===== */
         .solution-section {
-            padding: 32px 16px;
+            padding: 40px 16px;
             background: linear-gradient(180deg, var(--gray-50) 0%, #fff 100%);
             text-align: center;
         }
@@ -464,7 +476,7 @@
 
         /* ===== COMPARISON TABLE ===== */
         .comparison-section {
-            padding: 32px 16px;
+            padding: 40px 16px;
             background: #fff;
             text-align: center;
         }
@@ -523,7 +535,7 @@
 
         /* ===== ROI SECTION ===== */
         .roi-section {
-            padding: 32px 16px;
+            padding: 40px 16px;
             background: var(--gray-900);
             color: #fff;
             text-align: center;
@@ -660,8 +672,8 @@
 
         /* ===== TESTIMONIAL SECTION ===== */
         .testimonial-section {
-            padding: 32px 16px;
-            background: linear-gradient(180deg, var(--gray-50) 0%, #fff 100%);
+            padding: 40px 16px;
+            background: linear-gradient(180deg, #fff 0%, var(--gray-50) 100%);
             text-align: center;
         }
 
@@ -677,8 +689,9 @@
             background: #fff;
             border: 2px solid var(--gray-200);
             border-radius: 14px;
-            padding: 18px 16px;
+            padding: 20px 16px;
             text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .testimonial-header {
@@ -745,8 +758,8 @@
 
         /* ===== CHECKLIST SECTION ===== */
         .checklist-section {
-            padding: 32px 16px;
-            background: linear-gradient(180deg, #fff 0%, var(--gray-50) 100%);
+            padding: 40px 16px;
+            background: linear-gradient(180deg, var(--gray-50) 0%, #fff 100%);
             text-align: center;
         }
 
@@ -784,7 +797,7 @@
 
         /* ===== FORM SECTION ===== */
         .form-section {
-            padding: 32px 16px;
+            padding: 40px 16px;
             background: #fff;
             text-align: center;
         }
@@ -1157,22 +1170,23 @@
         @media (min-width: 768px) {
             body { padding-bottom: 0; }
             .fixed-cta { display: none; }
-            .hero { padding: 40px 24px; }
-            .hero-title { font-size: 32px; }
-            .hero-title .solution { font-size: 38px; }
-            .hero-title .pain { font-size: 15px; }
-            .hero-stats { gap: 12px; }
-            .hero-stat { max-width: 120px; padding: 16px 20px; }
-            .hero-stat-value { font-size: 24px; }
-            .hero-cta { flex-direction: row; }
-            .btn { max-width: 240px; }
-            .section-title { font-size: 26px; }
-            .pain-list, .benefit-grid, .check-items, .testimonial-list { max-width: 400px; }
-            .comparison-table { max-width: 400px; }
-            .solution-box, .roi-box { max-width: 400px; }
-            .promo-form { max-width: 360px; }
-            .pain-item { flex-direction: row; text-align: left; }
+            .hero { padding: 48px 24px; }
+            .hero-title { font-size: 28px; }
+            .hero-title .solution { font-size: 34px; }
+            .hero-title .pain { font-size: 16px; }
+            .hero-stats { gap: 16px; }
+            .hero-stat { max-width: 130px; padding: 18px 20px; }
+            .hero-stat-value { font-size: 22px; }
+            .hero-cta { flex-direction: row; gap: 16px; }
+            .btn { max-width: 240px; padding: 16px 28px; }
+            .section-title { font-size: 28px; }
+            .pain-list, .benefit-grid, .check-items, .testimonial-list { max-width: 450px; }
+            .comparison-table { max-width: 450px; }
+            .solution-box, .roi-box { max-width: 450px; }
+            .promo-form { max-width: 380px; }
+            .pain-item { flex-direction: row; text-align: left; gap: 16px; }
             .pain-text { text-align: left; }
+            .testimonial-list { gap: 16px; }
         }
     </style>
 </head>
@@ -1186,8 +1200,8 @@
             </div>
 
             <h1 class="hero-title">
-                <span class="pain">지난주 DSR 초과로 거절당한 치과원장님,</span>
-                <span class="solution">어제 <span class="amount">2억 3천</span> 입금됐습니다</span>
+                <span class="pain">DSR 초과로 거절당한 치과원장님,</span>
+                <span class="solution">3일 만에 <span class="amount">2억 3천</span> 입금</span>
             </h1>
 
             <p class="hero-subtitle">
