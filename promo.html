@@ -421,6 +421,82 @@
 
         .solution-sub strong { color: var(--gold-light); }
 
+        /* DSR 설명 */
+        .dsr-explanation {
+            margin-top: 16px;
+        }
+
+        .dsr-compare {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .dsr-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px 10px;
+            flex: 1;
+            max-width: 130px;
+        }
+
+        .dsr-item strong {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .dsr-item span {
+            display: block;
+            font-size: 10px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+
+        .dsr-item.bad {
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .dsr-item.good {
+            border: 1px solid var(--gold);
+            background: rgba(245, 158, 11, 0.15);
+        }
+
+        .dsr-tag {
+            margin-top: 6px;
+            padding: 3px 8px;
+            border-radius: 100px;
+            font-size: 10px !important;
+            font-weight: 700;
+            opacity: 1 !important;
+        }
+
+        .dsr-item.bad .dsr-tag {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .dsr-tag.highlight {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .dsr-arrow {
+            font-size: 16px;
+            opacity: 0.7;
+        }
+
+        .dsr-summary {
+            font-size: 12px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .dsr-summary strong {
+            color: var(--gold-light);
+        }
+
         /* 혜택 카드 */
         .benefit-grid {
             display: flex;
@@ -473,6 +549,14 @@
         }
 
         .benefit-content .key { color: var(--primary); font-weight: 600; }
+
+        .benefit-condition {
+            display: block;
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--gray-400);
+            font-weight: 400;
+        }
 
         /* ===== COMPARISON TABLE ===== */
         .comparison-section {
@@ -746,6 +830,28 @@
             color: var(--primary);
         }
 
+        .testimonial-notice {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: -16px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-date {
+            font-size: 11px;
+            color: var(--gray-400);
+            background: var(--gray-100);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .testimonial-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
         .testimonial-amount {
             display: inline-block;
             font-size: 12px;
@@ -754,6 +860,23 @@
             background: rgba(16, 185, 129, 0.1);
             padding: 4px 10px;
             border-radius: 100px;
+        }
+
+        .testimonial-rate {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(26, 58, 143, 0.08);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        .testimonial-disclaimer {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-top: 16px;
+            line-height: 1.5;
         }
 
         /* ===== CHECKLIST SECTION ===== */
@@ -793,6 +916,41 @@
             font-size: 15px;
             font-weight: 700;
             color: var(--primary);
+        }
+
+        .rejection-notice {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .rejection-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .rejection-text {
+            font-size: 12px;
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+
+        .rejection-text strong {
+            color: var(--primary);
+        }
+
+        .rejection-highlight {
+            display: block;
+            margin-top: 8px;
+            color: var(--gray-600);
+            font-weight: 500;
         }
 
         /* ===== FORM SECTION ===== */
@@ -1327,12 +1485,27 @@
 
         <div class="solution-box">
             <p class="solution-headline">
-                DSR? 그거 은행 얘기고요,<br>신협은 <strong>'얼마 버는지'</strong>만 봅니다
+                왜 DSR과 무관할까요?
             </p>
-            <p class="solution-sub">
-                원장님의 '진짜 신용' = 매일 들어오는 카드매출<br>
-                <strong>대부업 아닙니다. 제1금융권 신협 상품입니다</strong>
-            </p>
+            <div class="dsr-explanation">
+                <div class="dsr-compare">
+                    <div class="dsr-item bad">
+                        <strong>일반 대출</strong>
+                        <span>연소득 기준 상환능력 판단</span>
+                        <span class="dsr-tag">DSR 40% 제한</span>
+                    </div>
+                    <div class="dsr-arrow">→</div>
+                    <div class="dsr-item good">
+                        <strong>카드매출 담보</strong>
+                        <span>미래 매출채권을 담보로 설정</span>
+                        <span class="dsr-tag highlight">DSR 미반영</span>
+                    </div>
+                </div>
+                <p class="dsr-summary">
+                    쉽게 말해, <strong>"월급 대신 가게 매출을 담보로 잡는 것"</strong>입니다.<br>
+                    금융위원회 정식 인가 상품 · 대부업 아닌 제1금융권 신협
+                </p>
+            </div>
         </div>
 
         <div class="benefit-grid">
@@ -1346,6 +1519,7 @@
                 <div class="benefit-content">
                     <h3>3영업일 입금</h3>
                     <p><span class="key">월요일 상담 → 목요일 통장 입금</span><br>급할수록 메디플라톤입니다</p>
+                    <span class="benefit-condition">※ 서류 완비 + 심사 통과 기준</span>
                 </div>
             </div>
 
@@ -1444,57 +1618,71 @@
 
     <!-- ===== TESTIMONIALS ===== -->
     <section class="testimonial-section">
-        <span class="section-eyebrow green">실제 후기</span>
+        <span class="section-eyebrow green">이용 후기</span>
         <h2 class="section-title">
             먼저 이용하신 원장님들
         </h2>
+        <p class="testimonial-notice">※ 본인 동의 하에 게재된 실제 상담 사례입니다</p>
 
         <div class="testimonial-list">
             <div class="testimonial-card">
                 <div class="testimonial-header">
                     <div class="testimonial-avatar">김</div>
                     <div class="testimonial-info">
-                        <strong>김OO 원장</strong>
-                        <span>분당 내과의원</span>
+                        <strong>김** 원장님</strong>
+                        <span>경기 성남 · 내과의원</span>
                     </div>
-                    <div class="testimonial-stars">★★★★★</div>
+                    <span class="testimonial-date">2024.11 상담</span>
                 </div>
                 <p class="testimonial-text">
-                    "지난달 <strong>시중은행 3곳에서 거절</strong>당했는데, 여기선 <strong>1억 5천</strong> 나왔어요. DSR 때문에 포기했던 인테리어 공사 드디어 시작합니다."
+                    "시중은행 3곳에서 DSR 초과로 거절당한 후 상담받았습니다. 카드매출 증빙 제출 후 <strong>1억 5천만원 승인</strong>받아 인테리어 공사 진행했습니다."
                 </p>
-                <span class="testimonial-amount">승인 금액: 1억 5,000만원</span>
+                <div class="testimonial-meta">
+                    <span class="testimonial-amount">승인: 1억 5,000만원</span>
+                    <span class="testimonial-rate">금리: 연 5.9%</span>
+                </div>
             </div>
 
             <div class="testimonial-card">
                 <div class="testimonial-header">
                     <div class="testimonial-avatar">이</div>
                     <div class="testimonial-info">
-                        <strong>이OO 원장</strong>
-                        <span>강남 치과</span>
+                        <strong>이** 원장님</strong>
+                        <span>서울 강남 · 치과</span>
                     </div>
-                    <div class="testimonial-stars">★★★★★</div>
+                    <span class="testimonial-date">2024.12 상담</span>
                 </div>
                 <p class="testimonial-text">
-                    "CT 장비 계약금 마감이 3일 남았는데, <strong>정말 3일 만에 입금</strong>돼서 계약 성공했습니다. 속도가 생명이더라고요."
+                    "CT 장비 계약금 기한이 급했는데, 서류 완비 후 <strong>3영업일 만에 입금</strong>됐습니다. 전화 상담부터 입금까지 담당자 분이 꼼꼼히 안내해주셨어요."
                 </p>
-                <span class="testimonial-amount">승인 금액: 2억 3,000만원</span>
+                <div class="testimonial-meta">
+                    <span class="testimonial-amount">승인: 2억 3,000만원</span>
+                    <span class="testimonial-rate">금리: 연 5.5%</span>
+                </div>
             </div>
 
             <div class="testimonial-card">
                 <div class="testimonial-header">
                     <div class="testimonial-avatar">박</div>
                     <div class="testimonial-info">
-                        <strong>박OO 원장</strong>
-                        <span>수원 약국</span>
+                        <strong>박** 약사님</strong>
+                        <span>경기 수원 · 약국</span>
                     </div>
-                    <div class="testimonial-stars">★★★★★</div>
+                    <span class="testimonial-date">2024.10 상담</span>
                 </div>
                 <p class="testimonial-text">
-                    "대부업체 20% 금리 쓰려다가 여기서 <strong>5.8%</strong>로 받았습니다. 연간 이자만 <strong>1천만원 이상 절약</strong>이에요."
+                    "대부업 20% 금리밖에 선택지가 없었는데, 여기서 <strong>연 5.8%</strong>로 받았습니다. 이자 부담이 확 줄어서 운영이 훨씬 수월해졌어요."
                 </p>
-                <span class="testimonial-amount">승인 금액: 8,000만원</span>
+                <div class="testimonial-meta">
+                    <span class="testimonial-amount">승인: 8,000만원</span>
+                    <span class="testimonial-rate">금리: 연 5.8%</span>
+                </div>
             </div>
         </div>
+
+        <p class="testimonial-disclaimer">
+            ※ 개인별 신용상태, 카드매출에 따라 승인 금액 및 금리는 상이할 수 있습니다.
+        </p>
     </section>
 
     <!-- ===== CHECKLIST ===== -->
@@ -1525,8 +1713,17 @@
         </div>
 
         <p class="checklist-cta">
-            3개 다 해당되시면<br>94% 확률로 승인됩니다
+            3개 다 해당되시면<br>높은 확률로 승인됩니다
         </p>
+
+        <div class="rejection-notice">
+            <p class="rejection-title">승인이 어려운 경우에도 안심하세요</p>
+            <p class="rejection-text">
+                심사 결과 승인이 어려운 경우,<br>
+                조건에 맞는 <strong>다른 금융 상품을 안내</strong>해드립니다.<br>
+                <span class="rejection-highlight">상담 비용은 무료이며, 부담 없이 문의하세요.</span>
+            </p>
+        </div>
     </section>
 
     <!-- ===== FORM ===== -->
