@@ -920,6 +920,122 @@
             color: var(--primary);
         }
 
+        /* ===== PARTNER PROOF GALLERY (정산 실적) ===== */
+        .proof-gallery-section {
+            padding: 80px 0;
+            background: var(--gray-50);
+        }
+
+        .proof-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .proof-gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            aspect-ratio: 4/3;
+            background: var(--gray-100);
+        }
+
+        .proof-gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .proof-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .proof-gallery-item.featured {
+            grid-column: span 2;
+            aspect-ratio: 16/9;
+        }
+
+        .proof-gallery-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            color: white;
+            padding: 32px 16px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .proof-gallery-label .amount {
+            display: block;
+            font-size: 16px;
+            font-weight: 800;
+            color: #FCD34D;
+        }
+
+        .proof-gallery-notice {
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--gray-500);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        /* 라이트박스 */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightbox-overlay.active { display: flex; }
+
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 85vh;
+            position: relative;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .lightbox-caption {
+            color: white;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
         /* ===== FAQ ===== */
         .faq-section {
             padding: 100px 0;
@@ -2856,6 +2972,73 @@
         </div>
     </section>
 
+    <!-- PARTNER PROOF GALLERY (정산 실적) -->
+    <section class="proof-gallery-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge" style="background: var(--success);">실제 정산 내역</span>
+                <h2 class="section-title">매월 정산이 진행됩니다</h2>
+                <p class="section-desc">실제 파트너분들의 수수료 정산 내역입니다</p>
+            </div>
+
+            <div class="proof-gallery-grid">
+                <div class="proof-gallery-item featured" onclick="openLightbox('images/success/성공7.jpg', '실제 세금계산서 - 475만원 정산')">
+                    <img src="images/success/성공7.jpg" alt="세금계산서" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">475만원 정산</span>
+                        실제 세금계산서 발급
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공2.jpg', '450만원 정산 - 12월')">
+                    <img src="images/success/성공2.jpg" alt="정산 내역" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">450만원</span>
+                        12월 정산
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공5.jpg', '450만원 정산 - 8월')">
+                    <img src="images/success/성공5.jpg" alt="정산 내역" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">450만원</span>
+                        8월 정산
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공9.jpg', '250만원 정산')">
+                    <img src="images/success/성공9.jpg" alt="정산 내역" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">250만원</span>
+                        정산 요청
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공4.jpg', '210만원 정산 - 11월')">
+                    <img src="images/success/성공4.jpg" alt="정산 내역" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">210만원</span>
+                        11월 정산
+                    </div>
+                </div>
+            </div>
+
+            <p class="proof-gallery-notice">
+                ※ 개인정보 보호를 위해 일부 정보가 가려져 있습니다<br>
+                ※ 실제 파트너분들의 수수료 정산 대화 내역입니다
+            </p>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox-overlay" id="lightboxModal">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img id="lightboxImage" src="" alt="확대 이미지">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+    </div>
+
     <!-- FAQ Section -->
     <section class="faq-section">
         <div class="container">
@@ -3095,6 +3278,33 @@
     <script src="config.js"></script>
 
     <script>
+        // 라이트박스
+        function openLightbox(src, caption) {
+            const modal = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImage');
+            const cap = document.getElementById('lightboxCaption');
+            img.src = src;
+            cap.textContent = caption || '';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('lightboxModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLightbox();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('lightboxModal').classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+
         // Calculator
         function updateCalculator() {
             const count = parseInt(document.getElementById('calcCount').value);

@@ -809,3 +809,43 @@ function initCountdownTimer() {
 
 // [P0 FIX] 카운트다운 초기화 비활성화
 // document.addEventListener('DOMContentLoaded', initCountdownTimer);
+
+// ===== 라이트박스 (실제 승인 현황 갤러리) =====
+function openLightbox(src, caption) {
+    const modal = document.getElementById('lightboxModal');
+    if (!modal) return;
+
+    const img = document.getElementById('lightboxImage');
+    const cap = document.getElementById('lightboxCaption');
+    img.src = src;
+    cap.textContent = caption || '';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    const modal = document.getElementById('lightboxModal');
+    if (!modal) return;
+
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// 라이트박스 이벤트 리스너
+document.addEventListener('DOMContentLoaded', function() {
+    const lightboxModal = document.getElementById('lightboxModal');
+    if (lightboxModal) {
+        lightboxModal.addEventListener('click', function(e) {
+            if (e.target === this) closeLightbox();
+        });
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const lightboxModal = document.getElementById('lightboxModal');
+        if (lightboxModal && lightboxModal.classList.contains('active')) {
+            closeLightbox();
+        }
+    }
+});

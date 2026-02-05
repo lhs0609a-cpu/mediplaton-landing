@@ -1702,6 +1702,74 @@
         </div>
     </section>
 
+    <!-- Proof Gallery Section (실제 승인 현황) -->
+    <section class="proof-gallery-section">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-badge" style="background: var(--success);">실제 승인 현황</span>
+                <h2 class="section-title">지금도 <span class="text-primary">승인이 진행</span>되고 있습니다</h2>
+                <p class="section-desc">실시간 접수 및 승인 현황을 확인하세요</p>
+            </div>
+
+            <div class="proof-gallery-grid">
+                <!-- 대표 이미지 -->
+                <div class="proof-gallery-item featured" onclick="openLightbox('images/success/접수사례1.jpg', '누적 접수 현황 - 총 52억 이상 신청')">
+                    <img src="images/success/접수사례1.jpg" alt="누적 접수 현황" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">누적 52억+ 접수</span>
+                        전국 병의원·약국 실시간 접수 현황
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공사례3.jpg', '승인 현황 - 총 15.5억 심사 진행')">
+                    <img src="images/success/성공사례3.jpg" alt="승인 현황" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">15.5억 심사</span>
+                        승인 진행 현황
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공사례2.jpg', '월간 승인 현황 - 6.35억 실행')">
+                    <img src="images/success/성공사례2.jpg" alt="월간 실적" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">6.35억 실행</span>
+                        월간 승인 현황
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/심사 통과 1.png', '심사 통과 현황 - 3억/1억 건')">
+                    <img src="images/success/심사 통과 1.png" alt="심사 통과" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">3억 / 1억</span>
+                        심사 통과 건
+                    </div>
+                </div>
+
+                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공1.jpg', '1.5억 승인 사례')">
+                    <img src="images/success/성공1.jpg" alt="승인 안내" loading="lazy">
+                    <div class="proof-gallery-label">
+                        <span class="amount">1.5억 승인</span>
+                        고객 승인 안내
+                    </div>
+                </div>
+            </div>
+
+            <p class="proof-gallery-notice">
+                ※ 개인정보 보호를 위해 일부 정보가 가려져 있습니다<br>
+                ※ 실제 관리 시스템 및 상담 내역입니다
+            </p>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox-overlay" id="lightboxModal">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img id="lightboxImage" src="" alt="확대 이미지">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+    </div>
+
     <!-- Partners Section -->
     <section class="partners-section" id="partners">
         <div class="container">
