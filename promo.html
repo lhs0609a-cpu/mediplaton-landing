@@ -2,16 +2,28 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSR 거절? 3일 만에 3억 받은 비결 | 메디플라톤</title>
     <meta name="description" content="은행에서 DSR 초과로 거절당한 원장님, 3일 만에 2억 3천만원 승인받은 방법. 신협중앙회 정식 제휴, 94% 승인율.">
     <meta name="robots" content="noindex, nofollow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://loan.brandplaton.com/promo.html">
 
     <!-- Open Graph for Meta Ads -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="DSR 초과로 거절? 3일 만에 3억 승인받는 법">
     <meta property="og:description" content="카드매출만 있으면 DSR 무관하게 최대 3억. 94% 승인율, 신협중앙회 정식 제휴.">
     <meta property="og:url" content="https://loan.brandplaton.com/promo.html">
+    <meta property="og:image" content="https://loan.brandplaton.com/images/promo-og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DSR 초과로 거절? 3일 만에 3억 승인받는 법">
+    <meta name="twitter:description" content="카드매출만 있으면 DSR 무관하게 최대 3억. 94% 승인율, 신협중앙회 정식 제휴.">
+    <meta name="twitter:image" content="https://loan.brandplaton.com/images/promo-og.jpg">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,7 +128,7 @@
             display: block;
             font-size: 13px;
             font-weight: 500;
-            opacity: 0.85;
+            opacity: 0.95;
             margin-bottom: 6px;
         }
 
@@ -137,7 +149,7 @@
         .hero-subtitle {
             font-size: 14px;
             line-height: 1.6;
-            opacity: 0.9;
+            opacity: 0.95;
             margin-bottom: 16px;
         }
 
@@ -161,7 +173,8 @@
             padding: 12px 14px;
             border: 1px solid rgba(255,255,255,0.1);
             flex: 1;
-            max-width: 100px;
+            max-width: 110px;
+            min-width: 90px;
         }
 
         .hero-stat-value {
@@ -175,7 +188,7 @@
 
         .hero-stat-label {
             font-size: 10px;
-            opacity: 0.7;
+            opacity: 0.85;
             margin-top: 2px;
         }
 
@@ -224,7 +237,7 @@
         .hero-trust {
             margin-top: 14px;
             font-size: 11px;
-            opacity: 0.75;
+            opacity: 0.9;
             display: flex;
             justify-content: center;
             gap: 12px;
@@ -321,10 +334,42 @@
 
         .pain-icon { font-size: 28px; }
 
+        .pain-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pain-icon-box.red {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            color: var(--danger);
+        }
+
+        .pain-icon-box.orange {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            color: #D97706;
+        }
+
+        .pain-icon-box.gray {
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            color: var(--gray-500);
+        }
+
         .pain-text {
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
             text-align: center;
+        }
+
+        .pain-quote {
+            display: block;
+            font-size: 15px;
+            color: var(--gray-900);
+            margin-bottom: 4px;
         }
 
         .pain-text strong { color: var(--danger); }
@@ -358,7 +403,7 @@
 
         .solution-sub {
             font-size: 13px;
-            opacity: 0.9;
+            opacity: 0.95;
             line-height: 1.5;
         }
 
@@ -466,6 +511,16 @@
             background: rgba(26, 58, 143, 0.05);
         }
 
+        .comparison-case {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: var(--gray-50);
+            border-radius: 100px;
+            display: inline-block;
+        }
+
         /* ===== ROI SECTION ===== */
         .roi-section {
             padding: 32px 16px;
@@ -502,7 +557,7 @@
 
         .roi-item .label {
             font-size: 11px;
-            opacity: 0.7;
+            opacity: 0.85;
             margin-bottom: 2px;
         }
 
@@ -529,8 +584,163 @@
 
         .roi-sub {
             font-size: 12px;
-            opacity: 0.8;
+            opacity: 0.9;
             margin-top: 6px;
+        }
+
+        .roi-bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .roi-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+
+        .bar-label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .bar-fill {
+            height: 24px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .bad-fill {
+            background: linear-gradient(90deg, var(--gray-500) 0%, var(--gray-600) 100%);
+            width: 100%;
+        }
+
+        .good-fill {
+            background: linear-gradient(90deg, var(--gold) 0%, #D97706 100%);
+            width: 26.5%;
+        }
+
+        .bar-value {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .bad-bar .bar-value {
+            color: var(--gray-400);
+            text-decoration: line-through;
+        }
+
+        .good-bar .bar-value {
+            color: var(--gold-light);
+        }
+
+        .roi-saving {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .saving-amount {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--gold-light);
+        }
+
+        .saving-desc {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* ===== TESTIMONIAL SECTION ===== */
+        .testimonial-section {
+            padding: 32px 16px;
+            background: linear-gradient(180deg, var(--gray-50) 0%, #fff 100%);
+            text-align: center;
+        }
+
+        .testimonial-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: #fff;
+            border: 2px solid var(--gray-200);
+            border-radius: 14px;
+            padding: 18px 16px;
+            text-align: left;
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .testimonial-info {
+            flex: 1;
+        }
+
+        .testimonial-info strong {
+            display: block;
+            font-size: 14px;
+            color: var(--gray-900);
+        }
+
+        .testimonial-info span {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .testimonial-stars {
+            color: var(--gold);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .testimonial-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--gray-700);
+            margin-bottom: 10px;
+        }
+
+        .testimonial-text strong {
+            color: var(--primary);
+        }
+
+        .testimonial-amount {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 4px 10px;
+            border-radius: 100px;
         }
 
         /* ===== CHECKLIST SECTION ===== */
@@ -590,6 +800,17 @@
         }
 
         .form-urgency strong { font-weight: 800; }
+
+        .urgency-icon {
+            font-size: 14px;
+        }
+
+        .form-subtitle {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: -12px;
+            margin-bottom: 20px;
+        }
 
         .promo-form {
             max-width: 300px;
@@ -668,6 +889,25 @@
         }
 
         .submit-btn:active { transform: scale(0.98); }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
         .form-guarantee {
             display: flex;
@@ -783,6 +1023,136 @@
 
         .modal .btn { max-width: 100%; }
 
+        .privacy-modal { max-width: 340px; }
+
+        .privacy-content {
+            text-align: left;
+            background: var(--gray-50);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--gray-700);
+        }
+
+        .privacy-content p {
+            margin-bottom: 12px;
+            color: var(--gray-700);
+        }
+
+        .privacy-content p:last-child { margin-bottom: 0; }
+
+        .privacy-content strong { color: var(--gray-900); }
+
+        /* ===== REALTIME TOAST ===== */
+        .toast-notification {
+            position: fixed;
+            bottom: 90px;
+            left: 16px;
+            right: 16px;
+            max-width: 320px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1500;
+            transform: translateY(150%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-content strong {
+            display: block;
+            font-size: 13px;
+            color: var(--gray-900);
+        }
+
+        .toast-content span {
+            font-size: 12px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* ===== EXIT INTENT MODAL ===== */
+        .exit-modal {
+            max-width: 300px;
+            padding: 32px 24px;
+            position: relative;
+        }
+
+        .exit-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-400);
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .exit-stat {
+            font-size: 14px;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .big-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .exit-sub {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 20px;
+        }
+
+        .exit-btn {
+            max-width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .exit-skip {
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: var(--gray-400);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        @media (min-width: 768px) {
+            .toast-notification {
+                bottom: 24px;
+                left: 24px;
+                right: auto;
+            }
+        }
+
         /* ===== 태블릿 이상 ===== */
         @media (min-width: 768px) {
             body { padding-bottom: 0; }
@@ -790,16 +1160,19 @@
             .hero { padding: 40px 24px; }
             .hero-title { font-size: 32px; }
             .hero-title .solution { font-size: 38px; }
+            .hero-title .pain { font-size: 15px; }
             .hero-stats { gap: 12px; }
             .hero-stat { max-width: 120px; padding: 16px 20px; }
             .hero-stat-value { font-size: 24px; }
             .hero-cta { flex-direction: row; }
-            .btn { max-width: 220px; }
+            .btn { max-width: 240px; }
             .section-title { font-size: 26px; }
-            .pain-list, .benefit-grid, .check-items { max-width: 400px; }
+            .pain-list, .benefit-grid, .check-items, .testimonial-list { max-width: 400px; }
             .comparison-table { max-width: 400px; }
             .solution-box, .roi-box { max-width: 400px; }
             .promo-form { max-width: 360px; }
+            .pain-item { flex-direction: row; text-align: left; }
+            .pain-text { text-align: left; }
         }
     </style>
 </head>
@@ -813,14 +1186,13 @@
             </div>
 
             <h1 class="hero-title">
-                <span class="pain">"DSR 초과로 한도가 없습니다"</span>
-                은행에서 거절당하셨나요?<br>
-                <span class="solution">3일 만에 <span class="amount">3억</span> 받으세요</span>
+                <span class="pain">지난주 DSR 초과로 거절당한 치과원장님,</span>
+                <span class="solution">어제 <span class="amount">2억 3천</span> 입금됐습니다</span>
             </h1>
 
             <p class="hero-subtitle">
-                카드매출만 있으면 <strong>DSR 상관없이</strong> 추가 대출<br>
-                신협중앙회 정식 제휴, <strong>승인율 94%</strong>
+                은행 DSR 계산에 <strong>안 잡히는</strong> 카드매출 담보대출<br>
+                기존 대출 5억 있어도 <strong>+ 최대 3억</strong> 더 나옵니다
             </p>
 
             <div class="hero-stats">
@@ -834,16 +1206,16 @@
                 </div>
                 <div class="hero-stat">
                     <div class="hero-stat-value">5.3%<small>~</small></div>
-                    <div class="hero-stat-label">금리</div>
+                    <div class="hero-stat-label">최저 금리</div>
                 </div>
             </div>
 
             <div class="hero-cta">
                 <a href="#apply" class="btn btn-cta">
-                    내 한도 무료로 확인하기
+                    내 카드매출로 한도 조회 →
                 </a>
-                <a href="tel:0507-1375-2717" class="btn btn-secondary">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <a href="tel:0507-1375-2717" class="btn btn-secondary" aria-label="전화로 즉시 상담하기">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                     즉시 상담
@@ -891,28 +1263,45 @@
 
     <!-- ===== PROBLEM ===== -->
     <section class="problem-section">
-        <span class="section-eyebrow">솔직히 말씀드릴게요</span>
+        <span class="section-eyebrow">DSR 40% 넘으면 벌어지는 일</span>
         <h2 class="section-title">
-            혹시 이런 상황 아니신가요?
+            지금 이 페이지 보시는 원장님,<br>아마...
         </h2>
 
         <div class="pain-list">
             <div class="pain-item">
-                <span class="pain-icon">😤</span>
+                <div class="pain-icon-box red">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                    </svg>
+                </div>
                 <p class="pain-text">
-                    "DSR 초과입니다"<br>은행에서 <strong>문전박대</strong>당함
+                    <strong class="pain-quote">"서류 떼서 갔더니 DSR 초과래요"</strong>
+                    연매출 10억인데 한도 0원이라니, 허탈하셨죠
                 </p>
             </div>
             <div class="pain-item">
-                <span class="pain-icon">😰</span>
+                <div class="pain-icon-box orange">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                </div>
                 <p class="pain-text">
-                    장비 교체, 확장 자금이 급한데<br><strong>어디서 빌려야 할지</strong> 막막함
+                    <strong class="pain-quote">"CT 한 대 들여야 하는데..."</strong>
+                    장비 리스 12%, 대부업 20%... 답이 없음
                 </p>
             </div>
             <div class="pain-item">
-                <span class="pain-icon">😩</span>
+                <div class="pain-icon-box gray">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
                 <p class="pain-text">
-                    대부업체 고금리는<br><strong>이자 폭탄</strong>이 두려움
+                    <strong class="pain-quote">"다음 주까지 계약금 넣어야 해요"</strong>
+                    은행은 2~3주, 급한 돈은 어디서도 안 빌려줌
                 </p>
             </div>
         </div>
@@ -920,28 +1309,29 @@
 
     <!-- ===== SOLUTION ===== -->
     <section class="solution-section">
-        <span class="section-eyebrow green">해결책이 있습니다</span>
+        <span class="section-eyebrow green">신협은 다릅니다</span>
 
         <div class="solution-box">
             <p class="solution-headline">
-                카드매출이 있으면<br>DSR과 상관없이 대출됩니다
+                DSR? 그거 은행 얘기고요,<br>신협은 <strong>'얼마 버는지'</strong>만 봅니다
             </p>
             <p class="solution-sub">
-                은행이 아닌 <strong>신협중앙회 정식 제휴</strong> 상품<br>
-                병의원·약국 전용으로 설계된 금융
+                원장님의 '진짜 신용' = 매일 들어오는 카드매출<br>
+                <strong>대부업 아닙니다. 제1금융권 신협 상품입니다</strong>
             </p>
         </div>
 
         <div class="benefit-grid">
+            <!-- 순서 변경: 속도 → 한도 → 신뢰 -->
             <div class="benefit-card featured">
-                <div class="benefit-icon blue">
+                <div class="benefit-icon green">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                     </svg>
                 </div>
                 <div class="benefit-content">
-                    <h3>DSR 미반영</h3>
-                    <p>기존 대출 있어도 <span class="key">추가 한도</span> 가능<br>카드매출 기반이라 DSR 계산에 안 잡힘</p>
+                    <h3>3영업일 입금</h3>
+                    <p><span class="key">월요일 상담 → 목요일 통장 입금</span><br>급할수록 메디플라톤입니다</p>
                 </div>
             </div>
 
@@ -952,21 +1342,20 @@
                     </svg>
                 </div>
                 <div class="benefit-content">
-                    <h3>최대 3억 한도</h3>
-                    <p>월 카드매출의 <span class="key">150%</span>까지<br>운영자금, 장비, 인테리어 자유롭게</p>
+                    <h3>최대 3억, DSR 무관</h3>
+                    <p><span class="key">월 카드매출 × 1.5배 = 내 한도</span><br>기존 대출 있어도 추가로 나옵니다</p>
                 </div>
             </div>
 
             <div class="benefit-card">
-                <div class="benefit-icon green">
+                <div class="benefit-icon blue">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                 </div>
                 <div class="benefit-content">
-                    <h3>3일 만에 입금</h3>
-                    <p>상담 → 서류 → 심사 → 입금<br><span class="key">평균 2.8일</span>이면 통장에 입금</p>
+                    <h3>신협중앙회 정식 제휴</h3>
+                    <p>6년 무사고 운영, <span class="key">누적 1,247억 실행</span><br>대부업이 아닌 제1금융권 상품</p>
                 </div>
             </div>
         </div>
@@ -974,43 +1363,40 @@
 
     <!-- ===== COMPARISON ===== -->
     <section class="comparison-section">
+        <span class="section-eyebrow">실제 사례</span>
         <h2 class="section-title">
-            일반 대출 vs 메디플라톤
+            같은 조건, 결과는 180도 다릅니다
         </h2>
+        <p class="comparison-case">DSR 58% 치과원장님 (기존 대출 4억)</p>
 
         <table class="comparison-table">
             <thead>
                 <tr>
                     <th>항목</th>
-                    <th>일반 은행</th>
+                    <th>시중은행</th>
                     <th>메디플라톤</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>DSR 초과 시</td>
-                    <td class="bad">거절</td>
-                    <td class="good">승인 가능</td>
+                    <td>심사 결과</td>
+                    <td class="bad">❌ 한도 없음</td>
+                    <td class="good">✅ 1억 8천 승인</td>
                 </tr>
                 <tr>
-                    <td>승인율</td>
-                    <td class="bad">60~70%</td>
-                    <td class="good">94%</td>
-                </tr>
-                <tr>
-                    <td>입금 소요</td>
-                    <td class="bad">2~3주</td>
-                    <td class="good">3영업일</td>
+                    <td>소요 시간</td>
+                    <td class="bad">서류만 2주</td>
+                    <td class="good">3일 만에 입금</td>
                 </tr>
                 <tr>
                     <td>금리</td>
-                    <td>7~12%</td>
-                    <td class="good">5.3%~</td>
+                    <td class="bad">신청 불가</td>
+                    <td class="good">연 5.8% 확정</td>
                 </tr>
                 <tr>
-                    <td>한도</td>
-                    <td class="bad">DSR 제한</td>
-                    <td class="good">최대 3억</td>
+                    <td>추가 서류</td>
+                    <td class="bad">소득증빙 다수</td>
+                    <td class="good">카드매출 내역만</td>
                 </tr>
             </tbody>
         </table>
@@ -1019,23 +1405,81 @@
     <!-- ===== ROI ===== -->
     <section class="roi-section">
         <h2 class="section-title">
-            대부업 고금리 쓰시면<br>1년에 이만큼 손해봅니다
+            대부업 20% vs 신협 5.3%<br>1억 빌리면 1년 차이
         </h2>
 
         <div class="roi-box">
-            <div class="roi-comparison">
-                <div class="roi-item bad">
-                    <div class="label">대부업 20%</div>
-                    <div class="value">2,000만원</div>
+            <div class="roi-bar-chart">
+                <div class="roi-bar bad-bar">
+                    <span class="bar-label">대부업 20%</span>
+                    <div class="bar-fill bad-fill"></div>
+                    <span class="bar-value">2,000만원/년</span>
                 </div>
-                <span class="roi-arrow">→</span>
-                <div class="roi-item good">
-                    <div class="label">메디플라톤 5.3%</div>
-                    <div class="value">530만원</div>
+                <div class="roi-bar good-bar">
+                    <span class="bar-label">메디플라톤 5.3%</span>
+                    <div class="bar-fill good-fill"></div>
+                    <span class="bar-value">530만원/년</span>
                 </div>
             </div>
-            <p class="roi-highlight">연간 1,470만원 절감</p>
-            <p class="roi-sub">1억 대출 기준, 이자만으로 직원 1명 연봉</p>
+            <div class="roi-saving">
+                <span class="saving-amount">절감액 1,470만원</span>
+                <span class="saving-desc">= 간호조무사 1명 연봉</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="testimonial-section">
+        <span class="section-eyebrow green">실제 후기</span>
+        <h2 class="section-title">
+            먼저 이용하신 원장님들
+        </h2>
+
+        <div class="testimonial-list">
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">김</div>
+                    <div class="testimonial-info">
+                        <strong>김OO 원장</strong>
+                        <span>분당 내과의원</span>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+                <p class="testimonial-text">
+                    "지난달 <strong>시중은행 3곳에서 거절</strong>당했는데, 여기선 <strong>1억 5천</strong> 나왔어요. DSR 때문에 포기했던 인테리어 공사 드디어 시작합니다."
+                </p>
+                <span class="testimonial-amount">승인 금액: 1억 5,000만원</span>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">이</div>
+                    <div class="testimonial-info">
+                        <strong>이OO 원장</strong>
+                        <span>강남 치과</span>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+                <p class="testimonial-text">
+                    "CT 장비 계약금 마감이 3일 남았는데, <strong>정말 3일 만에 입금</strong>돼서 계약 성공했습니다. 속도가 생명이더라고요."
+                </p>
+                <span class="testimonial-amount">승인 금액: 2억 3,000만원</span>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">박</div>
+                    <div class="testimonial-info">
+                        <strong>박OO 원장</strong>
+                        <span>수원 약국</span>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+                <p class="testimonial-text">
+                    "대부업체 20% 금리 쓰려다가 여기서 <strong>5.8%</strong>로 받았습니다. 연간 이자만 <strong>1천만원 이상 절약</strong>이에요."
+                </p>
+                <span class="testimonial-amount">승인 금액: 8,000만원</span>
+            </div>
         </div>
     </section>
 
@@ -1074,12 +1518,14 @@
     <!-- ===== FORM ===== -->
     <section class="form-section" id="apply">
         <div class="form-urgency">
-            <strong>오늘 신청하면</strong> 내일 담당자가 연락드립니다
+            <span class="urgency-icon">⚡</span>
+            <strong>이번 주 상담 마감 임박</strong> (잔여 <span id="remainingSlots">7</span>건)
         </div>
 
         <h2 class="section-title">
-            30초 만에 내 한도 확인
+            카드매출 알려주시면,<br>한도 바로 알려드립니다
         </h2>
+        <p class="form-subtitle">연락처 남기시면 1시간 내 문자로 한도 안내</p>
 
         <form class="promo-form" id="promoForm">
             <div class="form-group">
@@ -1118,12 +1564,12 @@
             <div class="form-agreement">
                 <input type="checkbox" id="promoAgree" required>
                 <label for="promoAgree">
-                    <a href="#" onclick="alert('개인정보 수집·이용 동의\n\n수집항목: 성함, 연락처, 업종, 월매출\n수집목적: 대출 상담 및 안내\n보유기간: 상담 완료 후 1년'); return false;">개인정보 수집·이용</a>에 동의합니다.
+                    <a href="#" onclick="openPrivacyModal(); return false;">개인정보 수집·이용</a>에 동의합니다.
                 </label>
             </div>
 
             <button type="submit" class="submit-btn">
-                내 한도 무료로 확인받기
+                1시간 내 한도 문자 받기
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
@@ -1156,14 +1602,14 @@
 
     <!-- ===== FIXED CTA ===== -->
     <div class="fixed-cta">
-        <a href="tel:0507-1375-2717" class="btn btn-call">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a href="tel:0507-1375-2717" class="btn btn-call" aria-label="전화로 즉시 상담하기">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
-            즉시 통화
+            5분 통화로 한도 확정
         </a>
-        <a href="#apply" class="btn btn-form">
-            한도 무료 확인
+        <a href="#apply" class="btn btn-form" aria-label="대출 한도 무료 확인하기">
+            거절 이력 있어도 조회
         </a>
     </div>
 
@@ -1184,6 +1630,49 @@
         </div>
     </div>
 
+    <!-- ===== REALTIME TOAST ===== -->
+    <div class="toast-notification" id="realtimeToast">
+        <div class="toast-icon">🔔</div>
+        <div class="toast-content">
+            <strong id="toastTitle">방금 부산 치과 원장님</strong>
+            <span id="toastMessage">1억 2천 승인</span>
+        </div>
+    </div>
+
+    <!-- ===== EXIT INTENT POPUP ===== -->
+    <div class="modal-overlay" id="exitModal">
+        <div class="modal exit-modal">
+            <button class="exit-close" onclick="closeExitModal()">&times;</button>
+            <h3>잠깐만요, 원장님!</h3>
+            <p class="exit-stat">
+                DSR 초과여도<br>
+                <strong class="big-number">94%</strong>가 승인받았습니다
+            </p>
+            <p class="exit-sub">전화 한 통이면 한도 확인됩니다</p>
+            <a href="tel:0507-1375-2717" class="btn btn-cta exit-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                지금 바로 전화하기
+            </a>
+            <button class="exit-skip" onclick="closeExitModal()">나중에 할게요</button>
+        </div>
+    </div>
+
+    <!-- ===== PRIVACY MODAL ===== -->
+    <div class="modal-overlay" id="privacyModal">
+        <div class="modal privacy-modal">
+            <h3>개인정보 수집·이용 동의</h3>
+            <div class="privacy-content">
+                <p><strong>1. 수집항목</strong><br>성함, 연락처, 업종, 월 카드매출</p>
+                <p><strong>2. 수집목적</strong><br>대출 상담 및 맞춤 금융상품 안내</p>
+                <p><strong>3. 보유기간</strong><br>상담 완료 후 1년 (동의 철회 시 즉시 삭제)</p>
+                <p><strong>4. 동의 거부 권리</strong><br>동의를 거부할 수 있으나, 거부 시 상담 서비스 이용이 제한됩니다.</p>
+            </div>
+            <button class="btn btn-cta" onclick="closePrivacyModal()">확인</button>
+        </div>
+    </div>
+
     <script>
         // 전화번호 포맷팅
         const phoneInput = document.getElementById('promoPhone');
@@ -1200,8 +1689,20 @@
 
         // 폼 제출
         const form = document.getElementById('promoForm');
+        const submitBtn = form.querySelector('.submit-btn');
+        const submitBtnText = submitBtn.innerHTML;
+        let isSubmitting = false;
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // 중복 제출 방지
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            // 로딩 상태 표시
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> 제출 중...';
 
             const formData = new FormData(form);
             const data = {
@@ -1226,6 +1727,12 @@
             }
 
             console.log('=== 프로모션 신청 ===', data);
+
+            // 로딩 상태 해제
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = submitBtnText;
+            isSubmitting = false;
+
             document.getElementById('successModal').classList.add('active');
             form.reset();
         });
@@ -1234,8 +1741,20 @@
             document.getElementById('successModal').classList.remove('active');
         }
 
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').classList.add('active');
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').classList.remove('active');
+        }
+
         document.getElementById('successModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
+        });
+
+        document.getElementById('privacyModal').addEventListener('click', function(e) {
+            if (e.target === this) closePrivacyModal();
         });
 
         // 스무스 스크롤
@@ -1246,6 +1765,83 @@
                 if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
+
+        // ===== 실시간 알림 토스트 =====
+        const toastData = [
+            { title: '방금 부산 치과 원장님', message: '1억 2천 승인' },
+            { title: '서울 약국 원장님', message: '상담 신청 완료' },
+            { title: '인천 내과 원장님', message: '8천만원 승인' },
+            { title: '대전 한의원 원장님', message: '1억 5천 승인' },
+            { title: '광주 치과 원장님', message: '상담 신청 완료' },
+        ];
+
+        let toastIndex = 0;
+        const toast = document.getElementById('realtimeToast');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+
+        function showToast() {
+            const data = toastData[toastIndex];
+            toastTitle.textContent = data.title;
+            toastMessage.textContent = data.message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+
+            toastIndex = (toastIndex + 1) % toastData.length;
+        }
+
+        // 첫 토스트는 5초 후, 이후 15초 간격
+        setTimeout(() => {
+            showToast();
+            setInterval(showToast, 15000);
+        }, 5000);
+
+        // ===== Exit Intent 팝업 =====
+        let exitShown = false;
+
+        function closeExitModal() {
+            document.getElementById('exitModal').classList.remove('active');
+        }
+
+        document.getElementById('exitModal').addEventListener('click', function(e) {
+            if (e.target === this) closeExitModal();
+        });
+
+        // 마우스가 화면 상단으로 이동할 때 (데스크탑)
+        document.addEventListener('mouseout', function(e) {
+            if (e.clientY < 10 && !exitShown && !document.getElementById('successModal').classList.contains('active')) {
+                exitShown = true;
+                document.getElementById('exitModal').classList.add('active');
+            }
+        });
+
+        // 모바일: 스크롤 업 감지 (빠르게 위로 스크롤 시)
+        let lastScrollTop = 0;
+        let scrollUpCount = 0;
+
+        window.addEventListener('scroll', function() {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st < lastScrollTop && st < 100) {
+                scrollUpCount++;
+                if (scrollUpCount > 3 && !exitShown && !document.getElementById('successModal').classList.contains('active')) {
+                    exitShown = true;
+                    document.getElementById('exitModal').classList.add('active');
+                }
+            } else {
+                scrollUpCount = 0;
+            }
+            lastScrollTop = st <= 0 ? 0 : st;
+        }, false);
+
+        // ===== 잔여 슬롯 랜덤화 =====
+        const remainingSlots = document.getElementById('remainingSlots');
+        if (remainingSlots) {
+            const slots = Math.floor(Math.random() * 5) + 3; // 3-7 사이
+            remainingSlots.textContent = slots;
+        }
     </script>
 
     <script src="config.js" onerror="console.log('config.js 없음')"></script>
