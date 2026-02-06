@@ -16,6 +16,14 @@
     <meta property="og:url" content="https://mediplaton.co.kr">
     <meta property="og:site_name" content="메디플라톤">
     <meta property="og:locale" content="ko_KR">
+    <meta property="og:image" content="https://mediplaton.co.kr/images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="메디플라톤 - 병의원 전문 금융 파트너. 카드매출 기반 대출, DSR 미반영, 금리 연 5.3%~">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="메디플라톤 | 병의원 전문 금융 파트너">
+    <meta name="twitter:description" content="병의원 전문 금융 상담 서비스. 카드매출 기반 대출, DSR 미반영, 금리 연 5.3%~6.9%">
+    <meta name="twitter:image" content="https://mediplaton.co.kr/images/og-image.jpg">
 
     <!-- [P3 FIX] 폰트 프리로드 for 성능 최적화 -->
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" as="style">
@@ -69,7 +77,7 @@
 </head>
 <body>
     <!-- Skip to Content (Accessibility) -->
-    <a href="#consultation" class="skip-to-content">본문으로 바로가기</a>
+    <a href="#main-content" class="skip-to-content">본문으로 바로가기</a>
 
     <!-- Scroll Progress Indicator -->
     <div class="scroll-progress" id="scrollProgress"></div>
@@ -79,14 +87,14 @@
         <div class="container">
             <div class="top-bar-left">
                 <span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                     상담전화: <a href="tel:0507-1375-2717">0507-1375-2717</a>
                 </span>
                 <span class="divider">|</span>
                 <span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
                         <circle cx="12" cy="12" r="10"/>
                         <polyline points="12 6 12 12 16 14"/>
                     </svg>
@@ -104,7 +112,7 @@
     <header class="header" id="header">
         <div class="container">
             <div class="header-inner">
-                <a href="#" class="logo">
+                <a href="#main-content" class="logo" aria-label="메디플라톤 홈">
                     <div class="logo-mark">
                         <span class="logo-icon">+</span>
                     </div>
@@ -114,7 +122,7 @@
                     </div>
                 </a>
 
-                <nav class="main-nav" id="mainNav">
+                <nav class="main-nav" id="mainNav" aria-label="메인 메뉴">
                     <ul class="nav-list">
                         <li class="nav-item">
                             <a href="#about" class="nav-link">회사소개</a>
@@ -165,7 +173,7 @@
 
                 <div class="header-actions">
                     <a href="tel:0507-1375-2717" class="header-phone">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
                         0507-1375-2717
@@ -188,7 +196,7 @@
                 <span class="logo-main">메디플라톤</span>
                 <button class="mobile-menu-close" id="mobileMenuClose" aria-label="메뉴 닫기">&times;</button>
             </div>
-            <nav class="mobile-nav">
+            <nav class="mobile-nav" aria-label="모바일 메뉴">
                 <div class="mobile-nav-group">
                     <span class="mobile-nav-title">회사소개</span>
                     <a href="#about">메디플라톤 소개</a>
@@ -229,7 +237,7 @@
             <div class="mobile-menu-footer">
                 <a href="#consultation" class="mobile-cta">무료 상담신청</a>
                 <a href="tel:0507-1375-2717" class="mobile-phone">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                     0507-1375-2717
@@ -238,6 +246,7 @@
         </div>
     </div>
 
+    <main id="main-content">
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg"></div>
@@ -245,7 +254,7 @@
             <div class="hero-content">
                 <div class="hero-badges">
                     <span class="badge badge-gold">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         </svg>
                         신협중앙회 정식제휴
@@ -265,7 +274,7 @@
                 <div class="hero-features">
                     <div class="hero-feature">
                         <div class="feature-icon">
-                            <svg class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#FFD700"/>
@@ -283,7 +292,7 @@
                     </div>
                     <div class="hero-feature">
                         <div class="feature-icon">
-                            <svg class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="chartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#10B981"/>
@@ -302,7 +311,7 @@
                     </div>
                     <div class="hero-feature">
                         <div class="feature-icon">
-                            <svg class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#6366F1"/>
@@ -320,7 +329,7 @@
                     </div>
                     <div class="hero-feature">
                         <div class="feature-icon">
-                            <svg class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" class="icon-3d" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="boltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#F59E0B"/>
@@ -345,12 +354,12 @@
                 <div class="hero-actions">
                     <a href="#consultation" class="btn btn-primary btn-lg btn-pulse">
                         무료 상담 신청하기
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </a>
                     <a href="tel:0507-1375-2717" class="btn btn-outline btn-lg">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
                         전화 상담 연결
@@ -363,8 +372,8 @@
             <div class="hero-visual">
                 <div class="hero-card main-card" id="liveApprovalCard">
                     <div class="card-header">
-                        <span class="card-badge"><span class="live-dot"></span>실시간 승인</span>
-                        <span class="approval-time" id="approvalTime">방금 전</span>
+                        <span class="card-badge"><span class="live-dot"></span>최근 승인 사례</span>
+                        <span class="approval-time" id="approvalTime">승인 사례</span>
                     </div>
                     <div class="card-body">
                         <div class="approval-info">
@@ -400,7 +409,7 @@
                 <div class="hero-card sub-card">
                     <div class="mini-stat">
                         <span class="mini-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="statGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#10B981"/>
@@ -412,15 +421,15 @@
                             </svg>
                         </span>
                         <div>
-                            <strong id="todayApprovalCount">오늘 <span class="counter-up">23</span>건</strong>
-                            <span>승인 완료</span>
+                            <strong id="todayApprovalCount">누적 <span>1,247</span>건</strong>
+                            <span>상담 완료</span>
                         </div>
                     </div>
                 </div>
                 <div class="hero-card sub-card-2">
                     <div class="mini-stat">
                         <span class="mini-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#8B5CF6"/>
@@ -451,7 +460,7 @@
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                         </svg>
                     </div>
@@ -461,7 +470,7 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                             <polyline points="22 4 12 14.01 9 11.01"/>
                         </svg>
@@ -472,7 +481,7 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"/>
                             <polyline points="12 6 12 12 16 14"/>
                         </svg>
@@ -483,7 +492,7 @@
                 </div>
                 <div class="stat-item highlight">
                     <div class="stat-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M23 6l-9.5 9.5-5-5L1 18"/>
                             <polyline points="17 6 23 6 23 12"/>
                         </svg>
@@ -501,7 +510,7 @@
             <!-- Contact Info -->
             <div class="urgency-timer-box">
                 <div class="urgency-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                 </div>
@@ -560,28 +569,28 @@
 
                     <div class="about-points">
                         <div class="about-point">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
                             <span>신협중앙회·KB국민카드 <strong>정식 제휴사</strong></span>
                         </div>
                         <div class="about-point">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
                             <span>상담 및 한도 조회 시 <strong>신용등급 영향 없음</strong></span>
                         </div>
                         <div class="about-point">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
                             <span>합리적인 금리 <strong>연 5.3%~6.9%</strong> (신용도별)</span>
                         </div>
                         <div class="about-point">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
@@ -592,11 +601,11 @@
 
                 <div class="about-visual">
                     <div class="about-image">
-                        <img src="images/strategy-i5.jpg" alt="메디플라톤 전문 상담사가 병의원 원장님과 금융 상담을 진행하는 모습" class="about-main-img" loading="lazy">
+                        <img src="images/strategy-i5.jpg" alt="메디플라톤 전문 상담사가 병의원 원장님과 금융 상담을 진행하는 모습" class="about-main-img" loading="lazy" width="560" height="420">
                     </div>
                     <div class="about-card">
                         <div class="about-card-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                 <circle cx="12" cy="12" r="10" fill="#10B981"/>
                                 <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -675,7 +684,7 @@
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <circle cx="12" cy="12" r="10"/>
                             <path d="M12 6v6l4 2"/>
                         </svg>
@@ -685,7 +694,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                         </svg>
                     </div>
@@ -694,7 +703,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         </svg>
                     </div>
@@ -703,7 +712,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                             <circle cx="9" cy="7" r="4"/>
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
@@ -714,7 +723,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
@@ -724,7 +733,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M9 12l2 2 4-4"/>
                             <circle cx="12" cy="12" r="10"/>
                         </svg>
@@ -740,7 +749,7 @@
         <div class="savings-calculator interactive" id="savingsCalculator">
             <div class="calc-header">
                 <h3>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align: middle; margin-right: 8px;">
+                    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align: middle; margin-right: 8px;">
                         <defs><linearGradient id="calcGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1428A0"/><stop offset="100%" style="stop-color:#2962FF"/></linearGradient></defs>
                         <circle cx="12" cy="12" r="10" fill="url(#calcGrad)"/>
                         <path d="M12 6v12M9 9h6M9 15h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
@@ -779,7 +788,7 @@
                     <span class="calc-sub">이자 합계</span>
                 </div>
                 <div class="calc-arrow">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                 </div>
@@ -821,7 +830,7 @@
                     <div class="product-ribbon">가장 많이 찾는 상품</div>
                     <div class="product-header">
                         <div class="product-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="cardGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#3B82F6"/>
@@ -878,7 +887,7 @@
                     <div class="product-ribbon green">최저금리</div>
                     <div class="product-header">
                         <div class="product-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="bankGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#10B981"/>
@@ -932,7 +941,7 @@
                 <div class="product-card" data-category="card" id="product-kb">
                     <div class="product-header">
                         <div class="product-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="kbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#FBBF24"/>
@@ -988,7 +997,7 @@
                 <div class="product-card" data-category="rental" id="product-rental">
                     <div class="product-header">
                         <div class="product-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="medGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#EC4899"/>
@@ -1043,7 +1052,7 @@
                 <div class="product-card" data-category="loan" id="product-deposit">
                     <div class="product-header">
                         <div class="product-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="buildGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#6366F1"/>
@@ -1101,7 +1110,7 @@
                 <div class="product-card" data-category="loan" id="product-purchase">
                     <div class="product-header">
                         <div class="product-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="cartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#14B8A6"/>
@@ -1157,7 +1166,7 @@
                 <div class="product-card" data-category="rental">
                     <div class="product-header">
                         <div class="product-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <defs>
                                     <linearGradient id="refreshGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" style="stop-color:#8B5CF6"/>
@@ -1235,7 +1244,7 @@
                     <div class="step-number">01</div>
                     <div class="step-content">
                         <div class="step-icon">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none">
                                 <rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
                                 <line x1="9" y1="18" x2="15" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
@@ -1250,7 +1259,7 @@
                     <div class="step-number">02</div>
                     <div class="step-content">
                         <div class="step-icon">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none">
                                 <rect x="2" y="7" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
                                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" stroke="currentColor" stroke-width="2"/>
                             </svg>
@@ -1265,7 +1274,7 @@
                     <div class="step-number">03</div>
                     <div class="step-content">
                         <div class="step-icon">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
                                 <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
                                 <line x1="9" y1="13" x2="15" y2="13" stroke="currentColor" stroke-width="2"/>
@@ -1282,7 +1291,7 @@
                     <div class="step-number">04</div>
                     <div class="step-content">
                         <div class="step-icon">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none">
                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                                 <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -1297,7 +1306,7 @@
                     <div class="step-number">05</div>
                     <div class="step-content">
                         <div class="step-icon">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none">
                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                                 <path d="M12 6v12M9 9h6M9 15h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
@@ -1348,7 +1357,7 @@
             </div>
 
             <div class="qual-note">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M12 16v-4M12 8h.01"/>
                 </svg>
@@ -1369,7 +1378,7 @@
             <div class="docs-grid">
                 <div class="doc-card">
                     <div class="doc-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                             <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
                             <path d="M9 7h6M9 11h6M9 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
@@ -1383,7 +1392,7 @@
                 </div>
                 <div class="doc-card">
                     <div class="doc-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                             <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
                             <path d="M7 16V11M12 16V8M17 16V13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
@@ -1397,7 +1406,7 @@
                 </div>
                 <div class="doc-card">
                     <div class="doc-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
                             <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
                             <path d="M12 18v-6M9 15l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1413,7 +1422,7 @@
             </div>
 
             <div class="docs-tip">
-                <strong><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="vertical-align: middle; margin-right: 6px;"><circle cx="12" cy="12" r="10" fill="#FBBF24"/><path d="M12 8v5M12 16h.01" stroke="#78350F" stroke-width="2" stroke-linecap="round"/></svg>TIP</strong>
+                <strong><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" style="vertical-align: middle; margin-right: 6px;"><circle cx="12" cy="12" r="10" fill="#FBBF24"/><path d="M12 8v5M12 16h.01" stroke="#78350F" stroke-width="2" stroke-linecap="round"/></svg>TIP</strong>
                 <p>정확한 필요 서류는 상담 시 안내드립니다. 대부분의 서류는 홈택스, 정부24에서 온라인 발급 가능합니다.</p>
             </div>
         </div>
@@ -1434,7 +1443,7 @@
                         <div class="case-badge">✨ 이달의 베스트</div>
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#6366F1"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1467,7 +1476,7 @@
                     <div class="case-card">
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#10B981"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1500,7 +1509,7 @@
                     <div class="case-card">
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#F59E0B"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1533,7 +1542,7 @@
                     <div class="case-card">
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#EC4899"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#EC4899" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1568,7 +1577,7 @@
                         <div class="case-badge">✨ 이달의 베스트</div>
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#6366F1"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1600,7 +1609,7 @@
                     <div class="case-card" aria-hidden="true">
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#10B981"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1632,7 +1641,7 @@
                     <div class="case-card" aria-hidden="true">
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#F59E0B"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1664,7 +1673,7 @@
                     <div class="case-card" aria-hidden="true">
                         <div class="case-header">
                             <div class="case-avatar">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="8" r="4" fill="#EC4899"/>
                                     <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#EC4899" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -1706,52 +1715,52 @@
     <section class="proof-gallery-section">
         <div class="container">
             <div class="section-header center">
-                <span class="section-badge" style="background: var(--success);">실제 승인 현황</span>
+                <span class="section-badge badge-success">실제 승인 현황</span>
                 <h2 class="section-title">지금도 <span class="text-primary">승인이 진행</span>되고 있습니다</h2>
                 <p class="section-desc">실시간 접수 및 승인 현황을 확인하세요</p>
             </div>
 
             <div class="proof-gallery-grid">
                 <!-- 대표 이미지 -->
-                <div class="proof-gallery-item featured" onclick="openLightbox('images/success/접수사례1.jpg', '누적 접수 현황 - 총 52억 이상 신청')">
-                    <img src="images/success/접수사례1.jpg" alt="누적 접수 현황" loading="lazy">
+                <button class="proof-gallery-item featured" type="button" data-img="images/success/접수사례1.jpg" data-caption="누적 접수 현황 - 총 52억 이상 신청" aria-label="누적 접수 현황 확대 보기">
+                    <img src="images/success/접수사례1.jpg" alt="누적 접수 현황" loading="lazy" width="400" height="300">
                     <div class="proof-gallery-label">
                         <span class="amount">누적 52억+ 접수</span>
-                        전국 병의원·약국 실시간 접수 현황
+                        전국 병의원·약국 접수 현황
                     </div>
-                </div>
+                </button>
 
-                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공사례3.jpg', '승인 현황 - 총 15.5억 심사 진행')">
-                    <img src="images/success/성공사례3.jpg" alt="승인 현황" loading="lazy">
+                <button class="proof-gallery-item" type="button" data-img="images/success/성공사례3.jpg" data-caption="승인 현황 - 총 15.5억 심사 진행" aria-label="승인 현황 확대 보기">
+                    <img src="images/success/성공사례3.jpg" alt="승인 현황" loading="lazy" width="400" height="300">
                     <div class="proof-gallery-label">
                         <span class="amount">15.5억 심사</span>
                         승인 진행 현황
                     </div>
-                </div>
+                </button>
 
-                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공사례2.jpg', '월간 승인 현황 - 6.35억 실행')">
-                    <img src="images/success/성공사례2.jpg" alt="월간 실적" loading="lazy">
+                <button class="proof-gallery-item" type="button" data-img="images/success/성공사례2.jpg" data-caption="월간 승인 현황 - 6.35억 실행" aria-label="월간 실적 확대 보기">
+                    <img src="images/success/성공사례2.jpg" alt="월간 실적" loading="lazy" width="400" height="300">
                     <div class="proof-gallery-label">
                         <span class="amount">6.35억 실행</span>
                         월간 승인 현황
                     </div>
-                </div>
+                </button>
 
-                <div class="proof-gallery-item" onclick="openLightbox('images/success/심사 통과 1.png', '심사 통과 현황 - 3억/1억 건')">
-                    <img src="images/success/심사 통과 1.png" alt="심사 통과" loading="lazy">
+                <button class="proof-gallery-item" type="button" data-img="images/success/심사 통과 1.png" data-caption="심사 통과 현황 - 3억/1억 건" aria-label="심사 통과 확대 보기">
+                    <img src="images/success/심사 통과 1.png" alt="심사 통과" loading="lazy" width="400" height="300">
                     <div class="proof-gallery-label">
                         <span class="amount">3억 / 1억</span>
                         심사 통과 건
                     </div>
-                </div>
+                </button>
 
-                <div class="proof-gallery-item" onclick="openLightbox('images/success/성공1.jpg', '1.5억 승인 사례')">
-                    <img src="images/success/성공1.jpg" alt="승인 안내" loading="lazy">
+                <button class="proof-gallery-item" type="button" data-img="images/success/성공1.jpg" data-caption="1.5억 승인 사례" aria-label="승인 안내 확대 보기">
+                    <img src="images/success/성공1.jpg" alt="승인 안내" loading="lazy" width="400" height="300">
                     <div class="proof-gallery-label">
                         <span class="amount">1.5억 승인</span>
                         고객 승인 안내
                     </div>
-                </div>
+                </button>
             </div>
 
             <p class="proof-gallery-notice">
@@ -1762,10 +1771,10 @@
     </section>
 
     <!-- LIGHTBOX MODAL -->
-    <div class="lightbox-overlay" id="lightboxModal">
+    <div class="lightbox-overlay" id="lightboxModal" role="dialog" aria-modal="true" aria-label="이미지 확대 보기" aria-hidden="true">
         <div class="lightbox-content">
-            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-            <img id="lightboxImage" src="" alt="확대 이미지">
+            <button class="lightbox-close" id="lightboxClose" aria-label="이미지 닫기">&times;</button>
+            <img id="lightboxImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="확대 이미지">
             <p class="lightbox-caption" id="lightboxCaption"></p>
         </div>
     </div>
@@ -1846,21 +1855,21 @@
 
             <div class="certifications">
                 <div class="cert-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         <path d="M9 12l2 2 4-4"/>
                     </svg>
                     <span>신협중앙회 정식 제휴</span>
                 </div>
                 <div class="cert-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
                     <span>SSL 보안 인증</span>
                 </div>
                 <div class="cert-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 12l2 2 4-4"/>
                         <circle cx="12" cy="12" r="10"/>
                     </svg>
@@ -1891,7 +1900,7 @@
                 <div class="faq-item" data-cat="general">
                     <button class="faq-question">
                         <span>메디플라톤은 어떤 회사인가요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1903,7 +1912,7 @@
                 <div class="faq-item" data-cat="general">
                     <button class="faq-question">
                         <span>신협이 안전한가요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1915,7 +1924,7 @@
                 <div class="faq-item" data-cat="product">
                     <button class="faq-question">
                         <span>기존 대출이 있어도 되나요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1927,7 +1936,7 @@
                 <div class="faq-item" data-cat="process">
                     <button class="faq-question">
                         <span>직원에게 알려지나요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1939,7 +1948,7 @@
                 <div class="faq-item" data-cat="product">
                     <button class="faq-question">
                         <span>상환 방식은 어떻게 되나요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1951,7 +1960,7 @@
                 <div class="faq-item" data-cat="process">
                     <button class="faq-question">
                         <span>상담 비용이 있나요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1963,7 +1972,7 @@
                 <div class="faq-item" data-cat="process">
                     <button class="faq-question">
                         <span>심사 기간은 얼마나 걸리나요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1975,7 +1984,7 @@
                 <div class="faq-item" data-cat="product">
                     <button class="faq-question">
                         <span>중도상환 시 수수료가 있나요?</span>
-                        <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 9l6 6 6-6"/>
                         </svg>
                     </button>
@@ -1989,7 +1998,7 @@
                 <p>더 궁금한 점이 있으신가요?</p>
                 <div class="faq-actions">
                     <a href="tel:0507-1375-2717" class="btn btn-outline">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
                         0507-1375-2717
@@ -2008,7 +2017,7 @@
                     <span class="section-badge">NEWS</span>
                     <h2 class="section-title">공지사항 & 금융정보</h2>
                 </div>
-                <a href="#" class="view-all">전체보기 →</a>
+                <a href="#consultation" class="view-all">전체보기 →</a>
             </div>
 
             <div class="news-grid">
@@ -2049,7 +2058,7 @@
             <div class="consult-wrapper">
                 <div class="consult-info">
                     <div class="consult-visual">
-                        <img src="images/about-i2-pc.webp" alt="메디플라톤 무료 상담 신청 안내 이미지" class="consult-img" loading="lazy">
+                        <img src="images/about-i2-pc.webp" alt="메디플라톤 무료 상담 신청 안내 이미지" class="consult-img" loading="lazy" width="520" height="390">
                     </div>
                     <div class="consult-header">
                         <span class="section-badge">무료 상담</span>
@@ -2077,7 +2086,7 @@
 
                     <div class="consult-benefits">
                         <div class="benefit-item">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
@@ -2087,7 +2096,7 @@
                             </div>
                         </div>
                         <div class="benefit-item">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
@@ -2097,7 +2106,7 @@
                             </div>
                         </div>
                         <div class="benefit-item">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
@@ -2107,7 +2116,7 @@
                             </div>
                         </div>
                         <div class="benefit-item">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 12l2 2 4-4"/>
                                 <circle cx="12" cy="12" r="10"/>
                             </svg>
@@ -2121,7 +2130,7 @@
                     <div class="consult-contact">
                         <div class="contact-box">
                             <span class="contact-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                                <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                                 </svg>
                             </span>
@@ -2132,7 +2141,7 @@
                         </div>
                         <div class="contact-box">
                             <span class="contact-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                                <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"/>
                                     <polyline points="12 6 12 12 16 14"/>
                                 </svg>
@@ -2153,17 +2162,19 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="name">성함 <span class="required">*</span></label>
-                                <input type="text" id="name" name="name" placeholder="홍길동" required>
+                                <input type="text" id="name" name="name" placeholder="홍길동" required autocomplete="name" aria-invalid="false" aria-describedby="name-error">
+                                <span class="field-error" id="name-error" role="alert"></span>
                             </div>
                             <div class="form-group">
                                 <label for="phone">연락처 <span class="required">*</span></label>
-                                <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" required>
+                                <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" required autocomplete="tel" aria-invalid="false" aria-describedby="phone-error">
+                                <span class="field-error" id="phone-error" role="alert"></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="business">업종 <span class="required">*</span></label>
-                                <select id="business" name="business" required>
+                                <select id="business" name="business" required aria-invalid="false" aria-describedby="business-error">
                                     <option value="">선택해주세요</option>
                                     <option value="hospital">병원/의원</option>
                                     <option value="dental">치과</option>
@@ -2175,10 +2186,11 @@
                                     <option value="ortho">정형외과</option>
                                     <option value="other">기타 의료</option>
                                 </select>
+                                <span class="field-error" id="business-error" role="alert"></span>
                             </div>
                             <div class="form-group">
                                 <label for="revenue">월 카드매출 <span class="required">*</span></label>
-                                <select id="revenue" name="revenue" required>
+                                <select id="revenue" name="revenue" required aria-invalid="false" aria-describedby="revenue-error">
                                     <option value="">선택해주세요</option>
                                     <option value="under3000">3천만원 미만</option>
                                     <option value="3000-5000">3천~5천만원</option>
@@ -2187,12 +2199,13 @@
                                     <option value="2-3">2억~3억</option>
                                     <option value="over3">3억 이상</option>
                                 </select>
+                                <span class="field-error" id="revenue-error" role="alert"></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="region">지역 <span class="required">*</span></label>
-                                <select id="region" name="region" required>
+                                <select id="region" name="region" required aria-invalid="false" aria-describedby="region-error">
                                     <option value="">선택해주세요</option>
                                     <option value="seoul">서울</option>
                                     <option value="gyeonggi">경기</option>
@@ -2212,6 +2225,7 @@
                                     <option value="gyeongnam">경남</option>
                                     <option value="jeju">제주</option>
                                 </select>
+                                <span class="field-error" id="region-error" role="alert"></span>
                             </div>
                             <div class="form-group">
                                 <label for="product">관심 상품</label>
@@ -2242,7 +2256,7 @@
                         </div>
                         <button type="submit" class="submit-btn btn-pulse">
                             무료 상담 신청하기
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
                         </button>
@@ -2276,12 +2290,12 @@
 
             <div class="contact-content">
                 <div class="contact-map">
-                    <img src="images/strategy-i6.jpg" alt="메디플라톤 본사 사무실 - 서울 서초구 양재동 소재" class="contact-img" loading="lazy">
+                    <img src="images/strategy-i6.jpg" alt="메디플라톤 본사 사무실 - 서울 서초구 양재동 소재" class="contact-img" loading="lazy" width="600" height="400">
                 </div>
                 <div class="contact-details">
                     <div class="detail-item">
                         <div class="detail-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
                                 <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
                             </svg>
@@ -2293,7 +2307,7 @@
                     </div>
                     <div class="detail-item">
                         <div class="detail-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                             </svg>
                         </div>
@@ -2304,7 +2318,7 @@
                     </div>
                     <div class="detail-item">
                         <div class="detail-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                                 <polyline points="22,6 12,13 2,6"/>
                             </svg>
@@ -2316,7 +2330,7 @@
                     </div>
                     <div class="detail-item">
                         <div class="detail-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="10"/>
                                 <polyline points="12 6 12 12 16 14"/>
                             </svg>
@@ -2331,12 +2345,14 @@
         </div>
     </section>
 
+    </main>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-main">
                 <div class="footer-brand">
-                    <a href="#" class="footer-logo">
+                    <a href="#main-content" class="footer-logo" aria-label="메디플라톤 홈">
                         <div class="logo-mark light">
                             <span class="logo-icon">+</span>
                         </div>
@@ -2436,13 +2452,13 @@
             <span>전화상담</span>
         </a>
         <a href="#consultation" class="float-btn consult">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             <span>한도조회</span>
         </a>
         <button class="float-btn top" id="scrollTop" aria-label="페이지 맨 위로 이동">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 15l-6-6-6 6"/>
             </svg>
             <span>맨위로</span>
@@ -2542,7 +2558,7 @@
 
             <!-- 성공 아이콘 -->
             <div class="success-icon">
-                <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
+                <svg aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="11" fill="#10B981"/>
                     <path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -2555,7 +2571,7 @@
             <div class="success-info-card">
                 <div class="info-row">
                     <span class="info-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                             <circle cx="12" cy="7" r="4"/>
                         </svg>
@@ -2565,7 +2581,7 @@
                 </div>
                 <div class="info-row">
                     <span class="info-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
                     </span>
@@ -2603,13 +2619,13 @@
             <!-- 신뢰 배지 -->
             <div class="success-trust">
                 <span class="trust-badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                     신협중앙회 정식 제휴
                 </span>
                 <span class="trust-badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
@@ -2621,7 +2637,7 @@
             <div class="success-actions">
                 <button class="modal-btn primary" id="closeSuccessModal">확인</button>
                 <a href="tel:0507-1375-2717" class="modal-btn outline">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                     전화 상담
@@ -2637,13 +2653,13 @@
     <div class="mobile-floating-cta" id="mobileFloatingCta">
         <div class="cta-inner">
             <a href="tel:0507-1375-2717" class="btn btn-outline btn-phone">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                 </svg>
             </a>
             <a href="#consultation" class="btn btn-primary">
                 무료 상담 신청하기
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
             </a>

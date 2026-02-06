@@ -62,6 +62,9 @@
     --radius-xl: 28px;
     --radius-full: 9999px;
 
+    /* Spacing */
+    --section-padding: 100px;
+
     /* Transition - Smoother animations */
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -162,7 +165,7 @@ small, .text-sm {
 
 .text-xs {
     font-size: 12px;
-    line-height: 1.4;
+    line-height: 1.5;
     letter-spacing: 0.01em;
 }
 
@@ -241,6 +244,7 @@ small, .text-sm {
 
 .btn-pulse {
     animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    will-change: box-shadow;
 }
 
 @keyframes pulse {
@@ -342,12 +346,18 @@ section.hero .hero-trust span {
     backdrop-filter: blur(8px);
 }
 
+.section-badge.badge-success {
+    background: var(--success);
+    color: var(--white);
+    border: 1px solid var(--success);
+}
+
 .section-title {
     font-size: clamp(32px, 5vw, 48px);
     font-weight: 800;
     line-height: 1.25;
     margin-bottom: 20px;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.015em;
     color: var(--gray-900);
 }
 
@@ -460,7 +470,7 @@ section.hero .hero-trust span {
 }
 
 .logo-sub {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--gray-500);
     letter-spacing: 0.1em;
@@ -622,7 +632,7 @@ section.hero .hero-trust span {
 
 .hero-content {
     max-width: 580px;
-    color: #111827 !important; /* 기본 텍스트 색상 강제 */
+    color: var(--gray-900);
 }
 
 .hero-badges {
@@ -636,8 +646,8 @@ section.hero .hero-trust span {
     font-size: clamp(40px, 6vw, 64px);
     font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -0.03em;
-    color: #111827 !important;
+    letter-spacing: -0.02em;
+    color: var(--gray-900);
     margin-bottom: 24px;
     opacity: 1 !important;
     visibility: visible !important;
@@ -659,16 +669,16 @@ section.hero .hero-trust span {
 }
 
 .hero-title .highlight {
-    color: #1428A0 !important;
+    color: var(--primary);
 }
 
 .hero-title .highlight strong {
-    color: #1428A0 !important;
+    color: var(--primary);
     font-weight: 800;
 }
 
 .hero-title .highlight strong.text-danger {
-    color: #DC2626 !important;
+    color: #DC2626;
     position: relative;
 }
 
@@ -686,7 +696,7 @@ section.hero .hero-trust span {
 
 .hero-subtitle {
     font-size: 20px;
-    color: #4B5563 !important; /* 강제 그레이 컬러 */
+    color: var(--gray-600);
     line-height: 1.75;
     margin-bottom: 20px;
     opacity: 1 !important;
@@ -726,12 +736,12 @@ section.hero .hero-trust span {
     display: block;
     font-size: 18px;
     font-weight: 700;
-    color: #111827 !important; /* 강제 다크 컬러 */
+    color: var(--gray-900);
 }
 
 .feature-text span {
     font-size: 14px;
-    color: #6B7280 !important; /* 강제 그레이 컬러 */
+    color: var(--gray-500);
 }
 
 .hero-actions {
@@ -750,7 +760,7 @@ section.hero .hero-trust span {
 
 .hero-trust span {
     font-size: 14px;
-    color: #4B5563 !important; /* 강제 그레이 컬러 */
+    color: var(--gray-600);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -862,8 +872,8 @@ section.hero .hero-trust span {
 
 .approval-time {
     font-size: 12px;
-    color: rgba(255,255,255,0.8);
-    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.2);
     padding: 4px 10px;
     border-radius: 12px;
 }
@@ -1000,12 +1010,12 @@ section.hero .hero-trust span {
 
 .hero-card.sub-card {
     top: 20px;
-    right: -20px;
+    right: 0px;
 }
 
 .hero-card.sub-card-2 {
     bottom: 60px;
-    right: -30px;
+    right: 0px;
 }
 
 .mini-stat {
@@ -1141,7 +1151,7 @@ section.hero .hero-trust span {
 
 .stat-label {
     font-size: 14px;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.9);
     font-weight: 500;
     margin-bottom: 16px;
 }
@@ -1175,7 +1185,7 @@ section.hero .hero-trust span {
 .stats-footnote {
     text-align: center;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.9);
     margin-top: 24px;
     position: relative;
     z-index: 1;
@@ -1256,7 +1266,7 @@ section.hero .hero-trust span {
 }
 
 .countdown-item small {
-    font-size: 10px;
+    font-size: 11px;
     opacity: 0.7;
     text-transform: uppercase;
 }
@@ -1358,7 +1368,7 @@ section.hero .hero-trust span {
 
 /* ===== About Section ===== */
 .about-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--white);
 }
 
@@ -1550,7 +1560,7 @@ section.hero .hero-trust span {
 
 /* ===== Services Overview ===== */
 .services-overview {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--gray-50);
     position: relative;
     overflow: hidden;
@@ -1673,7 +1683,8 @@ section.hero .hero-trust span {
 }
 
 .filter-btn {
-    padding: 12px 24px;
+    padding: 14px 24px;
+    min-height: 44px;
     font-size: 14px;
     font-weight: 600;
     color: var(--gray-500);
@@ -1706,7 +1717,7 @@ section.hero .hero-trust span {
 }
 
 .products-grid > .product-card {
-    min-height: 520px;
+    min-height: auto;
 }
 
 .product-card {
@@ -1738,7 +1749,7 @@ section.hero .hero-trust span {
     right: 16px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: var(--white);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     padding: 8px 14px;
     border-radius: var(--radius-full);
@@ -1803,9 +1814,9 @@ section.hero .hero-trust span {
 
 .spec-label {
     display: block;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--gray-400);
+    color: var(--gray-500);
     margin-bottom: 6px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -1855,7 +1866,7 @@ div.product-cta .btn {
 
 /* ===== Process Section ===== */
 .process-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--gray-50);
     position: relative;
     overflow: hidden;
@@ -1932,7 +1943,7 @@ div.product-cta .btn {
 
 /* ===== Qualification Section ===== */
 .qualification-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--white);
 }
 
@@ -2015,14 +2026,15 @@ div.product-cta .btn {
 
 /* ===== Documents Section ===== */
 .documents-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--gray-50);
 }
 
-.doc-grid {
+.docs-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
+    margin-bottom: 32px;
 }
 
 .doc-card {
@@ -2059,7 +2071,7 @@ div.product-cta .btn {
 
 /* ===== Case Section ===== */
 .case-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--white);
 }
 
@@ -2067,6 +2079,7 @@ div.product-cta .btn {
     display: flex;
     gap: 24px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     padding-bottom: 16px;
 }
 
@@ -2160,7 +2173,7 @@ div.product-cta .btn {
 
 /* ===== PG System Section ===== */
 .pg-system-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--gray-50);
 }
 
@@ -2613,7 +2626,8 @@ div.product-cta .btn {
 }
 
 .faq-cat-btn {
-    padding: 10px 20px;
+    padding: 12px 20px;
+    min-height: 44px;
     font-size: 14px;
     font-weight: 500;
     color: var(--gray-500);
@@ -3047,7 +3061,7 @@ div.product-cta .btn {
 
 /* ===== Contact Section ===== */
 .contact-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--white);
 }
 
@@ -3315,8 +3329,8 @@ div.product-cta .btn {
 /* ===== Floating Actions ===== */
 .floating-actions {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    right: calc(24px + env(safe-area-inset-right, 0px));
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -3324,6 +3338,7 @@ div.product-cta .btn {
     opacity: 0;
     transform: translateY(20px);
     transition: var(--transition);
+    will-change: transform, opacity;
 }
 
 .floating-actions.visible {
@@ -3707,8 +3722,8 @@ div.product-cta .btn {
 }
 
 .mobile-menu-close {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3885,7 +3900,7 @@ div.product-cta .btn {
         grid-template-columns: 1fr;
     }
 
-    .doc-grid {
+    .docs-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -3976,7 +3991,6 @@ div.product-cta .btn {
         grid-template-columns: 1fr;
     }
 
-    .doc-grid,
     .docs-grid {
         grid-template-columns: 1fr;
     }
@@ -4862,6 +4876,14 @@ div.product-cta .btn {
     padding-left: 2px;
 }
 
+.field-error {
+    display: block;
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 4px;
+    min-height: 16px;
+}
+
 .form-group.has-error .error-message {
     display: block;
 }
@@ -5010,13 +5032,14 @@ div.product-cta .btn {
 
 /* ===== Comparison Section ===== */
 .comparison-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--white);
 }
 
 .comparison-wrapper {
     margin-bottom: 48px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .comparison-table {
@@ -5530,13 +5553,7 @@ div.product-cta .btn {
     }
 }
 
-/* ===== Documents Section Grid ===== */
-.docs-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-bottom: 32px;
-}
+
 
 .doc-card ul {
     margin-top: 16px;
@@ -5726,7 +5743,7 @@ div.product-cta .btn {
 /* [P3 FIX] 후기 인증 배지 및 날짜 스타일 */
 .verified-badge {
     display: inline-block;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     color: #10B981;
     background: rgba(16, 185, 129, 0.1);
@@ -5738,8 +5755,8 @@ div.product-cta .btn {
 
 .review-date {
     display: block;
-    font-size: 11px !important;
-    color: var(--gray-400) !important;
+    font-size: 12px !important;
+    color: var(--gray-500) !important;
     margin-top: 2px;
 }
 
@@ -5946,6 +5963,15 @@ div.product-cta .btn {
     }
 }
 
+/* ===== Z-INDEX SCALE =====
+ * header:          1000
+ * scroll-progress: 1001
+ * mobile-menu:     2000
+ * modal-overlay:   2100
+ * lightbox:        2200
+ * skip-to-content: 3000
+ */
+
 /* ===== UX/UI ENHANCEMENTS ===== */
 
 /* 1. Scroll Progress Indicator */
@@ -5955,7 +5981,7 @@ div.product-cta .btn {
     left: 0;
     height: 3px;
     background: linear-gradient(90deg, var(--primary), var(--accent));
-    z-index: 9999;
+    z-index: 1001;
     width: 0%;
     transition: width 0.1s ease-out;
 }
@@ -6124,6 +6150,7 @@ a.product-cta:hover svg {
     z-index: 998;
     transform: translateY(100%);
     transition: transform 0.3s ease;
+    will-change: transform;
 }
 
 .mobile-floating-cta.visible {
@@ -6354,7 +6381,7 @@ section {
     color: var(--white);
     font-weight: 600;
     border-radius: var(--radius);
-    z-index: 9999;
+    z-index: 3000;
     transition: top 0.3s ease;
 }
 
@@ -6475,8 +6502,8 @@ img.loaded {
 /* Live Notification Banner */
 .live-notification {
     position: fixed;
-    bottom: 100px;
-    left: 24px;
+    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    left: calc(24px + env(safe-area-inset-left, 0px));
     background: var(--white);
     padding: 12px 16px;
     border-radius: var(--radius-lg);
@@ -6636,6 +6663,7 @@ img.loaded {
 .comparison-table-wrap {
     margin-bottom: 48px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Urgency Box Enhanced - 상담 섹션용 (친근한 파란색 계열) */
@@ -8746,7 +8774,7 @@ textarea:focus-visible {
     }
 
     .success-timeline .step-label {
-        font-size: 9px;
+        font-size: 11px;
     }
 
     .success-timeline .timeline-line {
@@ -8914,7 +8942,7 @@ textarea:focus-visible {
 
 /* ===== PROOF GALLERY (실제 승인 현황) ===== */
 .proof-gallery-section {
-    padding: 100px 0;
+    padding: var(--section-padding) 0;
     background: var(--gray-50);
 }
 
@@ -8924,6 +8952,14 @@ textarea:focus-visible {
     gap: 20px;
     max-width: 900px;
     margin: 0 auto;
+}
+
+button.proof-gallery-item {
+    border: none;
+    padding: 0;
+    font: inherit;
+    text-align: left;
+    width: 100%;
 }
 
 .proof-gallery-item {
@@ -8989,7 +9025,7 @@ textarea:focus-visible {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.92);
-    z-index: 10000;
+    z-index: 2200;
     align-items: center;
     justify-content: center;
     padding: 24px;

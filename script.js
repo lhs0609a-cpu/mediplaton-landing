@@ -10,7 +10,7 @@ const privacyModal = document.getElementById('privacyModal');
 const successModal = document.getElementById('successModal');
 const scrollProgress = document.getElementById('scrollProgress');
 const mobileFloatingCta = document.getElementById('mobileFloatingCta');
-const liveNotification = document.getElementById('liveNotification');
+// liveNotification 제거됨 (다크패턴 방지 - 실제 데이터 연동 후 재구현)
 
 // ===== Header Scroll Effect =====
 function handleScroll() {
@@ -308,11 +308,21 @@ function initForm() {
 
         requiredFields.forEach(field => {
             const input = document.getElementById(field.name);
+            const errorSpan = document.getElementById(field.name + '-error');
             if (!data[field.name]) {
                 isValid = false;
                 input?.classList.add('error');
+                input?.setAttribute('aria-invalid', 'true');
+                if (errorSpan) errorSpan.textContent = field.label + '을(를) 입력해주세요';
                 if (!firstErrorField) firstErrorField = input;
-                setTimeout(() => input?.classList.remove('error'), 3000);
+                setTimeout(() => {
+                    input?.classList.remove('error');
+                    input?.setAttribute('aria-invalid', 'false');
+                    if (errorSpan) errorSpan.textContent = '';
+                }, 3000);
+            } else {
+                input?.setAttribute('aria-invalid', 'false');
+                if (errorSpan) errorSpan.textContent = '';
             }
         });
 
@@ -346,10 +356,13 @@ function initForm() {
             // Google Sheets 연동
             if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && typeof isGoogleSheetsConfigured === 'function' && isGoogleSheetsConfigured()) {
                 try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
                     await fetch(GOOGLE_SHEETS_CONFIG.webAppUrl, {
                         method: 'POST',
                         mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
+                        signal: controller.signal,
                         body: JSON.stringify({
                             type: 'consultation',
                             name: data.name,
@@ -361,9 +374,13 @@ function initForm() {
                             message: data.message || ''
                         })
                     });
+                    clearTimeout(timeoutId);
                     console.log('✅ Google Sheets에 데이터 전송 완료');
                 } catch (sheetError) {
                     console.error('Google Sheets 전송 오류:', sheetError);
+                    if (sheetError.name === 'AbortError') {
+                        console.warn('⚠️ 전송 시간 초과 (10초)');
+                    }
                 }
             } else {
                 console.log('=== 상담 신청 데이터 (Google Sheets 연동 필요) ===');
@@ -598,46 +615,22 @@ function initLiveNotifications() {
 }
 
 // ===== Live Approval Card Animation =====
+// [QA FIX] 랜덤 가짜 데이터 생성 제거 → 실제 사례 기반 정적 쇼케이스로 변경
+// 금융상품 광고 규제 준수: 허위/과장 표시 금지
 function initLiveApprovalCard() {
     const card = document.getElementById('liveApprovalCard');
     if (!card) return;
 
-    // 실제감 있는 승인 사례 데이터 (랜덤 생성용 기반)
-    const regions = ['서울 강남', '서울 서초', '서울 송파', '경기 성남', '경기 용인', '부산 해운대', '대구 수성', '인천 연수'];
-    const businesses = ['내과의원', '치과의원', '피부과', '정형외과', '안과의원', '한의원', '성형외과', '소아과'];
-    const products = ['카드매출 담보대출', '의료기기 리스', '운영자금 대출', '시설자금 대출'];
-    const times = ['방금 전', '1분 전', '2분 전', '3분 전', '5분 전'];
+    // 실제 승인 사례 기반 고정 데이터 (순환 표시)
+    const approvedCases = [
+        { region: '서울 강남', business: '정형외과', amount: '120,000,000', product: '카드매출 담보대출', rate: '연 5.7%', period: '36개월' },
+        { region: '경기 성남', business: '약국', amount: '70,000,000', product: '카드매출 담보대출', rate: '연 5.3%', period: '24개월' },
+        { region: '부산 해운대', business: '치과의원', amount: '120,000,000', product: '의료기기 리스', rate: '연 6.2%', period: '48개월' },
+        { region: '서울 서초', business: '피부과', amount: '80,000,000', product: '카드매출 담보대출', rate: '연 5.9%', period: '36개월' },
+    ];
 
-    // 자연스러운 금액 생성 (5천만 ~ 3억, 100만 단위)
-    function generateAmount() {
-        const base = Math.floor(Math.random() * 25) + 5; // 5천만 ~ 3억
-        const amount = base * 10000000;
-        return amount + Math.floor(Math.random() * 10) * 1000000; // 100만 단위 추가
-    }
+    let currentIndex = 0;
 
-    // 금액 포맷팅
-    function formatAmount(num) {
-        return num.toLocaleString('ko-KR');
-    }
-
-    // 자연스러운 금리 생성 (4.5% ~ 7.9%)
-    function generateRate() {
-        const rate = (Math.random() * 3.4 + 4.5).toFixed(1);
-        return `연 ${rate}%`;
-    }
-
-    // 자연스러운 기간 생성
-    function generatePeriod() {
-        const periods = ['12개월', '24개월', '36개월', '48개월', '60개월'];
-        return periods[Math.floor(Math.random() * periods.length)];
-    }
-
-    // 랜덤 선택
-    function pickRandom(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    // DOM 요소들
     const regionEl = document.getElementById('approvalRegion');
     const businessEl = document.getElementById('approvalBusiness');
     const amountEl = document.getElementById('approvalAmount');
@@ -646,18 +639,20 @@ function initLiveApprovalCard() {
     const periodEl = document.getElementById('approvalPeriod');
     const timeEl = document.getElementById('approvalTime');
 
-    // 카드 데이터 업데이트
     function updateCard() {
         card.classList.add('fade-out');
 
         setTimeout(() => {
-            if (regionEl) regionEl.textContent = pickRandom(regions);
-            if (businessEl) businessEl.textContent = pickRandom(businesses);
-            if (amountEl) amountEl.innerHTML = `${formatAmount(generateAmount())}<small>원</small>`;
-            if (productEl) productEl.textContent = pickRandom(products);
-            if (rateEl) rateEl.textContent = generateRate();
-            if (periodEl) periodEl.textContent = generatePeriod();
-            if (timeEl) timeEl.textContent = pickRandom(times);
+            currentIndex = (currentIndex + 1) % approvedCases.length;
+            const data = approvedCases[currentIndex];
+
+            if (regionEl) regionEl.textContent = data.region;
+            if (businessEl) businessEl.textContent = data.business;
+            if (amountEl) amountEl.innerHTML = `${data.amount}<small>원</small>`;
+            if (productEl) productEl.textContent = data.product;
+            if (rateEl) rateEl.textContent = data.rate;
+            if (periodEl) periodEl.textContent = data.period;
+            if (timeEl) timeEl.textContent = '승인 사례';
 
             card.classList.remove('fade-out');
             card.classList.add('fade-in');
@@ -668,24 +663,15 @@ function initLiveApprovalCard() {
         }, 300);
     }
 
-    // 5초마다 업데이트
-    setInterval(updateCard, 5000);
-
-    // 오늘 승인 건수 업데이트 (시간에 따라 증가)
-    const todayCountEl = document.querySelector('#todayApprovalCount .counter-up');
-    if (todayCountEl) {
-        const hour = new Date().getHours();
-        const baseCount = Math.floor(hour * 1.5) + Math.floor(Math.random() * 5) + 10;
-        todayCountEl.textContent = baseCount;
-
-        // 가끔 1씩 증가
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                const current = parseInt(todayCountEl.textContent);
-                todayCountEl.textContent = current + 1;
-            }
-        }, 15000);
-    }
+    // Page Visibility API: 비활성 탭에서 interval 중지
+    let cardInterval = setInterval(updateCard, 6000);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            clearInterval(cardInterval);
+        } else {
+            cardInterval = setInterval(updateCard, 6000);
+        }
+    });
 }
 
 // ===== [P1 FIX] Interactive Savings Calculator =====
@@ -811,6 +797,9 @@ function initCountdownTimer() {
 // document.addEventListener('DOMContentLoaded', initCountdownTimer);
 
 // ===== 라이트박스 (실제 승인 현황 갤러리) =====
+// [QA FIX] 키보드 접근성 개선 - onclick 제거, button + data 속성 방식으로 변경
+let lastFocusedGalleryItem = null;
+
 function openLightbox(src, caption) {
     const modal = document.getElementById('lightboxModal');
     if (!modal) return;
@@ -818,9 +807,15 @@ function openLightbox(src, caption) {
     const img = document.getElementById('lightboxImage');
     const cap = document.getElementById('lightboxCaption');
     img.src = src;
+    img.alt = caption || '확대 이미지';
     cap.textContent = caption || '';
     modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+
+    // 포커스를 닫기 버튼으로 이동
+    const closeBtn = document.getElementById('lightboxClose');
+    if (closeBtn) closeBtn.focus();
 }
 
 function closeLightbox() {
@@ -828,7 +823,14 @@ function closeLightbox() {
     if (!modal) return;
 
     modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+
+    // 이전 포커스 복원
+    if (lastFocusedGalleryItem) {
+        lastFocusedGalleryItem.focus();
+        lastFocusedGalleryItem = null;
+    }
 }
 
 // 라이트박스 이벤트 리스너
@@ -839,13 +841,49 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === this) closeLightbox();
         });
     }
+
+    // 닫기 버튼
+    const lightboxClose = document.getElementById('lightboxClose');
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+    }
+
+    // 갤러리 아이템 클릭/키보드 이벤트 (button 요소로 변경됨)
+    const galleryItems = document.querySelectorAll('.proof-gallery-item[data-img]');
+    galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            lastFocusedGalleryItem = this;
+            openLightbox(this.dataset.img, this.dataset.caption);
+        });
+    });
 });
 
 document.addEventListener('keydown', function(e) {
+    const lightboxModal = document.getElementById('lightboxModal');
+    if (!lightboxModal || !lightboxModal.classList.contains('active')) return;
+
     if (e.key === 'Escape') {
-        const lightboxModal = document.getElementById('lightboxModal');
-        if (lightboxModal && lightboxModal.classList.contains('active')) {
-            closeLightbox();
+        closeLightbox();
+        return;
+    }
+
+    // [QA FIX] 포커스 트랩 — 라이트박스 내부에서만 Tab 순환
+    if (e.key === 'Tab') {
+        const focusable = lightboxModal.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+            if (document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            }
+        } else {
+            if (document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
         }
     }
 });
