@@ -1218,10 +1218,10 @@ section.hero .hero-trust span {
     align-items: center;
     justify-content: center;
     color: #fff;
-    animation: pulse 2s ease-in-out infinite;
+    animation: pulse-scale 2s ease-in-out infinite;
 }
 
-@keyframes pulse {
+@keyframes pulse-scale {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.05); }
 }
@@ -1306,11 +1306,6 @@ section.hero .hero-trust span {
     font-weight: 600;
     color: var(--gray-700);
     animation: none;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
 }
 
 .slots-unit {
@@ -8261,12 +8256,6 @@ textarea:focus-visible {
     animation: spin 0.8s linear infinite;
     margin-right: 8px;
     vertical-align: middle;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 /* Form Error State Enhancement */

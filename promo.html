@@ -1175,6 +1175,26 @@
             box-shadow: var(--shadow-cta);
         }
 
+        .fixed-cta .btn-call:active { background: var(--gray-700); transform: scale(0.97); }
+        .fixed-cta .btn-form:active { transform: scale(0.97); box-shadow: 0 6px 24px rgba(245,158,11,0.5); }
+
+        /* Placeholder */
+        .form-group input::placeholder { color: var(--gray-400); font-weight: 400; }
+
+        /* Focus-visible for keyboard */
+        .btn:focus-visible,
+        .submit-btn:focus-visible,
+        .promo-float-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* btn-secondary hover */
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+
         /* ===== FOOTER ===== */
         .footer {
             background: var(--gray-100);
