@@ -887,3 +887,32 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+// === Proof Gallery Toggle (더보기/접기) ===
+(function() {
+    const toggleBtn = document.getElementById('proofToggleBtn');
+    if (!toggleBtn) return;
+
+    const grid = document.querySelector('.proof-gallery-grid.expanded');
+    if (!grid) return;
+
+    let isExpanded = false;
+
+    toggleBtn.addEventListener('click', function() {
+        isExpanded = !isExpanded;
+        grid.classList.toggle('show-all', isExpanded);
+
+        const textEl = toggleBtn.querySelector('.toggle-text');
+        const arrowEl = toggleBtn.querySelector('.toggle-arrow');
+
+        if (isExpanded) {
+            textEl.textContent = '접기';
+            arrowEl.style.transform = 'rotate(180deg)';
+        } else {
+            textEl.textContent = '더 많은 승인 사례 보기';
+            arrowEl.style.transform = 'rotate(0deg)';
+            // 갤러리 위치로 스크롤
+            grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+})();

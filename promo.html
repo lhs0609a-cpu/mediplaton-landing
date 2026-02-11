@@ -89,6 +89,9 @@
             -webkit-font-smoothing: antialiased;
             padding-bottom: 80px;
             text-align: center;
+            overflow-x: hidden;
+            word-break: keep-all;
+            overflow-wrap: break-word;
         }
 
         /* ===== HERO SECTION ===== */
@@ -188,6 +191,7 @@
             justify-content: center;
             gap: var(--space-2);
             margin-bottom: var(--space-4);
+            flex-wrap: wrap;
         }
 
         .hero-stat {
@@ -206,7 +210,6 @@
             font-weight: 900;
             color: var(--cta-light);
             line-height: 1.2;
-            white-space: nowrap;
         }
 
         .hero-stat-value small { font-size: 13px; font-weight: 700; }
@@ -455,6 +458,7 @@
             justify-content: center;
             gap: var(--space-2);
             margin-bottom: var(--space-4);
+            flex-wrap: wrap;
         }
 
         .dsr-item {
@@ -492,7 +496,7 @@
             margin-top: var(--space-2);
             padding: var(--space-1) var(--space-2);
             border-radius: var(--radius-full);
-            font-size: 11px !important;
+            font-size: 12px;
             font-weight: 700;
             opacity: 1 !important;
         }
@@ -1038,7 +1042,7 @@
             padding: var(--space-4);
             border: 1px solid var(--gray-200);
             border-radius: var(--radius-md);
-            font-size: 15px;
+            font-size: 16px;
             font-family: inherit;
             transition: all 0.2s;
             background: #fff;
@@ -1062,7 +1066,8 @@
         }
 
         .form-agreement input[type="checkbox"] {
-            width: 18px; height: 18px;
+            width: 22px; height: 22px;
+            min-width: 22px;
             margin-top: 1px;
             flex-shrink: 0;
             accent-color: var(--primary);
@@ -1140,7 +1145,7 @@
             position: fixed;
             bottom: 0; left: 0; right: 0;
             background: #fff;
-            padding: var(--space-3) var(--space-4);
+            padding: var(--space-3) var(--space-4) max(var(--space-3), env(safe-area-inset-bottom));
             box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
             display: flex;
             gap: var(--space-2);
@@ -1153,6 +1158,10 @@
             font-size: 13px;
             max-width: none;
             border-radius: var(--radius-md);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .fixed-cta .btn-call {
@@ -1307,7 +1316,7 @@
 
         /* ===== EXIT INTENT MODAL ===== */
         .exit-modal {
-            max-width: 320px;
+            max-width: min(320px, calc(100% - 32px));
             padding: var(--space-6) var(--space-5);
             position: relative;
         }
@@ -1452,7 +1461,7 @@
         .lightbox-overlay.active { display: flex; }
 
         .lightbox-content {
-            max-width: 90vw;
+            max-width: min(90vw, calc(100% - 32px));
             max-height: 85vh;
             position: relative;
         }
@@ -1466,7 +1475,7 @@
 
         .lightbox-close {
             position: absolute;
-            top: -40px;
+            top: -36px;
             right: 0;
             background: none;
             border: none;
@@ -1474,6 +1483,11 @@
             font-size: 32px;
             cursor: pointer;
             line-height: 1;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .lightbox-caption {
@@ -2074,7 +2088,7 @@
 
     <!-- ===== SUCCESS MODAL ===== -->
     <div class="modal-overlay" id="successModal">
-        <div class="modal-content">
+        <div class="modal">
             <div class="modal-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <path d="M20 6L9 17l-5-5"/>
@@ -2100,7 +2114,7 @@
 
     <!-- ===== EXIT INTENT POPUP ===== -->
     <div class="modal-overlay" id="exitModal">
-        <div class="modal-content exit-modal">
+        <div class="modal exit-modal">
             <button class="exit-close" onclick="closeExitModal()">&times;</button>
             <h3>잠깐만요, 원장님!</h3>
             <p class="exit-stat">
@@ -2129,7 +2143,7 @@
 
     <!-- ===== PRIVACY MODAL ===== -->
     <div class="modal-overlay" id="privacyModal">
-        <div class="modal-content privacy-modal">
+        <div class="modal privacy-modal">
             <h3>개인정보 수집·이용 동의</h3>
             <div class="privacy-content">
                 <p><strong>1. 수집항목</strong><br>성함, 연락처, 업종, 월 카드매출</p>
