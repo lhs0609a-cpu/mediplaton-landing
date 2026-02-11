@@ -1542,16 +1542,288 @@
             .proof-gallery-item.featured { grid-column: span 3; }
         }
 
+        /* ===== TRUST LOGO STRIP ===== */
+        .promo-trust-logos {
+            background: var(--gray-50);
+            padding: var(--space-5) 0;
+            overflow: hidden;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .promo-trust-logos .trust-label {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-400);
+            margin-bottom: var(--space-3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .promo-logo-track {
+            display: flex;
+            animation: promoLogoSlide 25s linear infinite;
+            width: max-content;
+        }
+        .promo-logo-track:hover { animation-play-state: paused; }
+        .promo-logo-track img {
+            height: 28px;
+            margin: 0 20px;
+            opacity: 0.7;
+            filter: grayscale(30%);
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .promo-logo-track img:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.08);
+        }
+        @keyframes promoLogoSlide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ===== CLIENT MARQUEE ===== */
+        .promo-client-marquee {
+            background: var(--gray-900);
+            color: #fff;
+            padding: var(--space-6) var(--space-4);
+            text-align: center;
+            overflow: hidden;
+        }
+        .promo-client-marquee .marquee-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+            color: var(--cta-light);
+        }
+        .marquee-wrapper { overflow: hidden; position: relative; }
+        .marquee-wrapper::before,
+        .marquee-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 40px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .marquee-wrapper::before { left: 0; background: linear-gradient(90deg, var(--gray-900), transparent); }
+        .marquee-wrapper::after { right: 0; background: linear-gradient(270deg, var(--gray-900), transparent); }
+        .marquee-track {
+            display: flex;
+            animation: marqueeMove 30s linear infinite;
+            width: max-content;
+        }
+        .marquee-track span {
+            white-space: nowrap;
+            padding: var(--space-2) var(--space-4);
+            margin: 0 var(--space-2);
+            background: rgba(255,255,255,0.08);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        @keyframes marqueeMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ===== PROCESS STEPS ===== */
+        .process-section {
+            padding: var(--space-10) var(--space-4);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: #fff;
+            text-align: center;
+        }
+        .process-section .section-title { color: #fff; }
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            max-width: 340px;
+            margin: 0 auto;
+        }
+        .process-step {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5) var(--space-4);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px; height: 36px;
+            background: var(--cta);
+            color: #000;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: var(--space-3);
+        }
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+        .step-desc {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        .process-arrow {
+            font-size: 20px;
+            opacity: 0.6;
+            text-align: center;
+        }
+
+        /* ===== MID-SECTION CTA ===== */
+        .mid-cta {
+            padding: var(--space-6) var(--space-4);
+            background: linear-gradient(135deg, var(--cta) 0%, var(--cta-dark) 100%);
+            text-align: center;
+        }
+        .mid-cta .mid-cta-text {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+        }
+        .mid-cta .mid-cta-sub {
+            color: rgba(255,255,255,0.9);
+            font-size: 13px;
+            margin-bottom: var(--space-4);
+        }
+        .mid-cta .btn-white {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            background: #fff;
+            color: var(--cta-dark);
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .mid-cta .btn-white:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+        /* ===== FLOATING BUTTONS ===== */
+        .promo-floating {
+            position: fixed;
+            right: 16px;
+            bottom: 90px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        .promo-float-btn {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .promo-float-btn:hover { transform: scale(1.1); }
+        .promo-float-btn.kakao { background: #FEE500; color: #3C1E1E; }
+        .promo-float-btn.phone-float { background: var(--success); color: #fff; }
+        .promo-float-btn.scroll-top { background: var(--gray-700); color: #fff; opacity: 0; pointer-events: none; transition: all 0.3s; }
+        .promo-float-btn.scroll-top.visible { opacity: 1; pointer-events: auto; }
+
+        /* ===== FORM TRUST BADGES ===== */
+        .form-trust-strip {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+            margin-top: var(--space-5);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--gray-200);
+        }
+        .form-trust-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        .form-trust-icon {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .form-trust-icon.blue { background: rgba(26,58,143,0.1); }
+        .form-trust-icon.green { background: rgba(16,185,129,0.1); }
+        .form-trust-icon.gold { background: rgba(245,158,11,0.1); }
+
+        /* ===== PROOF GALLERY TOGGLE ===== */
+        .promo-proof-toggle {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--space-5);
+        }
+        .promo-proof-toggle button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .promo-proof-toggle button:hover { background: var(--gray-200); }
+        .promo-proof-toggle .toggle-arrow { transition: transform 0.3s; font-size: 12px; }
+        .proof-gallery-grid .proof-gallery-item:nth-child(n+6) { display: none; }
+        .proof-gallery-grid.show-all .proof-gallery-item:nth-child(n+6) { display: block; }
+
+        @media (min-width: 768px) {
+            .promo-trust-logos { padding: var(--space-6) 0; }
+            .promo-logo-track img { height: 34px; margin: 0 28px; }
+            .process-steps { flex-direction: row; max-width: 600px; align-items: flex-start; }
+            .process-arrow { align-self: center; transform: rotate(0deg); }
+            .process-step { flex: 1; }
+            .promo-floating { bottom: 24px; }
+            .form-trust-strip { gap: var(--space-6); }
+            .marquee-track span { font-size: 13px; padding: var(--space-2) var(--space-5); }
+        }
+
         /* ===== 데스크탑 (1024px+) ===== */
         @media (min-width: 1024px) {
             .hero { padding: 56px 32px; }
             .hero-title { font-size: 32px; }
             .hero-title .solution { font-size: 38px; }
             .section-title { font-size: 28px; }
-            .pain-list, .benefit-grid, .check-items, .testimonial-list { max-width: 560px; }
-            .comparison-table { max-width: 560px; }
-            .solution-box, .roi-box { max-width: 560px; }
-            .proof-gallery-grid { max-width: 700px; }
+            .pain-list, .benefit-grid, .check-items, .testimonial-list { max-width: 640px; }
+            .comparison-table { max-width: 640px; }
+            .solution-box, .roi-box { max-width: 640px; }
+            .proof-gallery-grid { max-width: 800px; grid-template-columns: repeat(3, 1fr); }
+            .process-steps { max-width: 750px; }
+            .process-step { padding: var(--space-6) var(--space-5); }
+            .promo-logo-track img { height: 38px; margin: 0 32px; }
+            .promo-floating { right: 24px; }
         }
     </style>
 </head>
@@ -1586,6 +1858,10 @@
                 <div class="hero-stat">
                     <div class="hero-stat-value">5.3%<small>~</small></div>
                     <div class="hero-stat-label">최저 금리</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">332<small>+</small></div>
+                    <div class="hero-stat-label">누적 병원</div>
                 </div>
             </div>
 
@@ -1629,14 +1905,56 @@
             </div>
         </div>
         <div class="proof-logos">
-            <svg class="proof-logo" viewBox="0 0 90 28" fill="none">
-                <rect width="90" height="28" rx="5" fill="#2962FF"/>
-                <text x="45" y="18" text-anchor="middle" fill="white" font-size="9" font-weight="bold">신협중앙회 제휴</text>
-            </svg>
-            <svg class="proof-logo" viewBox="0 0 90 28" fill="none">
-                <rect width="90" height="28" rx="5" fill="#FFB800"/>
-                <text x="45" y="18" text-anchor="middle" fill="#333" font-size="9" font-weight="bold">KB국민카드 제휴</text>
-            </svg>
+            <img src="logo/kb-card.png" alt="KB국민카드" class="proof-logo">
+            <img src="logo/shinhan-card.png" alt="신한카드" class="proof-logo">
+            <img src="logo/hana-card.png" alt="하나카드" class="proof-logo">
+            <img src="logo/bc-card.png" alt="BC카드" class="proof-logo">
+        </div>
+    </section>
+
+    <!-- ===== TRUST LOGO STRIP ===== -->
+    <section class="promo-trust-logos">
+        <div class="trust-label">공식 제휴 파트너사</div>
+        <div class="promo-logo-track">
+            <img src="logo/kb-card.png" alt="KB국민카드">
+            <img src="logo/shinhan-card.png" alt="신한카드">
+            <img src="logo/woori-card.png" alt="우리카드">
+            <img src="logo/hana-card.png" alt="하나카드">
+            <img src="logo/bc-card.png" alt="BC카드">
+            <img src="logo/lotte-card.png" alt="롯데카드">
+            <img src="logo/samsung-card.png" alt="삼성카드">
+            <img src="logo/hyundai-card.png" alt="현대카드">
+            <img src="logo/tosspayments.png" alt="토스페이먼츠">
+            <img src="logo/nicepayments.png" alt="나이스페이먼츠">
+            <img src="logo/kg-inicis.png" alt="KG이니시스">
+            <img src="logo/smartro.png" alt="스마트로">
+            <img src="logo/kftc.png" alt="금융결제원">
+            <img src="logo/kis-van.png" alt="KIS-VAN">
+            <img src="logo/korbill.png" alt="한국빌링">
+            <img src="logo/korpay.png" alt="한국페이">
+            <img src="logo/okpos.png" alt="OKPOS">
+            <img src="logo/naver-cloud.png" alt="네이버클라우드">
+            <img src="logo/modusign.png" alt="모두싸인">
+            <!-- duplicate set for seamless loop -->
+            <img src="logo/kb-card.png" alt="KB국민카드">
+            <img src="logo/shinhan-card.png" alt="신한카드">
+            <img src="logo/woori-card.png" alt="우리카드">
+            <img src="logo/hana-card.png" alt="하나카드">
+            <img src="logo/bc-card.png" alt="BC카드">
+            <img src="logo/lotte-card.png" alt="롯데카드">
+            <img src="logo/samsung-card.png" alt="삼성카드">
+            <img src="logo/hyundai-card.png" alt="현대카드">
+            <img src="logo/tosspayments.png" alt="토스페이먼츠">
+            <img src="logo/nicepayments.png" alt="나이스페이먼츠">
+            <img src="logo/kg-inicis.png" alt="KG이니시스">
+            <img src="logo/smartro.png" alt="스마트로">
+            <img src="logo/kftc.png" alt="금융결제원">
+            <img src="logo/kis-van.png" alt="KIS-VAN">
+            <img src="logo/korbill.png" alt="한국빌링">
+            <img src="logo/korpay.png" alt="한국페이">
+            <img src="logo/okpos.png" alt="OKPOS">
+            <img src="logo/naver-cloud.png" alt="네이버클라우드">
+            <img src="logo/modusign.png" alt="모두싸인">
         </div>
     </section>
 
@@ -1797,6 +2115,15 @@
         </table>
     </section>
 
+    <!-- ===== MID CTA ===== -->
+    <section class="mid-cta">
+        <p class="mid-cta-text">지금 바로 내 한도를 확인하세요</p>
+        <p class="mid-cta-sub">신용점수 영향 없이, 1분이면 충분합니다</p>
+        <a href="#apply" class="btn-white">
+            무료 한도 조회하기 →
+        </a>
+    </section>
+
     <!-- ===== ROI ===== -->
     <section class="roi-section">
         <h2 class="section-title">
@@ -1871,12 +2198,135 @@
                     월간 승인 현황
                 </div>
             </div>
+
+            <!-- 추가 승인 사례 (토글로 보기) -->
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공2.jpg', '2억 승인 사례')">
+                <img src="images/success/성공2.jpg" alt="2억 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">2억 승인</span>
+                    승인 완료
+                </div>
+            </div>
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공3.jpg', '1억 8천 승인 사례')">
+                <img src="images/success/성공3.jpg" alt="1억 8천 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">1.8억 승인</span>
+                    승인 완료
+                </div>
+            </div>
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공4.jpg', '1억 2천 승인 사례')">
+                <img src="images/success/성공4.jpg" alt="1억 2천 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">1.2억 승인</span>
+                    승인 완료
+                </div>
+            </div>
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공5.jpg', '2억 5천 승인 사례')">
+                <img src="images/success/성공5.jpg" alt="2억 5천 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">2.5억 승인</span>
+                    승인 완료
+                </div>
+            </div>
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공6.jpg', '3억 승인 사례')">
+                <img src="images/success/성공6.jpg" alt="3억 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">3억 승인</span>
+                    최대 한도 승인
+                </div>
+            </div>
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공7.jpg', '9천만원 승인 사례')">
+                <img src="images/success/성공7.jpg" alt="9천만원 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">9천만 승인</span>
+                    승인 완료
+                </div>
+            </div>
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공8.jpg', '1억 5천 승인 사례')">
+                <img src="images/success/성공8.jpg" alt="1억 5천 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">1.5억 승인</span>
+                    승인 완료
+                </div>
+            </div>
+            <div class="proof-gallery-item" onclick="openLightbox('images/success/성공9.jpg', '2억 1천 승인 사례')">
+                <img src="images/success/성공9.jpg" alt="2억 1천 승인" loading="lazy">
+                <div class="proof-gallery-label">
+                    <span class="amount">2.1억 승인</span>
+                    승인 완료
+                </div>
+            </div>
+        </div>
+
+        <div class="promo-proof-toggle">
+            <button id="promoProofToggle">
+                <span class="toggle-text">더 많은 승인 사례 보기</span>
+                <span class="toggle-arrow">▼</span>
+            </button>
         </div>
 
         <p class="proof-gallery-notice">
             ※ 개인정보 보호를 위해 일부 정보가 가려져 있습니다<br>
             ※ 실제 관리 시스템 및 상담 내역입니다
         </p>
+    </section>
+
+    <!-- ===== CLIENT MARQUEE ===== -->
+    <section class="promo-client-marquee">
+        <div class="marquee-title">332+ 병의원이 메디플라톤을 선택했습니다</div>
+        <div class="marquee-wrapper">
+            <div class="marquee-track">
+                <span>서울 강남 ○○치과</span>
+                <span>경기 성남 ○○내과</span>
+                <span>부산 해운대 ○○정형외과</span>
+                <span>인천 ○○한의원</span>
+                <span>대구 ○○치과의원</span>
+                <span>광주 ○○약국</span>
+                <span>서울 서초 ○○피부과</span>
+                <span>경기 수원 ○○산부인과</span>
+                <span>대전 ○○안과</span>
+                <span>울산 ○○소아과</span>
+                <span>서울 마포 ○○치과</span>
+                <span>경기 용인 ○○이비인후과</span>
+                <span>부산 ○○정신건강의학과</span>
+                <span>서울 강동 ○○내과</span>
+                <span>경기 고양 ○○약국</span>
+                <span>제주 ○○치과</span>
+                <span>서울 송파 ○○피부과</span>
+                <span>전남 ○○한방병원</span>
+                <span>서울 영등포 ○○정형외과</span>
+                <span>경기 화성 ○○내과</span>
+                <span>충남 ○○치과</span>
+                <span>서울 관악 ○○약국</span>
+                <span>경북 ○○안과</span>
+                <span>인천 ○○산부인과</span>
+                <!-- duplicate for seamless loop -->
+                <span>서울 강남 ○○치과</span>
+                <span>경기 성남 ○○내과</span>
+                <span>부산 해운대 ○○정형외과</span>
+                <span>인천 ○○한의원</span>
+                <span>대구 ○○치과의원</span>
+                <span>광주 ○○약국</span>
+                <span>서울 서초 ○○피부과</span>
+                <span>경기 수원 ○○산부인과</span>
+                <span>대전 ○○안과</span>
+                <span>울산 ○○소아과</span>
+                <span>서울 마포 ○○치과</span>
+                <span>경기 용인 ○○이비인후과</span>
+                <span>부산 ○○정신건강의학과</span>
+                <span>서울 강동 ○○내과</span>
+                <span>경기 고양 ○○약국</span>
+                <span>제주 ○○치과</span>
+                <span>서울 송파 ○○피부과</span>
+                <span>전남 ○○한방병원</span>
+                <span>서울 영등포 ○○정형외과</span>
+                <span>경기 화성 ○○내과</span>
+                <span>충남 ○○치과</span>
+                <span>서울 관악 ○○약국</span>
+                <span>경북 ○○안과</span>
+                <span>인천 ○○산부인과</span>
+            </div>
+        </div>
     </section>
 
     <!-- ===== TESTIMONIALS ===== -->
@@ -1941,11 +2391,82 @@
                     <span class="testimonial-rate">금리: 연 5.8%</span>
                 </div>
             </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">정</div>
+                    <div class="testimonial-info">
+                        <strong>정** 원장님</strong>
+                        <span>대전 · 한의원</span>
+                    </div>
+                    <span class="testimonial-date">2025.01 상담</span>
+                </div>
+                <p class="testimonial-text">
+                    "개원 3년차라 신용대출은 이미 한도가 꽉 찬 상태였습니다. 카드매출 담보로 <strong>2억 승인</strong>받아 2호점 보증금으로 사용했습니다. 은행이면 불가능했을 금액이에요."
+                </p>
+                <div class="testimonial-meta">
+                    <span class="testimonial-amount">승인: 2억원</span>
+                    <span class="testimonial-rate">금리: 연 5.5%</span>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">최</div>
+                    <div class="testimonial-info">
+                        <strong>최** 원장님</strong>
+                        <span>부산 · 정형외과</span>
+                    </div>
+                    <span class="testimonial-date">2025.01 상담</span>
+                </div>
+                <p class="testimonial-text">
+                    "MRI 장비 도입이 급했는데 은행은 DSR 초과로 거절. 담당자분이 <strong>하루 만에 한도 안내</strong>해주시고, 서류 제출 후 3일 만에 입금됐습니다. 속도가 정말 빠릅니다."
+                </p>
+                <div class="testimonial-meta">
+                    <span class="testimonial-amount">승인: 3억원</span>
+                    <span class="testimonial-rate">금리: 연 5.3%</span>
+                </div>
+            </div>
         </div>
 
         <p class="testimonial-disclaimer">
             ※ 개인별 신용상태, 카드매출에 따라 승인 금액 및 금리는 상이할 수 있습니다.
         </p>
+    </section>
+
+    <!-- ===== MID CTA 2 ===== -->
+    <section class="mid-cta">
+        <p class="mid-cta-text">332+ 병원이 선택한 이유, 직접 확인하세요</p>
+        <p class="mid-cta-sub">무료 상담으로 나의 한도를 확인할 수 있습니다</p>
+        <a href="#apply" class="btn-white">
+            1분 만에 한도 조회 →
+        </a>
+    </section>
+
+    <!-- ===== PROCESS STEPS ===== -->
+    <section class="process-section">
+        <span class="section-eyebrow" style="background: rgba(255,255,255,0.2);">간단한 3단계</span>
+        <h2 class="section-title">상담부터 입금까지, 딱 3단계</h2>
+
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-title">무료 상담 신청</div>
+                <div class="step-desc">아래 양식 작성 또는 전화 한 통이면 끝</div>
+            </div>
+            <div class="process-arrow">▶</div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-title">한도·금리 안내</div>
+                <div class="step-desc">카드매출 기반 맞춤 한도를 1시간 내 안내</div>
+            </div>
+            <div class="process-arrow">▶</div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-title">3영업일 입금</div>
+                <div class="step-desc">서류 제출 후 심사 통과 시 통장 입금</div>
+            </div>
+        </div>
     </section>
 
     <!-- ===== CHECKLIST ===== -->
@@ -2059,6 +2580,21 @@
                     상담 후 결정
                 </span>
             </div>
+
+            <div class="form-trust-strip">
+                <div class="form-trust-item">
+                    <div class="form-trust-icon blue">🏦</div>
+                    <span>신협중앙회<br>정식 제휴</span>
+                </div>
+                <div class="form-trust-item">
+                    <div class="form-trust-icon green">🔒</div>
+                    <span>개인정보<br>암호화 보호</span>
+                </div>
+                <div class="form-trust-item">
+                    <div class="form-trust-icon gold">📋</div>
+                    <span>Since 2006<br>6년 무사고</span>
+                </div>
+            </div>
         </form>
     </section>
 
@@ -2072,6 +2608,19 @@
             대출중개수수료: 대출금액의 0~2% 이내 (상품별 상이)
         </p>
     </footer>
+
+    <!-- ===== FLOATING BUTTONS ===== -->
+    <div class="promo-floating">
+        <a href="https://open.kakao.com/o/sW043VVg" target="_blank" class="promo-float-btn kakao" aria-label="카카오톡 상담">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.48 3 2 6.58 2 10.9c0 2.78 1.86 5.22 4.65 6.6-.15.56-.96 3.56-.99 3.78 0 0-.02.17.09.24.11.06.24.01.24.01.32-.04 3.7-2.4 4.28-2.81.56.08 1.14.12 1.73.12 5.52 0 10-3.58 10-7.94C22 6.58 17.52 3 12 3z"/></svg>
+        </a>
+        <a href="tel:0507-1375-2717" class="promo-float-btn phone-float" aria-label="전화 상담">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+        <button class="promo-float-btn scroll-top" id="scrollTopBtn" aria-label="맨 위로">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        </button>
+    </div>
 
     <!-- ===== FIXED CTA ===== -->
     <div class="fixed-cta">
@@ -2369,6 +2918,45 @@
         document.getElementById('lightboxModal').addEventListener('click', function(e) {
             if (e.target === this) closeLightbox();
         });
+
+        // ===== 승인 사례 토글 =====
+        (function() {
+            const toggleBtn = document.getElementById('promoProofToggle');
+            if (!toggleBtn) return;
+            const grid = document.querySelector('.proof-gallery-grid');
+            if (!grid) return;
+            let isExpanded = false;
+            toggleBtn.addEventListener('click', function() {
+                isExpanded = !isExpanded;
+                grid.classList.toggle('show-all', isExpanded);
+                const textEl = toggleBtn.querySelector('.toggle-text');
+                const arrowEl = toggleBtn.querySelector('.toggle-arrow');
+                if (isExpanded) {
+                    textEl.textContent = '접기';
+                    arrowEl.style.transform = 'rotate(180deg)';
+                } else {
+                    textEl.textContent = '더 많은 승인 사례 보기';
+                    arrowEl.style.transform = 'rotate(0deg)';
+                    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        })();
+
+        // ===== 스크롤 탑 버튼 =====
+        (function() {
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (!scrollTopBtn) return;
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 500) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            }, { passive: true });
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
 
         // ===== Exit Intent 팝업 =====
         let exitShown = false;
