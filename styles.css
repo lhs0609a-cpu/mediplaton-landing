@@ -9393,13 +9393,19 @@ button.proof-gallery-item {
 /* === Expanded Proof Gallery (확장된 승인 갤러리) === */
 .proof-gallery-grid.expanded {
     grid-template-columns: repeat(4, 1fr);
+    max-width: 1100px;
 }
 
-.proof-gallery-grid.expanded .proof-gallery-item:nth-child(n+6) {
+.proof-gallery-grid.expanded .proof-gallery-item.featured {
+    grid-column: span 2;
+    aspect-ratio: 16/9;
+}
+
+.proof-gallery-grid.expanded .proof-gallery-item:nth-child(n+7) {
     display: none;
 }
 
-.proof-gallery-grid.expanded.show-all .proof-gallery-item:nth-child(n+6) {
+.proof-gallery-grid.expanded.show-all .proof-gallery-item:nth-child(n+7) {
     display: block;
     animation: fadeInUp 0.4s ease forwards;
 }
@@ -9449,6 +9455,10 @@ button.proof-gallery-item {
 @media (max-width: 768px) {
     .proof-gallery-grid.expanded {
         grid-template-columns: repeat(2, 1fr);
+        max-width: 400px;
+    }
+    .proof-gallery-grid.expanded .proof-gallery-item.featured {
+        grid-column: span 2;
     }
     .proof-toggle-btn { font-size: 14px; padding: 10px 24px; }
 }
@@ -9456,7 +9466,25 @@ button.proof-gallery-item {
 @media (min-width: 769px) and (max-width: 1024px) {
     .proof-gallery-grid.expanded {
         grid-template-columns: repeat(3, 1fr);
+        max-width: 900px;
     }
+
+    /* 태블릿 반응형 보강 */
+    .trust-strip-slide { gap: 30px; }
+    .trust-logo-item img { height: 28px; }
+
+    .about-image-grid { gap: 10px; }
+
+    .service-visual-banner { padding: 24px 16px; }
+    .service-visual-grid { gap: 20px; }
+    .service-visual-item img { width: 52px; height: 52px; }
+
+    .process-info-images { gap: 24px; }
+    .process-info-item img { width: 76px; height: 76px; }
+
+    .consult-sub-images img { height: 72px; }
+
+    .marquee-item { padding: 8px 20px; font-size: 13px; }
 }
 
 /* === Client Hospital Marquee === */
@@ -9714,7 +9742,7 @@ button.proof-gallery-item {
 
 .float-btn.kakao:hover {
     background: #F5D800;
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.05);
     box-shadow: 0 8px 20px rgba(254, 229, 0, 0.4);
 }
 
