@@ -82,6 +82,29 @@ function setupEventListeners() {
     // 엑셀 다운로드
     document.getElementById('exportConsultBtn').addEventListener('click', () => exportToCSV('consultations'));
     document.getElementById('exportPartnerBtn').addEventListener('click', () => exportToCSV('partners'));
+
+    // 정산 관리
+    document.getElementById('addSettlementBtn').addEventListener('click', openSettlementModal);
+    document.getElementById('settlementForm').addEventListener('submit', handleSettlementSubmit);
+    document.getElementById('adminPartnerFilter').addEventListener('change', loadAdminSettlements);
+    document.getElementById('adminMonthFilter').addEventListener('change', loadAdminSettlements);
+
+    // 공지사항 관리
+    document.getElementById('addNoticeBtn').addEventListener('click', openNoticeModal);
+    document.getElementById('noticeForm').addEventListener('submit', handleNoticeSubmit);
+
+    // 정산 자동 계산
+    document.getElementById('settleAmount').addEventListener('input', autoCalcCommission);
+    document.getElementById('settleRate').addEventListener('input', autoCalcCommission);
+
+    // 정산 모달 파트너 변경 시 수수료율 자동 반영
+    document.getElementById('settlePartnerSelect').addEventListener('change', function() {
+        const opt = this.selectedOptions[0];
+        if (opt && opt.dataset.rate) {
+            document.getElementById('settleRate').value = opt.dataset.rate;
+            autoCalcCommission();
+        }
+    });
 }
 
 // 로그인 처리
@@ -125,6 +148,7 @@ function showDashboard() {
 
     loadStats();
     loadConsultations();
+    initAdminSettlementFilters();
 }
 
 // 통계 로드
@@ -184,9 +208,12 @@ function switchTab(tab) {
 
     document.getElementById('consultationsSection').style.display = tab === 'consultations' ? 'block' : 'none';
     document.getElementById('partnersSection').style.display = tab === 'partners' ? 'block' : 'none';
+    document.getElementById('adminSettlementsSection').style.display = tab === 'admin-settlements' ? 'block' : 'none';
 
-    if (tab === 'partners') {
-        loadPartners();
+    if (tab === 'partners') loadPartners();
+    if (tab === 'admin-settlements') {
+        loadAdminSettlements();
+        loadAdminNotices();
     }
 }
 
@@ -371,6 +398,30 @@ async function viewConsultation(id) {
             <span class="detail-label">문의사항</span>
             <span class="detail-value">${escapeHtml(data.message) || '-'}</span>
         </div>
+        ${data.partner_id ? `
+        <div class="detail-row" style="border-top: 2px solid var(--gray-200); margin-top: 12px; padding-top: 12px;">
+            <span class="detail-label">파트너 연결</span>
+            <span class="detail-value">파트너 ID: ${data.partner_id}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">파이프라인</span>
+            <span class="detail-value">
+                <select class="filter-select" id="pipelineSelect" style="margin-right:8px;">
+                    <option value="received" ${data.pipeline_status === 'received' ? 'selected' : ''}>접수</option>
+                    <option value="reviewing" ${data.pipeline_status === 'reviewing' ? 'selected' : ''}>심사 중</option>
+                    <option value="approved" ${data.pipeline_status === 'approved' ? 'selected' : ''}>승인</option>
+                    <option value="installed" ${data.pipeline_status === 'installed' ? 'selected' : ''}>PG 설치 완료</option>
+                    <option value="rejected" ${data.pipeline_status === 'rejected' ? 'selected' : ''}>반려</option>
+                </select>
+            </span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">거래액</span>
+            <span class="detail-value">
+                <input type="number" id="transactionAmount" value="${data.transaction_amount || ''}" placeholder="거래액 입력" style="padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:14px;width:200px;">
+            </span>
+        </div>
+        ` : ''}
     `;
 
     // 상태 선택 업데이트
@@ -401,6 +452,8 @@ async function viewPartner(id) {
         showToast('데이터를 불러오는데 실패했습니다.', 'error');
         return;
     }
+
+    const showLinkBtn = data.status === 'approved' && !data.user_id;
 
     document.getElementById('modalTitle').textContent = '파트너 신청 상세';
     document.getElementById('modalBody').innerHTML = `
@@ -436,6 +489,17 @@ async function viewPartner(id) {
             <span class="detail-label">문의사항</span>
             <span class="detail-value">${escapeHtml(data.message) || '-'}</span>
         </div>
+        <div class="detail-row" style="border-top: 2px solid var(--gray-200); margin-top: 12px; padding-top: 12px;">
+            <span class="detail-label">계정 연결</span>
+            <span class="detail-value">
+                ${data.user_id
+                    ? '<span style="color:var(--success);font-weight:600;">연결됨</span> (ID: ' + data.user_id.substring(0, 8) + '...)'
+                    : showLinkBtn
+                        ? '<input type="text" id="linkUserId" placeholder="Supabase Auth User UUID" style="padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;width:100%;margin-bottom:8px;"><button class="btn btn-primary btn-sm" onclick="linkPartnerAccount(' + id + ')" style="width:auto;">계정 연결</button>'
+                        : '<span style="color:var(--gray-500);">승인 상태에서만 연결 가능</span>'
+                }
+            </span>
+        </div>
     `;
 
     // 상태 선택 업데이트
@@ -451,15 +515,60 @@ async function viewPartner(id) {
     document.getElementById('detailModal').classList.add('active');
 }
 
+// 파트너 계정 연결
+async function linkPartnerAccount(partnerId) {
+    const userId = document.getElementById('linkUserId').value.trim();
+    if (!userId) {
+        showToast('User UUID를 입력하세요.', 'error');
+        return;
+    }
+
+    // UUID 형식 검증
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
+        showToast('올바른 UUID 형식이 아닙니다.', 'error');
+        return;
+    }
+
+    try {
+        const { error } = await supabase
+            .from('partners')
+            .update({ user_id: userId, updated_at: new Date().toISOString() })
+            .eq('id', partnerId);
+
+        if (error) throw error;
+
+        showToast('계정이 연결되었습니다.', 'success');
+        closeModal();
+        loadPartners();
+    } catch (error) {
+        showToast('연결 실패: ' + error.message, 'error');
+    }
+}
+
 // 상태 저장
 async function saveStatus() {
     const newStatus = document.getElementById('statusSelect').value;
     const table = currentDetailType === 'consultation' ? 'consultations' : 'partners';
 
     try {
+        const updateData = { status: newStatus, updated_at: new Date().toISOString() };
+
+        // consultation에서 파트너 연결 건일 때 pipeline_status, transaction_amount도 저장
+        if (currentDetailType === 'consultation') {
+            const pipelineSelect = document.getElementById('pipelineSelect');
+            const transactionAmountInput = document.getElementById('transactionAmount');
+            if (pipelineSelect) {
+                updateData.pipeline_status = pipelineSelect.value;
+            }
+            if (transactionAmountInput && transactionAmountInput.value) {
+                updateData.transaction_amount = Number(transactionAmountInput.value);
+            }
+        }
+
         const { error } = await supabase
             .from(table)
-            .update({ status: newStatus, updated_at: new Date().toISOString() })
+            .update(updateData)
             .eq('id', currentDetailId);
 
         if (error) throw error;
@@ -485,6 +594,302 @@ function closeModal() {
     document.getElementById('detailModal').classList.remove('active');
     currentDetailId = null;
     currentDetailType = null;
+}
+
+// ─── 정산 관리 ───
+
+function initAdminSettlementFilters() {
+    // 월 필터 초기화
+    const monthSelect = document.getElementById('adminMonthFilter');
+    const now = new Date();
+    monthSelect.innerHTML = '';
+    for (let i = 0; i < 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const val = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const label = `${d.getFullYear()}년 ${d.getMonth() + 1}월`;
+        monthSelect.innerHTML += `<option value="${val}">${label}</option>`;
+    }
+
+    // 정산 모달 월 셀렉트도 동기화
+    const settleMonthSelect = document.getElementById('settleMonthSelect');
+    settleMonthSelect.innerHTML = monthSelect.innerHTML;
+
+    // 파트너 필터 로드
+    loadPartnerFilter();
+}
+
+async function loadPartnerFilter() {
+    try {
+        const { data, error } = await supabase
+            .from('partners')
+            .select('id, name, hospital_name, commission_rate')
+            .eq('status', 'approved')
+            .order('name');
+
+        if (error) throw error;
+
+        const options = (data || []).map(p =>
+            `<option value="${p.id}" data-rate="${p.commission_rate || 0.015}">${escapeHtml(p.name)}${p.hospital_name ? ' (' + escapeHtml(p.hospital_name) + ')' : ''}</option>`
+        ).join('');
+
+        document.getElementById('adminPartnerFilter').innerHTML = '<option value="">파트너 선택</option>' + options;
+        document.getElementById('settlePartnerSelect').innerHTML = '<option value="">파트너 선택</option>' + options;
+    } catch (error) {
+        console.error('Partner filter error:', error);
+    }
+}
+
+async function loadAdminSettlements() {
+    const partnerId = document.getElementById('adminPartnerFilter').value;
+    const month = document.getElementById('adminMonthFilter').value;
+
+    const loading = document.getElementById('adminSettlementLoading');
+    const table = document.getElementById('adminSettlementTable');
+    const empty = document.getElementById('adminSettlementEmpty');
+    const tbody = document.getElementById('adminSettlementTableBody');
+
+    if (!partnerId) {
+        table.style.display = 'none';
+        empty.style.display = 'block';
+        document.getElementById('adminSettlementEmpty').querySelector('h3').textContent = '파트너를 선택하세요';
+        return;
+    }
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        let query = supabase
+            .from('settlements')
+            .select('*, partners(name)')
+            .eq('month', month)
+            .order('created_at', { ascending: false });
+
+        if (partnerId) {
+            query = query.eq('partner_id', partnerId);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            document.getElementById('adminSettlementEmpty').querySelector('h3').textContent = '정산 내역이 없습니다';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(row => `
+            <tr>
+                <td>${row.partners ? escapeHtml(row.partners.name) : '-'}</td>
+                <td>${escapeHtml(row.client_name || '-')}</td>
+                <td>${formatCurrency(row.transaction_amount)}원</td>
+                <td>${row.commission_rate ? (Number(row.commission_rate) * 100).toFixed(2) + '%' : '-'}</td>
+                <td>${formatCurrency(row.commission_amount)}원</td>
+                <td>
+                    <select class="filter-select" onchange="updateSettlementStatus(${row.id}, this.value)" style="font-size:12px;padding:4px 8px;">
+                        <option value="pending" ${row.status === 'pending' ? 'selected' : ''}>대기</option>
+                        <option value="confirmed" ${row.status === 'confirmed' ? 'selected' : ''}>확정</option>
+                        <option value="paid" ${row.status === 'paid' ? 'selected' : ''}>지급완료</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="action-btn delete" onclick="deleteSettlement(${row.id})" style="background:#FEE2E2;color:#B91C1C;">삭제</button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Admin settlements error:', error);
+        loading.style.display = 'none';
+        showToast('정산 데이터를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+function openSettlementModal() {
+    // 현재 선택된 파트너/월 가져오기
+    const partnerVal = document.getElementById('adminPartnerFilter').value;
+    const monthVal = document.getElementById('adminMonthFilter').value;
+    if (partnerVal) document.getElementById('settlePartnerSelect').value = partnerVal;
+    if (monthVal) document.getElementById('settleMonthSelect').value = monthVal;
+
+    // 선택된 파트너의 수수료율 가져오기
+    const partnerOption = document.getElementById('settlePartnerSelect').selectedOptions[0];
+    if (partnerOption && partnerOption.dataset.rate) {
+        document.getElementById('settleRate').value = partnerOption.dataset.rate;
+    }
+
+    document.getElementById('settlementModal').classList.add('active');
+}
+
+function autoCalcCommission() {
+    const amount = Number(document.getElementById('settleAmount').value) || 0;
+    const rate = Number(document.getElementById('settleRate').value) || 0;
+    document.getElementById('settleCommission').value = Math.round(amount * rate);
+}
+
+async function handleSettlementSubmit(e) {
+    e.preventDefault();
+
+    const partnerId = document.getElementById('settlePartnerSelect').value;
+    if (!partnerId) {
+        showToast('파트너를 선택하세요.', 'error');
+        return;
+    }
+
+    const payload = {
+        partner_id: Number(partnerId),
+        month: document.getElementById('settleMonthSelect').value,
+        client_name: document.getElementById('settleClientName').value.trim(),
+        transaction_amount: Number(document.getElementById('settleAmount').value),
+        commission_rate: Number(document.getElementById('settleRate').value),
+        commission_amount: Number(document.getElementById('settleCommission').value),
+        status: document.getElementById('settleStatusSelect').value
+    };
+
+    try {
+        const { error } = await supabase.from('settlements').insert([payload]);
+        if (error) throw error;
+
+        showToast('정산이 추가되었습니다.', 'success');
+        document.getElementById('settlementModal').classList.remove('active');
+        e.target.reset();
+        document.getElementById('settleRate').value = '0.015';
+        loadAdminSettlements();
+    } catch (error) {
+        showToast('정산 추가 실패: ' + error.message, 'error');
+    }
+}
+
+async function updateSettlementStatus(id, status) {
+    try {
+        const { error } = await supabase
+            .from('settlements')
+            .update({ status, updated_at: new Date().toISOString() })
+            .eq('id', id);
+        if (error) throw error;
+        showToast('정산 상태가 변경되었습니다.', 'success');
+    } catch (error) {
+        showToast('상태 변경 실패', 'error');
+    }
+}
+
+async function deleteSettlement(id) {
+    if (!confirm('이 정산 내역을 삭제하시겠습니까?')) return;
+
+    try {
+        const { error } = await supabase.from('settlements').delete().eq('id', id);
+        if (error) throw error;
+        showToast('삭제되었습니다.', 'success');
+        loadAdminSettlements();
+    } catch (error) {
+        showToast('삭제 실패', 'error');
+    }
+}
+
+// ─── 공지사항 관리 ───
+
+async function loadAdminNotices() {
+    try {
+        const { data, error } = await supabase
+            .from('notices')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        const table = document.getElementById('noticeTable');
+        const empty = document.getElementById('noticeEmpty');
+        const tbody = document.getElementById('noticeTableBody');
+
+        if (!data || data.length === 0) {
+            table.style.display = 'none';
+            empty.style.display = 'block';
+            return;
+        }
+
+        empty.style.display = 'none';
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(row => `
+            <tr>
+                <td><strong>${escapeHtml(row.title)}</strong></td>
+                <td><span class="status-badge ${row.is_active ? 'status-completed' : 'status-cancelled'}">${row.is_active ? '활성' : '비활성'}</span></td>
+                <td>${formatDate(row.created_at)}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="action-btn edit" onclick="editNotice(${row.id})">수정</button>
+                        <button class="action-btn delete" onclick="deleteNotice(${row.id})" style="background:#FEE2E2;color:#B91C1C;">삭제</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Load notices error:', error);
+    }
+}
+
+function openNoticeModal() {
+    document.getElementById('noticeModalTitle').textContent = '공지 추가';
+    document.getElementById('noticeEditId').value = '';
+    document.getElementById('noticeTitle').value = '';
+    document.getElementById('noticeContent').value = '';
+    document.getElementById('noticeActive').checked = true;
+    document.getElementById('noticeModal').classList.add('active');
+}
+
+async function editNotice(id) {
+    const { data, error } = await supabase.from('notices').select('*').eq('id', id).single();
+    if (error) { showToast('공지를 불러올 수 없습니다.', 'error'); return; }
+
+    document.getElementById('noticeModalTitle').textContent = '공지 수정';
+    document.getElementById('noticeEditId').value = id;
+    document.getElementById('noticeTitle').value = data.title;
+    document.getElementById('noticeContent').value = data.content || '';
+    document.getElementById('noticeActive').checked = data.is_active;
+    document.getElementById('noticeModal').classList.add('active');
+}
+
+async function handleNoticeSubmit(e) {
+    e.preventDefault();
+
+    const editId = document.getElementById('noticeEditId').value;
+    const payload = {
+        title: document.getElementById('noticeTitle').value.trim(),
+        content: document.getElementById('noticeContent').value.trim(),
+        is_active: document.getElementById('noticeActive').checked
+    };
+
+    try {
+        if (editId) {
+            const { error } = await supabase.from('notices').update(payload).eq('id', Number(editId));
+            if (error) throw error;
+            showToast('공지가 수정되었습니다.', 'success');
+        } else {
+            const { error } = await supabase.from('notices').insert([payload]);
+            if (error) throw error;
+            showToast('공지가 추가되었습니다.', 'success');
+        }
+
+        document.getElementById('noticeModal').classList.remove('active');
+        loadAdminNotices();
+    } catch (error) {
+        showToast('저장 실패: ' + error.message, 'error');
+    }
+}
+
+async function deleteNotice(id) {
+    if (!confirm('이 공지를 삭제하시겠습니까?')) return;
+
+    try {
+        const { error } = await supabase.from('notices').delete().eq('id', id);
+        if (error) throw error;
+        showToast('삭제되었습니다.', 'success');
+        loadAdminNotices();
+    } catch (error) {
+        showToast('삭제 실패', 'error');
+    }
 }
 
 // CSV 내보내기
@@ -529,6 +934,7 @@ async function exportToCSV(type) {
 
 // 유틸리티 함수들
 function formatDate(dateStr) {
+    if (!dateStr) return '-';
     const date = new Date(dateStr);
     return date.toLocaleString('ko-KR', {
         year: 'numeric',
@@ -546,6 +952,10 @@ function escapeHtml(str) {
               .replace(/>/g, '&gt;')
               .replace(/"/g, '&quot;')
               .replace(/'/g, '&#039;');
+}
+
+function formatCurrency(amount) {
+    return Number(amount || 0).toLocaleString('ko-KR');
 }
 
 function getBusinessLabel(value) {

@@ -1,133 +1,36 @@
 -- =============================================
--- 메디플라톤 Supabase 데이터베이스 스키마
--- =============================================
--- 사용법:
--- 1. Supabase Dashboard → SQL Editor
--- 2. 이 파일 내용 전체 복사 후 실행
--- =============================================
-
--- 상담 신청 테이블
-CREATE TABLE IF NOT EXISTS consultations (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    business VARCHAR(50),
-    revenue VARCHAR(50),
-    region VARCHAR(50),
-    product VARCHAR(50),
-    message TEXT,
-    status VARCHAR(20) DEFAULT 'new',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 파트너 신청 테이블
-CREATE TABLE IF NOT EXISTS partners (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    hospital_name VARCHAR(200),
-    business VARCHAR(50),
-    region VARCHAR(50),
-    revenue VARCHAR(50),
-    message TEXT,
-    status VARCHAR(20) DEFAULT 'new',
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 인덱스 생성 (검색 성능 향상)
-CREATE INDEX IF NOT EXISTS idx_consultations_status ON consultations(status);
-CREATE INDEX IF NOT EXISTS idx_consultations_created_at ON consultations(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_consultations_phone ON consultations(phone);
-
-CREATE INDEX IF NOT EXISTS idx_partners_status ON partners(status);
-CREATE INDEX IF NOT EXISTS idx_partners_created_at ON partners(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_partners_phone ON partners(phone);
-
--- Row Level Security (RLS) 활성화
-ALTER TABLE consultations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE partners ENABLE ROW LEVEL SECURITY;
-
--- 정책: 누구나 INSERT 가능 (폼 제출용)
-CREATE POLICY "Anyone can insert consultations"
-    ON consultations FOR INSERT
-    WITH CHECK (true);
-
-CREATE POLICY "Anyone can insert partners"
-    ON partners FOR INSERT
-    WITH CHECK (true);
-
--- 정책: 인증된 사용자만 SELECT/UPDATE/DELETE 가능 (관리자용)
-CREATE POLICY "Authenticated users can select consultations"
-    ON consultations FOR SELECT
-    USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can update consultations"
-    ON consultations FOR UPDATE
-    USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can delete consultations"
-    ON consultations FOR DELETE
-    USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can select partners"
-    ON partners FOR SELECT
-    USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can update partners"
-    ON partners FOR UPDATE
-    USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Authenticated users can delete partners"
-    ON partners FOR DELETE
-    USING (auth.role() = 'authenticated');
-
--- =============================================
--- 설정 완료 후 해야 할 일:
--- =============================================
--- 1. Supabase Dashboard → Authentication → Users
---    → "Add User" 버튼으로 관리자 계정 생성
---    예: admin@mediplaton.co.kr / 안전한비밀번호
---
--- 2. config.js 파일에 Supabase URL과 API Key 입력
---    → Project Settings → API 에서 확인
---
--- 3. (선택) 이메일 알림 설정
---    → Database → Webhooks 또는 Edge Functions 활용
--- =============================================
-
-
--- =============================================
 -- 파트너 대시보드 마이그레이션
 -- =============================================
--- 기존 DB에 아래 SQL을 Supabase SQL Editor에서 실행하세요.
--- 기존 테이블을 삭제하지 않고 컬럼/테이블/정책만 추가합니다.
+-- Supabase Dashboard → SQL Editor → New Query
+-- 이 파일 전체를 복사하여 실행하세요.
+-- 기존 데이터를 삭제하지 않습니다.
 -- =============================================
 
+
 -- ─────────────────────────────────────────────
--- 1. 기존 테이블 컬럼 추가
+-- 1. 기존 테이블에 컬럼 추가
 -- ─────────────────────────────────────────────
 
--- partners 테이블에 컬럼 추가
+-- partners 테이블
 ALTER TABLE partners ADD COLUMN IF NOT EXISTS user_id UUID UNIQUE REFERENCES auth.users(id);
 ALTER TABLE partners ADD COLUMN IF NOT EXISTS commission_rate DECIMAL(5,4) DEFAULT 0.015;
 ALTER TABLE partners ADD COLUMN IF NOT EXISTS email VARCHAR(200);
 ALTER TABLE partners ADD COLUMN IF NOT EXISTS bank_name VARCHAR(50);
 ALTER TABLE partners ADD COLUMN IF NOT EXISTS bank_account VARCHAR(50);
 
--- consultations 테이블에 컬럼 추가
+-- consultations 테이블
 ALTER TABLE consultations ADD COLUMN IF NOT EXISTS partner_id BIGINT REFERENCES partners(id);
 ALTER TABLE consultations ADD COLUMN IF NOT EXISTS pipeline_status VARCHAR(30) DEFAULT 'received';
 ALTER TABLE consultations ADD COLUMN IF NOT EXISTS transaction_amount DECIMAL(15,0);
 
--- 인덱스 추가
+-- 인덱스
 CREATE INDEX IF NOT EXISTS idx_partners_user_id ON partners(user_id);
 CREATE INDEX IF NOT EXISTS idx_consultations_partner_id ON consultations(partner_id);
 CREATE INDEX IF NOT EXISTS idx_consultations_pipeline_status ON consultations(pipeline_status);
 
+
 -- ─────────────────────────────────────────────
--- 2. 신규 테이블
+-- 2. 신규 테이블 생성
 -- ─────────────────────────────────────────────
 
 -- 정산 테이블
@@ -135,12 +38,12 @@ CREATE TABLE IF NOT EXISTS settlements (
     id BIGSERIAL PRIMARY KEY,
     partner_id BIGINT NOT NULL REFERENCES partners(id),
     consultation_id BIGINT REFERENCES consultations(id),
-    month VARCHAR(7) NOT NULL,          -- '2026-02' 형식
+    month VARCHAR(7) NOT NULL,
     client_name VARCHAR(100),
     transaction_amount DECIMAL(15,0),
     commission_rate DECIMAL(5,4),
     commission_amount DECIMAL(15,0),
-    status VARCHAR(20) DEFAULT 'pending', -- pending / confirmed / paid
+    status VARCHAR(20) DEFAULT 'pending',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -158,43 +61,39 @@ CREATE TABLE IF NOT EXISTS notices (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+
 -- ─────────────────────────────────────────────
 -- 3. RLS 헬퍼 함수
 -- ─────────────────────────────────────────────
 
--- 현재 로그인한 사용자의 partner_id 반환
 CREATE OR REPLACE FUNCTION get_my_partner_id()
 RETURNS BIGINT
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
+LANGUAGE sql STABLE SECURITY DEFINER
 AS $$
     SELECT id FROM partners WHERE user_id = auth.uid()
 $$;
 
--- 현재 사용자가 admin인지 확인 (partners 테이블에 레코드 없음 = admin)
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS BOOLEAN
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
+LANGUAGE sql STABLE SECURITY DEFINER
 AS $$
     SELECT NOT EXISTS (
         SELECT 1 FROM partners WHERE user_id = auth.uid()
     ) AND auth.uid() IS NOT NULL
 $$;
 
+
 -- ─────────────────────────────────────────────
--- 4. RLS 정책 업데이트 — 기존 정책 삭제 후 역할별 재생성
+-- 4. RLS 정책 업데이트
 -- ─────────────────────────────────────────────
 
--- === consultations 테이블 ===
--- 기존 정책 삭제
+-- === consultations ===
+-- 기존 SELECT/UPDATE/DELETE 정책 삭제 (INSERT는 유지 - 공개 폼 제출용)
 DROP POLICY IF EXISTS "Authenticated users can select consultations" ON consultations;
 DROP POLICY IF EXISTS "Authenticated users can update consultations" ON consultations;
 DROP POLICY IF EXISTS "Authenticated users can delete consultations" ON consultations;
 
--- Admin: 모든 consultations 조회/수정/삭제
+-- Admin 정책
 CREATE POLICY "Admin can select all consultations"
     ON consultations FOR SELECT
     USING (auth.role() = 'authenticated' AND is_admin());
@@ -207,12 +106,11 @@ CREATE POLICY "Admin can delete all consultations"
     ON consultations FOR DELETE
     USING (auth.role() = 'authenticated' AND is_admin());
 
--- Partner: 본인이 등록한 consultations만 조회
+-- Partner 정책
 CREATE POLICY "Partner can select own consultations"
     ON consultations FOR SELECT
     USING (auth.role() = 'authenticated' AND partner_id = get_my_partner_id());
 
--- Partner: 본인 partner_id로만 INSERT
 CREATE POLICY "Partner can insert own consultations"
     ON consultations FOR INSERT
     WITH CHECK (
@@ -220,13 +118,11 @@ CREATE POLICY "Partner can insert own consultations"
         AND partner_id = get_my_partner_id()
     );
 
--- === partners 테이블 ===
--- 기존 정책 삭제
+-- === partners ===
 DROP POLICY IF EXISTS "Authenticated users can select partners" ON partners;
 DROP POLICY IF EXISTS "Authenticated users can update partners" ON partners;
 DROP POLICY IF EXISTS "Authenticated users can delete partners" ON partners;
 
--- Admin: 모든 partners 조회/수정/삭제
 CREATE POLICY "Admin can select all partners"
     ON partners FOR SELECT
     USING (auth.role() = 'authenticated' AND is_admin());
@@ -239,35 +135,40 @@ CREATE POLICY "Admin can delete all partners"
     ON partners FOR DELETE
     USING (auth.role() = 'authenticated' AND is_admin());
 
--- Partner: 본인 레코드만 조회
 CREATE POLICY "Partner can select own record"
     ON partners FOR SELECT
     USING (auth.role() = 'authenticated' AND user_id = auth.uid());
 
--- === settlements 테이블 ===
+-- === settlements ===
 ALTER TABLE settlements ENABLE ROW LEVEL SECURITY;
 
--- Admin: 전체 CRUD
 CREATE POLICY "Admin full access on settlements"
     ON settlements FOR ALL
     USING (auth.role() = 'authenticated' AND is_admin())
     WITH CHECK (auth.role() = 'authenticated' AND is_admin());
 
--- Partner: 본인 것만 조회
 CREATE POLICY "Partner can select own settlements"
     ON settlements FOR SELECT
     USING (auth.role() = 'authenticated' AND partner_id = get_my_partner_id());
 
--- === notices 테이블 ===
+-- === notices ===
 ALTER TABLE notices ENABLE ROW LEVEL SECURITY;
 
--- 인증된 사용자 모두 공지 조회 가능
 CREATE POLICY "Authenticated can select notices"
     ON notices FOR SELECT
     USING (auth.role() = 'authenticated');
 
--- Admin만 공지 생성/수정/삭제
 CREATE POLICY "Admin can manage notices"
     ON notices FOR ALL
     USING (auth.role() = 'authenticated' AND is_admin())
     WITH CHECK (auth.role() = 'authenticated' AND is_admin());
+
+
+-- ─────────────────────────────────────────────
+-- 완료!
+-- ─────────────────────────────────────────────
+-- 다음 단계:
+-- 1. Authentication → Users에서 파트너용 계정 생성
+-- 2. admin.html에서 파트너 상세 → "계정 연결" 버튼으로 UUID 연결
+-- 3. partner-dashboard.html에서 로그인 테스트
+-- ─────────────────────────────────────────────

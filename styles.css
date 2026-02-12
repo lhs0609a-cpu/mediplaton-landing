@@ -8085,6 +8085,10 @@ p, li, td, th, label, span {
     color: var(--gray-700);
 }
 
+.footer .footer-cta {
+    color: var(--white);
+}
+
 .footer a:hover {
     color: var(--primary);
 }
@@ -9591,7 +9595,10 @@ button.proof-gallery-item {
     display: inline-block;
     font-size: 13px;
     font-weight: 700;
-    color: var(--primary, #1A3A8F);
+    color: var(--white);
+    background: var(--primary);
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 16px;

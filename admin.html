@@ -396,6 +396,36 @@
             color: #B91C1C;
         }
 
+        .status-reviewing {
+            background: #FEF3C7;
+            color: #B45309;
+        }
+
+        .status-approved {
+            background: #D1FAE5;
+            color: #047857;
+        }
+
+        .status-rejected {
+            background: #FEE2E2;
+            color: #B91C1C;
+        }
+
+        .status-pending {
+            background: #FEF3C7;
+            color: #B45309;
+        }
+
+        .status-confirmed {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        .status-paid {
+            background: #D1FAE5;
+            color: #047857;
+        }
+
         .action-btns {
             display: flex;
             gap: 8px;
@@ -721,6 +751,9 @@
                     파트너 신청
                     <span class="tab-badge" id="partnerBadge">0</span>
                 </button>
+                <button class="tab-btn" data-tab="admin-settlements">
+                    정산 관리
+                </button>
             </div>
 
             <!-- Consultations Table -->
@@ -811,6 +844,62 @@
                     <p>새로운 파트너 신청이 들어오면 여기에 표시됩니다.</p>
                 </div>
             </div>
+
+            <!-- Admin Settlements Section -->
+            <div class="data-section" id="adminSettlementsSection" style="display: none;">
+                <!-- Settlement Management -->
+                <div class="data-header">
+                    <h2>정산 관리</h2>
+                    <div class="data-filters">
+                        <select class="filter-select" id="adminPartnerFilter">
+                            <option value="">파트너 선택</option>
+                        </select>
+                        <select class="filter-select" id="adminMonthFilter"></select>
+                        <button class="btn btn-primary btn-sm" id="addSettlementBtn">정산 추가</button>
+                    </div>
+                </div>
+                <div class="loading" id="adminSettlementLoading" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+                <table class="data-table" id="adminSettlementTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>파트너</th>
+                            <th>고객명</th>
+                            <th>거래액</th>
+                            <th>수수료율</th>
+                            <th>수수료</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminSettlementTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="adminSettlementEmpty" style="display: none;">
+                    <h3>정산 내역이 없습니다</h3>
+                    <p>파트너와 월을 선택한 후 정산을 추가하세요.</p>
+                </div>
+
+                <!-- Notices Management -->
+                <div class="data-header" style="margin-top: 24px; border-top: 2px solid var(--gray-200);">
+                    <h2>공지사항 관리</h2>
+                    <button class="btn btn-primary btn-sm" id="addNoticeBtn">공지 추가</button>
+                </div>
+                <table class="data-table" id="noticeTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>제목</th>
+                            <th>상태</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="noticeTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="noticeEmpty" style="display: none;">
+                    <h3>공지사항이 없습니다</h3>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -832,6 +921,84 @@
                 </select>
                 <button class="btn btn-primary btn-sm" id="saveStatusBtn">상태 저장</button>
                 <button class="btn btn-outline btn-sm" id="closeModalBtn">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settlement Add Modal -->
+    <div class="modal-overlay" id="settlementModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>정산 추가</h3>
+                <button class="modal-close" onclick="document.getElementById('settlementModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="settlementForm">
+                    <div class="form-group">
+                        <label>파트너</label>
+                        <select class="filter-select" id="settlePartnerSelect" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>월</label>
+                        <select class="filter-select" id="settleMonthSelect" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>고객명</label>
+                        <input type="text" id="settleClientName" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                    </div>
+                    <div class="form-group">
+                        <label>거래액</label>
+                        <input type="number" id="settleAmount" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                    </div>
+                    <div class="form-group">
+                        <label>수수료율 (예: 0.015 = 1.5%)</label>
+                        <input type="number" id="settleRate" step="0.0001" value="0.015" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                    </div>
+                    <div class="form-group">
+                        <label>수수료 금액</label>
+                        <input type="number" id="settleCommission" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                    </div>
+                    <div class="form-group">
+                        <label>상태</label>
+                        <select id="settleStatusSelect" style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                            <option value="pending">대기</option>
+                            <option value="confirmed">확정</option>
+                            <option value="paid">지급완료</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top:16px;">저장</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notice Modal -->
+    <div class="modal-overlay" id="noticeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="noticeModalTitle">공지 추가</h3>
+                <button class="modal-close" onclick="document.getElementById('noticeModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="noticeForm">
+                    <input type="hidden" id="noticeEditId">
+                    <div class="form-group">
+                        <label>제목</label>
+                        <input type="text" id="noticeTitle" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                    </div>
+                    <div class="form-group">
+                        <label>내용</label>
+                        <textarea id="noticeContent" rows="6" style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;resize:vertical;font-family:inherit;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="noticeActive" checked> 활성화
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top:16px;">저장</button>
+                </form>
             </div>
         </div>
     </div>
