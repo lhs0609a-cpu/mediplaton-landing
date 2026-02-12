@@ -72,10 +72,18 @@ scrollTopBtn?.addEventListener('click', () => {
 });
 
 // ===== Smooth Scroll for Anchor Links =====
+// Tab system handles most anchor clicks via its own event delegation.
+// This handler only covers #consultation and other non-tab links.
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
-        if (href === '#') return;
+        if (href === '#' || href === '#main-content') return;
+
+        // Skip if tab system will handle this link
+        if (this.dataset.tabTarget) return;
+        const targetId = href.substring(1);
+        const tabPanel = document.querySelector('.tab-panel [id="' + targetId + '"]');
+        if (tabPanel) return; // tab system handles this
 
         e.preventDefault();
         const target = document.querySelector(href);
@@ -742,8 +750,267 @@ function initSavingsCalculator() {
     calculateSavings();
 }
 
+// ===== Tab Navigation System =====
+function initTabSystem() {
+    const tabNav = document.getElementById('tabNav');
+    if (!tabNav) return;
+
+    const tabBtns = tabNav.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    const indicator = tabNav.querySelector('.tab-indicator');
+
+    // Section → tab mapping
+    const sectionTabMap = {
+        'about': 'home',
+        'products': 'products',
+        'product-loan': 'products',
+        'product-credit': 'products',
+        'product-kb': 'products',
+        'product-rental': 'products',
+        'product-deposit': 'products',
+        'product-purchase': 'products',
+        'product-equipment-loan': 'products',
+        'process': 'guide',
+        'qualification': 'guide',
+        'documents': 'guide',
+        'rental-calculator': 'guide',
+        'faq': 'guide',
+        'cases': 'cases',
+        'partners': 'company',
+        'news': 'company',
+        'blog': 'company',
+        'contact': 'company'
+    };
+
+    function moveIndicator(btn) {
+        if (!indicator || !btn) return;
+        indicator.style.width = btn.offsetWidth + 'px';
+        indicator.style.left = btn.offsetLeft + 'px';
+    }
+
+    function switchTab(tabName, updateHash) {
+        if (updateHash === undefined) updateHash = true;
+
+        // Update buttons
+        tabBtns.forEach(btn => {
+            const isActive = btn.dataset.tab === tabName;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            if (isActive) moveIndicator(btn);
+        });
+
+        // Update panels
+        tabPanels.forEach(panel => {
+            panel.classList.toggle('active', panel.dataset.tab === tabName);
+        });
+
+        // Update URL hash
+        if (updateHash) {
+            history.replaceState(null, '', tabName === 'home' ? window.location.pathname : '#' + tabName);
+        }
+
+        // Reinitialize animations in newly visible panel
+        const activePanel = document.querySelector('.tab-panel.active');
+        if (activePanel) {
+            reinitAnimationsInPanel(activePanel);
+            reinitMarquees(activePanel);
+        }
+
+        // Scroll tab button into view (for mobile horizontal scroll)
+        const activeBtn = tabNav.querySelector('.tab-btn.active');
+        if (activeBtn) {
+            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    }
+
+    function reinitAnimationsInPanel(panel) {
+        // Re-trigger counter animations
+        const counters = panel.querySelectorAll('[data-count]');
+        counters.forEach(counter => {
+            if (counter.dataset.counted) return;
+            const target = parseInt(counter.dataset.count);
+            const duration = 2500;
+            const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+            let startTime = null;
+
+            const updateCounter = (timestamp) => {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const current = Math.floor(easeOutExpo(progress) * target);
+                counter.textContent = current.toLocaleString();
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target.toLocaleString();
+                    counter.dataset.counted = 'true';
+                }
+            };
+            requestAnimationFrame(updateCounter);
+        });
+
+        // Re-trigger card/header fade-in animations
+        const animatedElements = panel.querySelectorAll(
+            '.service-card, .product-card, .case-card, .qual-card, .doc-card, .news-card, .solution-card, .effect-card, .main-partner-card, .comp-card'
+        );
+        animatedElements.forEach((el, index) => {
+            if (el.style.opacity === '1') return;
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = `opacity 0.5s ease ${index * 0.05}s, transform 0.5s ease ${index * 0.05}s`;
+            // Force reflow then animate
+            requestAnimationFrame(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Re-trigger section header animations
+        const sectionHeaders = panel.querySelectorAll('.section-header');
+        sectionHeaders.forEach(header => {
+            if (header.classList.contains('active')) return;
+            header.style.opacity = '0';
+            header.style.transform = 'translateY(20px)';
+            requestAnimationFrame(() => {
+                header.classList.add('active');
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+            });
+        });
+    }
+
+    function reinitMarquees(panel) {
+        // Reset CSS marquee animations by toggling animation
+        const marquees = panel.querySelectorAll('.marquee-slide, .trust-strip-slide');
+        marquees.forEach(el => {
+            const anim = el.style.animation || getComputedStyle(el).animation;
+            el.style.animation = 'none';
+            // Force reflow
+            void el.offsetHeight;
+            el.style.animation = '';
+        });
+    }
+
+    // Tab button click handlers
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            switchTab(btn.dataset.tab);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // Intercept anchor link clicks to switch tabs
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (href === '#' || href === '#main-content') return;
+
+        const targetId = href.substring(1);
+
+        // Check data-tab-target attribute first
+        const tabTarget = link.dataset.tabTarget;
+        if (tabTarget) {
+            e.preventDefault();
+            switchTab(tabTarget);
+
+            // Scroll to the specific section after a short delay for panel to render
+            setTimeout(() => {
+                const targetEl = document.getElementById(targetId);
+                if (targetEl && targetId !== tabTarget) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 50);
+
+            // Close mobile menu if open
+            if (typeof closeMobileMenu === 'function') closeMobileMenu();
+            return;
+        }
+
+        // Fall back to sectionTabMap
+        const mappedTab = sectionTabMap[targetId];
+        if (mappedTab) {
+            e.preventDefault();
+            switchTab(mappedTab);
+            setTimeout(() => {
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 50);
+
+            if (typeof closeMobileMenu === 'function') closeMobileMenu();
+        }
+    });
+
+    // URL hash deep linking on page load
+    function handleHash() {
+        const hash = window.location.hash.substring(1);
+        if (!hash) return;
+
+        // Direct tab name match
+        const directTab = document.querySelector('.tab-panel[data-tab="' + hash + '"]');
+        if (directTab) {
+            switchTab(hash, false);
+            return;
+        }
+
+        // Section → tab mapping
+        const mappedTab = sectionTabMap[hash];
+        if (mappedTab) {
+            switchTab(mappedTab, false);
+            setTimeout(() => {
+                const targetEl = document.getElementById(hash);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+    }
+
+    handleHash();
+
+    // Browser back/forward support
+    window.addEventListener('hashchange', handleHash);
+
+    // Keyboard accessibility: Arrow keys to navigate tabs
+    tabNav.addEventListener('keydown', (e) => {
+        if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+
+        const currentBtn = document.activeElement;
+        if (!currentBtn || !currentBtn.classList.contains('tab-btn')) return;
+
+        const btnsArray = Array.from(tabBtns);
+        const currentIndex = btnsArray.indexOf(currentBtn);
+
+        let nextIndex;
+        if (e.key === 'ArrowRight') {
+            nextIndex = (currentIndex + 1) % btnsArray.length;
+        } else {
+            nextIndex = (currentIndex - 1 + btnsArray.length) % btnsArray.length;
+        }
+
+        btnsArray[nextIndex].focus();
+        switchTab(btnsArray[nextIndex].dataset.tab);
+        e.preventDefault();
+    });
+
+    // Set initial indicator position
+    const activeBtn = tabNav.querySelector('.tab-btn.active');
+    if (activeBtn) moveIndicator(activeBtn);
+
+    // Recalculate indicator on window resize
+    window.addEventListener('resize', () => {
+        const active = tabNav.querySelector('.tab-btn.active');
+        if (active) moveIndicator(active);
+    });
+}
+
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
+    initTabSystem();
     handleScroll();
     animateCounters();
     initSavingsCalculator();
@@ -781,6 +1048,267 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// ===== Rental Payment Calculator =====
+function initRentalCalculator() {
+    const amountInput = document.getElementById('rcAmount');
+    const periodSelect = document.getElementById('rcPeriod');
+    const depositSelect = document.getElementById('rcDeposit');
+    const bizTypeSelect = document.getElementById('rcBizType');
+    const taxRateInput = document.getElementById('rcTaxRate');
+    const taxWarn = document.getElementById('rcTaxWarn');
+    const taxTableWrap = document.getElementById('rcTaxTableWrap');
+    const taxTableTitle = document.getElementById('rcTaxTableTitle');
+    const taxTableBody = document.getElementById('rcTaxTableBody');
+
+    if (!amountInput) return;
+
+    // Mode toggle
+    const modeBtns = document.querySelectorAll('.rc-mode-btn');
+    const modeLabels = document.querySelectorAll('.rc-mode-label, .rc-mode-label-result');
+    let currentMode = 'b2c';
+
+    // Tax bracket data: [구간 label, 세율%, 지방세%, 합계%]
+    const taxBrackets = {
+        '개인사업자-과세': [
+            ['1,400만 이하', '6.0%', '0.6%', '6.6%'],
+            ['1,400만 ~ 5,000만', '15.0%', '1.5%', '16.5%'],
+            ['5,000만 ~ 8,800만', '24.0%', '2.4%', '26.4%'],
+            ['8,800만 ~ 1.5억', '35.0%', '3.5%', '38.5%'],
+            ['1.5억 ~ 3억', '38.0%', '3.8%', '41.8%'],
+            ['3억 ~ 5억', '40.0%', '4.0%', '44.0%'],
+            ['5억 ~ 10억', '42.0%', '4.2%', '46.2%'],
+            ['10억 이상', '45.0%', '4.5%', '49.5%']
+        ],
+        '법인사업자-과세': [
+            ['2억 이하', '9.0%', '0.9%', '9.9%'],
+            ['2억 ~ 200억', '19.0%', '1.9%', '20.9%'],
+            ['200억 ~ 3,000억', '21.0%', '2.1%', '23.1%'],
+            ['3,000억 초과', '24.0%', '2.4%', '26.4%']
+        ]
+    };
+
+    // Valid tax rates for each biz type
+    const validRates = {
+        '개인사업자-과세': [6.6, 16.5, 26.4, 38.5, 41.8, 44.0, 46.2, 49.5],
+        '개인사업자-면세': [6.6, 16.5, 26.4, 38.5, 41.8, 44.0, 46.2, 49.5],
+        '법인사업자-과세': [9.9, 20.9, 23.1, 26.4],
+        '법인사업자-면세': [9.9, 20.9, 23.1, 26.4]
+    };
+
+    // Monthly rate coefficients per period (matching modoovillage output)
+    // PMT formula with annual rate ~21.75%, monthly rate = 21.75%/12 ≈ 1.8125%
+    // Coefficient = r*(1+r)^n / ((1+r)^n - 1)
+    const monthlyCoefficients = {
+        12: 0.09347,
+        24: 0.05175,
+        36: 0.03806,
+        48: 0.03137,
+        60: 0.02748
+    };
+
+    function formatNumber(n) {
+        if (isNaN(n) || n === 0) return '0';
+        return Math.round(n).toLocaleString('ko-KR');
+    }
+
+    function parseAmount(str) {
+        if (!str) return 0;
+        return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0;
+    }
+
+    // Format amount input with commas on typing
+    amountInput.addEventListener('input', function() {
+        const raw = this.value.replace(/[^0-9]/g, '');
+        if (raw) {
+            this.value = parseInt(raw, 10).toLocaleString('ko-KR');
+        } else {
+            this.value = '';
+        }
+        calculate();
+    });
+
+    // Mode toggle
+    modeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            modeBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentMode = this.dataset.mode;
+
+            if (currentMode === 'b2g') {
+                depositSelect.value = '0';
+                depositSelect.disabled = true;
+            } else {
+                depositSelect.disabled = false;
+            }
+
+            modeLabels.forEach(el => {
+                el.textContent = currentMode === 'b2g' ? 'B2G' : 'B2C / B2B';
+            });
+
+            calculate();
+        });
+    });
+
+    // Update tax table when biz type changes
+    bizTypeSelect.addEventListener('change', function() {
+        updateTaxTable();
+        calculate();
+    });
+
+    function updateTaxTable() {
+        const bizType = bizTypeSelect.value;
+        const isTax = bizType.includes('과세');
+
+        if (isTax && taxBrackets[bizType]) {
+            taxTableWrap.style.display = 'block';
+            taxTableTitle.textContent = bizType + ' 과세구간(표시용)';
+            taxTableBody.innerHTML = taxBrackets[bizType].map(row =>
+                `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`
+            ).join('');
+        } else if (bizType.includes('면세')) {
+            // 면세 사업자 - show the base bracket for reference
+            const baseType = bizType.replace('면세', '과세');
+            if (taxBrackets[baseType]) {
+                taxTableWrap.style.display = 'block';
+                taxTableTitle.textContent = baseType + ' 과세구간(참고용)';
+                taxTableBody.innerHTML = taxBrackets[baseType].map(row =>
+                    `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`
+                ).join('');
+            }
+        }
+        highlightTaxRow();
+    }
+
+    function highlightTaxRow() {
+        const rate = parseTaxRate();
+        const rows = taxTableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const lastTd = row.querySelector('td:last-child');
+            if (lastTd && parseFloat(lastTd.textContent) === rate) {
+                row.classList.add('active');
+            } else {
+                row.classList.remove('active');
+            }
+        });
+    }
+
+    function parseTaxRate() {
+        const raw = taxRateInput.value.replace(/[^0-9.]/g, '');
+        return parseFloat(raw) || 0;
+    }
+
+    // Validate and recalculate on input changes
+    [periodSelect, depositSelect, taxRateInput].forEach(el => {
+        el.addEventListener('change', calculate);
+        el.addEventListener('input', calculate);
+    });
+
+    function calculate() {
+        const amount = parseAmount(amountInput.value);
+        const months = parseInt(periodSelect.value, 10);
+        const depositPct = parseInt(depositSelect.value, 10);
+        const bizType = bizTypeSelect.value;
+        const taxRate = parseTaxRate();
+        const isTax = bizType.includes('과세');
+        const isFree = bizType.includes('면세');
+
+        // Validate tax rate
+        const biz = bizType;
+        const rates = validRates[biz] || [];
+        if (taxRate > 0 && rates.length > 0 && !rates.includes(taxRate)) {
+            taxWarn.textContent = '위 표의 합계값 중 하나를 입력해 주세요.';
+        } else {
+            taxWarn.textContent = '';
+        }
+        highlightTaxRow();
+
+        // Update info panel
+        document.getElementById('rcResBizType').textContent = bizType;
+        document.getElementById('rcResPeriod').textContent = months + '개월';
+        document.getElementById('rcResPeriodVal').textContent = months + '개월';
+        document.getElementById('rcResAmount').textContent = formatNumber(amount) + ' 원';
+
+        if (amount <= 0) {
+            setResults(0, 0, 0, 0, 0, 0, 0, 0);
+            return;
+        }
+
+        // Deposit calculation: ceil(총납부금 × deposit% / 10000) × 10000
+        // But we need to first calculate without deposit to get total, then deposit from amount
+        const coeff = monthlyCoefficients[months] || 0.03806;
+
+        // Financed amount = total amount - deposit
+        // Deposit = ceil(amount * depositPct% / 10000) * 10000
+        const depositAmount = depositPct > 0
+            ? Math.ceil((amount * depositPct / 100) / 10000) * 10000
+            : 0;
+
+        const financedAmount = amount - depositAmount;
+
+        // Monthly payment (VAT inclusive)
+        const monthly = Math.round(financedAmount * coeff);
+        const totalPayment = monthly * months;
+
+        // Tax savings
+        let vatSave = 0;
+        let incomeTaxSave = 0;
+
+        if (isTax) {
+            // 과세 사업자: VAT 절감 + 소득세 절감
+            vatSave = Math.round(totalPayment / 11);
+            if (taxRate > 0) {
+                incomeTaxSave = Math.round((totalPayment - vatSave) * taxRate / 100);
+            }
+        } else if (isFree) {
+            // 면세 사업자: VAT 절감 없음, 소득세 절감만
+            vatSave = 0;
+            if (taxRate > 0) {
+                incomeTaxSave = Math.round(totalPayment * taxRate / 100);
+            }
+        }
+
+        // 실부담금
+        const actualCost = totalPayment - vatSave - incomeTaxSave;
+
+        // 연회수율 & 총회수율
+        const years = months / 12;
+        const totalReturnRate = amount > 0 ? ((actualCost - amount) / amount) * 100 : 0;
+        const annualReturnRate = years > 0 ? totalReturnRate / years : 0;
+
+        // Update deposit display
+        document.getElementById('rcResDeposit').textContent = formatNumber(depositAmount) + ' 원';
+
+        setResults(monthly, months, totalPayment, vatSave, incomeTaxSave, actualCost, annualReturnRate, totalReturnRate);
+    }
+
+    function setResults(monthly, months, total, vatSave, incomeTaxSave, actual, annualRate, totalRate) {
+        document.getElementById('rcResMonthly').textContent = formatNumber(monthly) + ' 원';
+        document.getElementById('rcResTotal').textContent = formatNumber(total) + ' 원';
+        document.getElementById('rcResVatSave').textContent = formatNumber(vatSave) + ' 원';
+        document.getElementById('rcResIncomeTaxSave').textContent = formatNumber(incomeTaxSave) + ' 원';
+        document.getElementById('rcResActual').textContent = formatNumber(actual) + ' 원';
+        document.getElementById('rcResAnnualRate').textContent = annualRate.toFixed(1) + '%';
+        document.getElementById('rcResTotalRate').textContent = totalRate.toFixed(1) + '%';
+    }
+
+    // Print
+    const printBtn = document.getElementById('rcPrintBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', function() {
+            window.print();
+        });
+    }
+
+    // Initial mode label
+    modeLabels.forEach(el => { el.textContent = 'B2C / B2B'; });
+
+    // Initial calculation
+    calculate();
+}
+
+// Init rental calculator when DOM ready
+document.addEventListener('DOMContentLoaded', initRentalCalculator);
 
 // ===== Urgency Countdown Timer =====
 // [P0 FIX] 조작된 긴급성 Dark Pattern 제거

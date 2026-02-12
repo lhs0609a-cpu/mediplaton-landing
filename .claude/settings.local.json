@@ -13,7 +13,29 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial commit: 메디플라톤 병의원 금융 랜딩페이지\n\n- 반응형 랜딩페이지 구현\n- 신협/KB 정식제휴 금융상품 소개\n- 실시간 상담 알림, 카운트다운 등 인터랙션\n- 개인정보처리방침 모달\n- SEO 메타태그 적용\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(vercel:*)",
       "Bash(git commit:*)",
-      "Bash(npx vercel --prod --yes)"
+      "Bash(npx vercel --prod --yes)",
+      "WebFetch(domain:one-touch.co.kr)",
+      "Bash(curl:*)",
+      "WebFetch(domain:pgandplt-r0t733xn5-fewfs-projects-83cc0821.vercel.app)",
+      "Bash(pip show:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(playwright install:*)",
+      "Bash(powershell -Command \"Get-ChildItem ''G:\\\\내 드라이브\\\\landingpage\\\\pgandplt\\\\*.pdf'' | Select-Object Name, Length, LastWriteTime\")",
+      "Bash(powershell -Command:*)",
+      "Bash(copy \"C:\\\\Users\\\\u\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\G---------landingpage-pgandplt\\\\ade85c9a-962d-490b-828a-d948597d3f1c\\\\scratchpad\\\\proposal_simple.html\" \"G:\\\\내 드라이브\\\\landingpage\\\\pgandplt\\\\제안서_미리보기.html\")",
+      "Bash(gh auth:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git push:*)",
+      "Bash(npx vercel:*)",
+      "Bash(wc:*)",
+      "Bash(where:*)",
+      "Bash(findstr:*)",
+      "WebSearch",
+      "WebFetch(domain:loan.brandplaton.com)",
+      "Bash(sort:*)",
+      "WebFetch(domain:platonmg.imweb.me)",
+      "WebFetch(domain:modoovillage.co.kr)"
     ]
   }
 }
