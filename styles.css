@@ -798,16 +798,11 @@ section.hero .hero-trust span {
 /* Hero Visual */
 .hero-visual {
     position: relative;
-    padding-bottom: 24px;
+    padding-bottom: 0;
 }
 
 .hero-photo {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-    display: block;
+    display: none;
 }
 
 .hero-card {
@@ -820,10 +815,9 @@ section.hero .hero-trust span {
 
 .hero-card.main-card {
     padding: 0;
-    position: absolute;
-    bottom: -24px;
-    left: -32px;
-    max-width: 340px;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
     z-index: 2;
 }
 
@@ -998,7 +992,7 @@ section.hero .hero-trust span {
 .showcase-screen {
     position: relative;
     width: 100%;
-    aspect-ratio: 16/10;
+    aspect-ratio: 4/3;
     overflow: hidden;
     background: #1a1a2e;
 }
@@ -1086,18 +1080,18 @@ section.hero .hero-trust span {
 .hero-card.sub-card,
 .hero-card.sub-card-2 {
     position: absolute;
-    padding: 16px 20px;
-    z-index: 2;
+    padding: 14px 18px;
+    z-index: 3;
 }
 
 .hero-card.sub-card {
-    top: 16px;
-    right: -24px;
+    top: -16px;
+    right: -20px;
 }
 
 .hero-card.sub-card-2 {
-    bottom: 40px;
-    right: -24px;
+    bottom: 24px;
+    right: -20px;
 }
 
 .mini-stat {
@@ -3807,30 +3801,24 @@ div.product-cta .btn {
 
     .hero-visual {
         order: -1;
-        max-width: 500px;
+        max-width: 600px;
         margin: 0 auto;
     }
 
-    .hero-photo {
-        aspect-ratio: 4/3;
-        border-radius: 20px;
-    }
-
     .hero-card.main-card {
-        position: absolute;
-        bottom: -20px;
-        left: -16px;
-        max-width: 260px;
+        position: relative;
+        width: 100%;
+        max-width: 100%;
     }
 
     .hero-card.sub-card {
-        top: 12px;
-        right: -12px;
+        top: -12px;
+        right: -8px;
     }
 
     .hero-card.sub-card-2 {
-        bottom: 32px;
-        right: -12px;
+        bottom: 24px;
+        right: -8px;
     }
 
     .hero-content {
@@ -8460,18 +8448,11 @@ textarea:focus-visible {
 @media (max-width: 768px) {
     /* Hero Visual Cards */
     .hero-visual {
-        order: 2;
-        margin-top: 32px;
+        order: -1;
+        margin-top: 0;
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-    }
-
-    .hero-photo {
-        width: 100%;
-        aspect-ratio: 16/9;
-        border-radius: 16px;
-        margin-bottom: 4px;
     }
 
     .hero-card.main-card {
