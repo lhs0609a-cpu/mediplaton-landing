@@ -603,16 +603,42 @@
                         <input type="text" id="settleClientName" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
                     </div>
                     <div class="form-group">
-                        <label>거래액</label>
-                        <input type="number" id="settleAmount" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                        <label>총 대출금액 (원)</label>
+                        <div style="position:relative;">
+                            <input type="text" id="settleAmount" required placeholder="50,000,000" style="width:100%;padding:12px 16px;padding-right:40px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                            <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray-500);font-size:14px;">원</span>
+                        </div>
+                        <div id="settleAmountDisplay" style="font-size:13px;color:var(--primary);margin-top:4px;font-weight:600;"></div>
                     </div>
                     <div class="form-group">
-                        <label>수수료율 (예: 0.015 = 1.5%)</label>
-                        <input type="number" id="settleRate" step="0.0001" value="0.015" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                        <label>수수료율 (%)</label>
+                        <div style="position:relative;">
+                            <input type="number" id="settleRate" step="0.01" value="1.5" required style="width:100%;padding:12px 16px;padding-right:40px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                            <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray-500);font-size:14px;">%</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>수수료 금액</label>
-                        <input type="number" id="settleCommission" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                        <label>영업자 수수료 (원)</label>
+                        <div style="position:relative;">
+                            <input type="text" id="settleCommission" readonly style="width:100%;padding:12px 16px;padding-right:40px;border:1px solid var(--gray-200);border-radius:var(--radius);font-size:15px;background:var(--gray-50);font-weight:600;color:var(--primary);">
+                            <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray-500);font-size:14px;">원</span>
+                        </div>
+                        <div id="settleCommissionDisplay" style="font-size:13px;color:var(--success);margin-top:4px;font-weight:600;"></div>
+                    </div>
+                    <div id="settleSummary" style="background:var(--primary-light);padding:16px;border-radius:var(--radius);margin-bottom:8px;display:none;">
+                        <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;">정산 요약</div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px;">
+                            <span>총 대출금액</span>
+                            <span id="summaryAmount" style="font-weight:600;">-</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px;">
+                            <span>수수료율</span>
+                            <span id="summaryRate" style="font-weight:600;">-</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:15px;padding-top:8px;border-top:1px solid var(--gray-300);">
+                            <span style="font-weight:700;">영업자 수수료</span>
+                            <span id="summaryCommission" style="font-weight:700;color:var(--primary);">-</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>상태</label>

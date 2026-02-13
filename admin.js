@@ -93,13 +93,16 @@ function setupEventListeners() {
     document.getElementById('noticeForm').addEventListener('submit', handleNoticeSubmit);
 
     // Settlement auto calc
-    document.getElementById('settleAmount').addEventListener('input', autoCalcCommission);
+    document.getElementById('settleAmount').addEventListener('input', function() {
+        formatAmountInput(this);
+        autoCalcCommission();
+    });
     document.getElementById('settleRate').addEventListener('input', autoCalcCommission);
 
     document.getElementById('settlePartnerSelect').addEventListener('change', function() {
         const opt = this.selectedOptions[0];
         if (opt && opt.dataset.rate) {
-            document.getElementById('settleRate').value = opt.dataset.rate;
+            document.getElementById('settleRate').value = (Number(opt.dataset.rate) * 100).toFixed(2);
             autoCalcCommission();
         }
     });
@@ -853,16 +856,60 @@ function openSettlementModal() {
 
     const partnerOption = document.getElementById('settlePartnerSelect').selectedOptions[0];
     if (partnerOption && partnerOption.dataset.rate) {
-        document.getElementById('settleRate').value = partnerOption.dataset.rate;
+        document.getElementById('settleRate').value = (Number(partnerOption.dataset.rate) * 100).toFixed(2);
     }
+
+    document.getElementById('settleAmount').value = '';
+    document.getElementById('settleCommission').value = '';
+    document.getElementById('settleAmountDisplay').textContent = '';
+    document.getElementById('settleCommissionDisplay').textContent = '';
+    document.getElementById('settleSummary').style.display = 'none';
 
     document.getElementById('settlementModal').classList.add('active');
 }
 
+function formatAmountInput(input) {
+    const raw = input.value.replace(/[^0-9]/g, '');
+    if (!raw) { input.value = ''; return; }
+    input.value = Number(raw).toLocaleString('ko-KR');
+}
+
+function parseAmount(str) {
+    return Number(String(str).replace(/[^0-9]/g, '')) || 0;
+}
+
+function formatKoreanAmount(num) {
+    if (!num || num <= 0) return '';
+    const uk = Math.floor(num / 100000000);
+    const man = Math.floor((num % 100000000) / 10000);
+    const rest = num % 10000;
+    let result = '';
+    if (uk > 0) result += uk.toLocaleString('ko-KR') + '억 ';
+    if (man > 0) result += man.toLocaleString('ko-KR') + '만 ';
+    if (rest > 0) result += rest.toLocaleString('ko-KR');
+    return result.trim() + '원';
+}
+
 function autoCalcCommission() {
-    const amount = Number(document.getElementById('settleAmount').value) || 0;
-    const rate = Number(document.getElementById('settleRate').value) || 0;
-    document.getElementById('settleCommission').value = Math.round(amount * rate);
+    const amount = parseAmount(document.getElementById('settleAmount').value);
+    const ratePercent = Number(document.getElementById('settleRate').value) || 0;
+    const rateDecimal = ratePercent / 100;
+    const commission = Math.round(amount * rateDecimal);
+
+    document.getElementById('settleCommission').value = commission > 0 ? commission.toLocaleString('ko-KR') : '';
+
+    document.getElementById('settleAmountDisplay').textContent = amount > 0 ? formatKoreanAmount(amount) : '';
+    document.getElementById('settleCommissionDisplay').textContent = commission > 0 ? formatKoreanAmount(commission) : '';
+
+    const summary = document.getElementById('settleSummary');
+    if (amount > 0 && ratePercent > 0) {
+        summary.style.display = 'block';
+        document.getElementById('summaryAmount').textContent = amount.toLocaleString('ko-KR') + '원';
+        document.getElementById('summaryRate').textContent = ratePercent + '%';
+        document.getElementById('summaryCommission').textContent = commission.toLocaleString('ko-KR') + '원';
+    } else {
+        summary.style.display = 'none';
+    }
 }
 
 async function handleSettlementSubmit(e) {
@@ -871,13 +918,18 @@ async function handleSettlementSubmit(e) {
     const partnerId = document.getElementById('settlePartnerSelect').value;
     if (!partnerId) { showToast('파트너를 선택하세요.', 'error'); return; }
 
+    const amount = parseAmount(document.getElementById('settleAmount').value);
+    const ratePercent = Number(document.getElementById('settleRate').value) || 0;
+    const rateDecimal = ratePercent / 100;
+    const commission = Math.round(amount * rateDecimal);
+
     const payload = {
         partner_id: Number(partnerId),
         month: document.getElementById('settleMonthSelect').value,
         client_name: document.getElementById('settleClientName').value.trim(),
-        transaction_amount: Number(document.getElementById('settleAmount').value),
-        commission_rate: Number(document.getElementById('settleRate').value),
-        commission_amount: Number(document.getElementById('settleCommission').value),
+        transaction_amount: amount,
+        commission_rate: rateDecimal,
+        commission_amount: commission,
         status: document.getElementById('settleStatusSelect').value
     };
 
@@ -888,7 +940,8 @@ async function handleSettlementSubmit(e) {
         showToast('정산이 추가되었습니다.', 'success');
         document.getElementById('settlementModal').classList.remove('active');
         e.target.reset();
-        document.getElementById('settleRate').value = '0.015';
+        document.getElementById('settleRate').value = '1.5';
+        document.getElementById('settleSummary').style.display = 'none';
         loadAdminSettlements();
     } catch (error) {
         showToast('정산 추가 실패: ' + error.message, 'error');
