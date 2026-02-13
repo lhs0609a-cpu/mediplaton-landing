@@ -618,19 +618,19 @@ function initLiveApprovalCard() {
     const card = document.getElementById('liveApprovalCard');
     if (!card) return;
 
-    const images = card.querySelectorAll('.showcase-img');
+    const slides = card.querySelectorAll('.showcase-slide');
     const dots = card.querySelectorAll('.showcase-dots .dot');
-    if (images.length === 0) return;
+    if (slides.length === 0) return;
 
     let currentIndex = 0;
 
     function updateCard() {
-        images[currentIndex].classList.remove('active');
+        slides[currentIndex].classList.remove('active');
         if (dots[currentIndex]) dots[currentIndex].classList.remove('active');
 
-        currentIndex = (currentIndex + 1) % images.length;
+        currentIndex = (currentIndex + 1) % slides.length;
 
-        images[currentIndex].classList.add('active');
+        slides[currentIndex].classList.add('active');
         if (dots[currentIndex]) dots[currentIndex].classList.add('active');
     }
 
