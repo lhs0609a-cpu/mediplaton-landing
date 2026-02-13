@@ -72,28 +72,18 @@ scrollTopBtn?.addEventListener('click', () => {
 });
 
 // ===== Smooth Scroll for Anchor Links =====
-// Tab system handles most anchor clicks via its own event delegation.
-// This handler only covers #consultation and other non-tab links.
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
         if (href === '#' || href === '#main-content') return;
-
-        // Skip if tab system will handle this link
-        if (this.dataset.tabTarget) return;
-        const targetId = href.substring(1);
-        const tabPanel = document.querySelector('.tab-panel [id="' + targetId + '"]');
-        if (tabPanel) return; // tab system handles this
 
         e.preventDefault();
         const target = document.querySelector(href);
 
         if (target) {
             const headerHeight = header.offsetHeight;
-            const targetPosition = target.offsetTop - headerHeight - 20;
-
             window.scrollTo({
-                top: targetPosition,
+                top: target.offsetTop - headerHeight - 20,
                 behavior: 'smooth'
             });
         }
@@ -750,267 +740,23 @@ function initSavingsCalculator() {
     calculateSavings();
 }
 
-// ===== Tab Navigation System =====
-function initTabSystem() {
-    const tabNav = document.getElementById('tabNav');
-    if (!tabNav) return;
-
-    const tabBtns = tabNav.querySelectorAll('.tab-btn');
-    const tabPanels = document.querySelectorAll('.tab-panel');
-    const indicator = tabNav.querySelector('.tab-indicator');
-
-    // Section → tab mapping
-    const sectionTabMap = {
-        'about': 'home',
-        'products': 'products',
-        'product-loan': 'products',
-        'product-credit': 'products',
-        'product-kb': 'products',
-        'product-rental': 'products',
-        'product-deposit': 'products',
-        'product-purchase': 'products',
-        'product-equipment-loan': 'products',
-        'process': 'guide',
-        'qualification': 'guide',
-        'documents': 'guide',
-        'rental-calculator': 'guide',
-        'faq': 'guide',
-        'cases': 'cases',
-        'partners': 'company',
-        'news': 'company',
-        'blog': 'company',
-        'contact': 'company'
-    };
-
-    function moveIndicator(btn) {
-        if (!indicator || !btn) return;
-        indicator.style.width = btn.offsetWidth + 'px';
-        indicator.style.left = btn.offsetLeft + 'px';
+// ===== Active Navigation Highlight =====
+function initActiveNav() {
+    var page = document.body.dataset.page;
+    if (!page) return;
+    var map = { home: 0, products: 1, guide: 2, cases: 3, news: 4, company: 0 };
+    var items = document.querySelectorAll('.nav-list > .nav-item');
+    var idx = map[page];
+    if (idx !== undefined && items[idx]) {
+        var link = items[idx].querySelector('.nav-link');
+        if (link) link.classList.add('active');
     }
-
-    function switchTab(tabName, updateHash) {
-        if (updateHash === undefined) updateHash = true;
-
-        // Update buttons
-        tabBtns.forEach(btn => {
-            const isActive = btn.dataset.tab === tabName;
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-            if (isActive) moveIndicator(btn);
-        });
-
-        // Update panels
-        tabPanels.forEach(panel => {
-            panel.classList.toggle('active', panel.dataset.tab === tabName);
-        });
-
-        // Update URL hash
-        if (updateHash) {
-            history.replaceState(null, '', tabName === 'home' ? window.location.pathname : '#' + tabName);
-        }
-
-        // Reinitialize animations in newly visible panel
-        const activePanel = document.querySelector('.tab-panel.active');
-        if (activePanel) {
-            reinitAnimationsInPanel(activePanel);
-            reinitMarquees(activePanel);
-        }
-
-        // Scroll tab button into view (for mobile horizontal scroll)
-        const activeBtn = tabNav.querySelector('.tab-btn.active');
-        if (activeBtn) {
-            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-    }
-
-    function reinitAnimationsInPanel(panel) {
-        // Re-trigger counter animations
-        const counters = panel.querySelectorAll('[data-count]');
-        counters.forEach(counter => {
-            if (counter.dataset.counted) return;
-            const target = parseInt(counter.dataset.count);
-            const duration = 2500;
-            const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-            let startTime = null;
-
-            const updateCounter = (timestamp) => {
-                if (!startTime) startTime = timestamp;
-                const progress = Math.min((timestamp - startTime) / duration, 1);
-                const current = Math.floor(easeOutExpo(progress) * target);
-                counter.textContent = current.toLocaleString();
-                if (progress < 1) {
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    counter.textContent = target.toLocaleString();
-                    counter.dataset.counted = 'true';
-                }
-            };
-            requestAnimationFrame(updateCounter);
-        });
-
-        // Re-trigger card/header fade-in animations
-        const animatedElements = panel.querySelectorAll(
-            '.service-card, .product-card, .case-card, .qual-card, .doc-card, .news-card, .solution-card, .effect-card, .main-partner-card, .comp-card'
-        );
-        animatedElements.forEach((el, index) => {
-            if (el.style.opacity === '1') return;
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = `opacity 0.5s ease ${index * 0.05}s, transform 0.5s ease ${index * 0.05}s`;
-            // Force reflow then animate
-            requestAnimationFrame(() => {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            });
-        });
-
-        // Re-trigger section header animations
-        const sectionHeaders = panel.querySelectorAll('.section-header');
-        sectionHeaders.forEach(header => {
-            if (header.classList.contains('active')) return;
-            header.style.opacity = '0';
-            header.style.transform = 'translateY(20px)';
-            requestAnimationFrame(() => {
-                header.classList.add('active');
-                header.style.opacity = '1';
-                header.style.transform = 'translateY(0)';
-            });
-        });
-    }
-
-    function reinitMarquees(panel) {
-        // Reset CSS marquee animations by toggling animation
-        const marquees = panel.querySelectorAll('.marquee-slide, .trust-strip-slide');
-        marquees.forEach(el => {
-            const anim = el.style.animation || getComputedStyle(el).animation;
-            el.style.animation = 'none';
-            // Force reflow
-            void el.offsetHeight;
-            el.style.animation = '';
-        });
-    }
-
-    // Tab button click handlers
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            switchTab(btn.dataset.tab);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    });
-
-    // Intercept anchor link clicks to switch tabs
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('a[href^="#"]');
-        if (!link) return;
-
-        const href = link.getAttribute('href');
-        if (href === '#' || href === '#main-content') return;
-
-        const targetId = href.substring(1);
-
-        // Check data-tab-target attribute first
-        const tabTarget = link.dataset.tabTarget;
-        if (tabTarget) {
-            e.preventDefault();
-            switchTab(tabTarget);
-
-            // Scroll to the specific section after a short delay for panel to render
-            setTimeout(() => {
-                const targetEl = document.getElementById(targetId);
-                if (targetEl && targetId !== tabTarget) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }, 50);
-
-            // Close mobile menu if open
-            if (typeof closeMobileMenu === 'function') closeMobileMenu();
-            return;
-        }
-
-        // Fall back to sectionTabMap
-        const mappedTab = sectionTabMap[targetId];
-        if (mappedTab) {
-            e.preventDefault();
-            switchTab(mappedTab);
-            setTimeout(() => {
-                const targetEl = document.getElementById(targetId);
-                if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 50);
-
-            if (typeof closeMobileMenu === 'function') closeMobileMenu();
-        }
-    });
-
-    // URL hash deep linking on page load
-    function handleHash() {
-        const hash = window.location.hash.substring(1);
-        if (!hash) return;
-
-        // Direct tab name match
-        const directTab = document.querySelector('.tab-panel[data-tab="' + hash + '"]');
-        if (directTab) {
-            switchTab(hash, false);
-            return;
-        }
-
-        // Section → tab mapping
-        const mappedTab = sectionTabMap[hash];
-        if (mappedTab) {
-            switchTab(mappedTab, false);
-            setTimeout(() => {
-                const targetEl = document.getElementById(hash);
-                if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 100);
-        }
-    }
-
-    handleHash();
-
-    // Browser back/forward support
-    window.addEventListener('hashchange', handleHash);
-
-    // Keyboard accessibility: Arrow keys to navigate tabs
-    tabNav.addEventListener('keydown', (e) => {
-        if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
-
-        const currentBtn = document.activeElement;
-        if (!currentBtn || !currentBtn.classList.contains('tab-btn')) return;
-
-        const btnsArray = Array.from(tabBtns);
-        const currentIndex = btnsArray.indexOf(currentBtn);
-
-        let nextIndex;
-        if (e.key === 'ArrowRight') {
-            nextIndex = (currentIndex + 1) % btnsArray.length;
-        } else {
-            nextIndex = (currentIndex - 1 + btnsArray.length) % btnsArray.length;
-        }
-
-        btnsArray[nextIndex].focus();
-        switchTab(btnsArray[nextIndex].dataset.tab);
-        e.preventDefault();
-    });
-
-    // Set initial indicator position
-    const activeBtn = tabNav.querySelector('.tab-btn.active');
-    if (activeBtn) moveIndicator(activeBtn);
-
-    // Recalculate indicator on window resize
-    window.addEventListener('resize', () => {
-        const active = tabNav.querySelector('.tab-btn.active');
-        if (active) moveIndicator(active);
-    });
 }
+
 
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
-    initTabSystem();
+    initActiveNav();
     handleScroll();
     animateCounters();
     initSavingsCalculator();
@@ -1022,6 +768,19 @@ document.addEventListener('DOMContentLoaded', () => {
     initKeyboardNav();
     initLiveNotifications();
     initLiveApprovalCard();
+
+    // Hash scroll on page load
+    if (window.location.hash) {
+        setTimeout(() => {
+            const target = document.querySelector(window.location.hash);
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - header.offsetHeight - 20,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
 
     // Delay non-critical initializations
     setTimeout(() => {
