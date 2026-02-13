@@ -2,7 +2,7 @@
  * 메디플라톤 관리자 페이지 JavaScript (v2)
  */
 
-let supabase = null;
+let sb = null;
 let currentUser = null;
 let currentTab = 'consultations';
 let currentDetailId = null;
@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+    sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sb.auth.getSession();
     if (session) {
         currentUser = session.user;
         showDashboard();
@@ -113,7 +113,7 @@ async function handleLogin(e) {
     const password = document.getElementById('password').value;
 
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
         currentUser = data.user;
         loginError.style.display = 'none';
@@ -125,7 +125,7 @@ async function handleLogin(e) {
 }
 
 async function handleLogout() {
-    await supabase.auth.signOut();
+    await sb.auth.signOut();
     currentUser = null;
     adminDashboard.style.display = 'none';
     loginScreen.style.display = 'flex';
@@ -147,7 +147,7 @@ function showDashboard() {
 
 async function loadPartnersCache() {
     try {
-        const { data } = await supabase
+        const { data } = await sb
             .from('partners')
             .select('id, name, hospital_name, commission_rate, status')
             .order('name');
@@ -190,15 +190,15 @@ async function loadStats() {
             { count: pendingConsult },
             { count: pendingPartner }
         ] = await Promise.all([
-            supabase.from('consultations').select('*', { count: 'exact', head: true }).gte('created_at', today),
-            supabase.from('consultations').select('*', { count: 'exact', head: true }),
-            supabase.from('partners').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
-            supabase.from('consultations').select('*', { count: 'exact', head: true }).eq('status', 'new'),
-            supabase.from('partners').select('*', { count: 'exact', head: true }).in('status', ['new', 'pending'])
+            sb.from('consultations').select('*', { count: 'exact', head: true }).gte('created_at', today),
+            sb.from('consultations').select('*', { count: 'exact', head: true }),
+            sb.from('partners').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
+            sb.from('consultations').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+            sb.from('partners').select('*', { count: 'exact', head: true }).in('status', ['new', 'pending'])
         ]);
 
         // Monthly transaction amount
-        const { data: monthlyData } = await supabase
+        const { data: monthlyData } = await sb
             .from('consultations')
             .select('transaction_amount')
             .not('transaction_amount', 'is', null)
@@ -254,7 +254,7 @@ async function loadConsultations() {
     empty.style.display = 'none';
 
     try {
-        let query = supabase.from('consultations').select('*').order('created_at', { ascending: false });
+        let query = sb.from('consultations').select('*').order('created_at', { ascending: false });
 
         const statusFilter = document.getElementById('consultStatusFilter').value;
         if (statusFilter !== 'all') query = query.eq('status', statusFilter);
@@ -310,7 +310,7 @@ async function loadPartners() {
     empty.style.display = 'none';
 
     try {
-        let query = supabase.from('partners').select('*').order('created_at', { ascending: false });
+        let query = sb.from('partners').select('*').order('created_at', { ascending: false });
 
         const statusFilter = document.getElementById('partnerStatusFilter').value;
         if (statusFilter !== 'all') query = query.eq('status', statusFilter);
@@ -366,9 +366,9 @@ async function approvePartner(id) {
 
     try {
         // Get partner's user_id for notification
-        const { data: partner } = await supabase.from('partners').select('user_id, name').eq('id', id).single();
+        const { data: partner } = await sb.from('partners').select('user_id, name').eq('id', id).single();
 
-        const { error } = await supabase
+        const { error } = await sb
             .from('partners')
             .update({
                 status: 'approved',
@@ -382,7 +382,7 @@ async function approvePartner(id) {
 
         // Send notification if partner has user_id
         if (partner?.user_id) {
-            await supabase.rpc('create_notification', {
+            await sb.rpc('create_notification', {
                 p_user_id: partner.user_id,
                 p_type: 'partner_approved',
                 p_title: '파트너 승인 완료',
@@ -412,9 +412,9 @@ function openRejectModal(id) {
         }
 
         try {
-            const { data: partner } = await supabase.from('partners').select('user_id, name').eq('id', rejectTargetId).single();
+            const { data: partner } = await sb.from('partners').select('user_id, name').eq('id', rejectTargetId).single();
 
-            const { error } = await supabase
+            const { error } = await sb
                 .from('partners')
                 .update({
                     status: 'rejected',
@@ -427,7 +427,7 @@ function openRejectModal(id) {
 
             // Send notification
             if (partner?.user_id) {
-                await supabase.rpc('create_notification', {
+                await sb.rpc('create_notification', {
                     p_user_id: partner.user_id,
                     p_type: 'partner_rejected',
                     p_title: '파트너 가입 반려',
@@ -458,7 +458,7 @@ async function loadCustomers() {
     empty.style.display = 'none';
 
     try {
-        let query = supabase
+        let query = sb
             .from('consultations')
             .select('*, partners(name, hospital_name)')
             .not('partner_id', 'is', null)
@@ -518,7 +518,7 @@ async function loadCustomers() {
 
 async function updatePipelineStatus(id, status) {
     try {
-        const { error } = await supabase
+        const { error } = await sb
             .from('consultations')
             .update({
                 pipeline_status: status,
@@ -537,7 +537,7 @@ async function updatePipelineStatus(id, status) {
 async function updateTransactionAmount(id, value) {
     const amount = value ? Number(value) : null;
     try {
-        const { error } = await supabase
+        const { error } = await sb
             .from('consultations')
             .update({
                 transaction_amount: amount,
@@ -557,7 +557,7 @@ async function viewConsultation(id) {
     currentDetailId = id;
     currentDetailType = 'consultation';
 
-    const { data, error } = await supabase.from('consultations').select('*, partners(name)').eq('id', id).single();
+    const { data, error } = await sb.from('consultations').select('*, partners(name)').eq('id', id).single();
     if (error) { showToast('데이터를 불러오는데 실패했습니다.', 'error'); return; }
 
     document.getElementById('modalTitle').textContent = '상담 신청 상세';
@@ -646,7 +646,7 @@ async function viewPartner(id) {
     currentDetailId = id;
     currentDetailType = 'partner';
 
-    const { data, error } = await supabase.from('partners').select('*').eq('id', id).single();
+    const { data, error } = await sb.from('partners').select('*').eq('id', id).single();
     if (error) { showToast('데이터를 불러오는데 실패했습니다.', 'error'); return; }
 
     document.getElementById('modalTitle').textContent = '파트너 상세';
@@ -743,7 +743,7 @@ async function saveStatus() {
             updateData.approved_by = currentUser.id;
         }
 
-        const { error } = await supabase.from(table).update(updateData).eq('id', currentDetailId);
+        const { error } = await sb.from(table).update(updateData).eq('id', currentDetailId);
         if (error) throw error;
 
         showToast('상태가 저장되었습니다.', 'success');
@@ -799,7 +799,7 @@ async function loadAdminSettlements() {
     empty.style.display = 'none';
 
     try {
-        let query = supabase
+        let query = sb
             .from('settlements')
             .select('*, partners(name)')
             .eq('month', month)
@@ -882,7 +882,7 @@ async function handleSettlementSubmit(e) {
     };
 
     try {
-        const { error } = await supabase.from('settlements').insert([payload]);
+        const { error } = await sb.from('settlements').insert([payload]);
         if (error) throw error;
 
         showToast('정산이 추가되었습니다.', 'success');
@@ -897,7 +897,7 @@ async function handleSettlementSubmit(e) {
 
 async function updateSettlementStatus(id, status) {
     try {
-        const { error } = await supabase
+        const { error } = await sb
             .from('settlements')
             .update({ status, updated_at: new Date().toISOString() })
             .eq('id', id);
@@ -911,7 +911,7 @@ async function updateSettlementStatus(id, status) {
 async function deleteSettlement(id) {
     if (!confirm('이 정산 내역을 삭제하시겠습니까?')) return;
     try {
-        const { error } = await supabase.from('settlements').delete().eq('id', id);
+        const { error } = await sb.from('settlements').delete().eq('id', id);
         if (error) throw error;
         showToast('삭제되었습니다.', 'success');
         loadAdminSettlements();
@@ -924,7 +924,7 @@ async function deleteSettlement(id) {
 
 async function loadAdminNotices() {
     try {
-        const { data, error } = await supabase.from('notices').select('*').order('created_at', { ascending: false });
+        const { data, error } = await sb.from('notices').select('*').order('created_at', { ascending: false });
         if (error) throw error;
 
         const table = document.getElementById('noticeTable');
@@ -967,7 +967,7 @@ function openNoticeModal() {
 }
 
 async function editNotice(id) {
-    const { data, error } = await supabase.from('notices').select('*').eq('id', id).single();
+    const { data, error } = await sb.from('notices').select('*').eq('id', id).single();
     if (error) { showToast('공지를 불러올 수 없습니다.', 'error'); return; }
 
     document.getElementById('noticeModalTitle').textContent = '공지 수정';
@@ -990,11 +990,11 @@ async function handleNoticeSubmit(e) {
 
     try {
         if (editId) {
-            const { error } = await supabase.from('notices').update(payload).eq('id', Number(editId));
+            const { error } = await sb.from('notices').update(payload).eq('id', Number(editId));
             if (error) throw error;
             showToast('공지가 수정되었습니다.', 'success');
         } else {
-            const { error } = await supabase.from('notices').insert([payload]);
+            const { error } = await sb.from('notices').insert([payload]);
             if (error) throw error;
             showToast('공지가 추가되었습니다.', 'success');
         }
@@ -1009,7 +1009,7 @@ async function handleNoticeSubmit(e) {
 async function deleteNotice(id) {
     if (!confirm('이 공지를 삭제하시겠습니까?')) return;
     try {
-        const { error } = await supabase.from('notices').delete().eq('id', id);
+        const { error } = await sb.from('notices').delete().eq('id', id);
         if (error) throw error;
         showToast('삭제되었습니다.', 'success');
         loadAdminNotices();
@@ -1025,7 +1025,7 @@ async function exportToCSV(type) {
         let data, csv;
 
         if (type === 'consultations') {
-            const result = await supabase.from('consultations').select('*').order('created_at', { ascending: false });
+            const result = await sb.from('consultations').select('*').order('created_at', { ascending: false });
             if (result.error) throw result.error;
             data = result.data;
             if (!data?.length) { showToast('내보낼 데이터가 없습니다.', 'error'); return; }
@@ -1034,7 +1034,7 @@ async function exportToCSV(type) {
                 `"${formatDate(row.created_at)}","${row.name}","${row.phone}","${getBusinessLabel(row.business)}","${getRevenueLabel(row.revenue)}","${getRegionLabel(row.region)}","${getProductLabel(row.product)}","${(row.message || '').replace(/"/g, '""')}","${getStatusLabel(row.status)}"`
             ).join('\n');
         } else if (type === 'partners') {
-            const result = await supabase.from('partners').select('*').order('created_at', { ascending: false });
+            const result = await sb.from('partners').select('*').order('created_at', { ascending: false });
             if (result.error) throw result.error;
             data = result.data;
             if (!data?.length) { showToast('내보낼 데이터가 없습니다.', 'error'); return; }
@@ -1043,7 +1043,7 @@ async function exportToCSV(type) {
                 `"${formatDate(row.created_at)}","${row.name}","${row.phone}","${row.hospital_name || ''}","${getBusinessLabel(row.business)}","${getRegionLabel(row.region)}","${getPartnerStatusLabel(row.status)}"`
             ).join('\n');
         } else if (type === 'customers') {
-            const result = await supabase
+            const result = await sb
                 .from('consultations')
                 .select('*, partners(name)')
                 .not('partner_id', 'is', null)

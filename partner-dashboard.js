@@ -2,7 +2,7 @@
  * 메디플라톤 파트너 대시보드 JavaScript (v2 - Supabase)
  */
 
-let supabase = null;
+let sb = null;
 let currentUser = null;
 let currentPartner = null;
 let currentTab = 'register';
@@ -17,9 +17,9 @@ const loginInfo = document.getElementById('loginInfo');
 // ─── Init ───
 
 document.addEventListener('DOMContentLoaded', async () => {
-    supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+    sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sb.auth.getSession();
     if (session) {
         currentUser = session.user;
         await checkPartnerStatus();
@@ -70,7 +70,7 @@ async function handleLogin(e) {
     const password = document.getElementById('password').value;
 
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
         currentUser = data.user;
@@ -83,7 +83,7 @@ async function handleLogin(e) {
 
 async function checkPartnerStatus() {
     try {
-        const { data: partner, error } = await supabase
+        const { data: partner, error } = await sb
             .from('partners')
             .select('*')
             .eq('user_id', currentUser.id)
@@ -92,7 +92,7 @@ async function checkPartnerStatus() {
         if (error || !partner) {
             loginError.textContent = '파트너 정보를 찾을 수 없습니다. 파트너 가입을 먼저 진행해주세요.';
             loginError.style.display = 'block';
-            await supabase.auth.signOut();
+            await sb.auth.signOut();
             currentUser = null;
             return;
         }
@@ -100,7 +100,7 @@ async function checkPartnerStatus() {
         if (partner.status === 'pending' || partner.status === 'new' || partner.status === 'reviewing') {
             loginInfo.textContent = '파트너 가입 승인 대기 중입니다. 관리자 승인 후 이용하실 수 있습니다.';
             loginInfo.style.display = 'block';
-            await supabase.auth.signOut();
+            await sb.auth.signOut();
             currentUser = null;
             return;
         }
@@ -108,7 +108,7 @@ async function checkPartnerStatus() {
         if (partner.status === 'rejected') {
             loginError.textContent = '파트너 가입이 반려되었습니다.' + (partner.rejection_reason ? ' 사유: ' + partner.rejection_reason : '');
             loginError.style.display = 'block';
-            await supabase.auth.signOut();
+            await sb.auth.signOut();
             currentUser = null;
             return;
         }
@@ -119,17 +119,17 @@ async function checkPartnerStatus() {
     } catch (error) {
         loginError.textContent = '로그인 처리 중 오류가 발생했습니다.';
         loginError.style.display = 'block';
-        await supabase.auth.signOut();
+        await sb.auth.signOut();
         currentUser = null;
     }
 }
 
 async function handleLogout() {
     if (realtimeChannel) {
-        supabase.removeChannel(realtimeChannel);
+        sb.removeChannel(realtimeChannel);
         realtimeChannel = null;
     }
-    await supabase.auth.signOut();
+    await sb.auth.signOut();
     currentUser = null;
     currentPartner = null;
     dashboard.style.display = 'none';
@@ -154,7 +154,7 @@ function showDashboard() {
 // ─── Realtime ───
 
 function setupRealtime() {
-    realtimeChannel = supabase
+    realtimeChannel = sb
         .channel('partner-updates')
         .on('postgres_changes', {
             event: 'UPDATE',
@@ -206,7 +206,7 @@ async function loadStats() {
         const now = new Date();
         const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-        const { data: clients } = await supabase
+        const { data: clients } = await sb
             .from('consultations')
             .select('id, pipeline_status, transaction_amount, created_at')
             .eq('partner_id', currentPartner.id);
@@ -253,7 +253,7 @@ async function checkDuplicatePhone() {
     if (!phone || phone.length < 10) return;
 
     try {
-        const { data, error } = await supabase.rpc('check_duplicate_phone', { p_phone: phone });
+        const { data, error } = await sb.rpc('check_duplicate_phone', { p_phone: phone });
         if (error) throw error;
 
         if (data && data[0] && data[0].is_duplicate) {
@@ -282,7 +282,7 @@ async function handleClientSubmit(e) {
     };
 
     try {
-        const { error } = await supabase.from('consultations').insert([payload]);
+        const { error } = await sb.from('consultations').insert([payload]);
         if (error) throw error;
 
         showToast('고객이 등록되었습니다.', 'success');
@@ -307,7 +307,7 @@ async function loadClients() {
     empty.style.display = 'none';
 
     try {
-        let query = supabase
+        let query = sb
             .from('consultations')
             .select('*')
             .eq('partner_id', currentPartner.id)
@@ -350,7 +350,7 @@ async function loadClients() {
 }
 
 async function viewClient(id) {
-    const { data, error } = await supabase
+    const { data, error } = await sb
         .from('consultations')
         .select('*')
         .eq('id', id)
@@ -423,7 +423,7 @@ async function loadOverview() {
     empty.style.display = 'none';
 
     try {
-        const { data, error } = await supabase.rpc('get_anonymized_stats');
+        const { data, error } = await sb.rpc('get_anonymized_stats');
         if (error) throw error;
 
         loading.style.display = 'none';
@@ -463,7 +463,7 @@ async function loadLeaderboard() {
     empty.style.display = 'none';
 
     try {
-        const { data, error } = await supabase.rpc('get_monthly_leaderboard', { p_month: month });
+        const { data, error } = await sb.rpc('get_monthly_leaderboard', { p_month: month });
         if (error) throw error;
 
         loading.style.display = 'none';
@@ -504,7 +504,7 @@ async function loadSettlements() {
     empty.style.display = 'none';
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await sb
             .from('settlements')
             .select('*')
             .eq('partner_id', currentPartner.id)
@@ -558,7 +558,7 @@ async function loadSettlements() {
 
 async function loadUnreadCount() {
     try {
-        const { count, error } = await supabase
+        const { count, error } = await sb
             .from('notifications')
             .select('*', { count: 'exact', head: true })
             .eq('user_id', currentUser.id)
@@ -586,7 +586,7 @@ async function loadNotifications() {
     list.innerHTML = '';
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await sb
             .from('notifications')
             .select('*')
             .eq('user_id', currentUser.id)
@@ -620,7 +620,7 @@ async function markNotificationRead(id, el) {
     if (el && !el.classList.contains('unread')) return;
 
     try {
-        await supabase
+        await sb
             .from('notifications')
             .update({ is_read: true })
             .eq('id', id);
@@ -634,7 +634,7 @@ async function markNotificationRead(id, el) {
 
 async function markAllNotificationsRead() {
     try {
-        const { error } = await supabase
+        const { error } = await sb
             .from('notifications')
             .update({ is_read: true })
             .eq('user_id', currentUser.id)
