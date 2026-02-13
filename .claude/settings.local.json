@@ -35,7 +35,9 @@
       "WebFetch(domain:loan.brandplaton.com)",
       "Bash(sort:*)",
       "WebFetch(domain:platonmg.imweb.me)",
-      "WebFetch(domain:modoovillage.co.kr)"
+      "WebFetch(domain:modoovillage.co.kr)",
+      "Bash(git checkout:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)"
     ]
   }
 }

@@ -40,12 +40,29 @@
 const SUPABASE_CONFIG = {
     // ▼▼▼ 여기에 실제 Supabase URL을 붙여넣으세요 ▼▼▼
     // 예시: 'https://abcdefghijk.supabase.co'
-    url: 'YOUR_SUPABASE_URL',
+    url: 'https://rtjklelozdxznngjgedr.supabase.co',
 
     // ▼▼▼ 여기에 실제 anon key를 붙여넣으세요 ▼▼▼
     // 예시: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI...'
-    anonKey: 'YOUR_SUPABASE_ANON_KEY'
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0amtsZWxvemR4em5uZ2pnZWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5NDc5OTksImV4cCI6MjA4NjUyMzk5OX0.l4RZLS5PkvDX3Sq2xWw-VdEs9p_-9zfLKJtxn9J7RKY'
 };
+
+/**
+ * ============================================================
+ * 파트너 계정 설정 (Supabase 없이 간단 로그인)
+ * ============================================================
+ * 계정 추가: 배열에 객체를 추가하세요.
+ * ============================================================
+ */
+const PARTNER_ACCOUNTS = [
+    {
+        email: 'lhs0609c@naver.com',
+        password: 'lhs0609c@naver.com',
+        id: 1,
+        name: '메디플라톤 파트너',
+        commission_rate: 0.015
+    }
+];
 
 /**
  * ============================================================

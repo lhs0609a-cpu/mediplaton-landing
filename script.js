@@ -613,61 +613,34 @@ function initLiveNotifications() {
 }
 
 // ===== Live Approval Card Animation =====
-// [QA FIX] 랜덤 가짜 데이터 생성 제거 → 실제 사례 기반 정적 쇼케이스로 변경
-// 금융상품 광고 규제 준수: 허위/과장 표시 금지
+// 실제 승인 사례 스크린샷 캐러셀
 function initLiveApprovalCard() {
     const card = document.getElementById('liveApprovalCard');
     if (!card) return;
 
-    // 실제 승인 사례 기반 고정 데이터 (순환 표시)
-    const approvedCases = [
-        { region: '서울 강남', business: '정형외과', amount: '120,000,000', product: '카드매출 담보대출', rate: '연 5.7%', period: '36개월' },
-        { region: '경기 성남', business: '약국', amount: '70,000,000', product: '카드매출 담보대출', rate: '연 5.3%', period: '24개월' },
-        { region: '부산 해운대', business: '치과의원', amount: '120,000,000', product: '의료기기 리스', rate: '연 6.2%', period: '48개월' },
-        { region: '서울 서초', business: '피부과', amount: '80,000,000', product: '카드매출 담보대출', rate: '연 5.9%', period: '36개월' },
-    ];
+    const images = card.querySelectorAll('.showcase-img');
+    const dots = card.querySelectorAll('.showcase-dots .dot');
+    if (images.length === 0) return;
 
     let currentIndex = 0;
 
-    const regionEl = document.getElementById('approvalRegion');
-    const businessEl = document.getElementById('approvalBusiness');
-    const amountEl = document.getElementById('approvalAmount');
-    const productEl = document.getElementById('approvalProduct');
-    const rateEl = document.getElementById('approvalRate');
-    const periodEl = document.getElementById('approvalPeriod');
-    const timeEl = document.getElementById('approvalTime');
-
     function updateCard() {
-        card.classList.add('fade-out');
+        images[currentIndex].classList.remove('active');
+        if (dots[currentIndex]) dots[currentIndex].classList.remove('active');
 
-        setTimeout(() => {
-            currentIndex = (currentIndex + 1) % approvedCases.length;
-            const data = approvedCases[currentIndex];
+        currentIndex = (currentIndex + 1) % images.length;
 
-            if (regionEl) regionEl.textContent = data.region;
-            if (businessEl) businessEl.textContent = data.business;
-            if (amountEl) amountEl.innerHTML = `${data.amount}<small>원</small>`;
-            if (productEl) productEl.textContent = data.product;
-            if (rateEl) rateEl.textContent = data.rate;
-            if (periodEl) periodEl.textContent = data.period;
-            if (timeEl) timeEl.textContent = '승인 사례';
-
-            card.classList.remove('fade-out');
-            card.classList.add('fade-in');
-
-            setTimeout(() => {
-                card.classList.remove('fade-in');
-            }, 300);
-        }, 300);
+        images[currentIndex].classList.add('active');
+        if (dots[currentIndex]) dots[currentIndex].classList.add('active');
     }
 
     // Page Visibility API: 비활성 탭에서 interval 중지
-    let cardInterval = setInterval(updateCard, 6000);
+    let cardInterval = setInterval(updateCard, 5000);
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             clearInterval(cardInterval);
         } else {
-            cardInterval = setInterval(updateCard, 6000);
+            cardInterval = setInterval(updateCard, 5000);
         }
     });
 }

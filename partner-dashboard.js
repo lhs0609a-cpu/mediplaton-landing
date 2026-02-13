@@ -1,11 +1,16 @@
 /**
  * 메디플라톤 파트너 대시보드 JavaScript
+ * (localStorage 기반 - Supabase 불필요)
  */
 
-let supabase = null;
-let currentUser = null;
 let currentPartner = null;
 let currentTab = 'home';
+
+// LocalStorage keys
+const LS_SESSION = 'mp_partner_session';
+const LS_CLIENTS = 'mp_partner_clients';
+const LS_NOTICES = 'mp_partner_notices';
+const LS_SETTLEMENTS = 'mp_partner_settlements';
 
 // DOM
 const loginScreen = document.getElementById('loginScreen');
@@ -13,19 +18,37 @@ const dashboard = document.getElementById('partnerDashboard');
 const loginForm = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
 
-document.addEventListener('DOMContentLoaded', async () => {
-    if (!isSupabaseConfigured()) return;
-
-    supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        currentUser = session.user;
-        await initPartner();
+document.addEventListener('DOMContentLoaded', () => {
+    // 기존 세션 확인
+    const saved = localStorage.getItem(LS_SESSION);
+    if (saved) {
+        try {
+            currentPartner = JSON.parse(saved);
+            showDashboard();
+        } catch (e) {
+            localStorage.removeItem(LS_SESSION);
+        }
     }
 
+    initDefaultData();
     setupEventListeners();
 });
+
+// ─── Default Data (최초 1회) ───
+
+function initDefaultData() {
+    if (!localStorage.getItem(LS_NOTICES)) {
+        localStorage.setItem(LS_NOTICES, JSON.stringify([
+            { id: 1, title: '파트너 대시보드 오픈 안내', content: '파트너 대시보드가 오픈되었습니다.\n고객 등록 및 진행 현황을 확인하실 수 있습니다.', is_active: true, created_at: new Date().toISOString() }
+        ]));
+    }
+    if (!localStorage.getItem(LS_CLIENTS)) {
+        localStorage.setItem(LS_CLIENTS, JSON.stringify([]));
+    }
+    if (!localStorage.getItem(LS_SETTLEMENTS)) {
+        localStorage.setItem(LS_SETTLEMENTS, JSON.stringify([]));
+    }
+}
 
 // ─── Event Listeners ───
 
@@ -51,70 +74,44 @@ function setupEventListeners() {
 
 // ─── Auth ───
 
-async function handleLogin(e) {
+function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+    const account = PARTNER_ACCOUNTS.find(a => a.email === email && a.password === password);
 
-        currentUser = data.user;
-
-        // 파트너 레코드 확인
-        const { data: partner, error: pErr } = await supabase
-            .from('partners')
-            .select('*')
-            .eq('user_id', currentUser.id)
-            .single();
-
-        if (pErr || !partner) {
-            await supabase.auth.signOut();
-            currentUser = null;
-            loginError.textContent = '파트너 계정이 연결되지 않았습니다. 관리자에게 문의하세요.';
-            loginError.style.display = 'block';
-            return;
-        }
-
-        currentPartner = partner;
-        loginError.style.display = 'none';
-        showDashboard();
-    } catch (error) {
-        loginError.textContent = error.message || '로그인에 실패했습니다.';
+    if (!account) {
+        loginError.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
         loginError.style.display = 'block';
+        return;
     }
+
+    currentPartner = {
+        id: account.id,
+        name: account.name,
+        email: account.email,
+        commission_rate: account.commission_rate
+    };
+
+    localStorage.setItem(LS_SESSION, JSON.stringify(currentPartner));
+    loginError.style.display = 'none';
+    showDashboard();
 }
 
-async function handleLogout() {
-    await supabase.auth.signOut();
-    currentUser = null;
+function handleLogout() {
     currentPartner = null;
+    localStorage.removeItem(LS_SESSION);
     dashboard.style.display = 'none';
     loginScreen.style.display = 'flex';
     loginForm.reset();
-}
-
-async function initPartner() {
-    const { data: partner, error } = await supabase
-        .from('partners')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .single();
-
-    if (error || !partner) {
-        await handleLogout();
-        return;
-    }
-    currentPartner = partner;
-    showDashboard();
 }
 
 function showDashboard() {
     loginScreen.style.display = 'none';
     dashboard.style.display = 'block';
     document.getElementById('partnerName').textContent = currentPartner.name || '파트너';
-    document.getElementById('partnerEmail').textContent = currentUser.email;
+    document.getElementById('partnerEmail').textContent = currentPartner.email;
 
     loadStats();
     loadNotices();
@@ -137,108 +134,93 @@ function switchTab(tab) {
     if (tab === 'settlements') loadSettlements();
 }
 
+// ─── Data Helpers ───
+
+function getClients() {
+    try { return JSON.parse(localStorage.getItem(LS_CLIENTS) || '[]'); }
+    catch { return []; }
+}
+
+function saveClients(clients) {
+    localStorage.setItem(LS_CLIENTS, JSON.stringify(clients));
+}
+
+function getSettlementsData() {
+    try { return JSON.parse(localStorage.getItem(LS_SETTLEMENTS) || '[]'); }
+    catch { return []; }
+}
+
+function getNoticesData() {
+    try { return JSON.parse(localStorage.getItem(LS_NOTICES) || '[]'); }
+    catch { return []; }
+}
+
 // ─── Stats ───
 
-async function loadStats() {
-    try {
-        const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+function loadStats() {
+    const clients = getClients().filter(c => c.partner_id === currentPartner.id);
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-        // 이번 달 연결 고객
-        const { count: monthClients } = await supabase
-            .from('consultations')
-            .select('*', { count: 'exact', head: true })
-            .eq('partner_id', currentPartner.id)
-            .gte('created_at', monthStart);
+    // 이번 달 연결 고객
+    const monthClients = clients.filter(c => new Date(c.created_at) >= monthStart).length;
 
-        // 누적 거래액
-        const { data: amountData } = await supabase
-            .from('consultations')
-            .select('transaction_amount')
-            .eq('partner_id', currentPartner.id)
-            .not('transaction_amount', 'is', null);
+    // 누적 거래액
+    const totalAmount = clients.reduce((sum, r) => sum + Number(r.transaction_amount || 0), 0);
 
-        const totalAmount = (amountData || []).reduce((sum, r) => sum + Number(r.transaction_amount || 0), 0);
+    // 예상 수수료
+    const rate = Number(currentPartner.commission_rate || 0.015);
+    const commission = Math.round(totalAmount * rate);
 
-        // 예상 수수료
-        const rate = Number(currentPartner.commission_rate || 0.015);
-        const commission = Math.round(totalAmount * rate);
+    // 진행 중 건수
+    const inProgress = clients.filter(c => ['received', 'reviewing'].includes(c.pipeline_status)).length;
 
-        // 진행 중 건수
-        const { count: inProgress } = await supabase
-            .from('consultations')
-            .select('*', { count: 'exact', head: true })
-            .eq('partner_id', currentPartner.id)
-            .in('pipeline_status', ['received', 'reviewing']);
-
-        document.getElementById('statMonthClients').textContent = monthClients || 0;
-        document.getElementById('statTotalAmount').textContent = formatCurrency(totalAmount);
-        document.getElementById('statCommission').textContent = formatCurrency(commission);
-        document.getElementById('statInProgress').textContent = inProgress || 0;
-    } catch (error) {
-        console.error('Stats error:', error);
-    }
+    document.getElementById('statMonthClients').textContent = monthClients;
+    document.getElementById('statTotalAmount').textContent = formatCurrency(totalAmount);
+    document.getElementById('statCommission').textContent = formatCurrency(commission);
+    document.getElementById('statInProgress').textContent = inProgress;
 }
 
 // ─── Pipeline Summary ───
 
-async function loadPipelineSummary() {
-    try {
-        const { data } = await supabase
-            .from('consultations')
-            .select('pipeline_status')
-            .eq('partner_id', currentPartner.id);
+function loadPipelineSummary() {
+    const clients = getClients().filter(c => c.partner_id === currentPartner.id);
+    const counts = { received: 0, reviewing: 0, approved: 0, installed: 0, rejected: 0 };
+    clients.forEach(r => {
+        const s = r.pipeline_status || 'received';
+        if (counts[s] !== undefined) counts[s]++;
+    });
 
-        const counts = { received: 0, reviewing: 0, approved: 0, installed: 0, rejected: 0 };
-        (data || []).forEach(r => {
-            const s = r.pipeline_status || 'received';
-            if (counts[s] !== undefined) counts[s]++;
-        });
+    const labels = { received: '접수', reviewing: '심사 중', approved: '승인', installed: 'PG 설치 완료', rejected: '반려' };
+    const colors = { received: '#1D4ED8', reviewing: '#B45309', approved: '#047857', installed: '#4338CA', rejected: '#B91C1C' };
 
-        const labels = { received: '접수', reviewing: '심사 중', approved: '승인', installed: 'PG 설치 완료', rejected: '반려' };
-        const colors = { received: '#1D4ED8', reviewing: '#B45309', approved: '#047857', installed: '#4338CA', rejected: '#B91C1C' };
-
-        document.getElementById('pipelineSummary').innerHTML = Object.entries(labels).map(([key, label]) => `
-            <div class="stat-card">
-                <h3>${label}</h3>
-                <div class="stat-value" style="color: ${colors[key]}">${counts[key]}</div>
-                <div class="stat-sub">건</div>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error('Pipeline summary error:', error);
-    }
+    document.getElementById('pipelineSummary').innerHTML = Object.entries(labels).map(([key, label]) => `
+        <div class="stat-card">
+            <h3>${label}</h3>
+            <div class="stat-value" style="color: ${colors[key]}">${counts[key]}</div>
+            <div class="stat-sub">건</div>
+        </div>
+    `).join('');
 }
 
 // ─── Notices ───
 
-async function loadNotices() {
-    try {
-        const { data, error } = await supabase
-            .from('notices')
-            .select('*')
-            .eq('is_active', true)
-            .order('created_at', { ascending: false })
-            .limit(10);
+function loadNotices() {
+    const data = getNoticesData().filter(n => n.is_active);
+    const container = document.getElementById('noticeList');
 
-        if (error) throw error;
-
-        const container = document.getElementById('noticeList');
-        if (!data || data.length === 0) {
-            container.innerHTML = '<div class="empty-state"><h3>공지사항이 없습니다</h3></div>';
-            return;
-        }
-
-        container.innerHTML = data.map(n => `
-            <div class="notice-item" onclick="toggleNotice(this)">
-                <h4>${escapeHtml(n.title)}</h4>
-                <span class="notice-date">${formatDate(n.created_at)}</span>
-            </div>
-            <div class="notice-content">${escapeHtml(n.content || '').replace(/\n/g, '<br>')}</div>
-        `).join('');
-    } catch (error) {
-        console.error('Notices error:', error);
+    if (data.length === 0) {
+        container.innerHTML = '<div class="empty-state"><h3>공지사항이 없습니다</h3></div>';
+        return;
     }
+
+    container.innerHTML = data.map(n => `
+        <div class="notice-item" onclick="toggleNotice(this)">
+            <h4>${escapeHtml(n.title)}</h4>
+            <span class="notice-date">${formatDate(n.created_at)}</span>
+        </div>
+        <div class="notice-content">${escapeHtml(n.content || '').replace(/\n/g, '<br>')}</div>
+    `).join('');
 }
 
 function toggleNotice(el) {
@@ -248,7 +230,7 @@ function toggleNotice(el) {
 
 // ─── Clients ───
 
-async function loadClients() {
+function loadClients() {
     const loading = document.getElementById('clientLoading');
     const table = document.getElementById('clientTable');
     const empty = document.getElementById('clientEmpty');
@@ -258,57 +240,56 @@ async function loadClients() {
     table.style.display = 'none';
     empty.style.display = 'none';
 
-    try {
-        let query = supabase
-            .from('consultations')
-            .select('*')
-            .eq('partner_id', currentPartner.id)
-            .order('created_at', { ascending: false });
+    let clients = getClients().filter(c => c.partner_id === currentPartner.id);
 
-        const pipelineFilter = document.getElementById('clientPipelineFilter').value;
-        if (pipelineFilter !== 'all') {
-            query = query.eq('pipeline_status', pipelineFilter);
-        }
+    // 최신순 정렬
+    clients.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-        const search = document.getElementById('clientSearch').value.trim();
-        if (search) {
-            query = query.or(`name.ilike.%${search}%,phone.ilike.%${search}%`);
-        }
-
-        const { data, error } = await query;
-        if (error) throw error;
-
-        loading.style.display = 'none';
-
-        if (!data || data.length === 0) {
-            empty.style.display = 'block';
-            return;
-        }
-
-        table.style.display = 'table';
-        tbody.innerHTML = data.map(row => `
-            <tr>
-                <td>${formatDate(row.created_at)}</td>
-                <td><strong>${escapeHtml(row.name)}</strong></td>
-                <td>${escapeHtml(row.phone)}</td>
-                <td>${getBusinessLabel(row.business)}</td>
-                <td>${renderPipeline(row.pipeline_status)}</td>
-                <td>
-                    <button class="action-btn view" onclick="viewClient(${row.id})">상세</button>
-                </td>
-            </tr>
-        `).join('');
-    } catch (error) {
-        console.error('Load clients error:', error);
-        loading.style.display = 'none';
-        showToast('데이터를 불러오는데 실패했습니다.', 'error');
+    // 파이프라인 필터
+    const pipelineFilter = document.getElementById('clientPipelineFilter').value;
+    if (pipelineFilter !== 'all') {
+        clients = clients.filter(c => c.pipeline_status === pipelineFilter);
     }
+
+    // 검색
+    const search = document.getElementById('clientSearch').value.trim().toLowerCase();
+    if (search) {
+        clients = clients.filter(c =>
+            (c.name || '').toLowerCase().includes(search) ||
+            (c.phone || '').includes(search)
+        );
+    }
+
+    loading.style.display = 'none';
+
+    if (clients.length === 0) {
+        empty.style.display = 'block';
+        return;
+    }
+
+    table.style.display = 'table';
+    tbody.innerHTML = clients.map(row => `
+        <tr>
+            <td>${formatDate(row.created_at)}</td>
+            <td><strong>${escapeHtml(row.name)}</strong></td>
+            <td>${escapeHtml(row.phone)}</td>
+            <td>${getBusinessLabel(row.business)}</td>
+            <td>${renderPipeline(row.pipeline_status)}</td>
+            <td>
+                <button class="action-btn view" onclick="viewClient(${row.id})">상세</button>
+            </td>
+        </tr>
+    `).join('');
 }
 
-async function handleClientSubmit(e) {
+function handleClientSubmit(e) {
     e.preventDefault();
 
+    const clients = getClients();
+    const newId = clients.length > 0 ? Math.max(...clients.map(c => c.id)) + 1 : 1;
+
     const payload = {
+        id: newId,
         name: document.getElementById('clientName').value.trim(),
         phone: document.getElementById('clientPhone').value.trim(),
         business: document.getElementById('clientBusiness').value || null,
@@ -318,33 +299,26 @@ async function handleClientSubmit(e) {
         message: document.getElementById('clientMessage').value.trim() || null,
         partner_id: currentPartner.id,
         pipeline_status: 'received',
-        status: 'new'
+        status: 'new',
+        transaction_amount: null,
+        created_at: new Date().toISOString()
     };
 
-    try {
-        const { error } = await supabase.from('consultations').insert([payload]);
-        if (error) throw error;
+    clients.push(payload);
+    saveClients(clients);
 
-        showToast('고객이 등록되었습니다.', 'success');
-        e.target.reset();
-        loadClients();
-        loadStats();
-        loadPipelineSummary();
-    } catch (error) {
-        console.error('Client submit error:', error);
-        showToast('등록에 실패했습니다: ' + error.message, 'error');
-    }
+    showToast('고객이 등록되었습니다.', 'success');
+    e.target.reset();
+    loadClients();
+    loadStats();
+    loadPipelineSummary();
 }
 
-async function viewClient(id) {
-    const { data, error } = await supabase
-        .from('consultations')
-        .select('*')
-        .eq('id', id)
-        .eq('partner_id', currentPartner.id)
-        .single();
+function viewClient(id) {
+    const clients = getClients();
+    const data = clients.find(c => c.id === id && c.partner_id === currentPartner.id);
 
-    if (error || !data) {
+    if (!data) {
         showToast('데이터를 불러올 수 없습니다.', 'error');
         return;
     }
@@ -411,7 +385,7 @@ function initSettlementMonths() {
     }
 }
 
-async function loadSettlements() {
+function loadSettlements() {
     const month = document.getElementById('settlementMonth').value;
     if (!month) return;
 
@@ -424,56 +398,45 @@ async function loadSettlements() {
     table.style.display = 'none';
     empty.style.display = 'none';
 
-    try {
-        const { data, error } = await supabase
-            .from('settlements')
-            .select('*')
-            .eq('partner_id', currentPartner.id)
-            .eq('month', month)
-            .order('created_at', { ascending: false });
+    const data = getSettlementsData()
+        .filter(s => s.partner_id === currentPartner.id && s.month === month)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-        if (error) throw error;
+    loading.style.display = 'none';
 
-        loading.style.display = 'none';
-
-        if (!data || data.length === 0) {
-            empty.style.display = 'block';
-            document.getElementById('settleTotalAmount').textContent = '0원';
-            document.getElementById('settleRate').textContent = '-';
-            document.getElementById('settleTotalCommission').textContent = '0원';
-            document.getElementById('settleStatus').textContent = '-';
-            return;
-        }
-
-        // Summary
-        const totalAmt = data.reduce((s, r) => s + Number(r.transaction_amount || 0), 0);
-        const totalComm = data.reduce((s, r) => s + Number(r.commission_amount || 0), 0);
-        const rate = data[0].commission_rate ? (Number(data[0].commission_rate) * 100).toFixed(2) + '%' : '-';
-        const statusCounts = {};
-        data.forEach(r => { statusCounts[r.status] = (statusCounts[r.status] || 0) + 1; });
-        const mainStatus = Object.entries(statusCounts).sort((a, b) => b[1] - a[1])[0][0];
-
-        document.getElementById('settleTotalAmount').textContent = formatCurrency(totalAmt) + '원';
-        document.getElementById('settleRate').textContent = rate;
-        document.getElementById('settleTotalCommission').textContent = formatCurrency(totalComm) + '원';
-        document.getElementById('settleStatus').innerHTML = `<span class="status-badge status-${mainStatus}">${getSettlementStatusLabel(mainStatus)}</span>`;
-
-        // Table
-        table.style.display = 'table';
-        tbody.innerHTML = data.map(row => `
-            <tr>
-                <td>${escapeHtml(row.client_name || '-')}</td>
-                <td>${formatCurrency(row.transaction_amount)}원</td>
-                <td>${row.commission_rate ? (Number(row.commission_rate) * 100).toFixed(2) + '%' : '-'}</td>
-                <td>${formatCurrency(row.commission_amount)}원</td>
-                <td><span class="status-badge status-${row.status}">${getSettlementStatusLabel(row.status)}</span></td>
-            </tr>
-        `).join('');
-    } catch (error) {
-        console.error('Settlements error:', error);
-        loading.style.display = 'none';
-        showToast('정산 데이터를 불러오는데 실패했습니다.', 'error');
+    if (data.length === 0) {
+        empty.style.display = 'block';
+        document.getElementById('settleTotalAmount').textContent = '0원';
+        document.getElementById('settleRate').textContent = '-';
+        document.getElementById('settleTotalCommission').textContent = '0원';
+        document.getElementById('settleStatus').textContent = '-';
+        return;
     }
+
+    // Summary
+    const totalAmt = data.reduce((s, r) => s + Number(r.transaction_amount || 0), 0);
+    const totalComm = data.reduce((s, r) => s + Number(r.commission_amount || 0), 0);
+    const rate = data[0].commission_rate ? (Number(data[0].commission_rate) * 100).toFixed(2) + '%' : '-';
+    const statusCounts = {};
+    data.forEach(r => { statusCounts[r.status] = (statusCounts[r.status] || 0) + 1; });
+    const mainStatus = Object.entries(statusCounts).sort((a, b) => b[1] - a[1])[0][0];
+
+    document.getElementById('settleTotalAmount').textContent = formatCurrency(totalAmt) + '원';
+    document.getElementById('settleRate').textContent = rate;
+    document.getElementById('settleTotalCommission').textContent = formatCurrency(totalComm) + '원';
+    document.getElementById('settleStatus').innerHTML = `<span class="status-badge status-${mainStatus}">${getSettlementStatusLabel(mainStatus)}</span>`;
+
+    // Table
+    table.style.display = 'table';
+    tbody.innerHTML = data.map(row => `
+        <tr>
+            <td>${escapeHtml(row.client_name || '-')}</td>
+            <td>${formatCurrency(row.transaction_amount)}원</td>
+            <td>${row.commission_rate ? (Number(row.commission_rate) * 100).toFixed(2) + '%' : '-'}</td>
+            <td>${formatCurrency(row.commission_amount)}원</td>
+            <td><span class="status-badge status-${row.status}">${getSettlementStatusLabel(row.status)}</span></td>
+        </tr>
+    `).join('');
 }
 
 // ─── Pipeline Render ───
