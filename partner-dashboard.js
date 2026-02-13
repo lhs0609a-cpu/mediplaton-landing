@@ -1,56 +1,32 @@
 /**
- * 메디플라톤 파트너 대시보드 JavaScript
- * (localStorage 기반 - Supabase 불필요)
+ * 메디플라톤 파트너 대시보드 JavaScript (v2 - Supabase)
  */
 
+let supabase = null;
+let currentUser = null;
 let currentPartner = null;
-let currentTab = 'home';
+let currentTab = 'register';
+let realtimeChannel = null;
 
-// LocalStorage keys
-const LS_SESSION = 'mp_partner_session';
-const LS_CLIENTS = 'mp_partner_clients';
-const LS_NOTICES = 'mp_partner_notices';
-const LS_SETTLEMENTS = 'mp_partner_settlements';
-
-// DOM
 const loginScreen = document.getElementById('loginScreen');
 const dashboard = document.getElementById('partnerDashboard');
 const loginForm = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
+const loginInfo = document.getElementById('loginInfo');
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 기존 세션 확인
-    const saved = localStorage.getItem(LS_SESSION);
-    if (saved) {
-        try {
-            currentPartner = JSON.parse(saved);
-            showDashboard();
-        } catch (e) {
-            localStorage.removeItem(LS_SESSION);
-        }
+// ─── Init ───
+
+document.addEventListener('DOMContentLoaded', async () => {
+    supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        currentUser = session.user;
+        await checkPartnerStatus();
     }
 
-    initDefaultData();
     setupEventListeners();
 });
-
-// ─── Default Data (최초 1회) ───
-
-function initDefaultData() {
-    if (!localStorage.getItem(LS_NOTICES)) {
-        localStorage.setItem(LS_NOTICES, JSON.stringify([
-            { id: 1, title: '파트너 대시보드 오픈 안내', content: '파트너 대시보드가 오픈되었습니다.\n고객 등록 및 진행 현황을 확인하실 수 있습니다.', is_active: true, created_at: new Date().toISOString() }
-        ]));
-    }
-    if (!localStorage.getItem(LS_CLIENTS)) {
-        localStorage.setItem(LS_CLIENTS, JSON.stringify([]));
-    }
-    if (!localStorage.getItem(LS_SETTLEMENTS)) {
-        localStorage.setItem(LS_SETTLEMENTS, JSON.stringify([]));
-    }
-}
-
-// ─── Event Listeners ───
 
 function setupEventListeners() {
     loginForm.addEventListener('submit', handleLogin);
@@ -64,7 +40,18 @@ function setupEventListeners() {
     document.getElementById('clientPipelineFilter').addEventListener('change', loadClients);
     document.getElementById('clientSearch').addEventListener('input', debounce(loadClients, 300));
     document.getElementById('settlementMonth').addEventListener('change', loadSettlements);
+    document.getElementById('leaderboardMonth').addEventListener('change', loadLeaderboard);
 
+    // Duplicate phone check
+    document.getElementById('clientPhone').addEventListener('blur', checkDuplicatePhone);
+
+    // Notification bell
+    document.getElementById('notifBell').addEventListener('click', () => switchTab('notifications'));
+
+    // Mark all read
+    document.getElementById('markAllReadBtn').addEventListener('click', markAllNotificationsRead);
+
+    // Modal
     document.getElementById('closeModal').addEventListener('click', closeModal);
     document.getElementById('closeModalBtn').addEventListener('click', closeModal);
     document.getElementById('detailModal').addEventListener('click', (e) => {
@@ -74,49 +61,122 @@ function setupEventListeners() {
 
 // ─── Auth ───
 
-function handleLogin(e) {
+async function handleLogin(e) {
     e.preventDefault();
+    loginError.style.display = 'none';
+    loginInfo.style.display = 'none';
+
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
-    const account = PARTNER_ACCOUNTS.find(a => a.email === email && a.password === password);
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
 
-    if (!account) {
-        loginError.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
+        currentUser = data.user;
+        await checkPartnerStatus();
+    } catch (error) {
+        loginError.textContent = error.message || '이메일 또는 비밀번호가 올바르지 않습니다.';
         loginError.style.display = 'block';
-        return;
     }
-
-    currentPartner = {
-        id: account.id,
-        name: account.name,
-        email: account.email,
-        commission_rate: account.commission_rate
-    };
-
-    localStorage.setItem(LS_SESSION, JSON.stringify(currentPartner));
-    loginError.style.display = 'none';
-    showDashboard();
 }
 
-function handleLogout() {
+async function checkPartnerStatus() {
+    try {
+        const { data: partner, error } = await supabase
+            .from('partners')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .single();
+
+        if (error || !partner) {
+            loginError.textContent = '파트너 정보를 찾을 수 없습니다. 파트너 가입을 먼저 진행해주세요.';
+            loginError.style.display = 'block';
+            await supabase.auth.signOut();
+            currentUser = null;
+            return;
+        }
+
+        if (partner.status === 'pending' || partner.status === 'new' || partner.status === 'reviewing') {
+            loginInfo.textContent = '파트너 가입 승인 대기 중입니다. 관리자 승인 후 이용하실 수 있습니다.';
+            loginInfo.style.display = 'block';
+            await supabase.auth.signOut();
+            currentUser = null;
+            return;
+        }
+
+        if (partner.status === 'rejected') {
+            loginError.textContent = '파트너 가입이 반려되었습니다.' + (partner.rejection_reason ? ' 사유: ' + partner.rejection_reason : '');
+            loginError.style.display = 'block';
+            await supabase.auth.signOut();
+            currentUser = null;
+            return;
+        }
+
+        // approved - proceed
+        currentPartner = partner;
+        showDashboard();
+    } catch (error) {
+        loginError.textContent = '로그인 처리 중 오류가 발생했습니다.';
+        loginError.style.display = 'block';
+        await supabase.auth.signOut();
+        currentUser = null;
+    }
+}
+
+async function handleLogout() {
+    if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+    }
+    await supabase.auth.signOut();
+    currentUser = null;
     currentPartner = null;
-    localStorage.removeItem(LS_SESSION);
     dashboard.style.display = 'none';
     loginScreen.style.display = 'flex';
     loginForm.reset();
+    loginError.style.display = 'none';
+    loginInfo.style.display = 'none';
 }
 
 function showDashboard() {
     loginScreen.style.display = 'none';
     dashboard.style.display = 'block';
     document.getElementById('partnerName').textContent = currentPartner.name || '파트너';
-    document.getElementById('partnerEmail').textContent = currentPartner.email;
+    document.getElementById('partnerEmail').textContent = currentPartner.email || currentUser.email;
 
     loadStats();
-    loadNotices();
-    loadPipelineSummary();
-    initSettlementMonths();
+    initMonthSelects();
+    loadUnreadCount();
+    setupRealtime();
+}
+
+// ─── Realtime ───
+
+function setupRealtime() {
+    realtimeChannel = supabase
+        .channel('partner-updates')
+        .on('postgres_changes', {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'consultations',
+            filter: `partner_id=eq.${currentPartner.id}`
+        }, (payload) => {
+            loadStats();
+            if (currentTab === 'clients') loadClients();
+            showToast('고객 상태가 업데이트되었습니다.', 'success');
+        })
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'notifications',
+            filter: `user_id=eq.${currentUser.id}`
+        }, (payload) => {
+            loadUnreadCount();
+            if (currentTab === 'notifications') loadNotifications();
+            showToast(payload.new.title, 'success');
+        })
+        .subscribe();
 }
 
 // ─── Tabs ───
@@ -126,170 +186,89 @@ function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
     });
-    document.getElementById('homeSection').style.display = tab === 'home' ? 'block' : 'none';
+
+    document.getElementById('registerSection').style.display = tab === 'register' ? 'block' : 'none';
     document.getElementById('clientsSection').style.display = tab === 'clients' ? 'block' : 'none';
+    document.getElementById('overviewSection').style.display = tab === 'overview' ? 'block' : 'none';
     document.getElementById('settlementsSection').style.display = tab === 'settlements' ? 'block' : 'none';
+    document.getElementById('notificationsSection').style.display = tab === 'notifications' ? 'block' : 'none';
 
     if (tab === 'clients') loadClients();
+    if (tab === 'overview') { loadOverview(); loadLeaderboard(); }
     if (tab === 'settlements') loadSettlements();
-}
-
-// ─── Data Helpers ───
-
-function getClients() {
-    try { return JSON.parse(localStorage.getItem(LS_CLIENTS) || '[]'); }
-    catch { return []; }
-}
-
-function saveClients(clients) {
-    localStorage.setItem(LS_CLIENTS, JSON.stringify(clients));
-}
-
-function getSettlementsData() {
-    try { return JSON.parse(localStorage.getItem(LS_SETTLEMENTS) || '[]'); }
-    catch { return []; }
-}
-
-function getNoticesData() {
-    try { return JSON.parse(localStorage.getItem(LS_NOTICES) || '[]'); }
-    catch { return []; }
+    if (tab === 'notifications') loadNotifications();
 }
 
 // ─── Stats ───
 
-function loadStats() {
-    const clients = getClients().filter(c => c.partner_id === currentPartner.id);
+async function loadStats() {
+    try {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+        const { data: clients } = await supabase
+            .from('consultations')
+            .select('id, pipeline_status, transaction_amount, created_at')
+            .eq('partner_id', currentPartner.id);
+
+        const all = clients || [];
+
+        const monthClients = all.filter(c => c.created_at >= monthStart).length;
+        const totalAmount = all.reduce((s, r) => s + Number(r.transaction_amount || 0), 0);
+        const rate = Number(currentPartner.commission_rate || 0.015);
+        const commission = Math.round(totalAmount * rate);
+        const inProgress = all.filter(c => ['received', 'reviewing'].includes(c.pipeline_status)).length;
+
+        document.getElementById('statMonthClients').textContent = monthClients;
+        document.getElementById('statTotalAmount').textContent = formatCurrency(totalAmount);
+        document.getElementById('statCommission').textContent = formatCurrency(commission);
+        document.getElementById('statInProgress').textContent = inProgress;
+    } catch (error) {
+        console.error('Stats error:', error);
+    }
+}
+
+// ─── Month Selects ───
+
+function initMonthSelects() {
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    // 이번 달 연결 고객
-    const monthClients = clients.filter(c => new Date(c.created_at) >= monthStart).length;
-
-    // 누적 거래액
-    const totalAmount = clients.reduce((sum, r) => sum + Number(r.transaction_amount || 0), 0);
-
-    // 예상 수수료
-    const rate = Number(currentPartner.commission_rate || 0.015);
-    const commission = Math.round(totalAmount * rate);
-
-    // 진행 중 건수
-    const inProgress = clients.filter(c => ['received', 'reviewing'].includes(c.pipeline_status)).length;
-
-    document.getElementById('statMonthClients').textContent = monthClients;
-    document.getElementById('statTotalAmount').textContent = formatCurrency(totalAmount);
-    document.getElementById('statCommission').textContent = formatCurrency(commission);
-    document.getElementById('statInProgress').textContent = inProgress;
-}
-
-// ─── Pipeline Summary ───
-
-function loadPipelineSummary() {
-    const clients = getClients().filter(c => c.partner_id === currentPartner.id);
-    const counts = { received: 0, reviewing: 0, approved: 0, installed: 0, rejected: 0 };
-    clients.forEach(r => {
-        const s = r.pipeline_status || 'received';
-        if (counts[s] !== undefined) counts[s]++;
-    });
-
-    const labels = { received: '접수', reviewing: '심사 중', approved: '승인', installed: 'PG 설치 완료', rejected: '반려' };
-    const colors = { received: '#1D4ED8', reviewing: '#B45309', approved: '#047857', installed: '#4338CA', rejected: '#B91C1C' };
-
-    document.getElementById('pipelineSummary').innerHTML = Object.entries(labels).map(([key, label]) => `
-        <div class="stat-card">
-            <h3>${label}</h3>
-            <div class="stat-value" style="color: ${colors[key]}">${counts[key]}</div>
-            <div class="stat-sub">건</div>
-        </div>
-    `).join('');
-}
-
-// ─── Notices ───
-
-function loadNotices() {
-    const data = getNoticesData().filter(n => n.is_active);
-    const container = document.getElementById('noticeList');
-
-    if (data.length === 0) {
-        container.innerHTML = '<div class="empty-state"><h3>공지사항이 없습니다</h3></div>';
-        return;
+    let html = '';
+    for (let i = 0; i < 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const val = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const label = `${d.getFullYear()}년 ${d.getMonth() + 1}월`;
+        html += `<option value="${val}">${label}</option>`;
     }
-
-    container.innerHTML = data.map(n => `
-        <div class="notice-item" onclick="toggleNotice(this)">
-            <h4>${escapeHtml(n.title)}</h4>
-            <span class="notice-date">${formatDate(n.created_at)}</span>
-        </div>
-        <div class="notice-content">${escapeHtml(n.content || '').replace(/\n/g, '<br>')}</div>
-    `).join('');
+    document.getElementById('settlementMonth').innerHTML = html;
+    document.getElementById('leaderboardMonth').innerHTML = html;
 }
 
-function toggleNotice(el) {
-    const content = el.nextElementSibling;
-    content.classList.toggle('open');
+// ─── Client Registration ───
+
+async function checkDuplicatePhone() {
+    const phone = document.getElementById('clientPhone').value.trim();
+    const warning = document.getElementById('dupWarning');
+    warning.style.display = 'none';
+
+    if (!phone || phone.length < 10) return;
+
+    try {
+        const { data, error } = await supabase.rpc('check_duplicate_phone', { p_phone: phone });
+        if (error) throw error;
+
+        if (data && data[0] && data[0].is_duplicate) {
+            warning.textContent = `이 연락처로 등록된 건이 ${data[0].existing_count}건 있습니다. 중복 등록에 주의하세요.`;
+            warning.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Duplicate check error:', error);
+    }
 }
 
-// ─── Clients ───
-
-function loadClients() {
-    const loading = document.getElementById('clientLoading');
-    const table = document.getElementById('clientTable');
-    const empty = document.getElementById('clientEmpty');
-    const tbody = document.getElementById('clientTableBody');
-
-    loading.style.display = 'flex';
-    table.style.display = 'none';
-    empty.style.display = 'none';
-
-    let clients = getClients().filter(c => c.partner_id === currentPartner.id);
-
-    // 최신순 정렬
-    clients.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-    // 파이프라인 필터
-    const pipelineFilter = document.getElementById('clientPipelineFilter').value;
-    if (pipelineFilter !== 'all') {
-        clients = clients.filter(c => c.pipeline_status === pipelineFilter);
-    }
-
-    // 검색
-    const search = document.getElementById('clientSearch').value.trim().toLowerCase();
-    if (search) {
-        clients = clients.filter(c =>
-            (c.name || '').toLowerCase().includes(search) ||
-            (c.phone || '').includes(search)
-        );
-    }
-
-    loading.style.display = 'none';
-
-    if (clients.length === 0) {
-        empty.style.display = 'block';
-        return;
-    }
-
-    table.style.display = 'table';
-    tbody.innerHTML = clients.map(row => `
-        <tr>
-            <td>${formatDate(row.created_at)}</td>
-            <td><strong>${escapeHtml(row.name)}</strong></td>
-            <td>${escapeHtml(row.phone)}</td>
-            <td>${getBusinessLabel(row.business)}</td>
-            <td>${renderPipeline(row.pipeline_status)}</td>
-            <td>
-                <button class="action-btn view" onclick="viewClient(${row.id})">상세</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-function handleClientSubmit(e) {
+async function handleClientSubmit(e) {
     e.preventDefault();
 
-    const clients = getClients();
-    const newId = clients.length > 0 ? Math.max(...clients.map(c => c.id)) + 1 : 1;
-
     const payload = {
-        id: newId,
         name: document.getElementById('clientName').value.trim(),
         phone: document.getElementById('clientPhone').value.trim(),
         business: document.getElementById('clientBusiness').value || null,
@@ -299,26 +278,86 @@ function handleClientSubmit(e) {
         message: document.getElementById('clientMessage').value.trim() || null,
         partner_id: currentPartner.id,
         pipeline_status: 'received',
-        status: 'new',
-        transaction_amount: null,
-        created_at: new Date().toISOString()
+        status: 'new'
     };
 
-    clients.push(payload);
-    saveClients(clients);
+    try {
+        const { error } = await supabase.from('consultations').insert([payload]);
+        if (error) throw error;
 
-    showToast('고객이 등록되었습니다.', 'success');
-    e.target.reset();
-    loadClients();
-    loadStats();
-    loadPipelineSummary();
+        showToast('고객이 등록되었습니다.', 'success');
+        e.target.reset();
+        document.getElementById('dupWarning').style.display = 'none';
+        loadStats();
+    } catch (error) {
+        showToast('등록 실패: ' + error.message, 'error');
+    }
 }
 
-function viewClient(id) {
-    const clients = getClients();
-    const data = clients.find(c => c.id === id && c.partner_id === currentPartner.id);
+// ─── Clients List ───
 
-    if (!data) {
+async function loadClients() {
+    const loading = document.getElementById('clientLoading');
+    const table = document.getElementById('clientTable');
+    const empty = document.getElementById('clientEmpty');
+    const tbody = document.getElementById('clientTableBody');
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        let query = supabase
+            .from('consultations')
+            .select('*')
+            .eq('partner_id', currentPartner.id)
+            .order('created_at', { ascending: false });
+
+        const pipelineFilter = document.getElementById('clientPipelineFilter').value;
+        if (pipelineFilter !== 'all') query = query.eq('pipeline_status', pipelineFilter);
+
+        const search = document.getElementById('clientSearch').value.trim();
+        if (search) query = query.or(`name.ilike.%${search}%,phone.ilike.%${search}%`);
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(row => `
+            <tr>
+                <td>${formatDate(row.created_at)}</td>
+                <td><strong>${escapeHtml(row.name)}</strong></td>
+                <td>${escapeHtml(row.phone)}</td>
+                <td>${getBusinessLabel(row.business)}</td>
+                <td>${renderPipeline(row.pipeline_status)}</td>
+                <td>
+                    <button class="action-btn view" onclick="viewClient(${row.id})">상세</button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Load clients error:', error);
+        loading.style.display = 'none';
+        showToast('데이터를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+async function viewClient(id) {
+    const { data, error } = await supabase
+        .from('consultations')
+        .select('*')
+        .eq('id', id)
+        .eq('partner_id', currentPartner.id)
+        .single();
+
+    if (error || !data) {
         showToast('데이터를 불러올 수 없습니다.', 'error');
         return;
     }
@@ -371,21 +410,87 @@ function viewClient(id) {
     document.getElementById('detailModal').classList.add('active');
 }
 
-// ─── Settlements ───
+// ─── Overview (Anonymized Stats) ───
 
-function initSettlementMonths() {
-    const select = document.getElementById('settlementMonth');
-    const now = new Date();
-    select.innerHTML = '';
-    for (let i = 0; i < 12; i++) {
-        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        const val = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-        const label = `${d.getFullYear()}년 ${d.getMonth() + 1}월`;
-        select.innerHTML += `<option value="${val}">${label}</option>`;
+async function loadOverview() {
+    const loading = document.getElementById('overviewLoading');
+    const table = document.getElementById('overviewTable');
+    const empty = document.getElementById('overviewEmpty');
+    const tbody = document.getElementById('overviewTableBody');
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        const { data, error } = await supabase.rpc('get_anonymized_stats');
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(row => `
+            <tr style="${row.is_me ? 'background:var(--primary-light);font-weight:600;' : ''}">
+                <td>파트너 ${escapeHtml(row.partner_label)} ${row.is_me ? '(나)' : ''}</td>
+                <td>${row.total_clients}</td>
+                <td>${row.approved_clients}</td>
+                <td>${row.installed_clients}</td>
+                <td>${formatCurrency(row.total_amount)}원</td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Overview error:', error);
+        loading.style.display = 'none';
+        empty.style.display = 'block';
     }
 }
 
-function loadSettlements() {
+async function loadLeaderboard() {
+    const month = document.getElementById('leaderboardMonth').value;
+    if (!month) return;
+
+    const loading = document.getElementById('lbLoading');
+    const list = document.getElementById('leaderboardList');
+    const empty = document.getElementById('lbEmpty');
+
+    loading.style.display = 'flex';
+    list.innerHTML = '';
+    empty.style.display = 'none';
+
+    try {
+        const { data, error } = await supabase.rpc('get_monthly_leaderboard', { p_month: month });
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        list.innerHTML = data.map(row => `
+            <div class="lb-row ${row.is_me ? 'is-me' : ''}">
+                <div class="lb-rank">${row.rank}</div>
+                <div class="lb-name">파트너 ${escapeHtml(row.partner_label)} ${row.is_me ? '(나)' : ''}</div>
+                <div class="lb-stat">${row.client_count}건</div>
+                <div class="lb-stat">${formatCurrency(row.total_amount)}원</div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Leaderboard error:', error);
+        loading.style.display = 'none';
+        empty.style.display = 'block';
+    }
+}
+
+// ─── Settlements ───
+
+async function loadSettlements() {
     const month = document.getElementById('settlementMonth').value;
     if (!month) return;
 
@@ -398,45 +503,151 @@ function loadSettlements() {
     table.style.display = 'none';
     empty.style.display = 'none';
 
-    const data = getSettlementsData()
-        .filter(s => s.partner_id === currentPartner.id && s.month === month)
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    try {
+        const { data, error } = await supabase
+            .from('settlements')
+            .select('*')
+            .eq('partner_id', currentPartner.id)
+            .eq('month', month)
+            .order('created_at', { ascending: false });
 
-    loading.style.display = 'none';
+        if (error) throw error;
 
-    if (data.length === 0) {
-        empty.style.display = 'block';
-        document.getElementById('settleTotalAmount').textContent = '0원';
-        document.getElementById('settleRate').textContent = '-';
-        document.getElementById('settleTotalCommission').textContent = '0원';
-        document.getElementById('settleStatus').textContent = '-';
-        return;
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            document.getElementById('settleTotalAmount').textContent = '0원';
+            document.getElementById('settleRateDisplay').textContent = '-';
+            document.getElementById('settleTotalCommission').textContent = '0원';
+            document.getElementById('settleStatus').textContent = '-';
+            return;
+        }
+
+        // Summary
+        const totalAmt = data.reduce((s, r) => s + Number(r.transaction_amount || 0), 0);
+        const totalComm = data.reduce((s, r) => s + Number(r.commission_amount || 0), 0);
+        const rate = data[0].commission_rate ? (Number(data[0].commission_rate) * 100).toFixed(2) + '%' : '-';
+        const statusCounts = {};
+        data.forEach(r => { statusCounts[r.status] = (statusCounts[r.status] || 0) + 1; });
+        const mainStatus = Object.entries(statusCounts).sort((a, b) => b[1] - a[1])[0][0];
+
+        document.getElementById('settleTotalAmount').textContent = formatCurrency(totalAmt) + '원';
+        document.getElementById('settleRateDisplay').textContent = rate;
+        document.getElementById('settleTotalCommission').textContent = formatCurrency(totalComm) + '원';
+        document.getElementById('settleStatus').innerHTML = `<span class="status-badge status-${mainStatus}">${getSettlementStatusLabel(mainStatus)}</span>`;
+
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(row => `
+            <tr>
+                <td>${escapeHtml(row.client_name || '-')}</td>
+                <td>${formatCurrency(row.transaction_amount)}원</td>
+                <td>${row.commission_rate ? (Number(row.commission_rate) * 100).toFixed(2) + '%' : '-'}</td>
+                <td>${formatCurrency(row.commission_amount)}원</td>
+                <td><span class="status-badge status-${row.status}">${getSettlementStatusLabel(row.status)}</span></td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Settlements error:', error);
+        loading.style.display = 'none';
+        showToast('정산 데이터를 불러오는데 실패했습니다.', 'error');
     }
+}
 
-    // Summary
-    const totalAmt = data.reduce((s, r) => s + Number(r.transaction_amount || 0), 0);
-    const totalComm = data.reduce((s, r) => s + Number(r.commission_amount || 0), 0);
-    const rate = data[0].commission_rate ? (Number(data[0].commission_rate) * 100).toFixed(2) + '%' : '-';
-    const statusCounts = {};
-    data.forEach(r => { statusCounts[r.status] = (statusCounts[r.status] || 0) + 1; });
-    const mainStatus = Object.entries(statusCounts).sort((a, b) => b[1] - a[1])[0][0];
+// ─── Notifications ───
 
-    document.getElementById('settleTotalAmount').textContent = formatCurrency(totalAmt) + '원';
-    document.getElementById('settleRate').textContent = rate;
-    document.getElementById('settleTotalCommission').textContent = formatCurrency(totalComm) + '원';
-    document.getElementById('settleStatus').innerHTML = `<span class="status-badge status-${mainStatus}">${getSettlementStatusLabel(mainStatus)}</span>`;
+async function loadUnreadCount() {
+    try {
+        const { count, error } = await supabase
+            .from('notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', currentUser.id)
+            .eq('is_read', false);
 
-    // Table
-    table.style.display = 'table';
-    tbody.innerHTML = data.map(row => `
-        <tr>
-            <td>${escapeHtml(row.client_name || '-')}</td>
-            <td>${formatCurrency(row.transaction_amount)}원</td>
-            <td>${row.commission_rate ? (Number(row.commission_rate) * 100).toFixed(2) + '%' : '-'}</td>
-            <td>${formatCurrency(row.commission_amount)}원</td>
-            <td><span class="status-badge status-${row.status}">${getSettlementStatusLabel(row.status)}</span></td>
-        </tr>
-    `).join('');
+        if (error) throw error;
+
+        const badge = document.getElementById('notifBadge');
+        if (count > 0) {
+            badge.textContent = count;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Unread count error:', error);
+    }
+}
+
+async function loadNotifications() {
+    const loading = document.getElementById('notifLoading');
+    const list = document.getElementById('notifList');
+
+    loading.style.display = 'flex';
+    list.innerHTML = '';
+
+    try {
+        const { data, error } = await supabase
+            .from('notifications')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('created_at', { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            list.innerHTML = '<div class="empty-state"><h3>알림이 없습니다</h3></div>';
+            return;
+        }
+
+        list.innerHTML = data.map(n => `
+            <div class="notif-item ${n.is_read ? '' : 'unread'}" onclick="markNotificationRead(${n.id}, this)">
+                <h4>${escapeHtml(n.title)}</h4>
+                <p>${escapeHtml(n.message || '')}</p>
+                <span class="notif-time">${formatDate(n.created_at)}</span>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Notifications error:', error);
+        loading.style.display = 'none';
+        list.innerHTML = '<div class="empty-state"><h3>알림을 불러오지 못했습니다</h3></div>';
+    }
+}
+
+async function markNotificationRead(id, el) {
+    if (el && !el.classList.contains('unread')) return;
+
+    try {
+        await supabase
+            .from('notifications')
+            .update({ is_read: true })
+            .eq('id', id);
+
+        if (el) el.classList.remove('unread');
+        loadUnreadCount();
+    } catch (error) {
+        console.error('Mark read error:', error);
+    }
+}
+
+async function markAllNotificationsRead() {
+    try {
+        const { error } = await supabase
+            .from('notifications')
+            .update({ is_read: true })
+            .eq('user_id', currentUser.id)
+            .eq('is_read', false);
+
+        if (error) throw error;
+
+        document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+        loadUnreadCount();
+        showToast('모든 알림을 읽음 처리했습니다.', 'success');
+    } catch (error) {
+        showToast('처리 실패', 'error');
+    }
 }
 
 // ─── Pipeline Render ───
@@ -498,42 +709,22 @@ function formatCurrency(amount) {
 }
 
 function getBusinessLabel(value) {
-    const labels = {
-        'hospital': '병원/의원', 'dental': '치과', 'oriental': '한의원',
-        'pharmacy': '약국', 'plastic': '성형외과', 'derma': '피부과',
-        'eye': '안과', 'ortho': '정형외과', 'other': '기타 의료'
-    };
+    const labels = { 'hospital': '병원/의원', 'dental': '치과', 'oriental': '한의원', 'pharmacy': '약국', 'plastic': '성형외과', 'derma': '피부과', 'eye': '안과', 'ortho': '정형외과', 'other': '기타 의료' };
     return labels[value] || value || '-';
 }
 
 function getRevenueLabel(value) {
-    const labels = {
-        'under3000': '3천만원 미만', '3000-5000': '3천~5천만원',
-        '5000-1': '5천만원~1억', '1-2': '1억~2억',
-        '2-3': '2억~3억', 'over3': '3억 이상'
-    };
+    const labels = { 'under3000': '3천만원 미만', '3000-5000': '3천~5천만원', '5000-1': '5천만원~1억', '1-2': '1억~2억', '2-3': '2억~3억', 'over3': '3억 이상' };
     return labels[value] || value || '-';
 }
 
 function getRegionLabel(value) {
-    const labels = {
-        'seoul': '서울', 'gyeonggi': '경기', 'incheon': '인천',
-        'busan': '부산', 'daegu': '대구', 'daejeon': '대전',
-        'gwangju': '광주', 'ulsan': '울산', 'sejong': '세종',
-        'gangwon': '강원', 'chungbuk': '충북', 'chungnam': '충남',
-        'jeonbuk': '전북', 'jeonnam': '전남', 'gyeongbuk': '경북',
-        'gyeongnam': '경남', 'jeju': '제주'
-    };
+    const labels = { 'seoul': '서울', 'gyeonggi': '경기', 'incheon': '인천', 'busan': '부산', 'daegu': '대구', 'daejeon': '대전', 'gwangju': '광주', 'ulsan': '울산', 'sejong': '세종', 'gangwon': '강원', 'chungbuk': '충북', 'chungnam': '충남', 'jeonbuk': '전북', 'jeonnam': '전남', 'gyeongbuk': '경북', 'gyeongnam': '경남', 'jeju': '제주' };
     return labels[value] || value || '-';
 }
 
 function getProductLabel(value) {
-    const labels = {
-        'loan': '카드매출 담보대출', 'credit': '신협 데일리론',
-        'kb': 'KB국민카드 특별한도', 'rental': '의료장비 렌탈',
-        'deposit': '임차보증금 담보', 'purchase': '구매자금',
-        'consult': '모름 (상담 필요)'
-    };
+    const labels = { 'loan': '카드매출 담보대출', 'credit': '신협 데일리론', 'kb': 'KB국민카드 특별한도', 'rental': '의료장비 렌탈', 'deposit': '임차보증금 담보', 'purchase': '구매자금', 'consult': '모름 (상담 필요)' };
     return labels[value] || value || '-';
 }
 

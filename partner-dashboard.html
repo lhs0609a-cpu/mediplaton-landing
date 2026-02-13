@@ -36,21 +36,8 @@
         }
 
         /* Login */
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .login-box {
-            background: var(--white);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
-            width: 100%;
-            max-width: 400px;
-        }
+        .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-box { background: var(--white); padding: 40px; border-radius: 16px; box-shadow: var(--shadow-lg); width: 100%; max-width: 400px; }
         .login-logo { text-align: center; margin-bottom: 32px; }
         .login-logo h1 { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
         .login-logo p { color: var(--gray-500); font-size: 14px; }
@@ -58,24 +45,20 @@
         .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--gray-700); }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 12px 16px; border: 1px solid var(--gray-300);
-            border-radius: var(--radius); font-size: 15px; transition: all 0.2s;
-            font-family: inherit;
+            border-radius: var(--radius); font-size: 15px; transition: all 0.2s; font-family: inherit;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light);
         }
         .form-group textarea { resize: vertical; min-height: 80px; }
-        .login-error {
-            background: #FEE2E2; color: var(--danger); padding: 12px;
-            border-radius: var(--radius); margin-bottom: 20px; font-size: 14px; display: none;
-        }
+        .login-error { background: #FEE2E2; color: var(--danger); padding: 12px; border-radius: var(--radius); margin-bottom: 20px; font-size: 14px; display: none; }
+        .login-info { background: #DBEAFE; color: #1D4ED8; padding: 12px; border-radius: var(--radius); margin-bottom: 20px; font-size: 14px; display: none; }
+        .register-link { text-align: center; margin-top: 20px; font-size: 14px; color: var(--gray-500); }
+        .register-link a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .register-link a:hover { text-decoration: underline; }
 
         /* Buttons */
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 12px 24px; border-radius: var(--radius); font-size: 15px;
-            font-weight: 600; cursor: pointer; transition: all 0.2s; border: none;
-        }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: var(--radius); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
         .btn-primary { background: var(--primary); color: var(--white); width: 100%; }
         .btn-primary:hover { background: #0f1f7a; }
         .btn-outline { background: var(--white); border: 1px solid var(--gray-300); color: var(--gray-700); }
@@ -86,20 +69,17 @@
 
         /* Dashboard Layout */
         .dashboard-container { display: none; }
-        .dashboard-header {
-            background: var(--white); padding: 16px 24px;
-            box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100;
-        }
-        .dashboard-header-inner {
-            max-width: 1400px; margin: 0 auto; display: flex;
-            justify-content: space-between; align-items: center;
-        }
+        .dashboard-header { background: var(--white); padding: 16px 24px; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
+        .dashboard-header-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .dashboard-logo { font-size: 20px; font-weight: 700; color: var(--primary); }
-        .dashboard-logo span { font-size: 13px; color: var(--gray-500); font-weight: 400; margin-left: 8px; }
         .dashboard-user { display: flex; align-items: center; gap: 16px; }
         .dashboard-user .partner-name { color: var(--gray-700); font-size: 14px; font-weight: 600; }
         .dashboard-user .partner-email { color: var(--gray-500); font-size: 12px; }
         .dashboard-main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+        /* Notification Bell */
+        .notif-bell { position: relative; cursor: pointer; background: none; border: none; font-size: 20px; color: var(--gray-700); padding: 8px; }
+        .notif-bell .badge { position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; background: var(--danger); color: var(--white); border-radius: 9px; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
 
         /* Stats Cards */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px; }
@@ -111,22 +91,16 @@
         .stat-card.highlight h3, .stat-card.highlight .stat-value, .stat-card.highlight .stat-sub { color: var(--white); }
 
         /* Tabs */
-        .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: var(--white); padding: 8px; border-radius: var(--radius); box-shadow: var(--shadow); }
-        .tab-btn {
-            padding: 12px 24px; border: none; background: transparent; border-radius: 6px;
-            font-size: 14px; font-weight: 500; color: var(--gray-500); cursor: pointer; transition: all 0.2s;
-        }
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: var(--white); padding: 8px; border-radius: var(--radius); box-shadow: var(--shadow); flex-wrap: wrap; }
+        .tab-btn { padding: 12px 24px; border: none; background: transparent; border-radius: 6px; font-size: 14px; font-weight: 500; color: var(--gray-500); cursor: pointer; transition: all 0.2s; }
         .tab-btn:hover { background: var(--gray-100); }
         .tab-btn.active { background: var(--primary); color: var(--white); }
 
         /* Data Section */
         .data-section { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 24px; }
-        .data-header {
-            padding: 20px 24px; border-bottom: 1px solid var(--gray-200);
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
-        }
+        .data-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
         .data-header h2 { font-size: 18px; font-weight: 600; }
-        .data-filters { display: flex; gap: 12px; align-items: center; }
+        .data-filters { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
         .filter-select { padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 14px; background: var(--white); }
         .search-input { padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 14px; width: 200px; }
 
@@ -149,13 +123,8 @@
         .status-paid { background: #D1FAE5; color: #047857; }
 
         /* Pipeline */
-        .pipeline {
-            display: flex; align-items: center; gap: 4px; font-size: 12px; flex-wrap: wrap;
-        }
-        .pipeline-step {
-            padding: 4px 10px; border-radius: 12px; background: var(--gray-100);
-            color: var(--gray-500); white-space: nowrap;
-        }
+        .pipeline { display: flex; align-items: center; gap: 4px; font-size: 12px; flex-wrap: wrap; }
+        .pipeline-step { padding: 4px 10px; border-radius: 12px; background: var(--gray-100); color: var(--gray-500); white-space: nowrap; }
         .pipeline-step.active { background: var(--primary); color: var(--white); font-weight: 600; }
         .pipeline-step.done { background: var(--success); color: var(--white); }
         .pipeline-step.fail { background: var(--danger); color: var(--white); }
@@ -163,16 +132,32 @@
 
         /* Client Form */
         .client-form { padding: 24px; }
-        .client-form h3 { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
         .form-actions { margin-top: 20px; display: flex; gap: 12px; }
 
+        /* Leaderboard */
+        .leaderboard { padding: 0; }
+        .lb-row { display: flex; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--gray-200); gap: 16px; }
+        .lb-row:last-child { border-bottom: none; }
+        .lb-row.is-me { background: var(--primary-light); font-weight: 600; }
+        .lb-rank { width: 40px; font-size: 18px; font-weight: 700; color: var(--gray-500); text-align: center; }
+        .lb-row.is-me .lb-rank { color: var(--primary); }
+        .lb-name { flex: 1; font-size: 14px; }
+        .lb-stat { font-size: 14px; color: var(--gray-700); min-width: 80px; text-align: right; }
+
+        /* Notification List */
+        .notif-list { padding: 0; }
+        .notif-item { padding: 16px 24px; border-bottom: 1px solid var(--gray-200); cursor: pointer; transition: background 0.2s; }
+        .notif-item:hover { background: var(--gray-50); }
+        .notif-item:last-child { border-bottom: none; }
+        .notif-item.unread { background: #FFFBEB; border-left: 3px solid var(--warning); }
+        .notif-item h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+        .notif-item p { font-size: 13px; color: var(--gray-500); margin-bottom: 4px; }
+        .notif-item .notif-time { font-size: 11px; color: var(--gray-500); }
+
         /* Notice List */
         .notice-list { padding: 0; }
-        .notice-item {
-            padding: 16px 24px; border-bottom: 1px solid var(--gray-200);
-            cursor: pointer; transition: background 0.2s;
-        }
+        .notice-item { padding: 16px 24px; border-bottom: 1px solid var(--gray-200); cursor: pointer; transition: background 0.2s; }
         .notice-item:hover { background: var(--gray-50); }
         .notice-item:last-child { border-bottom: none; }
         .notice-item h4 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
@@ -181,23 +166,19 @@
         .notice-content.open { display: block; }
 
         /* Settlement Summary */
-        .settlement-summary {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px; padding: 24px; border-bottom: 1px solid var(--gray-200);
-        }
+        .settlement-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; padding: 24px; border-bottom: 1px solid var(--gray-200); }
         .settlement-summary-item h4 { font-size: 13px; color: var(--gray-500); margin-bottom: 4px; }
         .settlement-summary-item .value { font-size: 20px; font-weight: 700; }
+
+        /* Duplicate Warning */
+        .dup-warning { background: #FEF3C7; color: #92400E; padding: 10px 16px; border-radius: var(--radius); font-size: 13px; margin-top: 8px; display: none; }
 
         /* Empty State */
         .empty-state { padding: 60px 20px; text-align: center; color: var(--gray-500); }
         .empty-state h3 { font-size: 16px; margin-bottom: 8px; }
 
         /* Modal */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5); display: none; align-items: center;
-            justify-content: center; z-index: 1000; padding: 20px;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--white); border-radius: 16px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
         .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
@@ -216,14 +197,15 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* Toast */
-        .toast {
-            position: fixed; bottom: 24px; right: 24px; background: var(--gray-900); color: var(--white);
-            padding: 16px 24px; border-radius: var(--radius); box-shadow: var(--shadow-lg);
-            transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 2000;
-        }
+        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--gray-900); color: var(--white); padding: 16px 24px; border-radius: var(--radius); box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 2000; }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast.success { background: var(--success); }
         .toast.error { background: var(--danger); }
+
+        /* Action button */
+        .action-btn { padding: 6px 10px; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .action-btn.view { background: var(--primary-light); color: var(--primary); }
+        .action-btn:hover { opacity: 0.8; }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -236,14 +218,6 @@
             .dashboard-header-inner { flex-wrap: wrap; gap: 12px; }
             .tabs { flex-wrap: wrap; }
         }
-
-        /* Action button */
-        .action-btn {
-            padding: 6px 10px; border: none; border-radius: 4px;
-            font-size: 12px; cursor: pointer; transition: all 0.2s;
-        }
-        .action-btn.view { background: var(--primary-light); color: var(--primary); }
-        .action-btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -254,9 +228,8 @@
                 <h1>메디플라톤 파트너</h1>
                 <p>파트너 전용 대시보드</p>
             </div>
-            <div class="login-error" id="loginError">
-                이메일 또는 비밀번호가 올바르지 않습니다.
-            </div>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-info" id="loginInfo"></div>
             <form id="loginForm">
                 <div class="form-group">
                     <label for="email">이메일</label>
@@ -268,6 +241,9 @@
                 </div>
                 <button type="submit" class="btn btn-primary">로그인</button>
             </form>
+            <div class="register-link">
+                계정이 없으신가요? <a href="partner-register.html">파트너 가입</a>
+            </div>
         </div>
     </div>
 
@@ -277,6 +253,10 @@
             <div class="dashboard-header-inner">
                 <div class="dashboard-logo">메디플라톤 파트너</div>
                 <div class="dashboard-user">
+                    <button class="notif-bell" id="notifBell" title="알림">
+                        &#128276;
+                        <span class="badge" id="notifBadge" style="display:none;">0</span>
+                    </button>
                     <div>
                         <div class="partner-name" id="partnerName"></div>
                         <div class="partner-email" id="partnerEmail"></div>
@@ -313,39 +293,17 @@
 
             <!-- Tabs -->
             <div class="tabs">
-                <button class="tab-btn active" data-tab="home">홈</button>
-                <button class="tab-btn" data-tab="clients">고객 관리</button>
+                <button class="tab-btn active" data-tab="register">고객 등록</button>
+                <button class="tab-btn" data-tab="clients">내 건 현황</button>
+                <button class="tab-btn" data-tab="overview">전체 현황</button>
                 <button class="tab-btn" data-tab="settlements">정산</button>
+                <button class="tab-btn" data-tab="notifications">알림</button>
             </div>
 
-            <!-- Tab: Home -->
-            <div class="tab-content" id="homeSection">
-                <!-- Pipeline Summary -->
-                <div class="data-section" style="margin-bottom: 24px;">
-                    <div class="data-header">
-                        <h2>파이프라인 현황</h2>
-                    </div>
-                    <div class="stats-grid" style="padding: 24px;" id="pipelineSummary">
-                    </div>
-                </div>
-                <!-- Notices -->
+            <!-- Tab: Register -->
+            <div class="tab-content" id="registerSection">
                 <div class="data-section">
-                    <div class="data-header">
-                        <h2>공지사항</h2>
-                    </div>
-                    <div id="noticeList" class="notice-list">
-                        <div class="empty-state"><h3>공지사항이 없습니다</h3></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab: Clients -->
-            <div class="tab-content" id="clientsSection" style="display: none;">
-                <!-- New Client Form -->
-                <div class="data-section" style="margin-bottom: 24px;">
-                    <div class="data-header">
-                        <h2>신규 고객 등록</h2>
-                    </div>
+                    <div class="data-header"><h2>신규 고객 등록</h2></div>
                     <div class="client-form">
                         <form id="clientForm">
                             <div class="form-grid">
@@ -356,6 +314,7 @@
                                 <div class="form-group">
                                     <label for="clientPhone">연락처 *</label>
                                     <input type="tel" id="clientPhone" placeholder="010-0000-0000" required>
+                                    <div class="dup-warning" id="dupWarning"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="clientBusiness">업종</label>
@@ -432,11 +391,13 @@
                         </form>
                     </div>
                 </div>
+            </div>
 
-                <!-- Client List -->
+            <!-- Tab: Clients -->
+            <div class="tab-content" id="clientsSection" style="display: none;">
                 <div class="data-section">
                     <div class="data-header">
-                        <h2>내 고객 목록</h2>
+                        <h2>내 건 현황</h2>
                         <div class="data-filters">
                             <select class="filter-select" id="clientPipelineFilter">
                                 <option value="all">전체 상태</option>
@@ -449,9 +410,7 @@
                             <input type="text" class="search-input" placeholder="이름/연락처 검색..." id="clientSearch">
                         </div>
                     </div>
-                    <div class="loading" id="clientLoading">
-                        <div class="spinner"></div>
-                    </div>
+                    <div class="loading" id="clientLoading"><div class="spinner"></div></div>
                     <table class="data-table" id="clientTable" style="display: none;">
                         <thead>
                             <tr>
@@ -467,7 +426,42 @@
                     </table>
                     <div class="empty-state" id="clientEmpty" style="display: none;">
                         <h3>등록된 고객이 없습니다</h3>
-                        <p>위 폼에서 신규 고객을 등록해보세요.</p>
+                        <p>고객 등록 탭에서 신규 고객을 등록해보세요.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Overview -->
+            <div class="tab-content" id="overviewSection" style="display: none;">
+                <div class="data-section" style="margin-bottom: 24px;">
+                    <div class="data-header"><h2>전체 파트너 통계 (익명)</h2></div>
+                    <div class="loading" id="overviewLoading"><div class="spinner"></div></div>
+                    <table class="data-table" id="overviewTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>파트너</th>
+                                <th>총 등록</th>
+                                <th>승인</th>
+                                <th>설치완료</th>
+                                <th>누적 거래액</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overviewTableBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="overviewEmpty" style="display: none;">
+                        <h3>통계 데이터가 없습니다</h3>
+                    </div>
+                </div>
+
+                <div class="data-section">
+                    <div class="data-header">
+                        <h2>월간 순위</h2>
+                        <select class="filter-select" id="leaderboardMonth"></select>
+                    </div>
+                    <div class="loading" id="lbLoading" style="display:none;"><div class="spinner"></div></div>
+                    <div class="leaderboard" id="leaderboardList"></div>
+                    <div class="empty-state" id="lbEmpty" style="display: none;">
+                        <h3>순위 데이터가 없습니다</h3>
                     </div>
                 </div>
             </div>
@@ -488,7 +482,7 @@
                         </div>
                         <div class="settlement-summary-item">
                             <h4>수수료율</h4>
-                            <div class="value" id="settleRate">-</div>
+                            <div class="value" id="settleRateDisplay">-</div>
                         </div>
                         <div class="settlement-summary-item">
                             <h4>총 수수료</h4>
@@ -499,9 +493,7 @@
                             <div class="value" id="settleStatus">-</div>
                         </div>
                     </div>
-                    <div class="loading" id="settlementLoading" style="display: none;">
-                        <div class="spinner"></div>
-                    </div>
+                    <div class="loading" id="settlementLoading" style="display: none;"><div class="spinner"></div></div>
                     <table class="data-table" id="settlementTable" style="display: none;">
                         <thead>
                             <tr>
@@ -517,6 +509,20 @@
                     <div class="empty-state" id="settlementEmpty" style="display: none;">
                         <h3>정산 내역이 없습니다</h3>
                         <p>해당 월의 정산 데이터가 아직 등록되지 않았습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Notifications -->
+            <div class="tab-content" id="notificationsSection" style="display: none;">
+                <div class="data-section">
+                    <div class="data-header">
+                        <h2>알림</h2>
+                        <button class="btn btn-outline btn-sm" id="markAllReadBtn">모두 읽음</button>
+                    </div>
+                    <div class="loading" id="notifLoading" style="display:none;"><div class="spinner"></div></div>
+                    <div class="notif-list" id="notifList">
+                        <div class="empty-state"><h3>알림이 없습니다</h3></div>
                     </div>
                 </div>
             </div>
@@ -540,6 +546,8 @@
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="partner-dashboard.js"></script>
 </body>
