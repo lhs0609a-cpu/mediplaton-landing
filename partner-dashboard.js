@@ -90,10 +90,8 @@ async function checkPartnerStatus() {
             .single();
 
         if (error || !partner) {
-            loginError.textContent = '파트너 정보를 찾을 수 없습니다. 파트너 가입을 먼저 진행해주세요.';
-            loginError.style.display = 'block';
-            await sb.auth.signOut();
-            currentUser = null;
+            // Admin user (no partner record) - redirect to admin page
+            window.location.href = 'admin.html';
             return;
         }
 
