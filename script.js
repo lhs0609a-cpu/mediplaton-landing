@@ -1176,3 +1176,329 @@ document.addEventListener('keydown', function(e) {
         }
     });
 })();
+
+// ===== Marketing Page: Calculator =====
+function initMarketingCalculator() {
+    const pgCheck = document.getElementById('mktPg');
+    const loanCheck = document.getElementById('mktLoan');
+    const brokerCheck = document.getElementById('mktBroker');
+    const loanToggle = document.getElementById('mktLoanToggle');
+    const brokerToggle = document.getElementById('mktBrokerToggle');
+
+    if (!pgCheck) return; // Not on marketing page
+
+    const sizeRadios = document.querySelectorAll('input[name="mktSize"]');
+    const tierBadge = document.getElementById('mktTierBadge');
+    const tierDesc = document.getElementById('mktTierDesc');
+    const savingsValue = document.getElementById('mktSavingsValue');
+    const savingsNote = document.getElementById('mktSavingsNote');
+    const benefitsList = document.getElementById('mktBenefitsList');
+
+    function calculate() {
+        const hasLoan = loanCheck.checked;
+        const hasBroker = brokerCheck.checked;
+        const isLarge = document.querySelector('input[name="mktSize"]:checked')?.value === 'large';
+
+        // Toggle active states
+        loanToggle.classList.toggle('active', hasLoan);
+        brokerToggle.classList.toggle('active', hasBroker);
+
+        // Determine tier
+        let tier, tierName, tierDescText, savings, savingsNoteText;
+
+        if (hasLoan && hasBroker && isLarge) {
+            tier = 'platinum';
+            tierName = 'Platinum';
+            tierDescText = 'PG + 대출 + 중개 + 30평 이상';
+            savings = '~220만원/월';
+            savingsNoteText = '(전체 마케팅 무료)';
+        } else if (hasLoan && hasBroker) {
+            tier = 'gold';
+            tierName = 'Gold';
+            tierDescText = 'PG + 대출 + 중개';
+            savings = '~140만원/월';
+            savingsNoteText = '(홈페이지+블로그+플레이스)';
+        } else if (hasLoan) {
+            tier = 'silver';
+            tierName = 'Silver';
+            tierDescText = 'PG + 대출 이용';
+            savings = '~100만원/월';
+            savingsNoteText = '(홈페이지+블로그 운영)';
+        } else {
+            tier = 'basic';
+            tierName = 'Basic';
+            tierDescText = 'PG 단말기 교체 혜택';
+            savings = '~50만원';
+            savingsNoteText = '(홈페이지 제작비 1회)';
+        }
+
+        // Update tier badge
+        tierBadge.className = 'mkt-tier-badge ' + tier;
+        tierBadge.textContent = tierName;
+        tierDesc.textContent = tierDescText;
+
+        // Animate savings value
+        savingsValue.textContent = savings;
+        savingsNote.textContent = savingsNoteText;
+
+        // Update benefits list
+        const benefits = benefitsList.querySelectorAll('.mkt-benefit-item');
+        benefits.forEach(item => {
+            const benefit = item.dataset.benefit;
+            let isActive = false;
+
+            if (benefit === 'homepage') isActive = true; // Always active with PG
+            if (benefit === 'blog') isActive = hasLoan;
+            if (benefit === 'place') isActive = hasLoan && hasBroker;
+            if (benefit === 'cafe') isActive = hasLoan && hasBroker && isLarge;
+            if (benefit === 'sns') isActive = hasLoan && hasBroker && isLarge;
+
+            if (isActive) {
+                item.classList.add('active');
+                item.classList.remove('locked');
+                // Replace lock icon with check icon
+                const lockEl = item.querySelector('.mkt-benefit-lock');
+                if (lockEl) {
+                    lockEl.outerHTML = '<span class="mkt-benefit-check"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>';
+                }
+                const unlockEl = item.querySelector('.mkt-benefit-unlock');
+                if (unlockEl) unlockEl.style.display = 'none';
+            } else {
+                item.classList.remove('active');
+                item.classList.add('locked');
+                // Replace check icon with lock icon
+                const checkEl = item.querySelector('.mkt-benefit-check');
+                if (checkEl && benefit !== 'homepage') {
+                    checkEl.outerHTML = '<span class="mkt-benefit-lock"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>';
+                }
+                const unlockEl = item.querySelector('.mkt-benefit-unlock');
+                if (unlockEl) unlockEl.style.display = '';
+            }
+        });
+
+        // Pulse animation on savings
+        savingsValue.style.transform = 'scale(1.05)';
+        setTimeout(() => { savingsValue.style.transform = 'scale(1)'; }, 200);
+    }
+
+    // Event listeners
+    loanCheck.addEventListener('change', calculate);
+    brokerCheck.addEventListener('change', calculate);
+    sizeRadios.forEach(radio => radio.addEventListener('change', calculate));
+
+    // Initial calculation
+    calculate();
+}
+
+// ===== Marketing Page: Form =====
+function initMarketingForm() {
+    const form = document.getElementById('mktApplyForm');
+    if (!form) return;
+
+    // Phone number formatting
+    const phoneInput = document.getElementById('mktPhone');
+    phoneInput?.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+        if (value.length > 7) {
+            value = value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+        } else if (value.length > 3) {
+            value = value.replace(/(\d{3})(\d{0,4})/, '$1-$2');
+        }
+        e.target.value = value;
+    });
+
+    // Privacy modal
+    const privacyLink = document.getElementById('mktPrivacyLink');
+    const privacyModal = document.getElementById('privacyModal');
+    const closeModal = document.getElementById('closeModal');
+    const agreeBtn = document.getElementById('agreeBtn');
+    const agreeCheckbox = document.getElementById('mktAgree');
+
+    privacyLink?.addEventListener('click', (e) => {
+        e.preventDefault();
+        privacyModal?.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    closeModal?.addEventListener('click', () => {
+        privacyModal?.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    agreeBtn?.addEventListener('click', () => {
+        if (agreeCheckbox) agreeCheckbox.checked = true;
+        privacyModal?.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    privacyModal?.addEventListener('click', (e) => {
+        if (e.target === privacyModal) {
+            privacyModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Success modal
+    const successModal = document.getElementById('successModal');
+    const closeSuccessModal = document.getElementById('closeSuccessModal');
+
+    closeSuccessModal?.addEventListener('click', () => {
+        successModal?.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    successModal?.addEventListener('click', (e) => {
+        if (e.target === successModal) {
+            successModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        // Collect multiple interests
+        const interests = formData.getAll('interests');
+
+        // Validate required fields
+        const requiredFields = [
+            { id: 'mktName', name: 'name', label: '성함' },
+            { id: 'mktPhone', name: 'phone', label: '연락처' },
+            { id: 'mktBusiness', name: 'business_type', label: '업종' },
+            { id: 'mktSize', name: 'clinic_size', label: '사업장 평수' }
+        ];
+
+        let isValid = true;
+        let firstErrorField = null;
+
+        requiredFields.forEach(field => {
+            const input = document.getElementById(field.id);
+            const errorSpan = document.getElementById(field.id + '-error');
+            if (!data[field.name]) {
+                isValid = false;
+                input?.classList.add('error');
+                if (errorSpan) errorSpan.textContent = field.label + '을(를) 입력해주세요';
+                if (!firstErrorField) firstErrorField = input;
+                setTimeout(() => {
+                    input?.classList.remove('error');
+                    if (errorSpan) errorSpan.textContent = '';
+                }, 3000);
+            } else {
+                if (errorSpan) errorSpan.textContent = '';
+            }
+        });
+
+        // Check agreement
+        if (!agreeCheckbox?.checked) {
+            isValid = false;
+            const agreeLabel = document.querySelector('.mkt-agree-label');
+            if (agreeLabel) agreeLabel.style.color = 'var(--danger)';
+            setTimeout(() => {
+                if (agreeLabel) agreeLabel.style.color = '';
+            }, 3000);
+        }
+
+        if (!isValid) {
+            firstErrorField?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstErrorField?.focus();
+            return;
+        }
+
+        // Submit
+        const submitBtn = form.querySelector('.mkt-submit-btn');
+        const originalHTML = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span> 신청 중...';
+        submitBtn.disabled = true;
+
+        try {
+            // Supabase insert
+            if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+                try {
+                    const sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                    await sb.from('marketing_inquiries').insert({
+                        name: data.name,
+                        phone: data.phone,
+                        business_type: data.business_type,
+                        clinic_size: data.clinic_size,
+                        interests: interests
+                    });
+                    console.log('✅ Supabase에 마케팅 신청 데이터 저장 완료');
+                } catch (dbError) {
+                    console.error('Supabase 저장 오류:', dbError);
+                    saveToLocalBackup('marketing_inquiries', {
+                        name: data.name,
+                        phone: data.phone,
+                        business_type: data.business_type,
+                        clinic_size: data.clinic_size,
+                        interests: interests
+                    });
+                }
+            } else {
+                console.log('=== 마케팅 신청 데이터 ===');
+                console.table({ ...data, interests: interests.join(', ') });
+                saveToLocalBackup('marketing_inquiries', {
+                    name: data.name,
+                    phone: data.phone,
+                    business_type: data.business_type,
+                    clinic_size: data.clinic_size,
+                    interests: interests
+                });
+            }
+
+            // Google Sheets
+            if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && typeof isGoogleSheetsConfigured === 'function' && isGoogleSheetsConfigured()) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+                    await fetch(GOOGLE_SHEETS_CONFIG.webAppUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: controller.signal,
+                        body: JSON.stringify({
+                            type: 'marketing',
+                            name: data.name,
+                            phone: data.phone,
+                            business_type: data.business_type,
+                            clinic_size: data.clinic_size,
+                            interests: interests.join(', ')
+                        })
+                    });
+                    clearTimeout(timeoutId);
+                } catch (sheetError) {
+                    console.error('Google Sheets 전송 오류:', sheetError);
+                }
+            }
+
+            // Show success
+            const successName = document.getElementById('successName');
+            const successPhone = document.getElementById('successPhone');
+            if (successName) successName.textContent = data.name;
+            if (successPhone) successPhone.textContent = data.phone;
+
+            successModal?.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            form.reset();
+
+        } catch (error) {
+            console.error('폼 제출 오류:', error);
+            alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도하시거나,\n전화(0507-1375-2717)로 문의해 주세요.');
+        } finally {
+            submitBtn.innerHTML = originalHTML;
+            submitBtn.disabled = false;
+        }
+    });
+}
+
+// ===== Marketing Page Init =====
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.body.dataset.page === 'marketing') {
+        initMarketingCalculator();
+        initMarketingForm();
+    }
+});
