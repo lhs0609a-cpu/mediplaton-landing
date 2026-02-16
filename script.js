@@ -1210,25 +1210,25 @@ function initMarketingCalculator() {
             tier = 'platinum';
             tierName = 'Platinum';
             tierDescText = 'PG + 대출 + 중개 + 30평 이상';
-            savings = '~220만원/월';
+            savings = '~600만원/월';
             savingsNoteText = '(전체 마케팅 무료)';
         } else if (hasLoan && hasBroker) {
             tier = 'gold';
             tierName = 'Gold';
             tierDescText = 'PG + 대출 + 중개';
-            savings = '~140만원/월';
+            savings = '~350만원/월';
             savingsNoteText = '(홈페이지+블로그+플레이스)';
         } else if (hasLoan) {
             tier = 'silver';
             tierName = 'Silver';
             tierDescText = 'PG + 대출 이용';
-            savings = '~100만원/월';
+            savings = '~250만원/월';
             savingsNoteText = '(홈페이지+블로그 운영)';
         } else {
             tier = 'basic';
             tierName = 'Basic';
             tierDescText = 'PG 단말기 교체 혜택';
-            savings = '~50만원';
+            savings = '~400만원';
             savingsNoteText = '(홈페이지 제작비 1회)';
         }
 
