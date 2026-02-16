@@ -10153,11 +10153,12 @@ html {
 
 /* ============================================================
    MARKETING PAGE STYLES (mkt- prefix)
+   Brand Blue (#1428A0~#2962FF) + Gold (#F59E0B) accent
    ============================================================ */
 
 /* === Navigation: Marketing Link === */
 .nav-item.highlight .nav-link.marketing-link {
-    background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     color: var(--white);
     font-weight: 700;
     border-radius: 8px;
@@ -10165,14 +10166,14 @@ html {
 }
 
 .nav-item.highlight .nav-link.marketing-link:hover {
-    background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 12px rgba(20, 40, 160, 0.4);
     color: var(--white);
 }
 
 .mobile-nav-group.partner-highlight .marketing-link {
-    background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     color: var(--white) !important;
     font-weight: 700;
     border-radius: 8px;
@@ -10186,15 +10187,15 @@ html {
     position: relative;
     padding: 140px 0 80px;
     overflow: hidden;
-    background: linear-gradient(135deg, #064E3B 0%, #065F46 30%, #047857 60%, #059669 100%);
+    background: linear-gradient(135deg, #0A0F2E 0%, #0D1B6F 25%, var(--primary) 55%, var(--accent) 100%);
     color: var(--white);
 }
 
 .mkt-hero-bg {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 30% 20%, rgba(52, 211, 153, 0.2) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+    background: radial-gradient(ellipse at 30% 20%, rgba(41, 98, 255, 0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(68, 138, 255, 0.15) 0%, transparent 50%);
     pointer-events: none;
 }
 
@@ -10220,14 +10221,14 @@ html {
     border-radius: var(--radius-full);
     font-size: 13px;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .mkt-badge-pill.accent {
-    background: rgba(251, 191, 36, 0.25);
-    border-color: rgba(251, 191, 36, 0.4);
+    background: rgba(245, 158, 11, 0.25);
+    border-color: rgba(245, 158, 11, 0.5);
     color: #FDE68A;
 }
 
@@ -10240,7 +10241,7 @@ html {
 }
 
 .mkt-highlight {
-    background: linear-gradient(135deg, #34D399, #A7F3D0);
+    background: linear-gradient(135deg, #FFB300, #FCD34D);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -10266,8 +10267,8 @@ html {
     border-radius: var(--radius-full);
     font-size: 13px;
     font-weight: 500;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .mkt-hero-actions {
@@ -10284,7 +10285,7 @@ html {
     gap: 8px;
     padding: 16px 32px;
     background: var(--white);
-    color: #065F46;
+    color: var(--primary);
     font-size: 16px;
     font-weight: 700;
     border-radius: var(--radius);
@@ -10294,7 +10295,7 @@ html {
 
 .mkt-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .mkt-btn-outline {
@@ -10307,14 +10308,14 @@ html {
     font-size: 16px;
     font-weight: 600;
     border-radius: var(--radius);
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.35);
     text-decoration: none;
     transition: var(--transition);
 }
 
 .mkt-btn-outline:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.55);
 }
 
 .mkt-hero-trust {
@@ -10402,21 +10403,21 @@ html {
     text-align: center;
     margin-top: 40px;
     padding: 24px;
-    background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+    background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
     border-radius: var(--radius-lg);
-    border: 1px solid #A7F3D0;
+    border: 1px solid var(--primary-100);
 }
 
 .mkt-pain-solution p {
     font-size: 18px;
     font-weight: 600;
-    color: #065F46;
+    color: var(--primary-dark);
 }
 
 .mkt-free-text {
     font-size: 28px;
     font-weight: 900;
-    color: #059669;
+    color: #D97706;
 }
 
 /* === Loan Section === */
@@ -10435,9 +10436,10 @@ html {
 }
 
 .mkt-loan-highlights {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
 }
 
 .mkt-loan-item {
@@ -10464,20 +10466,13 @@ html {
 }
 
 .mkt-loan-free strong {
-    color: #059669;
+    color: #D97706;
 }
 
 .mkt-loan-divider {
     width: 1px;
     background: var(--border);
     align-self: stretch;
-}
-
-.mkt-loan-highlights {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 12px 0;
 }
 
 .mkt-loan-notice {
@@ -10514,7 +10509,7 @@ html {
 /* === Calculator Section === */
 .mkt-calculator {
     padding: var(--section-padding) 0;
-    background: linear-gradient(180deg, #F0FDF4 0%, #ECFDF5 50%, var(--white) 100%);
+    background: linear-gradient(180deg, #EEF2FF 0%, #E8EAF6 50%, var(--white) 100%);
 }
 
 .mkt-calc-layout {
@@ -10549,7 +10544,7 @@ html {
 }
 
 .mkt-calc-panel-title svg {
-    color: #059669;
+    color: var(--accent);
 }
 
 /* Toggle switches */
@@ -10570,17 +10565,17 @@ html {
 }
 
 .mkt-calc-toggle:hover {
-    border-color: #A7F3D0;
+    border-color: var(--primary-100);
 }
 
 .mkt-calc-toggle.active {
-    border-color: #10B981;
-    background: #F0FDF4;
+    border-color: var(--accent);
+    background: #EEF2FF;
 }
 
 .mkt-calc-toggle[data-required] {
-    border-color: #10B981;
-    background: #ECFDF5;
+    border-color: var(--accent);
+    background: #EEF2FF;
     cursor: default;
     opacity: 0.8;
 }
@@ -10614,7 +10609,7 @@ html {
 
 .mkt-calc-toggle.active .mkt-toggle-slider,
 .mkt-calc-toggle[data-required] .mkt-toggle-slider {
-    background: #10B981;
+    background: var(--accent);
 }
 
 .mkt-calc-toggle.active .mkt-toggle-slider::after,
@@ -10674,14 +10669,14 @@ html {
 }
 
 .mkt-calc-radio input:checked + span {
-    border-color: #10B981;
-    background: #F0FDF4;
-    color: #065F46;
+    border-color: var(--accent);
+    background: #EEF2FF;
+    color: var(--primary-dark);
 }
 
 /* Result panel */
 .mkt-calc-result {
-    background: linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%);
+    background: linear-gradient(180deg, #FFFFFF 0%, #EEF2FF 100%);
 }
 
 /* Tier badge */
@@ -10734,7 +10729,7 @@ html {
     background: var(--white);
     border-radius: var(--radius-lg);
     margin-bottom: 24px;
-    border: 1px solid #A7F3D0;
+    border: 1px solid var(--primary-100);
 }
 
 .mkt-savings-label {
@@ -10748,7 +10743,7 @@ html {
     display: block;
     font-size: 36px;
     font-weight: 900;
-    color: #059669;
+    color: #D97706;
     line-height: 1.2;
     transition: var(--transition);
 }
@@ -10779,8 +10774,8 @@ html {
 }
 
 .mkt-benefit-item.active {
-    background: #F0FDF4;
-    border: 1px solid #A7F3D0;
+    background: #EEF2FF;
+    border: 1px solid var(--primary-100);
 }
 
 .mkt-benefit-item.locked {
@@ -10793,7 +10788,7 @@ html {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: #10B981;
+    background: var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -10833,7 +10828,7 @@ html {
 .mkt-benefit-val {
     font-size: 14px;
     font-weight: 700;
-    color: #059669;
+    color: var(--primary);
     white-space: nowrap;
 }
 
@@ -10856,7 +10851,7 @@ html {
     width: 100%;
     padding: 16px;
     text-align: center;
-    background: linear-gradient(135deg, #059669, #10B981);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     color: var(--white);
     font-size: 16px;
     font-weight: 700;
@@ -10867,7 +10862,7 @@ html {
 
 .mkt-calc-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3);
+    box-shadow: 0 8px 24px rgba(20, 40, 160, 0.3);
 }
 
 /* === Comparison Section === */
@@ -10906,7 +10901,7 @@ html {
 }
 
 .mkt-comp-table thead th.mkt-comp-highlight {
-    background: #059669;
+    background: var(--primary);
 }
 
 .mkt-comp-table tbody td {
@@ -10915,7 +10910,7 @@ html {
 }
 
 .mkt-comp-table tbody td.mkt-comp-highlight {
-    background: #F0FDF4;
+    background: #EEF2FF;
 }
 
 .mkt-comp-table tbody td:first-child {
@@ -10929,14 +10924,14 @@ html {
 }
 
 .mkt-comp-table tbody tr.mkt-comp-total td.mkt-comp-highlight {
-    background: #ECFDF5;
+    background: #E0E7FF;
 }
 
 .mkt-free-badge {
     display: inline-block;
     padding: 3px 10px;
-    background: linear-gradient(135deg, #059669, #10B981);
-    color: var(--white);
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    color: var(--gray-900);
     border-radius: var(--radius-full);
     font-size: 13px;
     font-weight: 700;
@@ -10979,7 +10974,7 @@ html {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #059669, #10B981);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     color: var(--white);
     font-size: 22px;
     font-weight: 800;
@@ -10987,7 +10982,7 @@ html {
     align-items: center;
     justify-content: center;
     margin: 0 auto 16px;
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    box-shadow: 0 4px 12px rgba(20, 40, 160, 0.3);
 }
 
 .mkt-process-step h3 {
@@ -11012,13 +11007,13 @@ html {
 /* === Trust Section === */
 .mkt-trust-section {
     padding: var(--section-padding) 0;
-    background: linear-gradient(180deg, #064E3B 0%, #065F46 100%);
+    background: linear-gradient(180deg, #0A0F2E 0%, var(--primary-dark) 100%);
     color: var(--white);
 }
 
 .mkt-trust-section .section-badge {
-    background: rgba(255, 255, 255, 0.15);
-    color: #A7F3D0;
+    background: rgba(255, 255, 255, 0.12);
+    color: #93B4FF;
 }
 
 .mkt-trust-section .section-title {
@@ -11035,16 +11030,16 @@ html {
 .mkt-trust-card {
     text-align: center;
     padding: 32px 16px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(8px);
 }
 
 .mkt-trust-number {
     font-size: 48px;
     font-weight: 900;
-    color: #34D399;
+    color: #93B4FF;
     line-height: 1;
     display: inline;
 }
@@ -11052,12 +11047,12 @@ html {
 .mkt-trust-unit {
     font-size: 24px;
     font-weight: 700;
-    color: #34D399;
+    color: #93B4FF;
 }
 
 .mkt-trust-card p {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
     margin-top: 8px;
 }
 
@@ -11065,13 +11060,13 @@ html {
     text-align: center;
     margin-top: 48px;
     padding-top: 32px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .mkt-trust-logos > span {
     display: block;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.4);
     margin-bottom: 16px;
 }
 
@@ -11085,13 +11080,13 @@ html {
 
 .mkt-trust-logo-row img {
     height: 32px;
-    opacity: 0.6;
+    opacity: 0.5;
     filter: brightness(0) invert(1);
     transition: var(--transition);
 }
 
 .mkt-trust-logo-row img:hover {
-    opacity: 1;
+    opacity: 0.9;
 }
 
 /* === FAQ Section === */
@@ -11108,7 +11103,7 @@ html {
 /* === Apply Section === */
 .mkt-apply {
     padding: var(--section-padding) 0;
-    background: linear-gradient(180deg, var(--white), #F0FDF4);
+    background: linear-gradient(180deg, var(--white), #EEF2FF);
 }
 
 .mkt-apply-form {
@@ -11168,8 +11163,8 @@ html {
 .mkt-form-group input:focus,
 .mkt-form-group select:focus {
     outline: none;
-    border-color: #10B981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.1);
 }
 
 .mkt-form-group input.error,
@@ -11206,7 +11201,7 @@ html {
 }
 
 .mkt-check-label:hover {
-    border-color: #A7F3D0;
+    border-color: var(--primary-100);
 }
 
 .mkt-check-label input[type="checkbox"] {
@@ -11214,9 +11209,9 @@ html {
 }
 
 .mkt-check-label:has(input:checked) {
-    border-color: #10B981;
-    background: #F0FDF4;
-    color: #065F46;
+    border-color: var(--accent);
+    background: #EEF2FF;
+    color: var(--primary-dark);
     font-weight: 600;
 }
 
@@ -11237,11 +11232,11 @@ html {
 .mkt-agree-label input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    accent-color: #10B981;
+    accent-color: var(--accent);
 }
 
 .mkt-agree-label a {
-    color: #059669;
+    color: var(--accent);
     text-decoration: underline;
     font-weight: 600;
 }
@@ -11254,7 +11249,7 @@ html {
     gap: 8px;
     width: 100%;
     padding: 18px;
-    background: linear-gradient(135deg, #059669, #10B981);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     color: var(--white);
     font-size: 18px;
     font-weight: 700;
@@ -11267,7 +11262,7 @@ html {
 
 .mkt-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3);
+    box-shadow: 0 8px 24px rgba(20, 40, 160, 0.3);
 }
 
 .mkt-submit-btn:disabled {
