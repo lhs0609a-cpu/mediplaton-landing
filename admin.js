@@ -287,6 +287,7 @@ async function loadConsultations() {
         tbody.innerHTML = data.map(row => `
             <tr>
                 <td>${formatDate(row.created_at)}</td>
+                <td>${getSourceBadge(row.source_page || 'consultation')}</td>
                 <td><strong>${escapeHtml(row.name)}</strong></td>
                 <td>${escapeHtml(row.phone)}</td>
                 <td>${getBusinessLabel(row.business)}</td>
