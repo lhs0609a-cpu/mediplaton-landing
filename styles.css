@@ -513,22 +513,23 @@ section.hero .hero-trust span {
 
 /* 파트너 모집 링크 강조 스타일 */
 .nav-item.highlight .nav-link.partner-link {
-    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
-    color: var(--gray-900);
+    background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%);
+    color: var(--white);
     font-weight: 700;
     border-radius: 8px;
     padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .nav-item.highlight .nav-link.partner-link:hover {
-    background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+    background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
 }
 
 .mobile-nav-group.partner-highlight .partner-link {
-    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
-    color: var(--gray-900) !important;
+    background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%);
+    color: var(--white) !important;
     font-weight: 700;
     border-radius: 8px;
     padding: 12px 16px;
@@ -10200,12 +10201,12 @@ html {
 /* === Hero Section === */
 .mkt-hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 90vh;
     display: flex;
     align-items: center;
     padding: 120px 0 60px;
     overflow: hidden;
-    background: linear-gradient(135deg, #0A0F2E 0%, #0D1B6F 25%, var(--primary) 55%, var(--accent) 100%);
+    background: linear-gradient(135deg, #0A0F2E 0%, #0D1B6F 30%, var(--primary) 60%, #1E40AF 100%);
     color: var(--white);
 }
 
@@ -10239,19 +10240,21 @@ html {
 .mkt-badge-pill {
     display: inline-flex;
     align-items: center;
-    padding: 6px 16px;
+    padding: 8px 18px;
     border-radius: var(--radius-full);
     font-size: 13px;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
 }
 
 .mkt-badge-pill.accent {
-    background: rgba(245, 158, 11, 0.25);
-    border-color: rgba(245, 158, 11, 0.5);
-    color: #FDE68A;
+    background: rgba(255, 213, 79, 0.3);
+    border-color: rgba(255, 213, 79, 0.6);
+    color: #FFE082;
+    font-weight: 700;
 }
 
 .mkt-hero-title {
@@ -10260,21 +10263,28 @@ html {
     line-height: 1.2;
     margin-bottom: 20px;
     letter-spacing: -0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .mkt-highlight {
-    background: linear-gradient(135deg, #FFB300, #FCD34D);
+    background: linear-gradient(135deg, #FFD54F, #FFE082);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .mkt-hero-subtitle {
     font-size: 18px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.7;
+    color: #ffffff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     margin-bottom: 28px;
+}
+
+.mkt-hero-subtitle strong {
+    color: #FFE082;
+    font-weight: 700;
 }
 
 .mkt-hero-benefits {
@@ -10286,12 +10296,13 @@ html {
 }
 
 .mkt-benefit-pill {
-    padding: 6px 14px;
+    padding: 8px 16px;
     border-radius: var(--radius-full);
     font-size: 13px;
-    font-weight: 500;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
 }
 
 .mkt-hero-actions {
@@ -10306,39 +10317,41 @@ html {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 16px 32px;
-    background: var(--white);
-    color: var(--primary);
-    font-size: 16px;
-    font-weight: 700;
+    padding: 18px 36px;
+    background: linear-gradient(135deg, #FFD54F, #FFB300);
+    color: #1a1a2e;
+    font-size: 17px;
+    font-weight: 800;
     border-radius: var(--radius);
     text-decoration: none;
     transition: var(--transition);
+    box-shadow: 0 4px 16px rgba(255, 179, 0, 0.3);
 }
 
 .mkt-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 28px rgba(255, 179, 0, 0.45);
+    background: linear-gradient(135deg, #FFE082, #FFD54F);
 }
 
 .mkt-btn-outline {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 16px 32px;
-    background: transparent;
-    color: var(--white);
-    font-size: 16px;
-    font-weight: 600;
+    padding: 18px 36px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
     border-radius: var(--radius);
-    border: 2px solid rgba(255, 255, 255, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.45);
     text-decoration: none;
     transition: var(--transition);
 }
 
 .mkt-btn-outline:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.7);
 }
 
 .mkt-hero-trust {
@@ -10347,7 +10360,9 @@ html {
     justify-content: center;
     align-items: center;
     font-size: 13px;
-    opacity: 0.7;
+    opacity: 0.85;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .mkt-trust-divider {
@@ -11450,7 +11465,7 @@ html {
 
 @media (max-width: 768px) {
     .mkt-hero {
-        min-height: 100svh;
+        min-height: 85svh;
         padding: 100px 0 40px;
     }
 
