@@ -10200,7 +10200,10 @@ html {
 /* === Hero Section === */
 .mkt-hero {
     position: relative;
-    padding: 140px 0 80px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 0 60px;
     overflow: hidden;
     background: linear-gradient(135deg, #0A0F2E 0%, #0D1B6F 25%, var(--primary) 55%, var(--accent) 100%);
     color: var(--white);
@@ -10212,6 +10215,10 @@ html {
     background: radial-gradient(ellipse at 30% 20%, rgba(41, 98, 255, 0.2) 0%, transparent 60%),
                 radial-gradient(ellipse at 70% 80%, rgba(68, 138, 255, 0.15) 0%, transparent 50%);
     pointer-events: none;
+}
+
+.mkt-hero > .container {
+    width: 100%;
 }
 
 .mkt-hero-content {
@@ -10265,7 +10272,8 @@ html {
 .mkt-hero-subtitle {
     font-size: 18px;
     line-height: 1.6;
-    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     margin-bottom: 28px;
 }
 
@@ -11442,7 +11450,8 @@ html {
 
 @media (max-width: 768px) {
     .mkt-hero {
-        padding: 120px 0 60px;
+        min-height: 100svh;
+        padding: 100px 0 40px;
     }
 
     .mkt-hero-title {
