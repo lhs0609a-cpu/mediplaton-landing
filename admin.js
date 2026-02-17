@@ -4,7 +4,7 @@
 
 let sb = null;
 let currentUser = null;
-let currentTab = 'consultations';
+let currentTab = 'all-inquiries';
 let currentDetailId = null;
 let currentDetailType = null;
 let rejectTargetId = null;
@@ -147,7 +147,7 @@ function showDashboard() {
     userEmailEl.textContent = currentUser.email;
 
     loadStats();
-    loadConsultations();
+    loadAllInquiries();
     initAdminSettlementFilters();
     loadPartnersCache();
 }
