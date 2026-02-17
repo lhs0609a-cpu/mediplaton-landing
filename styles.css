@@ -3138,10 +3138,10 @@ div.product-cta .btn {
 
 /* ===== Footer - Premium Light ===== */
 .footer {
-    background: var(--gray-50);
-    color: var(--gray-600);
+    background: linear-gradient(180deg, #0A1628 0%, #0D1B6F 100%);
+    color: rgba(255, 255, 255, 0.7);
     padding-top: 80px;
-    border-top: 1px solid var(--border);
+    border-top: none;
 }
 
 .footer-main {
@@ -3149,7 +3149,7 @@ div.product-cta .btn {
     grid-template-columns: 1fr 2fr;
     gap: 80px;
     padding-bottom: 56px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-brand {
@@ -3163,14 +3163,14 @@ div.product-cta .btn {
     margin-bottom: 20px;
 }
 
-.footer-logo .logo-main { color: #111827; color: var(--gray-900); }
-.footer-logo .logo-sub { color: #9CA3AF; color: var(--gray-400); }
+.footer-logo .logo-main { color: #FFFFFF; }
+.footer-logo .logo-sub { color: rgba(255, 255, 255, 0.5); }
+.footer-logo .logo-icon { color: #FFD54F; }
 
 .footer-desc {
     font-size: 14px;
     margin-bottom: 20px;
-    color: #6B7280;
-    color: var(--gray-500);
+    color: rgba(255, 255, 255, 0.6);
     line-height: 1.7;
 }
 
@@ -3183,13 +3183,10 @@ div.product-cta .btn {
 .footer-certifications span {
     font-size: 12px;
     padding: 8px 14px;
-    background: #FFFFFF;
-    background: var(--white);
-    border: 1px solid #E8ECF0;
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--radius-full);
-    color: #4B5563;
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.8);
     font-weight: 500;
 }
 
@@ -3203,7 +3200,8 @@ div.product-cta .btn {
 .footer-partner-logos img {
     height: 28px;
     width: auto;
-    opacity: 0.9;
+    opacity: 0.7;
+    filter: brightness(0) invert(1);
     transition: var(--transition);
 }
 
@@ -3221,17 +3219,28 @@ div.product-cta .btn {
 .footer-col h4 {
     font-size: 14px;
     font-weight: 700;
-    color: #1F2937;
-    color: var(--gray-800);
+    color: #FFFFFF;
     margin-bottom: 20px;
     letter-spacing: 0.02em;
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.footer-col h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background: #FFD54F;
+    border-radius: 1px;
 }
 
 .footer-col a {
     display: block;
     font-size: 14px;
-    color: #6B7280;
-    color: var(--gray-500);
+    color: rgba(255, 255, 255, 0.6);
     padding: 10px 0;
     min-height: 44px;
     display: flex;
@@ -3240,60 +3249,65 @@ div.product-cta .btn {
 }
 
 .footer-col a:hover {
-    color: #1428A0;
-    color: var(--primary);
+    color: #FFD54F;
+    padding-left: 4px;
 }
 
 .footer-phone a {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
-    color: #111827;
-    color: var(--gray-900);
+    color: #FFD54F;
+    letter-spacing: 0.02em;
+}
+
+.footer-phone a:hover {
+    color: #FFE082;
 }
 
 .footer-time {
     font-size: 13px;
     margin-top: 8px;
-    color: #9CA3AF;
-    color: var(--gray-400);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .footer-cta {
     display: inline-block;
     margin-top: 20px;
-    padding: 12px 24px;
+    padding: 14px 28px;
     font-size: 14px;
-    font-weight: 600;
-    color: var(--white);
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    font-weight: 700;
+    color: #0A1628;
+    background: linear-gradient(135deg, #FFD54F 0%, #FFB300 100%);
     border-radius: var(--radius-full);
     transition: var(--transition);
-    box-shadow: 0 4px 12px rgba(20, 40, 160, 0.2);
+    box-shadow: 0 4px 16px rgba(255, 179, 0, 0.3);
 }
 
 .footer-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(20, 40, 160, 0.3);
+    box-shadow: 0 6px 24px rgba(255, 179, 0, 0.4);
+    color: #0A1628;
 }
 
 .footer-info {
     padding: 28px 0;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-info p {
     font-size: 13px;
     line-height: 1.8;
-    color: #374151;
-    color: var(--gray-700);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-info p strong {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .footer-legal {
     padding: 24px;
-    background: #FFFFFF;
-    background: var(--white);
-    border: 1px solid #E8ECF0;
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-lg);
     margin: 28px 0;
 }
@@ -3301,8 +3315,11 @@ div.product-cta .btn {
 .footer-legal p {
     font-size: 13px;
     line-height: 1.8;
-    color: #374151;
-    color: var(--gray-700);
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.footer-legal p strong {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .footer-bottom {
@@ -3310,12 +3327,12 @@ div.product-cta .btn {
     justify-content: space-between;
     align-items: center;
     padding: 28px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .footer-bottom p {
     font-size: 13px;
-    color: #4B5563;
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .footer-policy {
@@ -3325,14 +3342,12 @@ div.product-cta .btn {
 
 .footer-policy a {
     font-size: 13px;
-    color: #4B5563;
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.5);
     transition: var(--transition);
 }
 
 .footer-policy a:hover {
-    color: #1428A0;
-    color: var(--primary);
+    color: #FFD54F;
 }
 
 /* ===== Floating Actions ===== */
@@ -8076,24 +8091,24 @@ p, li, td, th, label, span {
     line-height: 1.6;
 }
 
-/* Ensure readable contrast on all backgrounds */
+/* Ensure readable contrast on dark footer */
 .footer a,
 .footer p,
 .footer span,
 .footer li {
-    color: var(--gray-700);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .footer .footer-cta {
-    color: var(--white);
+    color: #0A1628;
 }
 
 .footer a:hover {
-    color: var(--primary);
+    color: #FFD54F;
 }
 
 .footer h4 {
-    color: var(--gray-900);
+    color: #FFFFFF;
 }
 
 /* Fix low-contrast text elements */
@@ -10984,6 +10999,110 @@ html {
 
 .mkt-comp-table td .mkt-free-text {
     font-size: 22px;
+}
+
+/* === PG Terminal Image Showcase === */
+.mkt-pg-terminal-showcase {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    max-width: 900px;
+    margin: 40px auto 0;
+}
+
+.mkt-pg-terminal-img {
+    flex-shrink: 0;
+    width: 220px;
+    position: relative;
+}
+
+.mkt-pg-terminal-img img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 40px rgba(20, 40, 160, 0.15));
+    transition: var(--transition-slow);
+}
+
+.mkt-pg-terminal-img:hover img {
+    transform: translateY(-8px);
+    filter: drop-shadow(0 28px 48px rgba(20, 40, 160, 0.2));
+}
+
+.mkt-pg-terminal-features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mkt-pg-terminal-feature {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.mkt-pg-terminal-feature:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-100);
+    transform: translateX(4px);
+}
+
+.mkt-pg-terminal-feature .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mkt-pg-terminal-feature .feature-icon svg {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+.mkt-pg-terminal-feature .feature-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 2px;
+}
+
+.mkt-pg-terminal-feature .feature-text span {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+/* Process step terminal image */
+.mkt-step-terminal-img {
+    width: 80px;
+    height: auto;
+    margin: 12px auto 0;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+}
+
+@media (max-width: 768px) {
+    .mkt-pg-terminal-showcase {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .mkt-pg-terminal-img {
+        width: 160px;
+    }
+
+    .mkt-pg-terminal-feature {
+        padding: 14px 16px;
+    }
 }
 
 /* === PG Terminal Cost Comparison === */
