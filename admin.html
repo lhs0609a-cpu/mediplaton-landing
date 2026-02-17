@@ -263,6 +263,17 @@
         .setup-guide li { margin-bottom: 8px; }
         .setup-guide code { background: #FEF3C7; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; }
 
+        /* Source Badges */
+        .source-badge {
+            display: inline-flex; padding: 4px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 600; white-space: nowrap;
+        }
+        .source-consultation { background: #F3F4F6; color: #374151; }
+        .source-marketing-medical { background: #DBEAFE; color: #1D4ED8; }
+        .source-marketing-biz { background: #D1FAE5; color: #047857; }
+        .source-partner { background: #EDE9FE; color: #6D28D9; }
+        .source-promo { background: #FED7AA; color: #C2410C; }
+
         /* Responsive */
         @media (max-width: 768px) {
             .data-table { display: block; overflow-x: auto; }
@@ -353,6 +364,9 @@
 
             <!-- Tabs -->
             <div class="tabs">
+                <button class="tab-btn" data-tab="all-inquiries">
+                    전체 문의
+                </button>
                 <button class="tab-btn active" data-tab="consultations">
                     상담 신청
                     <span class="tab-badge" id="consultBadge">0</span>
@@ -367,6 +381,51 @@
                 <button class="tab-btn" data-tab="admin-settlements">
                     정산 관리
                 </button>
+            </div>
+
+            <!-- All Inquiries (통합 문의) -->
+            <div class="data-section" id="allInquiriesSection" style="display: none;">
+                <div class="data-header">
+                    <h2>전체 문의 통합 조회</h2>
+                    <div class="data-filters">
+                        <select class="filter-select" id="allSourceFilter">
+                            <option value="all">전체 출처</option>
+                            <option value="consultation">일반 상담</option>
+                            <option value="marketing-medical">병의원 마케팅</option>
+                            <option value="marketing-biz">소상공인 마케팅</option>
+                            <option value="partner">파트너 신청</option>
+                            <option value="promo">DSR 프로모</option>
+                        </select>
+                        <select class="filter-select" id="allStatusFilter">
+                            <option value="all">전체 상태</option>
+                            <option value="new">신규</option>
+                            <option value="contacted">연락완료</option>
+                            <option value="completed">상담완료</option>
+                            <option value="cancelled">취소</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="이름/연락처 검색..." id="allSearch">
+                        <button class="btn btn-outline btn-sm" id="exportAllBtn">CSV 다운로드</button>
+                    </div>
+                </div>
+                <div class="loading" id="allLoading"><div class="spinner"></div></div>
+                <table class="data-table" id="allTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>일시</th>
+                            <th>출처</th>
+                            <th>성함</th>
+                            <th>연락처</th>
+                            <th>업종/직업</th>
+                            <th>상태</th>
+                            <th>비고</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="allEmpty" style="display: none;">
+                    <h3>문의 내역이 없습니다</h3>
+                    <p>새로운 문의가 들어오면 여기에 표시됩니다.</p>
+                </div>
             </div>
 
             <!-- Consultations Table -->

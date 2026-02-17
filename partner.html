@@ -3385,8 +3385,36 @@
             btn.disabled = true;
 
             try {
+                // Supabase 연동
+                if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+                    try {
+                        const sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                        await sbClient.from('partner_inquiries').insert({
+                            name: data.name,
+                            phone: data.phone,
+                            occupation: data.occupation,
+                            expected_leads: data.expected_leads || '',
+                            source_page: 'partner'
+                        });
+                        console.log('✅ Supabase에 파트너 신청 데이터 저장 완료');
+                    } catch (dbError) {
+                        console.error('Supabase 저장 오류:', dbError);
+                        saveToLocalBackup('partner_inquiries', {
+                            name: data.name, phone: data.phone,
+                            occupation: data.occupation, expected_leads: data.expected_leads || '',
+                            source_page: 'partner'
+                        });
+                    }
+                } else {
+                    saveToLocalBackup('partner_inquiries', {
+                        name: data.name, phone: data.phone,
+                        occupation: data.occupation, expected_leads: data.expected_leads || '',
+                        source_page: 'partner'
+                    });
+                }
+
                 // Google Sheets 연동
-                if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && isGoogleSheetsConfigured()) {
+                if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && typeof isGoogleSheetsConfigured === 'function' && isGoogleSheetsConfigured()) {
                     try {
                         await fetch(GOOGLE_SHEETS_CONFIG.webAppUrl, {
                             method: 'POST',
@@ -3397,21 +3425,14 @@
                                 name: data.name,
                                 phone: data.phone,
                                 occupation: data.occupation,
-                                expected_leads: data.expected_leads || ''
+                                expected_leads: data.expected_leads || '',
+                                source_page: 'partner'
                             })
                         });
                         console.log('✅ Google Sheets에 데이터 전송 완료');
                     } catch (sheetError) {
                         console.error('Google Sheets 전송 오류:', sheetError);
                     }
-                } else {
-                    console.log('=== 파트너 신청 데이터 (Google Sheets 연동 필요) ===');
-                    console.log('성함:', data.name);
-                    console.log('연락처:', data.phone);
-                    console.log('소속:', data.occupation);
-                    console.log('예상 월 연결 건수:', data.expected_leads);
-                    console.warn('⚠️ config.js에 GOOGLE_SHEETS_CONFIG.webAppUrl을 설정하세요.');
-                    await new Promise(resolve => setTimeout(resolve, 500));
                 }
 
                 alert('제휴 신청이 완료되었습니다!\n담당자가 24시간 내 연락드리겠습니다.');

@@ -56,6 +56,12 @@ function setupEventListeners() {
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
+    // All inquiries filters
+    document.getElementById('allSourceFilter').addEventListener('change', loadAllInquiries);
+    document.getElementById('allStatusFilter').addEventListener('change', loadAllInquiries);
+    document.getElementById('allSearch').addEventListener('input', debounce(loadAllInquiries, 300));
+    document.getElementById('exportAllBtn').addEventListener('click', exportAllInquiriesCSV);
+
     // Consultation filters
     document.getElementById('consultStatusFilter').addEventListener('change', loadConsultations);
     document.getElementById('consultSearch').addEventListener('input', debounce(loadConsultations, 300));
@@ -231,11 +237,13 @@ function switchTab(tab) {
         btn.classList.toggle('active', btn.dataset.tab === tab);
     });
 
+    document.getElementById('allInquiriesSection').style.display = tab === 'all-inquiries' ? 'block' : 'none';
     document.getElementById('consultationsSection').style.display = tab === 'consultations' ? 'block' : 'none';
     document.getElementById('partnersSection').style.display = tab === 'partners' ? 'block' : 'none';
     document.getElementById('customersSection').style.display = tab === 'customers' ? 'block' : 'none';
     document.getElementById('adminSettlementsSection').style.display = tab === 'admin-settlements' ? 'block' : 'none';
 
+    if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'partners') loadPartners();
     if (tab === 'customers') loadCustomers();
     if (tab === 'admin-settlements') {
@@ -1069,6 +1077,163 @@ async function deleteNotice(id) {
     } catch (error) {
         showToast('삭제 실패', 'error');
     }
+}
+
+// ─── All Inquiries (통합 문의) ───
+
+function getSourceLabel(source) {
+    if (!source) return { text: '일반상담', cls: 'source-consultation' };
+
+    const s = source.toLowerCase();
+    if (s === 'partner') return { text: '파트너 신청', cls: 'source-partner' };
+    if (s === 'promo') return { text: 'DSR 프로모', cls: 'source-promo' };
+    if (s.includes('marketing-medical') || s.includes('marketing_medical')) return { text: '병의원 마케팅', cls: 'source-marketing-medical' };
+    if (s.includes('marketing-biz') || s.includes('marketing_biz')) return { text: '소상공인 마케팅', cls: 'source-marketing-biz' };
+    if (s.includes('marketing')) return { text: '마케팅', cls: 'source-marketing-medical' };
+    return { text: '일반상담', cls: 'source-consultation' };
+}
+
+function getSourceBadge(source) {
+    const info = getSourceLabel(source);
+    return `<span class="source-badge ${info.cls}">${info.text}</span>`;
+}
+
+function normalizeSource(row) {
+    if (row._table === 'partner_inquiries') return 'partner';
+    if (row._table === 'promo_inquiries') return 'promo';
+    const sp = (row.source_page || '').toLowerCase();
+    if (sp.includes('marketing-medical')) return 'marketing-medical';
+    if (sp.includes('marketing-biz')) return 'marketing-biz';
+    if (row._table === 'marketing_inquiries') {
+        if (sp.includes('medical')) return 'marketing-medical';
+        if (sp.includes('biz')) return 'marketing-biz';
+        return 'marketing-medical';
+    }
+    return 'consultation';
+}
+
+async function loadAllInquiries() {
+    const loading = document.getElementById('allLoading');
+    const table = document.getElementById('allTable');
+    const empty = document.getElementById('allEmpty');
+    const tbody = document.getElementById('allTableBody');
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        const [consultRes, mktRes, partnerRes, promoRes] = await Promise.all([
+            sb.from('consultations').select('*').order('created_at', { ascending: false }),
+            sb.from('marketing_inquiries').select('*').order('created_at', { ascending: false }),
+            sb.from('partner_inquiries').select('*').order('created_at', { ascending: false }),
+            sb.from('promo_inquiries').select('*').order('created_at', { ascending: false })
+        ]);
+
+        let allData = [];
+
+        if (consultRes.data) {
+            allData = allData.concat(consultRes.data.map(r => ({
+                ...r, _table: 'consultations',
+                _business: getBusinessLabel(r.business),
+                _notes: r.message || r.admin_notes || ''
+            })));
+        }
+        if (mktRes.data) {
+            allData = allData.concat(mktRes.data.map(r => ({
+                ...r, _table: 'marketing_inquiries',
+                _business: r.business_type || '',
+                _notes: r.clinic_size ? '평수: ' + r.clinic_size : ''
+            })));
+        }
+        if (partnerRes.data) {
+            allData = allData.concat(partnerRes.data.map(r => ({
+                ...r, _table: 'partner_inquiries',
+                _business: r.occupation || '',
+                _notes: r.expected_leads ? '예상 월 ' + r.expected_leads + '건' : ''
+            })));
+        }
+        if (promoRes.data) {
+            allData = allData.concat(promoRes.data.map(r => ({
+                ...r, _table: 'promo_inquiries',
+                _business: r.business_type || '',
+                _notes: r.monthly_sales || ''
+            })));
+        }
+
+        // Sort by created_at DESC
+        allData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        // Apply source filter
+        const sourceFilter = document.getElementById('allSourceFilter').value;
+        if (sourceFilter !== 'all') {
+            allData = allData.filter(row => normalizeSource(row) === sourceFilter);
+        }
+
+        // Apply status filter
+        const statusFilter = document.getElementById('allStatusFilter').value;
+        if (statusFilter !== 'all') {
+            allData = allData.filter(row => row.status === statusFilter);
+        }
+
+        // Apply search
+        const search = document.getElementById('allSearch').value.trim().toLowerCase();
+        if (search) {
+            allData = allData.filter(row =>
+                (row.name || '').toLowerCase().includes(search) ||
+                (row.phone || '').toLowerCase().includes(search)
+            );
+        }
+
+        loading.style.display = 'none';
+
+        if (allData.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = allData.map(row => `
+            <tr>
+                <td>${formatDate(row.created_at)}</td>
+                <td>${getSourceBadge(normalizeSource(row))}</td>
+                <td><strong>${escapeHtml(row.name)}</strong></td>
+                <td>${escapeHtml(row.phone)}</td>
+                <td>${escapeHtml(row._business)}</td>
+                <td><span class="status-badge status-${row.status || 'new'}">${getStatusLabel(row.status || 'new')}</span></td>
+                <td>${escapeHtml(row._notes)}</td>
+            </tr>
+        `).join('');
+
+        // Store for CSV export
+        window._allInquiriesData = allData;
+    } catch (error) {
+        console.error('Load all inquiries error:', error);
+        loading.style.display = 'none';
+        showToast('전체 문의 데이터를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+async function exportAllInquiriesCSV() {
+    const data = window._allInquiriesData;
+    if (!data || data.length === 0) {
+        showToast('내보낼 데이터가 없습니다.', 'error');
+        return;
+    }
+
+    let csv = '일시,출처,성함,연락처,업종/직업,상태,비고\n';
+    csv += data.map(row => {
+        const sourceInfo = getSourceLabel(normalizeSource(row));
+        return `"${formatDate(row.created_at)}","${sourceInfo.text}","${row.name}","${row.phone}","${(row._business || '').replace(/"/g, '""')}","${getStatusLabel(row.status || 'new')}","${(row._notes || '').replace(/"/g, '""')}"`;
+    }).join('\n');
+
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `all_inquiries_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    showToast('다운로드가 시작되었습니다.', 'success');
 }
 
 // ─── CSV Export ───

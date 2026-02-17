@@ -292,6 +292,7 @@ function initForm() {
 
         const formData = new FormData(consultForm);
         const data = Object.fromEntries(formData.entries());
+        const sourcePage = window.location.pathname.split('/').pop() || 'index.html';
 
         // Validate required fields with individual error messages
         const requiredFields = [
@@ -351,6 +352,29 @@ function initForm() {
         submitBtn.disabled = true;
 
         try {
+            // Supabase 연동
+            if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+                try {
+                    const sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                    await sbClient.from('consultations').insert({
+                        name: data.name,
+                        phone: data.phone,
+                        business: data.business,
+                        revenue: data.revenue,
+                        region: data.region,
+                        product: data.product || '',
+                        message: data.message || '',
+                        source_page: sourcePage
+                    });
+                    console.log('✅ Supabase에 상담 신청 데이터 저장 완료');
+                } catch (dbError) {
+                    console.error('Supabase 저장 오류:', dbError);
+                    saveToLocalBackup('consultations', { ...data, source_page: sourcePage });
+                }
+            } else {
+                saveToLocalBackup('consultations', { ...data, source_page: sourcePage });
+            }
+
             // Google Sheets 연동
             if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && typeof isGoogleSheetsConfigured === 'function' && isGoogleSheetsConfigured()) {
                 try {
@@ -369,7 +393,8 @@ function initForm() {
                             revenue: data.revenue,
                             region: data.region,
                             product: data.product || '',
-                            message: data.message || ''
+                            message: data.message || '',
+                            source_page: sourcePage
                         })
                     });
                     clearTimeout(timeoutId);
@@ -380,11 +405,6 @@ function initForm() {
                         console.warn('⚠️ 전송 시간 초과 (10초)');
                     }
                 }
-            } else {
-                console.log('=== 상담 신청 데이터 (Google Sheets 연동 필요) ===');
-                console.table(data);
-                console.warn('⚠️ config.js에 GOOGLE_SHEETS_CONFIG.webAppUrl을 설정하세요.');
-                await new Promise(resolve => setTimeout(resolve, 500));
             }
 
             // Success
@@ -1417,6 +1437,7 @@ function initMarketingForm() {
 
         try {
             // Supabase insert
+            const mktSourcePage = window.location.pathname.split('/').pop() || 'marketing.html';
             if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
                 try {
                     const sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
@@ -1425,7 +1446,8 @@ function initMarketingForm() {
                         phone: data.phone,
                         business_type: data.business_type,
                         clinic_size: data.clinic_size,
-                        interests: interests
+                        interests: interests,
+                        source_page: mktSourcePage
                     });
                     console.log('✅ Supabase에 마케팅 신청 데이터 저장 완료');
                 } catch (dbError) {
@@ -1435,7 +1457,8 @@ function initMarketingForm() {
                         phone: data.phone,
                         business_type: data.business_type,
                         clinic_size: data.clinic_size,
-                        interests: interests
+                        interests: interests,
+                        source_page: mktSourcePage
                     });
                 }
             } else {
@@ -1446,7 +1469,8 @@ function initMarketingForm() {
                     phone: data.phone,
                     business_type: data.business_type,
                     clinic_size: data.clinic_size,
-                    interests: interests
+                    interests: interests,
+                    source_page: mktSourcePage
                 });
             }
 
@@ -1466,7 +1490,8 @@ function initMarketingForm() {
                             phone: data.phone,
                             business_type: data.business_type,
                             clinic_size: data.clinic_size,
-                            interests: interests.join(', ')
+                            interests: interests.join(', '),
+                            source_page: mktSourcePage
                         })
                     });
                     clearTimeout(timeoutId);
