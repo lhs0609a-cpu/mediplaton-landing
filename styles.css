@@ -10182,6 +10182,21 @@ html {
     margin-top: 8px;
 }
 
+/* Marketing dropdown sub-links in mobile nav */
+.mobile-nav-group.partner-highlight .marketing-link + a,
+.mobile-nav-group.partner-highlight .marketing-link ~ a {
+    color: var(--primary) !important;
+    font-weight: 600;
+    padding: 10px 16px;
+    margin-top: 4px;
+    border-radius: 6px;
+    background: rgba(20, 40, 160, 0.05);
+}
+
+.mobile-nav-group.partner-highlight .marketing-link ~ a:hover {
+    background: rgba(20, 40, 160, 0.1);
+}
+
 /* === Hero Section === */
 .mkt-hero {
     position: relative;
