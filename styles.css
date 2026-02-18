@@ -3200,13 +3200,14 @@ div.product-cta .btn {
 .footer-partner-logos img {
     height: 28px;
     width: auto;
-    opacity: 0.7;
-    filter: brightness(0) invert(1);
+    opacity: 0.85;
+    filter: grayscale(1) brightness(5);
     transition: var(--transition);
 }
 
 .footer-partner-logos img:hover {
     opacity: 1;
+    filter: grayscale(0) brightness(5);
     transform: scale(1.05);
 }
 
@@ -10278,6 +10279,7 @@ html {
     line-height: 1.2;
     margin-bottom: 20px;
     letter-spacing: -0.02em;
+    color: #FFFFFF;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
