@@ -3275,12 +3275,14 @@ div.product-cta .btn {
 }
 
 .footer-cta {
-    display: inline-block;
+    display: inline-block !important;
     margin-top: 20px;
-    padding: 14px 28px;
+    padding: 14px 28px !important;
+    min-height: auto !important;
     font-size: 14px;
     font-weight: 700;
-    color: #0A1628;
+    color: #0A1628 !important;
+    text-align: center;
     background: linear-gradient(135deg, #FFD54F 0%, #FFB300 100%);
     border-radius: var(--radius-full);
     transition: var(--transition);
