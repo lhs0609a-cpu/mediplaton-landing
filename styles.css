@@ -3139,9 +3139,10 @@ div.product-cta .btn {
 /* ===== Footer - Premium Light ===== */
 .footer {
     background: linear-gradient(180deg, #0A1628 0%, #0D1B6F 100%);
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.75);
     padding-top: 80px;
     border-top: none;
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
 .footer-main {
@@ -3163,14 +3164,14 @@ div.product-cta .btn {
     margin-bottom: 20px;
 }
 
-.footer-logo .logo-main { color: #FFFFFF; }
-.footer-logo .logo-sub { color: rgba(255, 255, 255, 0.5); }
-.footer-logo .logo-icon { color: #FFD54F; }
+.footer-logo .logo-main { color: #FFFFFF !important; }
+.footer-logo .logo-sub { color: rgba(255, 255, 255, 0.7) !important; }
+.footer-logo .logo-icon { color: #FFD54F !important; }
 
 .footer-desc {
     font-size: 14px;
     margin-bottom: 20px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.75);
     line-height: 1.7;
 }
 
@@ -3200,14 +3201,14 @@ div.product-cta .btn {
 .footer-partner-logos img {
     height: 28px;
     width: auto;
-    opacity: 0.85;
-    filter: grayscale(1) brightness(5);
+    opacity: 0.9;
+    filter: brightness(0) invert(1);
     transition: var(--transition);
 }
 
 .footer-partner-logos img:hover {
     opacity: 1;
-    filter: grayscale(0) brightness(5);
+    filter: brightness(0) invert(1);
     transform: scale(1.05);
 }
 
@@ -3241,7 +3242,7 @@ div.product-cta .btn {
 .footer-col a {
     display: block;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.75);
     padding: 10px 0;
     min-height: 44px;
     display: flex;
@@ -3268,7 +3269,7 @@ div.product-cta .btn {
 .footer-time {
     font-size: 13px;
     margin-top: 8px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .footer-cta {
@@ -3298,11 +3299,11 @@ div.product-cta .btn {
 .footer-info p {
     font-size: 13px;
     line-height: 1.8;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.65);
 }
 
 .footer-info p strong {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .footer-legal {
@@ -3316,11 +3317,11 @@ div.product-cta .btn {
 .footer-legal p {
     font-size: 13px;
     line-height: 1.8;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .footer-legal p strong {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .footer-bottom {
@@ -3333,7 +3334,7 @@ div.product-cta .btn {
 
 .footer-bottom p {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.55);
 }
 
 .footer-policy {
@@ -3343,7 +3344,7 @@ div.product-cta .btn {
 
 .footer-policy a {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.65);
     transition: var(--transition);
 }
 
@@ -8097,11 +8098,15 @@ p, li, td, th, label, span {
 .footer p,
 .footer span,
 .footer li {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .footer .footer-cta {
     color: #0A1628;
+}
+
+.footer .footer-phone a {
+    color: #FFD54F;
 }
 
 .footer a:hover {
@@ -8110,6 +8115,10 @@ p, li, td, th, label, span {
 
 .footer h4 {
     color: #FFFFFF;
+}
+
+.footer strong {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 /* Fix low-contrast text elements */
