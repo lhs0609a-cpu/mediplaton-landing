@@ -1300,6 +1300,29 @@ function initMarketingCalculator() {
         setTimeout(() => { savingsValue.style.transform = 'scale(1)'; }, 200);
     }
 
+    // === Homepage toggle / alt-service logic ===
+    const homepageToggle = document.getElementById('mktHomepageToggle');
+    const altServiceEl = document.getElementById('mktAltService');
+    const altSelect = document.getElementById('mktAltSelect');
+    let homepageOff = false;
+
+    if (homepageToggle && altServiceEl) {
+        homepageToggle.addEventListener('click', () => {
+            homepageOff = !homepageOff;
+            const hpItem = benefitsList.querySelector('[data-benefit="homepage"]');
+
+            if (homepageOff) {
+                hpItem.classList.add('homepage-off');
+                altServiceEl.style.display = '';
+                homepageToggle.textContent = '원래대로';
+            } else {
+                hpItem.classList.remove('homepage-off');
+                altServiceEl.style.display = 'none';
+                homepageToggle.textContent = '변경';
+            }
+        });
+    }
+
     // Event listeners
     loanCheck.addEventListener('change', calculate);
     brokerCheck.addEventListener('change', calculate);
