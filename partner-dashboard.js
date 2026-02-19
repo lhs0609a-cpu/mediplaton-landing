@@ -784,7 +784,7 @@ function formatCurrency(amount) {
 }
 
 function getBusinessLabel(value) {
-    const labels = { 'hospital': '병원/의원', 'dental': '치과', 'oriental': '한의원', 'pharmacy': '약국', 'plastic': '성형외과', 'derma': '피부과', 'eye': '안과', 'ortho': '정형외과', 'other': '기타 의료' };
+    const labels = { 'broker': '중개법인', 'accounting': '회계사/세무사', 'law': '변호사/법무사', 'insurance': '보험대리점', 'finance': '금융컨설팅', 'marketing': '마케팅대행', 'individual': '개인영업', 'other': '기타', 'hospital': '병원/의원', 'dental': '치과', 'oriental': '한의원', 'pharmacy': '약국', 'restaurant': '음식점', 'cafe': '카페', 'salon': '미용실', 'gym': '헬스장' };
     return labels[value] || value || '-';
 }
 
