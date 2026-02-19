@@ -147,6 +147,7 @@ function showDashboard() {
     initMonthSelects();
     loadUnreadCount();
     setupRealtime();
+    setupQNA();
 }
 
 // ─── Realtime ───
@@ -189,11 +190,16 @@ function switchTab(tab) {
     document.getElementById('clientsSection').style.display = tab === 'clients' ? 'block' : 'none';
     document.getElementById('overviewSection').style.display = tab === 'overview' ? 'block' : 'none';
     document.getElementById('settlementsSection').style.display = tab === 'settlements' ? 'block' : 'none';
+    document.getElementById('noticesSection').style.display = tab === 'notices' ? 'block' : 'none';
+    document.getElementById('qnaSection').style.display = tab === 'qna' ? 'block' : 'none';
+    document.getElementById('boardSection').style.display = tab === 'board' ? 'block' : 'none';
     document.getElementById('notificationsSection').style.display = tab === 'notifications' ? 'block' : 'none';
 
     if (tab === 'clients') loadClients();
     if (tab === 'overview') { loadOverview(); loadLeaderboard(); }
     if (tab === 'settlements') loadSettlements();
+    if (tab === 'notices') loadPartnerNotices();
+    if (tab === 'board') loadBoardPosts();
     if (tab === 'notifications') loadNotifications();
 }
 
@@ -648,6 +654,77 @@ async function markAllNotificationsRead() {
     }
 }
 
+// ─── Partner Notices ───
+
+async function loadPartnerNotices() {
+    const loading = document.getElementById('noticeLoading');
+    const list = document.getElementById('partnerNoticeList');
+
+    loading.style.display = 'flex';
+    list.innerHTML = '';
+
+    try {
+        const { data, error } = await sb
+            .from('notices')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            list.innerHTML = '<div class="empty-state"><h3>공지사항이 없습니다</h3></div>';
+            return;
+        }
+
+        list.innerHTML = data.map(n => `
+            <div class="notice-item" onclick="this.nextElementSibling.classList.toggle('open')">
+                <h4>${escapeHtml(n.title)}</h4>
+                <span class="notice-date">${formatDate(n.created_at)}</span>
+            </div>
+            <div class="notice-content">${escapeHtml(n.content || '내용 없음')}</div>
+        `).join('');
+    } catch (error) {
+        console.error('Notices error:', error);
+        loading.style.display = 'none';
+        list.innerHTML = '<div class="empty-state"><h3>공지사항을 불러오지 못했습니다</h3></div>';
+    }
+}
+
+// ─── QNA Accordion ───
+
+function setupQNA() {
+    document.querySelectorAll('.qna-question').forEach(q => {
+        q.addEventListener('click', () => {
+            const item = q.parentElement;
+            item.classList.toggle('open');
+        });
+    });
+
+    const searchInput = document.getElementById('qnaSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(() => {
+            const query = searchInput.value.trim().toLowerCase();
+            document.querySelectorAll('.qna-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = (!query || text.includes(query)) ? '' : 'none';
+            });
+            document.querySelectorAll('.qna-cat-title').forEach(title => {
+                const next = [];
+                let el = title.nextElementSibling;
+                while (el && !el.classList.contains('qna-cat-title')) {
+                    if (el.classList.contains('qna-item')) next.push(el);
+                    el = el.nextElementSibling;
+                }
+                const anyVisible = next.some(n => n.style.display !== 'none');
+                title.style.display = (!query || anyVisible) ? '' : 'none';
+            });
+        }, 200));
+    }
+}
+
 // ─── Pipeline Render ───
 
 function renderPipeline(status) {
@@ -737,6 +814,120 @@ function showToast(message, type = 'info') {
     toast.className = 'toast show ' + type;
     setTimeout(() => { toast.className = 'toast'; }, 3000);
 }
+
+// ─── Board (게시판) ───
+
+async function loadBoardPosts() {
+    const loading = document.getElementById('boardLoading');
+    const list = document.getElementById('boardList');
+    loading.style.display = 'flex';
+
+    try {
+        const { data: posts, error } = await supabase
+            .from('board_posts')
+            .select('*, board_replies(*)')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!posts || posts.length === 0) {
+            list.innerHTML = '<div class="board-empty"><h3>게시글이 없습니다</h3></div>';
+            return;
+        }
+
+        list.innerHTML = posts.map(post => {
+            const date = new Date(post.created_at).toLocaleDateString('ko-KR');
+            const replies = post.board_replies || [];
+            const answeredBadge = post.is_answered
+                ? '<span class="board-badge-answered">답변완료</span>'
+                : '';
+
+            const repliesHtml = replies.map(r => {
+                const rDate = new Date(r.created_at).toLocaleDateString('ko-KR');
+                return `<div class="board-reply">
+                    <div class="board-reply-label">관리자 답변</div>
+                    <div class="board-reply-content">${escapeHtml(r.content)}</div>
+                    <div class="board-reply-date">${rDate}</div>
+                </div>`;
+            }).join('');
+
+            return `<div class="board-item">
+                <div class="board-item-header" onclick="toggleBoardItem(this)">
+                    <div class="board-item-title">${escapeHtml(post.title)}</div>
+                    <div class="board-item-meta">
+                        ${answeredBadge}
+                        <span>${post.author_name}</span>
+                        <span>${date}</span>
+                        <span class="board-arrow">&#9660;</span>
+                    </div>
+                </div>
+                <div class="board-item-body">
+                    <div class="board-content">${escapeHtml(post.content)}</div>
+                    ${repliesHtml}
+                </div>
+            </div>`;
+        }).join('');
+    } catch (err) {
+        console.error('Board load error:', err);
+        list.innerHTML = '<div class="board-empty"><h3>게시글을 불러올 수 없습니다</h3></div>';
+    } finally {
+        loading.style.display = 'none';
+    }
+}
+
+function toggleBoardItem(header) {
+    const body = header.nextElementSibling;
+    const arrow = header.querySelector('.board-arrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+}
+
+async function handleBoardPostSubmit(e) {
+    e.preventDefault();
+    const title = document.getElementById('boardPostTitle').value.trim();
+    const content = document.getElementById('boardPostContent').value.trim();
+    if (!title || !content) return;
+
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const { error } = await supabase.from('board_posts').insert({
+            title,
+            content,
+            author_id: user.id,
+            author_name: currentUser.name || currentUser.email,
+            author_type: 'partner'
+        });
+
+        if (error) throw error;
+
+        document.getElementById('boardPostModal').classList.remove('active');
+        document.getElementById('boardPostForm').reset();
+        showToast('게시글이 등록되었습니다', 'success');
+        loadBoardPosts();
+    } catch (err) {
+        console.error('Board post error:', err);
+        showToast('게시글 등록에 실패했습니다', 'error');
+    }
+}
+
+function setupBoard() {
+    const openBtn = document.getElementById('openBoardPostModal');
+    if (openBtn) {
+        openBtn.addEventListener('click', () => {
+            document.getElementById('boardPostModal').classList.add('active');
+        });
+    }
+
+    const form = document.getElementById('boardPostForm');
+    if (form) {
+        form.addEventListener('submit', handleBoardPostSubmit);
+    }
+}
+
+// Initialize board on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    setupBoard();
+});
 
 function debounce(func, wait) {
     let timeout;

@@ -368,6 +368,7 @@ function switchTab(tab) {
     document.getElementById('customersSection').style.display = tab === 'customers' ? 'block' : 'none';
     document.getElementById('adminSettlementsSection').style.display = tab === 'admin-settlements' ? 'block' : 'none';
     document.getElementById('partnerQnaSection').style.display = tab === 'partner-qna' ? 'block' : 'none';
+    document.getElementById('boardManageSection').style.display = tab === 'board-manage' ? 'block' : 'none';
 
     if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'partners') loadPartners();
@@ -380,6 +381,7 @@ function switchTab(tab) {
         setupAdminQNA();
         window._qnaInitialized = true;
     }
+    if (tab === 'board-manage') loadAdminBoardPosts();
 }
 
 // ─── Consultations ───
@@ -1511,6 +1513,189 @@ function setupAdminQNA() {
         }, 200));
     }
 }
+
+// ─── Board Management (게시판 관리) ───
+
+async function loadAdminBoardPosts() {
+    const loading = document.getElementById('adminBoardLoading');
+    const list = document.getElementById('adminBoardList');
+    loading.style.display = 'flex';
+
+    try {
+        const { data: posts, error } = await supabase
+            .from('board_posts')
+            .select('*, board_replies(*)')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!posts || posts.length === 0) {
+            list.innerHTML = '<div class="board-empty"><h3>게시글이 없습니다</h3></div>';
+            return;
+        }
+
+        list.innerHTML = posts.map(post => {
+            const date = new Date(post.created_at).toLocaleDateString('ko-KR');
+            const replies = post.board_replies || [];
+            const typeBadge = post.author_type === 'admin'
+                ? '<span class="board-badge-admin">관리자</span>'
+                : '<span class="board-badge-partner">파트너</span>';
+            const statusBadge = post.is_answered
+                ? '<span class="board-badge-answered">답변완료</span>'
+                : '<span class="board-badge-waiting">대기중</span>';
+
+            const repliesHtml = replies.map(r => {
+                const rDate = new Date(r.created_at).toLocaleDateString('ko-KR');
+                return `<div class="board-reply">
+                    <div class="board-reply-label">관리자 답변</div>
+                    <div class="board-reply-content">${escapeHtml(r.content)}</div>
+                    <div class="board-reply-date">${rDate}</div>
+                </div>`;
+            }).join('');
+
+            return `<div class="board-item">
+                <div class="board-item-header" onclick="toggleAdminBoardItem(this)">
+                    <div class="board-item-title">${escapeHtml(post.title)}</div>
+                    <div class="board-item-meta">
+                        ${typeBadge}
+                        ${statusBadge}
+                        <span>${post.author_name}</span>
+                        <span>${date}</span>
+                        <span class="board-arrow">&#9660;</span>
+                    </div>
+                </div>
+                <div class="board-item-body">
+                    <div class="board-content">${escapeHtml(post.content)}</div>
+                    ${repliesHtml}
+                    <div class="board-actions">
+                        <button class="btn btn-primary btn-sm" onclick="openReplyModal(${post.id})">답변하기</button>
+                        <button class="btn btn-outline btn-sm" onclick="deleteBoardPost(${post.id})" style="color:var(--danger);border-color:var(--danger);">삭제</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (err) {
+        console.error('Admin board load error:', err);
+        list.innerHTML = '<div class="board-empty"><h3>게시글을 불러올 수 없습니다</h3></div>';
+    } finally {
+        loading.style.display = 'none';
+    }
+}
+
+function toggleAdminBoardItem(header) {
+    const body = header.nextElementSibling;
+    const arrow = header.querySelector('.board-arrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+}
+
+function openReplyModal(postId) {
+    document.getElementById('replyPostId').value = postId;
+    document.getElementById('boardReplyContent').value = '';
+    document.getElementById('boardReplyModal').classList.add('active');
+}
+
+async function handleBoardReplySubmit(e) {
+    e.preventDefault();
+    const postId = document.getElementById('replyPostId').value;
+    const content = document.getElementById('boardReplyContent').value.trim();
+    if (!content) return;
+
+    try {
+        const { error: replyError } = await supabase.from('board_replies').insert({
+            post_id: parseInt(postId),
+            content,
+            author_name: '관리자'
+        });
+
+        if (replyError) throw replyError;
+
+        const { error: updateError } = await supabase
+            .from('board_posts')
+            .update({ is_answered: true })
+            .eq('id', parseInt(postId));
+
+        if (updateError) throw updateError;
+
+        document.getElementById('boardReplyModal').classList.remove('active');
+        document.getElementById('boardReplyForm').reset();
+        showToast('답변이 등록되었습니다', 'success');
+        loadAdminBoardPosts();
+    } catch (err) {
+        console.error('Reply error:', err);
+        showToast('답변 등록에 실패했습니다', 'error');
+    }
+}
+
+async function deleteBoardPost(id) {
+    if (!confirm('이 게시글을 삭제하시겠습니까?')) return;
+
+    try {
+        const { error } = await supabase
+            .from('board_posts')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        showToast('게시글이 삭제되었습니다', 'success');
+        loadAdminBoardPosts();
+    } catch (err) {
+        console.error('Delete error:', err);
+        showToast('삭제에 실패했습니다', 'error');
+    }
+}
+
+async function handleAdminBoardPostSubmit(e) {
+    e.preventDefault();
+    const title = document.getElementById('adminBoardPostTitle').value.trim();
+    const content = document.getElementById('adminBoardPostContent').value.trim();
+    if (!title || !content) return;
+
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const { error } = await supabase.from('board_posts').insert({
+            title,
+            content,
+            author_id: user.id,
+            author_name: '관리자',
+            author_type: 'admin'
+        });
+
+        if (error) throw error;
+
+        document.getElementById('adminBoardPostModal').classList.remove('active');
+        document.getElementById('adminBoardPostForm').reset();
+        showToast('게시글이 등록되었습니다', 'success');
+        loadAdminBoardPosts();
+    } catch (err) {
+        console.error('Admin board post error:', err);
+        showToast('게시글 등록에 실패했습니다', 'error');
+    }
+}
+
+function setupAdminBoard() {
+    const openBtn = document.getElementById('openAdminBoardPostModal');
+    if (openBtn) {
+        openBtn.addEventListener('click', () => {
+            document.getElementById('adminBoardPostModal').classList.add('active');
+        });
+    }
+
+    const replyForm = document.getElementById('boardReplyForm');
+    if (replyForm) {
+        replyForm.addEventListener('submit', handleBoardReplySubmit);
+    }
+
+    const postForm = document.getElementById('adminBoardPostForm');
+    if (postForm) {
+        postForm.addEventListener('submit', handleAdminBoardPostSubmit);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupAdminBoard();
+});
 
 function debounce(func, wait) {
     let timeout;

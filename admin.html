@@ -50,7 +50,8 @@
             border-radius: 16px;
             box-shadow: var(--shadow-lg);
             width: 100%;
-            max-width: 400px;
+            max-width: 480px;
+            transition: max-width 0.3s;
         }
 
         .login-logo { text-align: center; margin-bottom: 32px; }
@@ -85,6 +86,38 @@
         .login-error {
             background: #FEE2E2; color: var(--danger); padding: 12px;
             border-radius: var(--radius); margin-bottom: 20px; font-size: 14px; display: none;
+        }
+        .login-success {
+            background: #D1FAE5; color: #047857; padding: 12px;
+            border-radius: var(--radius); margin-bottom: 20px; font-size: 14px; display: none;
+        }
+
+        /* Auth Tabs */
+        .auth-tabs {
+            display: flex; margin-bottom: 24px; border-bottom: 2px solid var(--gray-200);
+        }
+        .auth-tab {
+            flex: 1; padding: 12px; text-align: center; font-size: 15px; font-weight: 600;
+            color: var(--gray-500); background: none; border: none; cursor: pointer;
+            border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s;
+        }
+        .auth-tab:hover { color: var(--gray-700); }
+        .auth-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+
+        .register-form .form-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+        .register-form .form-group { margin-bottom: 16px; }
+        .register-form .form-group.full-width { grid-column: 1 / -1; }
+        .form-divider {
+            border: none; border-top: 1px solid var(--gray-200);
+            margin: 8px 0 16px 0;
+        }
+        .form-section-title {
+            font-size: 13px; font-weight: 600; color: var(--gray-500);
+            margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
         /* Admin Dashboard */
@@ -274,6 +307,23 @@
         .source-partner { background: #EDE9FE; color: #6D28D9; }
         .source-promo { background: #FED7AA; color: #C2410C; }
 
+        /* QNA Accordion */
+        .qna-categories { padding: 24px; }
+        .qna-cat-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: var(--primary); margin: 24px 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); }
+        .qna-cat-title:first-child { margin-top: 0; }
+        .qna-item { border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
+        .qna-question { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; background: var(--white); transition: background 0.2s; font-size: 14px; font-weight: 600; color: var(--gray-900); }
+        .qna-question:hover { background: var(--gray-50); }
+        .qna-question .q-icon { color: var(--primary); font-weight: 700; font-size: 15px; flex-shrink: 0; }
+        .qna-question .q-arrow { margin-left: auto; color: var(--gray-300); transition: transform 0.2s; flex-shrink: 0; }
+        .qna-item.open .qna-question .q-arrow { transform: rotate(180deg); }
+        .qna-item.open .qna-question { background: var(--primary-light); }
+        .qna-answer { display: none; padding: 16px 20px; background: var(--gray-50); border-top: 1px solid var(--gray-200); font-size: 13px; line-height: 1.8; color: var(--gray-700); white-space: pre-line; }
+        .qna-item.open .qna-answer { display: block; }
+        .qna-answer .tip { margin-top: 12px; padding: 10px 14px; background: #FFFBEB; border-radius: 6px; font-size: 12px; color: #92400E; }
+        .qna-search { width: 100%; padding: 12px 16px; border: 1px solid var(--gray-300); border-radius: var(--radius); font-size: 14px; margin-bottom: 16px; }
+        .qna-search:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
         /* Responsive */
         @media (max-width: 768px) {
             .data-table { display: block; overflow-x: auto; }
@@ -281,6 +331,30 @@
             .data-filters { width: 100%; }
             .search-input { width: 100%; }
         }
+
+        /* ===== 게시판 관리 스타일 ===== */
+        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .board-list { display: flex; flex-direction: column; gap: 0; }
+        .board-item { border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; background: #fff; }
+        .board-item-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; transition: background 0.15s; }
+        .board-item-header:hover { background: var(--gray-100); }
+        .board-item-title { flex: 1; font-weight: 600; font-size: 15px; color: var(--gray-900); }
+        .board-item-meta { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--gray-500); }
+        .board-badge-answered { background: var(--success); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+        .board-badge-waiting { background: var(--warning); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+        .board-badge-admin { background: var(--primary); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+        .board-badge-partner { background: var(--gray-500); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+        .board-item-body { display: none; padding: 0 18px 16px; border-top: 1px solid var(--gray-200); }
+        .board-item-body.open { display: block; }
+        .board-content { padding: 14px 0; white-space: pre-wrap; font-size: 14px; line-height: 1.7; color: var(--gray-800); }
+        .board-reply { background: var(--gray-100); border-radius: var(--radius); padding: 14px 16px; margin-top: 10px; }
+        .board-reply-label { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+        .board-reply-content { font-size: 14px; line-height: 1.6; color: var(--gray-800); white-space: pre-wrap; }
+        .board-reply-date { font-size: 12px; color: var(--gray-500); margin-top: 6px; }
+        .board-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .board-empty { text-align: center; padding: 40px; color: var(--gray-500); }
+        .board-arrow { transition: transform 0.2s; color: var(--gray-400); }
+        .board-arrow.open { transform: rotate(180deg); }
     </style>
 </head>
 <body>
@@ -291,20 +365,136 @@
                 <h1>메디플라톤 관리자</h1>
                 <p>상담 신청 및 파트너 신청 관리</p>
             </div>
-            <div class="login-error" id="loginError">
-                이메일 또는 비밀번호가 올바르지 않습니다.
+
+            <!-- Auth Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-auth-tab="login" onclick="switchAuthTab('login')">로그인</button>
+                <button class="auth-tab" data-auth-tab="register" onclick="switchAuthTab('register')">파트너 회원가입</button>
             </div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">이메일</label>
-                    <input type="email" id="email" placeholder="admin@mediplaton.co.kr" autocomplete="username" required>
+
+            <!-- Login Form -->
+            <div class="auth-form active" id="loginFormWrap">
+                <div class="login-error" id="loginError">
+                    이메일 또는 비밀번호가 올바르지 않습니다.
                 </div>
-                <div class="form-group">
-                    <label for="password">비밀번호</label>
-                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">로그인</button>
-            </form>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="email" id="email" placeholder="admin@mediplaton.co.kr" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">로그인</button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerFormWrap">
+                <div class="login-error" id="registerError"></div>
+                <div class="login-success" id="registerSuccess"></div>
+                <form id="registerForm" class="register-form">
+                    <div class="form-section-title">기본 정보</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="regName">이름 *</label>
+                            <input type="text" id="regName" placeholder="홍길동" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPhone">연락처 *</label>
+                            <input type="tel" id="regPhone" placeholder="010-1234-5678" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">이메일 *</label>
+                        <input type="email" id="regEmail" placeholder="partner@example.com" autocomplete="username" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="regPassword">비밀번호 * <span style="font-weight:400;color:var(--gray-500);font-size:12px;">(6자 이상)</span></label>
+                            <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password" minlength="6" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPasswordConfirm">비밀번호 확인 *</label>
+                            <input type="password" id="regPasswordConfirm" placeholder="••••••••" autocomplete="new-password" minlength="6" required>
+                        </div>
+                    </div>
+
+                    <hr class="form-divider">
+                    <div class="form-section-title">사업자 정보</div>
+                    <div class="form-group">
+                        <label for="regHospital">소속 (병원명/회사명) *</label>
+                        <input type="text" id="regHospital" placeholder="메디플라톤 병원" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="regBusiness">업종 *</label>
+                            <select id="regBusiness" required>
+                                <option value="">선택</option>
+                                <option value="hospital">병원</option>
+                                <option value="dental">치과</option>
+                                <option value="oriental">한의원</option>
+                                <option value="pharmacy">약국</option>
+                                <option value="restaurant">음식점</option>
+                                <option value="cafe">카페</option>
+                                <option value="salon">미용실</option>
+                                <option value="gym">헬스장</option>
+                                <option value="other">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="regRegion">지역 *</label>
+                            <select id="regRegion" required>
+                                <option value="">선택</option>
+                                <option value="seoul">서울</option>
+                                <option value="gyeonggi">경기</option>
+                                <option value="incheon">인천</option>
+                                <option value="busan">부산</option>
+                                <option value="daegu">대구</option>
+                                <option value="daejeon">대전</option>
+                                <option value="gwangju">광주</option>
+                                <option value="ulsan">울산</option>
+                                <option value="sejong">세종</option>
+                                <option value="gangwon">강원</option>
+                                <option value="chungbuk">충북</option>
+                                <option value="chungnam">충남</option>
+                                <option value="jeonbuk">전북</option>
+                                <option value="jeonnam">전남</option>
+                                <option value="gyeongbuk">경북</option>
+                                <option value="gyeongnam">경남</option>
+                                <option value="jeju">제주</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr class="form-divider">
+                    <div class="form-section-title">정산 계좌 (선택)</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="regBankName">은행명</label>
+                            <select id="regBankName">
+                                <option value="">선택</option>
+                                <option value="kb">KB국민</option>
+                                <option value="shinhan">신한</option>
+                                <option value="woori">우리</option>
+                                <option value="hana">하나</option>
+                                <option value="nh">NH농협</option>
+                                <option value="ibk">IBK기업</option>
+                                <option value="kakao">카카오뱅크</option>
+                                <option value="toss">토스뱅크</option>
+                                <option value="other">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="regBankAccount">계좌번호</label>
+                            <input type="text" id="regBankAccount" placeholder="123-456-789012">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="registerBtn" style="margin-top: 8px;">회원가입 신청</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -380,6 +570,12 @@
                 </button>
                 <button class="tab-btn" data-tab="admin-settlements">
                     정산 관리
+                </button>
+                <button class="tab-btn" data-tab="partner-qna">
+                    파트너 Q&amp;A
+                </button>
+                <button class="tab-btn" data-tab="board-manage">
+                    게시판 관리
                 </button>
             </div>
 
@@ -600,6 +796,154 @@
                     <h3>공지사항이 없습니다</h3>
                 </div>
             </div>
+            <!-- Partner QNA Section -->
+            <div class="data-section" id="partnerQnaSection" style="display: none;">
+                <div class="data-header"><h2>파트너 Q&amp;A (상품 안내)</h2></div>
+                <div class="qna-categories">
+                    <input type="text" class="qna-search" id="adminQnaSearch" placeholder="검색...">
+
+                    <div class="qna-cat-title">📌 상품종류</div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>어떤 대출 상품이 있나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">총 4가지 상품이 있습니다:
+
+① 영업지원금(PG상품)
+→ 카드단말기 바꾸고, 매달 카드매출에서 조금씩 빠져나가는 방식
+→ 금리: 연 5.6%~6.8% / 기간: 365일 또는 700일
+→ 은행 대출 아니라서 신용등급에 영향 없음 (대출 전산에 안 올라감)
+
+② 신협 데일리론
+→ 신협에서 나오는 대출, 매일 카드매출에서 자동 상환
+→ 은행 대출이라 신용등급에 반영됨
+
+③ 렌탈/리스
+→ 에어컨, 냉장고, 주방기기 등 새 장비 살 때 사용
+→ 장비값을 나눠서 갚는 개념
+→ 부가세 환급 + 경비처리 가능 (절세 효과)
+
+④ 임차보증금 담보대출
+→ 가게 보증금을 담보로 대출 (최대 90%까지)
+→ 카드매출 없어도 가능
+<div class="tip">신용 관리가 중요하시면 PG/렌탈 추천 (대출 전산에 안 올라감). 여러 상품 동시 진행 가능</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>구매자금과 운영자금 차이는?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">▶ 구매자금: 물품 구입 목적, 모든 업종 가능, 물품이 담보
+▶ 운영자금: 단순 현금 확보, 병원만 가능, 담보 필요
+<div class="tip">소상공인 운영자금은 공식 상품 아님. 플라톤 DB건은 특별 적용 조건 있으니 별도 문의</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>수수료는 얼마예요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">성사됐을 때만 수수료 발생합니다:
+
+• 렌탈상품: 대출금액의 3%
+  (예: 5천만원 → 150만원)
+• 신협 데일리론: 대출금액의 3%
+  (예: 5천만원 → 150만원)
+• 팀장 소개건: 3%
+• 플라톤 DB건: 2%
+<div class="tip">수수료는 대출 실행 후 지급. 불승인되면 수수료 없음</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>금리(이자)는 얼마나 되나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">연 5~8% 수준입니다.
+
+• 일반 상품: 연 5~7% (신용점수 좋으면 조금 낮아짐)
+• 보증금 담보: 연 7~8% (부가세 환급 받으면 실제론 더 낮음)
+
+※ 은행보다는 높지만, 제2금융권 중에선 합리적인 편입니다.
+<div class="tip">정확한 금리는 심사 후 확정. 사전에 확답 불가</div></div></div>
+
+                    <div class="qna-cat-title">💳 카드매출 대출</div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>카드매출이 얼마나 나와야 하나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">① 영업지원금(PG) → 월 5천만원 이상 필수!
+② 신협 데일리론 → 개별 심사 (5천 안 돼도 상담 가능)
+③ 렌탈 → 카드매출 + 신용 종합 평가
+
+중요: 배달앱 매출은 안 쳐요! 손님이 직접 가게에서 카드 긁은 매출만 인정
+<div class="tip">매출 확인: 포스기 매출내역 or 여신금융협회에서 조회</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>기존 카드단말기 그대로 써도 되나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">안 됩니다. 단말기 교체가 필수예요.
+
+카드매출에서 자동으로 상환금이 빠지는 구조라서 저희 쪽 단말기를 써야 정산이 가능합니다.
+
+• 기존 단말기 위약금? → 100% 지원
+• 2개 같이 쓰면? → 매출 분산되면 약정 못 채울 수 있어서 비추
+• 프랜차이즈는? → 본사 확인 필요, 추가 설치로 해결 가능
+<div class="tip">위약금 금액 미리 확인해주시면 진행이 빨라요</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>배달 매출만 있으면 안 되나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">네, 안 됩니다.
+
+배달앱은 중간에서 정산해주는 구조라서 저희 단말기를 안 거치거든요.
+그래서 '홀(매장) 매출'이 있어야 해요. → 손님이 매장에서 직접 카드 긁는 매출!
+<div class="tip">홀 매출 월 1천만원 이상은 되어야 검토 가능</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>5천만원 안 되면 절대 안 되나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">• 현재: PG 상품은 월 5천만원 이상만 가능
+• 2026년 2월부터: 5천만원 미만도 가능한 상품 출시 예정
+
+※ 그 전까지는 보증금 담보나 렌탈 쪽으로 검토해보세요.
+<div class="tip">2월 이후 재상담 권장</div></div></div>
+
+                    <div class="qna-cat-title">🏠 보증금 담보</div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>보증금이 얼마 이상이어야 하나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">최소 3천만원 이상이면 가능합니다.
+
+• 보증금 3천만원 이상 / 임대인(건물주) 동의 필수
+• 보증보험 가입 필요 (저희가 해드려요)
+• 예시) 보증금 2억 → 약 1억 6,900만원 정도
+<div class="tip">임대인 연락처 미리 확보해두시면 진행이 빨라요</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>임대인 동의를 꼭 받아야 하나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">네, 반드시 필요합니다.
+
+1. 보증보험 심사 통과 → 2. 증권 발행 → 3. 임대인 동의 → 4. 대출 실행
+임대인이 거부하면 진행 불가입니다.
+<div class="tip">임대인 동의서 양식은 저희가 제공해드려요</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>카드매출 대출이랑 동시에 받을 수 있나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">네, 조건 맞으면 둘 다 가능해요!
+
+예시) 보증금 1억 + 월 카드매출 6천만원 → 보증금 8천만원 + PG 6천만원 = 합계 약 1억 4천만원
+<div class="tip">동시 진행 시 심사가 조금 더 까다로울 수 있음</div></div></div>
+
+                    <div class="qna-cat-title">🏪 업종별</div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>어떤 업종이 잘 되나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">승인률 높은 업종: 병원, 의원, 치과, 한의원, 약국
+일반적으로 되는 업종: 음식점, 카페, 학원, 마사지샵, 호텔, 마트
+제조업도 카드매출이 있으면 가능
+<div class="tip">병원은 법인이어도 리스로 가능</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>안 되는 업종은 뭐예요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">❌ 편의점 (본사 포스기만 사용)
+❌ 배달전문점 (홀 매출 없음)
+△ 스크린골프 (폐업률 높아 심사 까다로움)
+△ 백화점 입점 매장 (단말기 교체 불가)
+<div class="tip">업종별로 개별 상담 필요. 예외도 있을 수 있음</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>법인사업자도 가능한가요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">✅ PG 영업지원금, 렌탈/리스, 보증금 담보 → 법인 OK
+❌ 신협 데일리론 → 개인사업자만 가능
+법인은 서류가 좀 더 많이 필요 (재무제표 3개년, 대표자 신분증)
+<div class="tip">법인 필요서류: 재무제표 3개년, 대표자 신분증</div></div></div>
+
+                    <div class="qna-cat-title">📍 지역</div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>지역 제한이 있나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">① PG / 렌탈 → 전국 가능
+② 신협 데일리론 → 병원: 서울/경기/인천 + 광역시 / 일반: 서울/경기/인천만
+③ 제주도 → 병원, 약국은 가능 / 일반은 협의
+<div class="tip">신협 지역제한은 계속 확대 중</div></div></div>
+
+                    <div class="qna-cat-title">📋 심사</div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>신용등급은 몇 점 이상이어야 하나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">• KCB 기준: 760점 이상 / NICE 기준: 680점 이상
+• 매출이 좋으면 760점 미만이어도 승인 가능성 있음
+• 종합적으로 보는 거라서 상담 먼저 받아보세요
+<div class="tip">신용조회는 심사 단계에서만 (사전상담은 조회 안 함)</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>심사 기간은 얼마나 걸려요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">① PG / 렌탈 → 서류 제출 후 1~2일, 승인 후 2~3일 내 실행
+② 신협 데일리론 → 약 3일
+③ 보증금 담보 → 보증보험 심사 때문에 약 2주
+<div class="tip">급한 건 별도 문의 주세요</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>필요한 서류가 뭐예요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">기본: 신분증, 사업자등록증, 카드매출 확인서
+법인 추가: 재무제표 3개년, 법인등기부등본
+보증금 담보 추가: 임대차계약서, 임대인 연락처
+<div class="tip">서류는 카톡이나 문자로 사진 찍어서 보내주시면 됨</div></div></div>
+
+                    <div class="qna-cat-title">⚠️ 주의사항</div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>PG 대출은 신용등급에 영향 없나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">① PG / 렌탈 → 대출 전산에 안 올라감! 신용등급 영향 없음!
+② 신협 데일리론 → 대출 전산에 반영됨, 1억 이하는 PG 추천
+<div class="tip">신용 관리가 중요하시면 PG 상품 추천</div></div></div>
+                    <div class="qna-item"><div class="qna-question"><span class="q-icon">Q</span>상환은 어떻게 되나요?<span class="q-arrow">&#9660;</span></div><div class="qna-answer">자동 상환! 카드매출에서 알아서 빠지는 구조입니다.
+• PG/렌탈: 카드 결제 시 일정 비율 자동 차감
+• 신협 데일리론: 매일 카드매출에서 자동 상환
+<div class="tip">상환 비율/금액은 계약 시 확정</div></div></div>
+                </div>
+            </div>
+
+            <!-- Board Manage Section -->
+            <div class="data-section" id="boardManageSection" style="display: none;">
+                <div class="board-header">
+                    <h2>게시판 관리</h2>
+                    <button class="btn btn-primary btn-sm" id="openAdminBoardPostModal">글쓰기</button>
+                </div>
+                <div class="loading" id="adminBoardLoading" style="display:none;"><div class="spinner"></div></div>
+                <div class="board-list" id="adminBoardList">
+                    <div class="board-empty"><h3>게시글이 없습니다</h3></div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -736,6 +1080,49 @@
                         <label><input type="checkbox" id="noticeActive" checked> 활성화</label>
                     </div>
                     <button type="submit" class="btn btn-primary" style="margin-top:16px;">저장</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Board Reply Modal -->
+    <div class="modal-overlay" id="boardReplyModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>답변 작성</h3>
+                <button class="modal-close" onclick="document.getElementById('boardReplyModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="boardReplyForm">
+                    <input type="hidden" id="replyPostId">
+                    <div class="form-group">
+                        <label>답변 내용</label>
+                        <textarea id="boardReplyContent" rows="6" placeholder="답변을 입력하세요" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;font-family:inherit;resize:vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px;">답변 등록</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Board Post Modal -->
+    <div class="modal-overlay" id="adminBoardPostModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>글쓰기</h3>
+                <button class="modal-close" onclick="document.getElementById('adminBoardPostModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminBoardPostForm">
+                    <div class="form-group">
+                        <label>제목</label>
+                        <input type="text" id="adminBoardPostTitle" placeholder="제목을 입력하세요" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;font-family:inherit;">
+                    </div>
+                    <div class="form-group" style="margin-top:12px;">
+                        <label>내용</label>
+                        <textarea id="adminBoardPostContent" rows="6" placeholder="내용을 입력하세요" required style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;font-family:inherit;resize:vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px;">등록</button>
                 </form>
             </div>
         </div>
