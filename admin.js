@@ -31,7 +31,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session } } = await sb.auth.getSession();
     if (session) {
         currentUser = session.user;
-        showDashboard();
+
+        // 파트너인지 관리자인지 체크 후 라우팅
+        const { data: partner } = await sb
+            .from('partners')
+            .select('status')
+            .eq('user_id', currentUser.id)
+            .single();
+
+        if (partner?.status === 'approved') {
+            window.location.href = 'partner-dashboard.html';
+            return;
+        } else if (partner && partner.status !== 'approved') {
+            // 미승인 파트너는 세션 제거
+            await sb.auth.signOut();
+            currentUser = null;
+        } else {
+            // 관리자
+            showDashboard();
+        }
     }
 
     setupEventListeners();
@@ -170,11 +188,23 @@ async function handleRegister(e) {
     btn.textContent = '처리 중...';
 
     try {
-        // 1. Sign up in Supabase Auth
-        const { data, error } = await sb.auth.signUp({ email, password });
+        // 1. Sign up in Supabase Auth (이메일 인증 건너뛰기 위해 옵션 추가)
+        const { data, error } = await sb.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { name, phone, role: 'partner' }
+            }
+        });
         if (error) throw error;
 
+        // signUp이 유저를 반환하지 않으면 이미 존재하는 이메일
+        if (!data.user || !data.user.id) {
+            throw new Error('이미 가입된 이메일입니다. 로그인을 시도해주세요.');
+        }
+
         // 2. Insert partner record with pending status
+        // (signUp으로 세션이 생겼을 수 있으므로 해당 세션으로 insert)
         const { error: insertError } = await sb.from('partners').insert({
             name,
             phone,
@@ -193,7 +223,7 @@ async function handleRegister(e) {
         await sb.auth.signOut();
 
         // 4. Show success
-        successEl.textContent = '가입 신청이 완료되었습니다! 관리자 승인 후 파트너 대시보드를 이용하실 수 있습니다.';
+        successEl.textContent = '가입 신청이 완료되었습니다! 관리자 승인 후 로그인하실 수 있습니다.';
         successEl.style.display = 'block';
         document.getElementById('registerForm').reset();
 
