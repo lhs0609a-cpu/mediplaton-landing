@@ -1271,7 +1271,6 @@ function initMarketingCalculator() {
             if (benefit === 'blog') isActive = hasLoan;
             if (benefit === 'place') isActive = hasLoan && hasBroker;
             if (benefit === 'cafe') isActive = hasLoan && hasBroker && isLarge;
-            if (benefit === 'sns') isActive = hasLoan && hasBroker && isLarge;
 
             if (isActive) {
                 item.classList.add('active');
