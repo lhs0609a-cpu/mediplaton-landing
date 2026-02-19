@@ -362,29 +362,17 @@
                         </label>
                     </div>
 
-                    <!-- 중개 -->
-                    <div class="mkt-calc-group">
-                        <label class="mkt-calc-toggle" id="mktBrokerToggle">
-                            <input type="checkbox" id="mktBroker">
-                            <span class="mkt-toggle-slider"></span>
-                            <span class="mkt-toggle-text">
-                                <strong>부동산 중개수수료</strong>
-                                <small>개원/이전 시 중개 연계</small>
-                            </span>
-                        </label>
-                    </div>
-
                     <!-- 평수 -->
                     <div class="mkt-calc-group">
                         <label class="mkt-calc-radio-title">사업장 규모</label>
                         <div class="mkt-calc-radios">
                             <label class="mkt-calc-radio">
                                 <input type="radio" name="mktSize" value="small" checked>
-                                <span>30평 미만</span>
+                                <span>50평 미만</span>
                             </label>
                             <label class="mkt-calc-radio">
                                 <input type="radio" name="mktSize" value="large">
-                                <span>30평 이상</span>
+                                <span>50평 이상</span>
                             </label>
                         </div>
                     </div>
@@ -399,41 +387,40 @@
 
                     <!-- 등급 표시 -->
                     <div class="mkt-tier-display">
-                        <span class="mkt-tier-badge basic" id="mktTierBadge">Basic</span>
+                        <span class="mkt-tier-badge silver" id="mktTierBadge">Silver</span>
                         <span class="mkt-tier-desc" id="mktTierDesc">PG 단말기 교체 혜택</span>
                     </div>
 
                     <!-- 절감액 -->
                     <div class="mkt-savings-box">
                         <span class="mkt-savings-label">월 절감액</span>
-                        <span class="mkt-savings-value" id="mktSavingsValue">~400만원</span>
-                        <span class="mkt-savings-note" id="mktSavingsNote">(홈페이지 제작비 1회)</span>
+                        <span class="mkt-savings-value" id="mktSavingsValue">~350만원/월</span>
+                        <span class="mkt-savings-note" id="mktSavingsNote">(블로그+플레이스 무료)</span>
                     </div>
 
                     <!-- 혜택 목록 -->
                     <div class="mkt-benefits-list" id="mktBenefitsList">
-                        <div class="mkt-benefit-item active" data-benefit="homepage">
+                        <div class="mkt-benefit-item active" data-benefit="blog">
                             <span class="mkt-benefit-check">
                                 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
                             </span>
-                            <span class="mkt-benefit-name">홈페이지 제작</span>
-                            <span class="mkt-benefit-val">~400만원</span>
-                        </div>
-                        <div class="mkt-benefit-item locked" data-benefit="blog">
-                            <span class="mkt-benefit-lock">
-                                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </span>
                             <span class="mkt-benefit-name">블로그 운영</span>
                             <span class="mkt-benefit-val">월 ~250만원</span>
-                            <span class="mkt-benefit-unlock">+ 대출 이용 시 해제</span>
                         </div>
-                        <div class="mkt-benefit-item locked" data-benefit="place">
-                            <span class="mkt-benefit-lock">
-                                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <div class="mkt-benefit-item active" data-benefit="place">
+                            <span class="mkt-benefit-check">
+                                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
                             </span>
                             <span class="mkt-benefit-name">플레이스 광고</span>
                             <span class="mkt-benefit-val">월 ~100만원</span>
-                            <span class="mkt-benefit-unlock">+ 중개 이용 시 해제</span>
+                        </div>
+                        <div class="mkt-benefit-item locked" data-benefit="homepage">
+                            <span class="mkt-benefit-lock">
+                                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            </span>
+                            <span class="mkt-benefit-name">홈페이지 제작</span>
+                            <span class="mkt-benefit-val">~400만원</span>
+                            <span class="mkt-benefit-unlock">+ 대출 이용 시 해제</span>
                         </div>
                         <div class="mkt-benefit-item locked" data-benefit="cafe">
                             <span class="mkt-benefit-lock">
@@ -441,7 +428,7 @@
                             </span>
                             <span class="mkt-benefit-name">카페 바이럴</span>
                             <span class="mkt-benefit-val">월 ~150만원</span>
-                            <span class="mkt-benefit-unlock">+ 30평 이상 시 해제</span>
+                            <span class="mkt-benefit-unlock">+ 대출 이용 시 해제</span>
                         </div>
                         <div class="mkt-benefit-item locked" data-benefit="sns">
                             <span class="mkt-benefit-lock">
@@ -449,7 +436,7 @@
                             </span>
                             <span class="mkt-benefit-name">SNS 마케팅</span>
                             <span class="mkt-benefit-val">월 ~150만원</span>
-                            <span class="mkt-benefit-unlock">+ 30평 이상 시 해제</span>
+                            <span class="mkt-benefit-unlock">+ 50평 이상 시 해제</span>
                         </div>
                     </div>
 
