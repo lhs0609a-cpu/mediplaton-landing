@@ -1201,13 +1201,11 @@ document.addEventListener('keydown', function(e) {
 function initMarketingCalculator() {
     const pgCheck = document.getElementById('mktPg');
     const loanCheck = document.getElementById('mktLoan');
-    const brokerCheck = document.getElementById('mktBroker'); // null on medical page
+    const brokerCheck = document.getElementById('mktBroker');
     const loanToggle = document.getElementById('mktLoanToggle');
-    const brokerToggle = document.getElementById('mktBrokerToggle'); // null on medical page
+    const brokerToggle = document.getElementById('mktBrokerToggle');
 
     if (!pgCheck) return; // Not on marketing page
-
-    const hasBrokerOption = !!brokerCheck; // biz page has broker, medical does not
 
     const sizeRadios = document.querySelectorAll('input[name="mktSize"]');
     const tierBadge = document.getElementById('mktTierBadge');
@@ -1218,64 +1216,40 @@ function initMarketingCalculator() {
 
     function calculate() {
         const hasLoan = loanCheck.checked;
-        const hasBroker = brokerCheck ? brokerCheck.checked : false;
+        const hasBroker = brokerCheck.checked;
         const isLarge = document.querySelector('input[name="mktSize"]:checked')?.value === 'large';
 
         // Toggle active states
         loanToggle.classList.toggle('active', hasLoan);
-        if (brokerToggle) brokerToggle.classList.toggle('active', hasBroker);
+        brokerToggle.classList.toggle('active', hasBroker);
 
         // Determine tier
         let tier, tierName, tierDescText, savings, savingsNoteText;
 
-        if (hasBrokerOption) {
-            // === Biz page: 4-tier with broker ===
-            if (hasLoan && hasBroker && isLarge) {
-                tier = 'platinum';
-                tierName = 'Platinum';
-                tierDescText = 'PG + 대출 + 중개 + 30평 이상';
-                savings = '~600만원/월';
-                savingsNoteText = '(전체 마케팅 무료)';
-            } else if (hasLoan && hasBroker) {
-                tier = 'gold';
-                tierName = 'Gold';
-                tierDescText = 'PG + 대출 + 중개';
-                savings = '~350만원/월';
-                savingsNoteText = '(홈페이지+블로그+플레이스)';
-            } else if (hasLoan) {
-                tier = 'silver';
-                tierName = 'Silver';
-                tierDescText = 'PG + 대출 이용';
-                savings = '~250만원/월';
-                savingsNoteText = '(홈페이지+블로그 운영)';
-            } else {
-                tier = 'basic';
-                tierName = 'Basic';
-                tierDescText = 'PG 단말기 교체 혜택';
-                savings = '~400만원';
-                savingsNoteText = '(홈페이지 제작비 1회)';
-            }
+        if (hasLoan && hasBroker && isLarge) {
+            tier = 'platinum';
+            tierName = 'Platinum';
+            tierDescText = 'PG + 대출 + 중개 + 30평 이상';
+            savings = '~600만원/월';
+            savingsNoteText = '(전체 마케팅 무료)';
+        } else if (hasLoan && hasBroker) {
+            tier = 'gold';
+            tierName = 'Gold';
+            tierDescText = 'PG + 대출 + 중개';
+            savings = '~350만원/월';
+            savingsNoteText = '(홈페이지+블로그+플레이스)';
+        } else if (hasLoan) {
+            tier = 'silver';
+            tierName = 'Silver';
+            tierDescText = 'PG + 대출 이용';
+            savings = '~250만원/월';
+            savingsNoteText = '(홈페이지+블로그 운영)';
         } else {
-            // === Medical page: 3-tier without broker ===
-            if (hasLoan && isLarge) {
-                tier = 'platinum';
-                tierName = 'Platinum';
-                tierDescText = 'PG + 대출 + 50평 이상';
-                savings = '~650만원/월';
-                savingsNoteText = '(전체 마케팅 무료)';
-            } else if (hasLoan) {
-                tier = 'gold';
-                tierName = 'Gold';
-                tierDescText = 'PG + 대출 이용';
-                savings = '~500만원/월';
-                savingsNoteText = '(홈페이지+블로그+플레이스+카페)';
-            } else {
-                tier = 'silver';
-                tierName = 'Silver';
-                tierDescText = 'PG 단말기 교체 혜택';
-                savings = '~350만원/월';
-                savingsNoteText = '(블로그+플레이스 무료)';
-            }
+            tier = 'basic';
+            tierName = 'Basic';
+            tierDescText = 'PG 단말기 교체 혜택';
+            savings = '~400만원';
+            savingsNoteText = '(홈페이지 제작비 1회)';
         }
 
         // Update tier badge
@@ -1293,20 +1267,10 @@ function initMarketingCalculator() {
             const benefit = item.dataset.benefit;
             let isActive = false;
 
-            if (hasBrokerOption) {
-                // Biz page unlock logic
-                if (benefit === 'homepage') isActive = true;
-                if (benefit === 'blog') isActive = hasLoan;
-                if (benefit === 'place') isActive = hasLoan && hasBroker;
-                if (benefit === 'cafe') isActive = hasLoan && hasBroker && isLarge;
-            } else {
-                // Medical page unlock logic
-                if (benefit === 'blog') isActive = true;   // PG base
-                if (benefit === 'place') isActive = true;   // PG base
-                if (benefit === 'homepage') isActive = hasLoan;
-                if (benefit === 'cafe') isActive = hasLoan;
-                if (benefit === 'sns') isActive = hasLoan && isLarge;
-            }
+            if (benefit === 'homepage') isActive = true; // Always active with PG
+            if (benefit === 'blog') isActive = hasLoan;
+            if (benefit === 'place') isActive = hasLoan && hasBroker;
+            if (benefit === 'cafe') isActive = hasLoan && hasBroker && isLarge;
 
             if (isActive) {
                 item.classList.add('active');
@@ -1323,7 +1287,7 @@ function initMarketingCalculator() {
                 item.classList.add('locked');
                 // Replace check icon with lock icon
                 const checkEl = item.querySelector('.mkt-benefit-check');
-                if (checkEl && !(hasBrokerOption && benefit === 'homepage')) {
+                if (checkEl && benefit !== 'homepage') {
                     checkEl.outerHTML = '<span class="mkt-benefit-lock"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>';
                 }
                 const unlockEl = item.querySelector('.mkt-benefit-unlock');
@@ -1336,32 +1300,9 @@ function initMarketingCalculator() {
         setTimeout(() => { savingsValue.style.transform = 'scale(1)'; }, 200);
     }
 
-    // === Homepage toggle / alt-service logic ===
-    const homepageToggle = document.getElementById('mktHomepageToggle');
-    const altServiceEl = document.getElementById('mktAltService');
-    const altSelect = document.getElementById('mktAltSelect');
-    let homepageOff = false;
-
-    if (homepageToggle && altServiceEl) {
-        homepageToggle.addEventListener('click', () => {
-            homepageOff = !homepageOff;
-            const hpItem = benefitsList.querySelector('[data-benefit="homepage"]');
-
-            if (homepageOff) {
-                hpItem.classList.add('homepage-off');
-                altServiceEl.style.display = '';
-                homepageToggle.textContent = '원래대로';
-            } else {
-                hpItem.classList.remove('homepage-off');
-                altServiceEl.style.display = 'none';
-                homepageToggle.textContent = '변경';
-            }
-        });
-    }
-
     // Event listeners
     loanCheck.addEventListener('change', calculate);
-    if (brokerCheck) brokerCheck.addEventListener('change', calculate);
+    brokerCheck.addEventListener('change', calculate);
     sizeRadios.forEach(radio => radio.addEventListener('change', calculate));
 
     // Initial calculation

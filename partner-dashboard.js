@@ -147,7 +147,6 @@ function showDashboard() {
     initMonthSelects();
     loadUnreadCount();
     setupRealtime();
-    setupQNA();
 }
 
 // ─── Realtime ───
@@ -190,14 +189,11 @@ function switchTab(tab) {
     document.getElementById('clientsSection').style.display = tab === 'clients' ? 'block' : 'none';
     document.getElementById('overviewSection').style.display = tab === 'overview' ? 'block' : 'none';
     document.getElementById('settlementsSection').style.display = tab === 'settlements' ? 'block' : 'none';
-    document.getElementById('noticesSection').style.display = tab === 'notices' ? 'block' : 'none';
-    document.getElementById('qnaSection').style.display = tab === 'qna' ? 'block' : 'none';
     document.getElementById('notificationsSection').style.display = tab === 'notifications' ? 'block' : 'none';
 
     if (tab === 'clients') loadClients();
     if (tab === 'overview') { loadOverview(); loadLeaderboard(); }
     if (tab === 'settlements') loadSettlements();
-    if (tab === 'notices') loadPartnerNotices();
     if (tab === 'notifications') loadNotifications();
 }
 
@@ -649,77 +645,6 @@ async function markAllNotificationsRead() {
         showToast('모든 알림을 읽음 처리했습니다.', 'success');
     } catch (error) {
         showToast('처리 실패', 'error');
-    }
-}
-
-// ─── Partner Notices ───
-
-async function loadPartnerNotices() {
-    const loading = document.getElementById('noticeLoading');
-    const list = document.getElementById('partnerNoticeList');
-
-    loading.style.display = 'flex';
-    list.innerHTML = '';
-
-    try {
-        const { data, error } = await sb
-            .from('notices')
-            .select('*')
-            .eq('is_active', true)
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        loading.style.display = 'none';
-
-        if (!data || data.length === 0) {
-            list.innerHTML = '<div class="empty-state"><h3>공지사항이 없습니다</h3></div>';
-            return;
-        }
-
-        list.innerHTML = data.map(n => `
-            <div class="notice-item" onclick="this.nextElementSibling.classList.toggle('open')">
-                <h4>${escapeHtml(n.title)}</h4>
-                <span class="notice-date">${formatDate(n.created_at)}</span>
-            </div>
-            <div class="notice-content">${escapeHtml(n.content || '내용 없음')}</div>
-        `).join('');
-    } catch (error) {
-        console.error('Notices error:', error);
-        loading.style.display = 'none';
-        list.innerHTML = '<div class="empty-state"><h3>공지사항을 불러오지 못했습니다</h3></div>';
-    }
-}
-
-// ─── QNA Accordion ───
-
-function setupQNA() {
-    document.querySelectorAll('.qna-question').forEach(q => {
-        q.addEventListener('click', () => {
-            const item = q.parentElement;
-            item.classList.toggle('open');
-        });
-    });
-
-    const searchInput = document.getElementById('qnaSearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce(() => {
-            const query = searchInput.value.trim().toLowerCase();
-            document.querySelectorAll('.qna-item').forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = (!query || text.includes(query)) ? '' : 'none';
-            });
-            document.querySelectorAll('.qna-cat-title').forEach(title => {
-                const next = [];
-                let el = title.nextElementSibling;
-                while (el && !el.classList.contains('qna-cat-title')) {
-                    if (el.classList.contains('qna-item')) next.push(el);
-                    el = el.nextElementSibling;
-                }
-                const anyVisible = next.some(n => n.style.display !== 'none');
-                title.style.display = (!query || anyVisible) ? '' : 'none';
-            });
-        }, 200));
     }
 }
 

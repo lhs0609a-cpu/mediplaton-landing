@@ -50,6 +50,7 @@ function showSetupGuide() {
 
 function setupEventListeners() {
     loginForm.addEventListener('submit', handleLogin);
+    document.getElementById('registerForm').addEventListener('submit', handleRegister);
     logoutBtn.addEventListener('click', handleLogout);
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -116,6 +117,97 @@ function setupEventListeners() {
 
 // ─── Auth ───
 
+function switchAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.authTab === tab);
+    });
+    document.getElementById('loginFormWrap').classList.toggle('active', tab === 'login');
+    document.getElementById('registerFormWrap').classList.toggle('active', tab === 'register');
+
+    // Clear messages
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('registerError').style.display = 'none';
+    document.getElementById('registerSuccess').style.display = 'none';
+}
+
+async function handleRegister(e) {
+    e.preventDefault();
+    const errEl = document.getElementById('registerError');
+    const successEl = document.getElementById('registerSuccess');
+    const btn = document.getElementById('registerBtn');
+    errEl.style.display = 'none';
+    successEl.style.display = 'none';
+
+    const name = document.getElementById('regName').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+    const hospital_name = document.getElementById('regHospital').value.trim();
+    const business = document.getElementById('regBusiness').value;
+    const region = document.getElementById('regRegion').value;
+    const bank_name = document.getElementById('regBankName').value || null;
+    const bank_account = document.getElementById('regBankAccount').value.trim() || null;
+
+    // Validation
+    if (!name || !phone || !email || !password || !hospital_name || !business || !region) {
+        errEl.textContent = '필수 항목을 모두 입력해주세요.';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (password.length < 6) {
+        errEl.textContent = '비밀번호는 6자 이상이어야 합니다.';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (password !== passwordConfirm) {
+        errEl.textContent = '비밀번호가 일치하지 않습니다.';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '처리 중...';
+
+    try {
+        // 1. Sign up in Supabase Auth
+        const { data, error } = await sb.auth.signUp({ email, password });
+        if (error) throw error;
+
+        // 2. Insert partner record with pending status
+        const { error: insertError } = await sb.from('partners').insert({
+            name,
+            phone,
+            email,
+            hospital_name,
+            business,
+            region,
+            bank_name,
+            bank_account,
+            user_id: data.user.id,
+            status: 'pending'
+        });
+        if (insertError) throw insertError;
+
+        // 3. Sign out (pending user should not have a session)
+        await sb.auth.signOut();
+
+        // 4. Show success
+        successEl.textContent = '가입 신청이 완료되었습니다! 관리자 승인 후 파트너 대시보드를 이용하실 수 있습니다.';
+        successEl.style.display = 'block';
+        document.getElementById('registerForm').reset();
+
+        // 5. Auto-switch to login tab after 3 seconds
+        setTimeout(() => switchAuthTab('login'), 3000);
+    } catch (error) {
+        errEl.textContent = error.message || '회원가입에 실패했습니다.';
+        errEl.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '회원가입 신청';
+    }
+}
+
 async function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('email').value;
@@ -126,7 +218,40 @@ async function handleLogin(e) {
         if (error) throw error;
         currentUser = data.user;
         loginError.style.display = 'none';
-        showDashboard();
+
+        // Check if this user is a partner
+        const { data: partner } = await sb
+            .from('partners')
+            .select('status, rejection_reason')
+            .eq('user_id', currentUser.id)
+            .single();
+
+        if (!partner) {
+            // No partner record → admin
+            showDashboard();
+        } else if (partner.status === 'approved') {
+            // Approved partner → redirect to partner dashboard
+            window.location.href = 'partner-dashboard.html';
+        } else if (partner.status === 'pending' || partner.status === 'reviewing') {
+            // Pending/reviewing → show message and sign out
+            loginError.textContent = '관리자 승인 대기 중입니다. 승인 후 다시 로그인해주세요.';
+            loginError.style.display = 'block';
+            await sb.auth.signOut();
+            currentUser = null;
+        } else if (partner.status === 'rejected') {
+            // Rejected → show reason and sign out
+            const reason = partner.rejection_reason ? ` (사유: ${partner.rejection_reason})` : '';
+            loginError.textContent = `가입이 거절되었습니다${reason}. 자세한 내용은 고객센터에 문의하세요.`;
+            loginError.style.display = 'block';
+            await sb.auth.signOut();
+            currentUser = null;
+        } else {
+            // Fallback: other statuses (new, etc.) treated like pending
+            loginError.textContent = '관리자 승인 대기 중입니다. 승인 후 다시 로그인해주세요.';
+            loginError.style.display = 'block';
+            await sb.auth.signOut();
+            currentUser = null;
+        }
     } catch (error) {
         loginError.textContent = error.message || '로그인에 실패했습니다.';
         loginError.style.display = 'block';
@@ -242,6 +367,7 @@ function switchTab(tab) {
     document.getElementById('partnersSection').style.display = tab === 'partners' ? 'block' : 'none';
     document.getElementById('customersSection').style.display = tab === 'customers' ? 'block' : 'none';
     document.getElementById('adminSettlementsSection').style.display = tab === 'admin-settlements' ? 'block' : 'none';
+    document.getElementById('partnerQnaSection').style.display = tab === 'partner-qna' ? 'block' : 'none';
 
     if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'partners') loadPartners();
@@ -249,6 +375,10 @@ function switchTab(tab) {
     if (tab === 'admin-settlements') {
         loadAdminSettlements();
         loadAdminNotices();
+    }
+    if (tab === 'partner-qna' && !window._qnaInitialized) {
+        setupAdminQNA();
+        window._qnaInitialized = true;
     }
 }
 
@@ -1346,6 +1476,40 @@ function showToast(message, type = 'info') {
     toast.textContent = message;
     toast.className = 'toast show ' + type;
     setTimeout(() => { toast.className = 'toast'; }, 3000);
+}
+
+// ─── Admin QNA ───
+
+function setupAdminQNA() {
+    const section = document.getElementById('partnerQnaSection');
+    if (!section) return;
+
+    section.querySelectorAll('.qna-question').forEach(q => {
+        q.addEventListener('click', () => {
+            q.parentElement.classList.toggle('open');
+        });
+    });
+
+    const searchInput = document.getElementById('adminQnaSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(() => {
+            const query = searchInput.value.trim().toLowerCase();
+            section.querySelectorAll('.qna-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = (!query || text.includes(query)) ? '' : 'none';
+            });
+            section.querySelectorAll('.qna-cat-title').forEach(title => {
+                const next = [];
+                let el = title.nextElementSibling;
+                while (el && !el.classList.contains('qna-cat-title')) {
+                    if (el.classList.contains('qna-item')) next.push(el);
+                    el = el.nextElementSibling;
+                }
+                const anyVisible = next.some(n => n.style.display !== 'none');
+                title.style.display = (!query || anyVisible) ? '' : 'none';
+            });
+        }, 200));
+    }
 }
 
 function debounce(func, wait) {
