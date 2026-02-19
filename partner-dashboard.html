@@ -207,6 +207,23 @@
         .action-btn.view { background: var(--primary-light); color: var(--primary); }
         .action-btn:hover { opacity: 0.8; }
 
+        /* QNA Accordion */
+        .qna-categories { padding: 24px; }
+        .qna-cat-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: var(--primary); margin: 24px 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); }
+        .qna-cat-title:first-child { margin-top: 0; }
+        .qna-item { border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
+        .qna-question { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; background: var(--white); transition: background 0.2s; font-size: 14px; font-weight: 600; color: var(--gray-800); }
+        .qna-question:hover { background: var(--gray-50); }
+        .qna-question .q-icon { color: var(--primary); font-weight: 700; font-size: 15px; flex-shrink: 0; }
+        .qna-question .q-arrow { margin-left: auto; color: var(--gray-400); transition: transform 0.2s; flex-shrink: 0; }
+        .qna-item.open .qna-question .q-arrow { transform: rotate(180deg); }
+        .qna-item.open .qna-question { background: var(--primary-light); }
+        .qna-answer { display: none; padding: 16px 20px; background: var(--gray-50); border-top: 1px solid var(--gray-200); font-size: 13px; line-height: 1.8; color: var(--gray-700); white-space: pre-line; }
+        .qna-item.open .qna-answer { display: block; }
+        .qna-answer .tip { margin-top: 12px; padding: 10px 14px; background: #FFFBEB; border-radius: 6px; font-size: 12px; color: #92400E; }
+        .qna-search { width: 100%; padding: 12px 16px; border: 1px solid var(--gray-300); border-radius: var(--radius); font-size: 14px; margin-bottom: 16px; }
+        .qna-search:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
         /* Responsive */
         @media (max-width: 768px) {
             .data-table { display: block; overflow-x: auto; }
@@ -297,6 +314,8 @@
                 <button class="tab-btn" data-tab="clients">내 건 현황</button>
                 <button class="tab-btn" data-tab="overview">전체 현황</button>
                 <button class="tab-btn" data-tab="settlements">정산</button>
+                <button class="tab-btn" data-tab="notices">공지사항</button>
+                <button class="tab-btn" data-tab="qna">상품 Q&amp;A</button>
                 <button class="tab-btn" data-tab="notifications">알림</button>
             </div>
 
@@ -509,6 +528,418 @@
                     <div class="empty-state" id="settlementEmpty" style="display: none;">
                         <h3>정산 내역이 없습니다</h3>
                         <p>해당 월의 정산 데이터가 아직 등록되지 않았습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Notices (공지사항) -->
+            <div class="tab-content" id="noticesSection" style="display: none;">
+                <div class="data-section">
+                    <div class="data-header"><h2>공지사항</h2></div>
+                    <div class="loading" id="noticeLoading" style="display:none;"><div class="spinner"></div></div>
+                    <div class="notice-list" id="partnerNoticeList">
+                        <div class="empty-state"><h3>공지사항이 없습니다</h3></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: QNA (상품 Q&A) -->
+            <div class="tab-content" id="qnaSection" style="display: none;">
+                <div class="data-section">
+                    <div class="data-header"><h2>상품 Q&amp;A</h2></div>
+                    <div class="qna-categories">
+                        <input type="text" class="qna-search" id="qnaSearch" placeholder="궁금한 내용을 검색하세요...">
+
+                        <div class="qna-cat-title">📌 상품종류</div>
+                        <div class="qna-item" data-cat="상품종류">
+                            <div class="qna-question"><span class="q-icon">Q</span>어떤 대출 상품이 있나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">총 4가지 상품이 있습니다:
+
+① 영업지원금(PG상품)
+→ 카드단말기 바꾸고, 매달 카드매출에서 조금씩 빠져나가는 방식
+→ 은행 대출 아니라서 신용등급에 영향 없음
+
+② 신협 데일리론
+→ 신협에서 나오는 대출, 매일 카드매출에서 자동 상환
+→ 은행 대출이라 신용등급에 반영됨
+
+③ 렌탈/리스
+→ 에어컨, 냉장고, 주방기기 등 새 장비 살 때 사용
+→ 장비값을 나눠서 갚는 개념
+
+④ 임차보증금 담보대출
+→ 가게 보증금을 담보로 대출
+→ 카드매출 없어도 가능
+<div class="tip">여러 상품 동시 진행 가능 (예: 보증금담보 + PG 동시에)</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="상품종류">
+                            <div class="qna-question"><span class="q-icon">Q</span>수수료는 얼마예요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">성사됐을 때만 수수료 발생합니다:
+
+• 렌탈상품: 대출금액의 3%
+  (예: 5천만원 → 150만원)
+
+• 신협 데일리론: 대출금액의 3%
+  (예: 5천만원 → 150만원)
+
+• 팀장 소개건: 3%
+
+• 플라톤 DB건: 2%
+<div class="tip">수수료는 대출 실행 후 지급. 불승인되면 수수료 없음</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="상품종류">
+                            <div class="qna-question"><span class="q-icon">Q</span>금리(이자)는 얼마나 되나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">연 5~8% 수준입니다.
+
+• 일반 상품: 연 5~7%
+  (신용점수 좋으면 조금 낮아짐)
+
+• 보증금 담보: 연 7~8%
+  (부가세 환급 받으면 실제론 더 낮음)
+
+※ 신용점수 900점대라고 금리가 확 낮아지진 않아요.
+  은행보다는 높지만, 제2금융권 중에선 합리적인 편입니다.
+<div class="tip">정확한 금리는 심사 후 확정. 사전에 확답 불가</div></div>
+                        </div>
+
+                        <div class="qna-cat-title">💳 카드매출 대출</div>
+                        <div class="qna-item" data-cat="카드매출">
+                            <div class="qna-question"><span class="q-icon">Q</span>카드매출이 얼마나 나와야 하나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">상품마다 다릅니다:
+
+① 영업지원금(PG)
+→ 월 5천만원 이상 필수!
+  (5천 안 되면 2월부터 가능 예정)
+
+② 신협 데일리론
+→ 개별 심사 (5천 안 돼도 상담 가능)
+
+③ 렌탈
+→ 카드매출 + 신용 종합 평가
+
+중요: 배달앱 매출은 안 쳐요!
+→ 손님이 직접 가게에서 카드 긁은 매출만 인정
+<div class="tip">매출 확인: 포스기 매출내역 or 여신금융협회에서 조회</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="카드매출">
+                            <div class="qna-question"><span class="q-icon">Q</span>기존 카드단말기 그대로 써도 되나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">안 됩니다. 단말기 교체가 필수예요.
+
+이유: 카드매출에서 자동으로 상환금이 빠지는 구조라서,
+저희 쪽 단말기를 써야 정산이 가능합니다.
+
+• 기존 단말기 위약금? → 100% 지원해드려요
+• 2개 같이 쓰면? → 가능은 한데 매출 분산되면
+  약정 못 채울 수 있어서 비추천
+• 프랜차이즈는? → 본사 확인 필요, 추가 설치로 해결 가능
+<div class="tip">위약금 금액 미리 확인해주시면 진행이 빨라요</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="카드매출">
+                            <div class="qna-question"><span class="q-icon">Q</span>배달 매출만 있으면 안 되나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">네, 안 됩니다.
+
+배달의민족, 쿠팡이츠 같은 배달앱 매출은
+카드매출로 안 쳐요.
+
+왜? 배달앱은 중간에서 정산해주는 구조라서
+저희 단말기를 안 거치거든요.
+
+그래서 '홀(매장) 매출'이 있어야 해요.
+→ 손님이 매장에서 직접 카드 긁는 매출!
+<div class="tip">홀 매출 월 1천만원 이상은 되어야 검토 가능</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="카드매출">
+                            <div class="qna-question"><span class="q-icon">Q</span>5천만원 안 되면 절대 안 되나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">지금은 좀 어렵지만, 곧 가능해져요!
+
+• 현재: PG 상품은 월 5천만원 이상만 가능
+
+• 2026년 2월부터:
+  → 5천만원 미만도 가능한 상품 출시 예정
+  → 월 매출만큼 지원하는 상품 협의 중
+
+※ 그 전까지는 보증금 담보나 렌탈 쪽으로 검토해보세요.
+<div class="tip">2월 이후 재상담 권장</div></div>
+                        </div>
+
+                        <div class="qna-cat-title">🏠 보증금 담보</div>
+                        <div class="qna-item" data-cat="보증금">
+                            <div class="qna-question"><span class="q-icon">Q</span>보증금이 얼마 이상이어야 하나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">최소 3천만원 이상이면 가능합니다.
+
+• 보증금 3천만원 이상
+• 임대인(건물주) 동의 필수
+• 보증보험 가입 필요 (저희가 해드려요)
+
+예시) 보증금 2억인 경우
+→ 약 1억 6,900만원 정도 받으실 수 있어요
+  (보증보험 기준으로 산정)
+<div class="tip">임대인 연락처 미리 확보해두시면 진행이 빨라요</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="보증금">
+                            <div class="qna-question"><span class="q-icon">Q</span>임대인 동의를 꼭 받아야 하나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">네, 반드시 필요합니다.
+
+진행 순서:
+1. 보증보험 심사 통과
+2. 보증보험 증권 발행
+3. 임대인에게 동의(도장) 요청
+4. 동의 받으면 대출 실행
+
+임대인이 거부하면?
+→ 안타깝지만 진행 불가입니다.
+
+Tip: 미리 건물주한테 양해 구해두시면 좋아요.
+"보증금 담보로 대출 좀 받으려 하는데 괜찮으시죠?"
+<div class="tip">임대인 동의서 양식은 저희가 제공해드려요</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="보증금">
+                            <div class="qna-question"><span class="q-icon">Q</span>집(자택) 보증금도 되나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">사업장이면 됩니다.
+
+• 자택이 사업장 주소로 등록되어 있고
+• 그 자택에서 실제로 카드매출이 발생하면
+→ 가능!
+
+하지만 순수 주거용(아파트, 오피스텔)은 안 돼요.
+→ 사업장이 아니라서요.
+
+예시)
+✅ 집에서 네일샵 운영 → 가능
+❌ 그냥 살고 있는 아파트 → 불가
+<div class="tip">사업자등록증 주소 = 보증금 담보 주소여야 함</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="보증금">
+                            <div class="qna-question"><span class="q-icon">Q</span>카드매출 대출이랑 동시에 받을 수 있나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">네, 조건 맞으면 둘 다 가능해요!
+
+예시) 보증금 1억 + 월 카드매출 6천만원인 사장님
+→ 보증금 담보로 8천만원
+→ PG로 6천만원
+→ 합계 약 1억 4천만원 가능
+
+단, 각각 조건 충족해야 해요:
+• 보증금 담보: 3천만원 이상
+• PG: 월 카드매출 5천만원 이상
+<div class="tip">동시 진행 시 심사가 조금 더 까다로울 수 있음</div></div>
+                        </div>
+
+                        <div class="qna-cat-title">🏪 업종별</div>
+                        <div class="qna-item" data-cat="업종">
+                            <div class="qna-question"><span class="q-icon">Q</span>어떤 업종이 잘 되나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">승인률 높은 업종 (추천):
+• 병원, 의원, 치과, 한의원 → 가장 좋음!
+• 약국 → 안정적
+• 음식점, 카페, 제과점 → 매출만 되면 OK
+
+일반적으로 되는 업종:
+• 학원 (교육서비스업)
+• 마사지샵, 피부관리실
+• 호텔, 펜션, 모텔
+• 유흥주점
+• 마트, 슈퍼
+
+제조업도 가능:
+→ 단, 카드매출이 있어야 해요
+<div class="tip">병원은 법인이어도 리스로 가능</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="업종">
+                            <div class="qna-question"><span class="q-icon">Q</span>안 되는 업종은 뭐예요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">어려운 업종들:
+
+❌ 편의점
+→ 포스기를 본사 것만 써야 해서 교체 불가
+
+❌ 배달전문점 (배민키친 등)
+→ 홀 매출이 없어서 안 됨
+
+△ 스크린골프
+→ 폐업률이 높아서 심사 까다로움
+→ 3천만원 정도만 가능할 수도
+
+△ 백화점 입점 매장
+→ 백화점 시스템 써야 해서 단말기 교체 불가
+<div class="tip">업종별로 개별 상담 필요. 예외도 있을 수 있음</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="업종">
+                            <div class="qna-question"><span class="q-icon">Q</span>법인사업자도 가능한가요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">상품에 따라 달라요:
+
+✅ 가능한 것:
+• PG 영업지원금 → 법인 OK (월 5천 이상)
+• 렌탈/리스 → 법인 OK
+• 보증금 담보 → 법인 OK
+  (재무제표 3년치 + 대표자 신분증 필요)
+
+❌ 안 되는 것:
+• 신협 데일리론 → 개인사업자만 가능
+
+법인은 서류가 좀 더 많이 필요해요.
+<div class="tip">법인 필요서류: 재무제표 3개년, 대표자 신분증</div></div>
+                        </div>
+
+                        <div class="qna-cat-title">📍 지역</div>
+                        <div class="qna-item" data-cat="지역">
+                            <div class="qna-question"><span class="q-icon">Q</span>지역 제한이 있나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">상품마다 달라요:
+
+① PG 영업지원금 / 렌탈
+→ 전국 어디든 가능!
+
+② 신협 데일리론 (2026년 1월 기준)
+→ 병원/의원: 서울, 경기, 인천 + 부산, 대구 등 광역시
+  (광역시는 3건 이상 모아서 진행)
+→ 일반 소상공인: 서울, 경기, 인천만 가능
+→ 기타 지역: 5건 이상 모이면 협의
+
+③ 제주도
+→ 병원, 약국은 가능
+→ 일반 소상공인은 협의 필요
+<div class="tip">신협 지역제한은 계속 확대 중</div></div>
+                        </div>
+
+                        <div class="qna-cat-title">📋 심사</div>
+                        <div class="qna-item" data-cat="심사">
+                            <div class="qna-question"><span class="q-icon">Q</span>신용등급은 몇 점 이상이어야 하나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">기준점수:
+• KCB 기준: 760점 이상
+• NICE 기준: 680점 이상
+
+그런데 꼭 이 점수 넘어야만 되는 건 아니에요!
+
+매출이 좋으면?
+→ 760점 미만이어도 승인 가능성 있음
+
+매출이 애매하면?
+→ 점수 높아도 거절될 수 있음
+
+※ 종합적으로 보는 거라서 상담 먼저 받아보세요.
+<div class="tip">신용조회는 심사 단계에서만 (사전상담은 조회 안 함)</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="심사">
+                            <div class="qna-question"><span class="q-icon">Q</span>개업한 지 얼마 돼야 하나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">권장 기준: 6개월 이상
+
+왜? 최소 몇 달 매출 데이터가 있어야
+심사할 수 있거든요.
+
+6개월 안 됐는데 가능한 경우:
+• 신용이 정말 좋거나
+• 이전 사업 경력이 있거나
+• 의사, 약사 등 전문직이거나
+
+3개월 미만은?
+→ 거의 어렵습니다. 조금 더 운영하시고 재상담 권장
+<div class="tip">업종 변경 후 얼마 안 됐으면 이전 업력도 참고 가능</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="심사">
+                            <div class="qna-question"><span class="q-icon">Q</span>심사 기간은 얼마나 걸려요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">상품별 심사 기간:
+
+① PG / 렌탈
+→ 서류 제출 후 1~2일 내 결과
+→ 승인되면 2~3일 내 실행
+
+② 신협 데일리론
+→ 약 3일 정도
+
+③ 보증금 담보
+→ 보증보험 심사 때문에 약 2주 소요
+
+진행 상황은 구글시트에서 실시간 확인 가능해요.
+1~2시간마다 업데이트됩니다.
+<div class="tip">급한 건 별도 문의 주세요</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="심사">
+                            <div class="qna-question"><span class="q-icon">Q</span>필요한 서류가 뭐예요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">기본 서류 (개인사업자):
+• 신분증
+• 사업자등록증
+• 최근 카드매출 확인서 (포스기 or 여신협회)
+
+법인사업자 추가:
+• 재무제표 3개년
+• 법인등기부등본
+• 대표자 신분증
+
+보증금 담보 추가:
+• 임대차계약서
+• 임대인 연락처 (동의 받아야 함)
+<div class="tip">서류는 카톡이나 문자로 사진 찍어서 보내주시면 됨</div></div>
+                        </div>
+
+                        <div class="qna-cat-title">⚠️ 주의사항</div>
+                        <div class="qna-item" data-cat="주의">
+                            <div class="qna-question"><span class="q-icon">Q</span>진행이 안 되는 경우는?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">아래 경우는 진행이 어려워요:
+
+① 신용 관련
+• 신용점수 760점 미만 (단, 매출 좋으면 예외 있음)
+• 최근 연체 기록 있음
+• 채무불이행자
+
+② 매출 관련
+• 월 카드매출 300~400만원 수준
+• 배달 위주로 홀 매출 없음
+
+③ 기타
+• 개업 3개월 미만
+• PG(단말기 교체)에 강한 거부감
+• 제조업인데 카드매출도 없고 장비도 노후화
+<div class="tip">일단 상담받아보시고 안 되면 다른 방법 찾아봐요</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="주의">
+                            <div class="qna-question"><span class="q-icon">Q</span>PG 대출은 신용등급에 영향 없나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">상품마다 달라요:
+
+① PG 영업지원금 / 렌탈
+→ 대출 전산에 안 올라감!
+→ 신용등급 영향 없음!
+→ 나중에 은행 대출 받을 때도 문제 없음
+
+② 신협 데일리론
+→ 대출 전산에 반영됨
+→ 신용등급에 영향 있음
+→ 그래서 1억 이하는 비추천 (PG로 하는 게 나음)
+<div class="tip">신용 관리가 중요하시면 PG 상품 추천</div></div>
+                        </div>
+                        <div class="qna-item" data-cat="주의">
+                            <div class="qna-question"><span class="q-icon">Q</span>상환은 어떻게 되나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">자동 상환이라 편해요:
+
+① PG / 렌탈
+→ 카드 결제 들어올 때마다 일정 비율 자동 빠짐
+→ 매출 많으면 빨리 갚아지고, 적으면 천천히
+
+② 신협 데일리론
+→ 매일매일 카드매출에서 자동 상환
+→ 일정 금액씩 빠져나감
+
+직접 이체하거나 할 필요 없어요!
+카드매출에서 알아서 빠지는 구조입니다.
+<div class="tip">상환 비율/금액은 계약 시 확정</div></div>
+                        </div>
+
+                        <div class="qna-cat-title">📞 상담</div>
+                        <div class="qna-item" data-cat="상담">
+                            <div class="qna-question"><span class="q-icon">Q</span>상담은 어떻게 받나요?<span class="q-arrow">&#9660;</span></div>
+                            <div class="qna-answer">상담 프로세스:
+
+1. 양식 제출 (카톡 or 구글폼)
+  → 상호, 업종, 연락처, 대략적인 매출
+
+2. 모두빌리지에서 연락
+  → 부재 시 문자 남김
+  → 통화 가능 시간 미리 알려주시면 좋아요
+
+3. 상담 후 서류 안내
+
+4. 서류 제출 → 심사 → 결과 통보
+
+※ 진행 상황은 구글시트에서 실시간 확인 가능
+  1~2시간마다 업데이트됩니다.
+<div class="tip">급한 건 별도로 말씀해주세요</div></div>
+                        </div>
                     </div>
                 </div>
             </div>
