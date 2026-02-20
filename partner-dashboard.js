@@ -823,7 +823,7 @@ async function loadBoardPosts() {
     loading.style.display = 'flex';
 
     try {
-        const { data: posts, error } = await supabase
+        const { data: posts, error } = await sb
             .from('board_posts')
             .select('*, board_replies(*)')
             .order('created_at', { ascending: false });
@@ -889,8 +889,8 @@ async function handleBoardPostSubmit(e) {
     if (!title || !content) return;
 
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        const { error } = await supabase.from('board_posts').insert({
+        const { data: { user } } = await sb.auth.getUser();
+        const { error } = await sb.from('board_posts').insert({
             title,
             content,
             author_id: user.id,
