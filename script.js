@@ -746,6 +746,8 @@ function initLoanCalculator() {
     const resultAmountEl = document.getElementById('loanResultAmount');
     const resultRateEl = document.getElementById('loanResultRate');
     const resultMonthlyEl = document.getElementById('loanResultMonthly');
+    const resultProductEl = document.getElementById('loanResultProduct');
+    const extraProductsEl = document.getElementById('loanExtraProducts');
 
     // 콤마 자동 포맷 + 비숫자 차단
     function formatComma(input) {
@@ -769,27 +771,18 @@ function initLoanCalculator() {
         return parseInt(str.replace(/,/g, ''), 10) || 0;
     }
 
-    function getCreditScoreMul(score) {
-        if (score >= 900) return 1.25;
-        if (score >= 800) return 1.15;
-        if (score >= 700) return 1.0;
-        if (score >= 600) return 0.85;
-        if (score >= 500) return 0.7;
-        return 0.55;
-    }
-
+    // 금리 범위 (신협 데일리론 5.3~6% 기준, 신용점수별 조정)
     function getRateRange(score) {
-        if (score >= 900) return [4.5, 5.5];
-        if (score >= 800) return [5.3, 6.5];
-        if (score >= 700) return [6.0, 7.5];
-        if (score >= 600) return [7.0, 9.0];
-        if (score >= 500) return [8.5, 11.0];
-        return [10.0, 13.0];
+        if (score >= 800) return [5.3, 6.0];
+        if (score >= 700) return [5.5, 7.0];
+        if (score >= 600) return [6.5, 8.5];
+        if (score >= 500) return [8.0, 10.0];
+        return [9.0, 12.0];
     }
 
     function formatLoanAmount(num) {
         if (num >= 100000000) {
-            const eok = num / 100000000;
+            var eok = num / 100000000;
             return eok % 1 === 0 ? eok + '억원' : eok.toFixed(1) + '억원';
         } else if (num >= 10000) {
             return Math.round(num / 10000).toLocaleString() + '만원';
@@ -806,43 +799,61 @@ function initLoanCalculator() {
 
     function calculateLoan() {
         var salesMan = parseCommaNumber(salesInput.value);     // 만원 단위
-        var bizMul = parseFloat(bizSelect.value);
-        var yearsMul = parseFloat(yearsSelect.value);
+        var biz = bizSelect.value;                             // 업종명
+        var years = yearsSelect.value;                         // 개업연차 코드
         var creditScore = parseInt(creditInput.value, 10) || 0;
-        var collateralMul = parseFloat(collateralSelect.value);
-        var hasCollateral = collateralMul > 1.0;
+        var collateral = collateralSelect.value;
 
-        var creditMul = getCreditScoreMul(creditScore);
-        var rateRange = getRateRange(creditScore);
+        // 개업 1년 이상 → 카드매출 담보(200%), 미만 → 카드매출약정(80%)
+        var isOver1Year = ['1y3y', '3y5y', '5y10y', 'over10y'].indexOf(years) !== -1;
+        var salesMultiplier = isOver1Year ? 2.0 : 0.8;
+        var productName = isOver1Year ? '카드매출 담보상품 기준' : '카드매출약정 기준';
 
-        // base = 월매출(원) × 200% × 업종 × 연차 × 신용 × 담보
-        var base = (salesMan * 10000) * 2 * bizMul * yearsMul * creditMul * collateralMul;
+        var base = salesMan * 10000 * salesMultiplier;
 
-        var min = Math.floor(base * 0.85 / 1000000) * 1000000;
+        var min = Math.floor(base * 0.9 / 1000000) * 1000000;
         var max = Math.ceil(base * 1.1 / 1000000) * 1000000;
-
-        var cap = hasCollateral ? 500000000 : 300000000;
-        if (min > cap) min = cap;
-        if (max > cap) max = cap;
         if (min < 0) min = 0;
         if (max < 0) max = 0;
         if (min > max) min = max;
 
-        // 결과 렌더링: 한도
+        // 결과: 한도
         resultAmountEl.textContent = formatLoanAmount(min) + ' ~ ' + formatLoanAmount(max);
+        resultProductEl.textContent = productName;
 
-        // 결과 렌더링: 금리
+        // 결과: 금리
+        var rateRange = getRateRange(creditScore);
         resultRateEl.textContent = rateRange[0].toFixed(1) + '% ~ ' + rateRange[1].toFixed(1) + '%';
 
-        // 결과 렌더링: 월 상환액 (한도 중간값, 금리 중간값, 36개월)
+        // 결과: 월 상환액 (한도 중간값, 금리 중간값, 36개월)
         var midLoan = (min + max) / 2;
         var midRate = (rateRange[0] + rateRange[1]) / 2;
         var monthly = calcMonthlyPayment(midLoan, midRate, 36);
-        if (monthly > 0) {
-            resultMonthlyEl.textContent = '약 ' + Math.round(monthly / 10000).toLocaleString() + '만원';
-        } else {
-            resultMonthlyEl.textContent = '-';
+        resultMonthlyEl.textContent = monthly > 0
+            ? '약 ' + Math.round(monthly / 10000).toLocaleString() + '만원'
+            : '-';
+
+        // 추가 가능 상품 안내
+        var extras = [];
+        if (!isOver1Year) {
+            extras.push('개원 1년 후 카드매출 담보(월매출 200%)로 한도 확대 가능');
         }
+        var isOver6Month = years !== 'under6m';
+        if (isOver6Month) {
+            extras.push('신협 데일리론 최대 1.5억 (연 5.3%~6%, 카드매출 매일공제)');
+        }
+        if (biz === '병원' || biz === '약국') {
+            extras.push('KB국민카드 특별한도 최대 2억 추가 가능');
+        }
+        if (collateral === 'deposit') {
+            extras.push('임차보증금 담보상품 (보증금 최대 100%) 추가 가능');
+        }
+        if (collateral === 'equipment') {
+            extras.push('의료장비 구매자금 최대 3억 (렌탈금융) 추가 가능');
+        }
+        extraProductsEl.innerHTML = extras.length
+            ? extras.map(function (t) { return '<div class="loan-extra-item">+ ' + t + '</div>'; }).join('')
+            : '';
 
         calculator.classList.add('calculated');
         setTimeout(function () { calculator.classList.remove('calculated'); }, 300);

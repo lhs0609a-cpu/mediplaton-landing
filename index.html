@@ -510,25 +510,26 @@
                     <div class="loan-input-group">
                         <label for="loanBiz">업종</label>
                         <select id="loanBiz" class="loan-select">
-                            <option value="1.3" selected>병원</option>
-                            <option value="1.2">치과</option>
-                            <option value="1.25">한의원</option>
-                            <option value="1.15">약국</option>
-                            <option value="1.3">동물병원</option>
-                            <option value="1.35">성형외과</option>
-                            <option value="1.3">피부과</option>
-                            <option value="1.25">안과</option>
-                            <option value="1.1">기타</option>
+                            <option value="병원" selected>병원</option>
+                            <option value="치과">치과</option>
+                            <option value="한의원">한의원</option>
+                            <option value="약국">약국</option>
+                            <option value="동물병원">동물병원</option>
+                            <option value="성형외과">성형외과</option>
+                            <option value="피부과">피부과</option>
+                            <option value="안과">안과</option>
+                            <option value="기타">기타</option>
                         </select>
                     </div>
                     <div class="loan-input-group">
                         <label for="loanYears">개업연차</label>
                         <select id="loanYears" class="loan-select">
-                            <option value="0.6">1년 미만</option>
-                            <option value="0.8">1 ~ 3년</option>
-                            <option value="1.0" selected>3 ~ 5년</option>
-                            <option value="1.1">5 ~ 10년</option>
-                            <option value="1.15">10년 이상</option>
+                            <option value="under6m">6개월 미만</option>
+                            <option value="6m1y">6개월 ~ 1년</option>
+                            <option value="1y3y">1 ~ 3년</option>
+                            <option value="3y5y" selected>3 ~ 5년</option>
+                            <option value="5y10y">5 ~ 10년</option>
+                            <option value="over10y">10년 이상</option>
                         </select>
                     </div>
                     <div class="loan-input-group">
@@ -541,10 +542,9 @@
                     <div class="loan-input-group">
                         <label for="loanCollateral">담보 가능 여부</label>
                         <select id="loanCollateral" class="loan-select">
-                            <option value="1.0" selected>없음</option>
-                            <option value="1.5">부동산</option>
-                            <option value="1.3">보증금</option>
-                            <option value="1.15">의료장비</option>
+                            <option value="none" selected>없음</option>
+                            <option value="deposit">임차보증금</option>
+                            <option value="equipment">의료장비</option>
                         </select>
                     </div>
                 </div>
@@ -553,6 +553,7 @@
                     <div class="loan-result-card loan-result-main">
                         <span class="loan-result-label">예상 대출 한도</span>
                         <div class="loan-result-amount" id="loanResultAmount">-</div>
+                        <span class="loan-result-note" id="loanResultProduct"></span>
                     </div>
                     <div class="loan-result-card loan-result-sub">
                         <span class="loan-result-label">예상 금리</span>
@@ -564,6 +565,8 @@
                         <span class="loan-result-note">원리금균등 3년 기준</span>
                     </div>
                 </div>
+
+                <div class="loan-extra-products" id="loanExtraProducts"></div>
 
                 <div class="loan-reassurance">
                     <div class="loan-reassurance-item">

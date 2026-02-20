@@ -12027,6 +12027,23 @@ html {
     margin-top: 6px;
 }
 
+/* Extra Products Note */
+.loan-extra-products {
+    margin-bottom: 24px;
+}
+
+.loan-extra-products:empty {
+    display: none;
+}
+
+.loan-extra-item {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary);
+    padding: 6px 0;
+    line-height: 1.5;
+}
+
 .loan-reassurance {
     display: flex;
     justify-content: center;
