@@ -742,7 +742,6 @@ function initLoanCalculator() {
     const bizSelect = document.getElementById('loanBiz');
     const yearsSelect = document.getElementById('loanYears');
     const creditInput = document.getElementById('loanCredit');
-    const debtInput = document.getElementById('loanDebt');
     const collateralSelect = document.getElementById('loanCollateral');
     const resultAmountEl = document.getElementById('loanResultAmount');
     const resultRateEl = document.getElementById('loanResultRate');
@@ -758,7 +757,6 @@ function initLoanCalculator() {
         });
     }
     formatComma(salesInput);
-    formatComma(debtInput);
 
     // 신용점수 입력: 1~1000 범위, 비숫자 차단
     creditInput.addEventListener('input', function () {
@@ -811,7 +809,6 @@ function initLoanCalculator() {
         var bizMul = parseFloat(bizSelect.value);
         var yearsMul = parseFloat(yearsSelect.value);
         var creditScore = parseInt(creditInput.value, 10) || 0;
-        var debtMan = parseCommaNumber(debtInput.value);       // 만원 단위
         var collateralMul = parseFloat(collateralSelect.value);
         var hasCollateral = collateralMul > 1.0;
 
@@ -820,11 +817,9 @@ function initLoanCalculator() {
 
         // base = 월매출(원) × 업종 × 연차 × 신용 × 담보
         var base = (salesMan * 10000) * bizMul * yearsMul * creditMul * collateralMul;
-        // 기존 대출 50% 차감
-        var adjusted = base - (debtMan * 10000 * 0.5);
 
-        var min = Math.floor(adjusted * 0.85 / 1000000) * 1000000;
-        var max = Math.ceil(adjusted * 1.1 / 1000000) * 1000000;
+        var min = Math.floor(base * 0.85 / 1000000) * 1000000;
+        var max = Math.ceil(base * 1.1 / 1000000) * 1000000;
 
         var cap = hasCollateral ? 500000000 : 300000000;
         if (min > cap) min = cap;
@@ -858,7 +853,6 @@ function initLoanCalculator() {
     bizSelect.addEventListener('change', calculateLoan);
     yearsSelect.addEventListener('change', calculateLoan);
     creditInput.addEventListener('input', calculateLoan);
-    debtInput.addEventListener('input', calculateLoan);
     collateralSelect.addEventListener('change', calculateLoan);
 
     // 초기 계산
