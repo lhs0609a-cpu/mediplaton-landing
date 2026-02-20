@@ -738,56 +738,138 @@ function initLoanCalculator() {
     const calculator = document.getElementById('loanCalculator');
     if (!calculator) return;
 
-    const salesSelect = document.getElementById('loanSales');
+    const salesInput = document.getElementById('loanSales');
     const bizSelect = document.getElementById('loanBiz');
     const yearsSelect = document.getElementById('loanYears');
-    const creditSelect = document.getElementById('loanCredit');
+    const creditInput = document.getElementById('loanCredit');
+    const debtInput = document.getElementById('loanDebt');
+    const collateralSelect = document.getElementById('loanCollateral');
     const resultAmountEl = document.getElementById('loanResultAmount');
+    const resultRateEl = document.getElementById('loanResultRate');
+    const resultMonthlyEl = document.getElementById('loanResultMonthly');
+
+    // 콤마 자동 포맷 + 비숫자 차단
+    function formatComma(input) {
+        input.addEventListener('input', function () {
+            let val = this.value.replace(/[^\d]/g, '');
+            if (val) {
+                this.value = Number(val).toLocaleString();
+            }
+        });
+    }
+    formatComma(salesInput);
+    formatComma(debtInput);
+
+    // 신용점수 입력: 1~1000 범위, 비숫자 차단
+    creditInput.addEventListener('input', function () {
+        let val = this.value.replace(/[^\d]/g, '');
+        if (val && Number(val) > 1000) val = '1000';
+        this.value = val;
+    });
+
+    function parseCommaNumber(str) {
+        return parseInt(str.replace(/,/g, ''), 10) || 0;
+    }
+
+    function getCreditScoreMul(score) {
+        if (score >= 900) return 1.25;
+        if (score >= 800) return 1.15;
+        if (score >= 700) return 1.0;
+        if (score >= 600) return 0.85;
+        if (score >= 500) return 0.7;
+        return 0.55;
+    }
+
+    function getRateRange(score) {
+        if (score >= 900) return [4.5, 5.5];
+        if (score >= 800) return [5.3, 6.5];
+        if (score >= 700) return [6.0, 7.5];
+        if (score >= 600) return [7.0, 9.0];
+        if (score >= 500) return [8.5, 11.0];
+        return [10.0, 13.0];
+    }
 
     function formatLoanAmount(num) {
         if (num >= 100000000) {
-            return (num / 100000000).toFixed(1).replace(/\.0$/, '') + '억원';
+            const eok = num / 100000000;
+            return eok % 1 === 0 ? eok + '억원' : eok.toFixed(1) + '억원';
         } else if (num >= 10000) {
             return Math.round(num / 10000).toLocaleString() + '만원';
         }
         return num.toLocaleString() + '원';
     }
 
+    // 원리금균등 월 상환액 계산
+    function calcMonthlyPayment(principal, annualRate, months) {
+        if (principal <= 0 || annualRate <= 0) return 0;
+        var r = annualRate / 100 / 12;
+        return principal * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
+    }
+
     function calculateLoan() {
-        const sales = parseInt(salesSelect.value);
-        const bizMul = parseFloat(bizSelect.value);
-        const yearsMul = parseFloat(yearsSelect.value);
-        const creditMul = parseFloat(creditSelect.value);
+        var salesMan = parseCommaNumber(salesInput.value);     // 만원 단위
+        var bizMul = parseFloat(bizSelect.value);
+        var yearsMul = parseFloat(yearsSelect.value);
+        var creditScore = parseInt(creditInput.value, 10) || 0;
+        var debtMan = parseCommaNumber(debtInput.value);       // 만원 단위
+        var collateralMul = parseFloat(collateralSelect.value);
+        var hasCollateral = collateralMul > 1.0;
 
-        const base = sales * bizMul * yearsMul * creditMul;
-        const cap = 300000000;
-        let min = Math.floor(base * 0.85 / 1000000) * 1000000;
-        let max = Math.ceil(base * 1.1 / 1000000) * 1000000;
+        var creditMul = getCreditScoreMul(creditScore);
+        var rateRange = getRateRange(creditScore);
 
+        // base = 월매출(원) × 업종 × 연차 × 신용 × 담보
+        var base = (salesMan * 10000) * bizMul * yearsMul * creditMul * collateralMul;
+        // 기존 대출 50% 차감
+        var adjusted = base - (debtMan * 10000 * 0.5);
+
+        var min = Math.floor(adjusted * 0.85 / 1000000) * 1000000;
+        var max = Math.ceil(adjusted * 1.1 / 1000000) * 1000000;
+
+        var cap = hasCollateral ? 500000000 : 300000000;
         if (min > cap) min = cap;
         if (max > cap) max = cap;
         if (min < 0) min = 0;
+        if (max < 0) max = 0;
+        if (min > max) min = max;
 
+        // 결과 렌더링: 한도
         resultAmountEl.textContent = formatLoanAmount(min) + ' ~ ' + formatLoanAmount(max);
 
+        // 결과 렌더링: 금리
+        resultRateEl.textContent = rateRange[0].toFixed(1) + '% ~ ' + rateRange[1].toFixed(1) + '%';
+
+        // 결과 렌더링: 월 상환액 (한도 중간값, 금리 중간값, 36개월)
+        var midLoan = (min + max) / 2;
+        var midRate = (rateRange[0] + rateRange[1]) / 2;
+        var monthly = calcMonthlyPayment(midLoan, midRate, 36);
+        if (monthly > 0) {
+            resultMonthlyEl.textContent = '약 ' + Math.round(monthly / 10000).toLocaleString() + '만원';
+        } else {
+            resultMonthlyEl.textContent = '-';
+        }
+
         calculator.classList.add('calculated');
-        setTimeout(() => calculator.classList.remove('calculated'), 300);
+        setTimeout(function () { calculator.classList.remove('calculated'); }, 300);
     }
 
-    salesSelect.addEventListener('change', calculateLoan);
+    // 이벤트 바인딩: 입력 변경 시 실시간 계산
+    salesInput.addEventListener('input', calculateLoan);
     bizSelect.addEventListener('change', calculateLoan);
     yearsSelect.addEventListener('change', calculateLoan);
-    creditSelect.addEventListener('change', calculateLoan);
+    creditInput.addEventListener('input', calculateLoan);
+    debtInput.addEventListener('input', calculateLoan);
+    collateralSelect.addEventListener('change', calculateLoan);
 
     // 초기 계산
     calculateLoan();
 
     // CTA 부드러운 스크롤
-    const ctaBtn = calculator.querySelector('.loan-cta-btn');
+    var ctaBtn = calculator.querySelector('.loan-cta-btn');
     if (ctaBtn) {
         ctaBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            var target = document.querySelector(this.getAttribute('href'));
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
             }

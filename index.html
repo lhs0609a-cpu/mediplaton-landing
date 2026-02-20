@@ -489,32 +489,28 @@
         </div>
     </section>
 
-    <!-- Loan Limit Calculator - 대출 한도 간이 계산기 -->
+    <!-- Loan Limit Calculator - 대출 한도 계산기 -->
     <section class="loan-calc-section">
         <div class="container">
             <div class="loan-calc" id="loanCalculator">
                 <div class="loan-calc-header">
                     <span class="loan-calc-badge">30초 간편 조회</span>
                     <h3>내 대출 한도는 얼마일까?</h3>
-                    <p>간단한 정보만 입력하면 예상 한도를 바로 확인할 수 있어요</p>
+                    <p>정확한 정보를 입력할수록 더 정확한 예상 결과를 확인할 수 있어요</p>
                 </div>
 
                 <div class="loan-calc-inputs">
                     <div class="loan-input-group">
                         <label for="loanSales">월 카드매출</label>
-                        <select id="loanSales" class="loan-select">
-                            <option value="10000000">1천만원 이하</option>
-                            <option value="20000000">1천 ~ 3천만원</option>
-                            <option value="40000000" selected>3천 ~ 5천만원</option>
-                            <option value="75000000">5천만원 ~ 1억</option>
-                            <option value="200000000">1억 ~ 3억</option>
-                            <option value="300000000">3억 이상</option>
-                        </select>
+                        <div class="loan-input-wrap">
+                            <input type="text" id="loanSales" class="loan-input" inputmode="numeric" placeholder="5,000" value="5,000">
+                            <span class="loan-input-suffix">만원</span>
+                        </div>
                     </div>
                     <div class="loan-input-group">
                         <label for="loanBiz">업종</label>
                         <select id="loanBiz" class="loan-select">
-                            <option value="1.3">병원</option>
+                            <option value="1.3" selected>병원</option>
                             <option value="1.2">치과</option>
                             <option value="1.25">한의원</option>
                             <option value="1.15">약국</option>
@@ -536,19 +532,44 @@
                         </select>
                     </div>
                     <div class="loan-input-group">
-                        <label for="loanCredit">신용등급</label>
-                        <select id="loanCredit" class="loan-select">
-                            <option value="1.2" selected>1~3등급 (우수)</option>
-                            <option value="1.0">4~5등급 (양호)</option>
-                            <option value="0.85">6~7등급 (보통)</option>
-                            <option value="0.7">8등급 이하</option>
+                        <label for="loanCredit">신용점수 (NICE)</label>
+                        <div class="loan-input-wrap">
+                            <input type="text" id="loanCredit" class="loan-input" inputmode="numeric" placeholder="750" value="750">
+                            <span class="loan-input-suffix">점</span>
+                        </div>
+                    </div>
+                    <div class="loan-input-group">
+                        <label for="loanDebt">기존 대출 잔액</label>
+                        <div class="loan-input-wrap">
+                            <input type="text" id="loanDebt" class="loan-input" inputmode="numeric" placeholder="0" value="0">
+                            <span class="loan-input-suffix">만원</span>
+                        </div>
+                    </div>
+                    <div class="loan-input-group">
+                        <label for="loanCollateral">담보 가능 여부</label>
+                        <select id="loanCollateral" class="loan-select">
+                            <option value="1.0" selected>없음</option>
+                            <option value="1.5">부동산</option>
+                            <option value="1.3">보증금</option>
+                            <option value="1.15">의료장비</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="loan-result">
-                    <span class="loan-result-label">예상 대출 한도</span>
-                    <div class="loan-result-amount" id="loanResultAmount">4,800만원 ~ 6,300만원</div>
+                <div class="loan-result-cards">
+                    <div class="loan-result-card loan-result-main">
+                        <span class="loan-result-label">예상 대출 한도</span>
+                        <div class="loan-result-amount" id="loanResultAmount">-</div>
+                    </div>
+                    <div class="loan-result-card loan-result-sub">
+                        <span class="loan-result-label">예상 금리</span>
+                        <div class="loan-result-value" id="loanResultRate">-</div>
+                    </div>
+                    <div class="loan-result-card loan-result-sub">
+                        <span class="loan-result-label">예상 월 상환액</span>
+                        <div class="loan-result-value" id="loanResultMonthly">-</div>
+                        <span class="loan-result-note">원리금균등 3년 기준</span>
+                    </div>
                 </div>
 
                 <div class="loan-reassurance">
