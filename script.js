@@ -815,8 +815,8 @@ function initLoanCalculator() {
         var creditMul = getCreditScoreMul(creditScore);
         var rateRange = getRateRange(creditScore);
 
-        // base = 월매출(원) × 업종 × 연차 × 신용 × 담보
-        var base = (salesMan * 10000) * bizMul * yearsMul * creditMul * collateralMul;
+        // base = 월매출(원) × 200% × 업종 × 연차 × 신용 × 담보
+        var base = (salesMan * 10000) * 2 * bizMul * yearsMul * creditMul * collateralMul;
 
         var min = Math.floor(base * 0.85 / 1000000) * 1000000;
         var max = Math.ceil(base * 1.1 / 1000000) * 1000000;
