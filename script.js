@@ -733,6 +733,68 @@ function initSavingsCalculator() {
     calculateSavings();
 }
 
+// ===== Loan Limit Calculator =====
+function initLoanCalculator() {
+    const calculator = document.getElementById('loanCalculator');
+    if (!calculator) return;
+
+    const salesSelect = document.getElementById('loanSales');
+    const bizSelect = document.getElementById('loanBiz');
+    const yearsSelect = document.getElementById('loanYears');
+    const creditSelect = document.getElementById('loanCredit');
+    const resultAmountEl = document.getElementById('loanResultAmount');
+
+    function formatLoanAmount(num) {
+        if (num >= 100000000) {
+            return (num / 100000000).toFixed(1).replace(/\.0$/, '') + '억원';
+        } else if (num >= 10000) {
+            return Math.round(num / 10000).toLocaleString() + '만원';
+        }
+        return num.toLocaleString() + '원';
+    }
+
+    function calculateLoan() {
+        const sales = parseInt(salesSelect.value);
+        const bizMul = parseFloat(bizSelect.value);
+        const yearsMul = parseFloat(yearsSelect.value);
+        const creditMul = parseFloat(creditSelect.value);
+
+        const base = sales * bizMul * yearsMul * creditMul;
+        const cap = 300000000;
+        let min = Math.floor(base * 0.85 / 1000000) * 1000000;
+        let max = Math.ceil(base * 1.1 / 1000000) * 1000000;
+
+        if (min > cap) min = cap;
+        if (max > cap) max = cap;
+        if (min < 0) min = 0;
+
+        resultAmountEl.textContent = formatLoanAmount(min) + ' ~ ' + formatLoanAmount(max);
+
+        calculator.classList.add('calculated');
+        setTimeout(() => calculator.classList.remove('calculated'), 300);
+    }
+
+    salesSelect.addEventListener('change', calculateLoan);
+    bizSelect.addEventListener('change', calculateLoan);
+    yearsSelect.addEventListener('change', calculateLoan);
+    creditSelect.addEventListener('change', calculateLoan);
+
+    // 초기 계산
+    calculateLoan();
+
+    // CTA 부드러운 스크롤
+    const ctaBtn = calculator.querySelector('.loan-cta-btn');
+    if (ctaBtn) {
+        ctaBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+}
+
 // ===== Active Navigation Highlight =====
 function initActiveNav() {
     var page = document.body.dataset.page;
@@ -753,6 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleScroll();
     animateCounters();
     initSavingsCalculator();
+    initLoanCalculator();
     initForm();
     initScrollAnimations();
     initNavDropdowns();
