@@ -49,22 +49,26 @@ const VPS = {
         return Math.max(0, Math.floor((now - base) / 86400000));
     },
 
-    // 실제 파트너 라벨 수집 → 충돌 없는 가상 라벨 생성
+    // 실제 파트너 라벨 → MP 코드로 변환
+    toLabelCode(originalLabel) {
+        const h = this.hashStr('mp_label_' + originalLabel);
+        const num = String(h % 10000).padStart(4, '0');
+        return 'MP-' + num;
+    },
+
+    // 가상 파트너용 MP 코드 생성 (실제 라벨과 충돌 회피)
     generateLabels(realLabels) {
-        const usedSet = new Set(realLabels.map(l => l.toUpperCase()));
+        const usedCodes = new Set(realLabels.map(l => this.toLabelCode(l)));
         const labels = [];
-        let code = 0;
+        let attempt = 0;
         while (labels.length < this.targetCount) {
-            // A=0, B=1, ... Z=25, AA=26, AB=27, ...
-            let label = '';
-            let n = code;
-            do {
-                label = String.fromCharCode(65 + (n % 26)) + label;
-                n = Math.floor(n / 26) - 1;
-            } while (n >= 0);
-            code++;
-            if (!usedSet.has(label)) {
-                labels.push(label);
+            const seed = this.hashStr('vps_code_' + attempt);
+            const num = String(seed % 10000).padStart(4, '0');
+            const code = 'MP-' + num;
+            attempt++;
+            if (!usedCodes.has(code)) {
+                usedCodes.add(code);
+                labels.push(code);
             }
         }
         return labels;
@@ -197,9 +201,15 @@ const VPS = {
         const realLabels = (realData || []).map(d => d.partner_label);
         const virtualLabels = this.generateLabels(realLabels);
 
+        // 실제 파트너 라벨도 MP 코드로 변환 (본인 제외)
+        const converted = (realData || []).map(d => ({
+            ...d,
+            partner_label: d.is_me ? d.partner_label : this.toLabelCode(d.partner_label)
+        }));
+
         const virtualData = virtualLabels.map((label, i) => this.generatePartnerStats(label, i));
 
-        const merged = [...(realData || []), ...virtualData];
+        const merged = [...converted, ...virtualData];
         // 거래액 내림차순 정렬
         merged.sort((a, b) => (b.total_amount || 0) - (a.total_amount || 0));
         return merged;
@@ -212,11 +222,17 @@ const VPS = {
         const realLabels = (realData || []).map(d => d.partner_label);
         const virtualLabels = this.generateLabels(realLabels);
 
+        // 실제 파트너 라벨도 MP 코드로 변환 (본인 제외)
+        const converted = (realData || []).map(d => ({
+            ...d,
+            partner_label: d.is_me ? d.partner_label : this.toLabelCode(d.partner_label)
+        }));
+
         const virtualData = virtualLabels
             .map((label, i) => this.generatePartnerMonthly(label, i, month))
             .filter(d => d !== null);
 
-        const merged = [...(realData || []), ...virtualData];
+        const merged = [...converted, ...virtualData];
         // 건수 내림차순 정렬
         merged.sort((a, b) => (b.client_count || 0) - (a.client_count || 0));
         // 순위 재부여
@@ -660,7 +676,7 @@ async function loadOverview() {
         table.style.display = 'table';
         tbody.innerHTML = merged.map(row => `
             <tr style="${row.is_me ? 'background:var(--primary-light);font-weight:600;' : ''}">
-                <td>파트너 ${escapeHtml(row.partner_label)} ${row.is_me ? '(나)' : ''}</td>
+                <td>${row.is_me ? escapeHtml(row.partner_label) + ' (나)' : escapeHtml(row.partner_label)}</td>
                 <td>${row.total_clients}</td>
                 <td>${row.approved_clients}</td>
                 <td>${row.installed_clients}</td>
@@ -703,7 +719,7 @@ async function loadLeaderboard() {
         list.innerHTML = merged.map(row => `
             <div class="lb-row ${row.is_me ? 'is-me' : ''}">
                 <div class="lb-rank">${row.rank}</div>
-                <div class="lb-name">파트너 ${escapeHtml(row.partner_label)} ${row.is_me ? '(나)' : ''}</div>
+                <div class="lb-name">${row.is_me ? escapeHtml(row.partner_label) + ' (나)' : escapeHtml(row.partner_label)}</div>
                 <div class="lb-stat">${row.client_count}건</div>
                 <div class="lb-stat">${formatCurrency(row.total_amount)}원</div>
             </div>
