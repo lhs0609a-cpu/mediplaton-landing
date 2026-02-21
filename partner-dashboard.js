@@ -8,6 +8,223 @@ let currentPartner = null;
 let currentTab = 'register';
 let realtimeChannel = null;
 
+// ─── VPS (Virtual Partner System) ───
+// 파트너 대시보드에만 가상 파트너를 주입하여 경쟁 심리 자극
+// 관리자 페이지(admin.js)에는 영향 없음
+
+const VPS = {
+    enabled: true,
+    targetCount: 42,
+    baseDate: '2025-06-01',
+
+    // 시드 기반 의사난수 (결정적) - 같은 시드 → 같은 결과
+    rand(seed) {
+        let s = seed % 2147483647;
+        if (s <= 0) s += 2147483646;
+        s = (s * 16807) % 2147483647;
+        return (s - 1) / 2147483646;
+    },
+
+    // 문자열 → 정수 해시
+    hashStr(str) {
+        let h = 0;
+        for (let i = 0; i < str.length; i++) {
+            h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+        }
+        return Math.abs(h);
+    },
+
+    // 날짜 문자열 → 해시용 정수
+    hashDate(dateStr) {
+        const d = new Date(dateStr);
+        return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+    },
+
+    // baseDate부터 오늘까지의 일수
+    daysSinceBase() {
+        const base = new Date(this.baseDate);
+        const now = new Date();
+        base.setHours(0, 0, 0, 0);
+        now.setHours(0, 0, 0, 0);
+        return Math.max(0, Math.floor((now - base) / 86400000));
+    },
+
+    // 실제 파트너 라벨 수집 → 충돌 없는 가상 라벨 생성
+    generateLabels(realLabels) {
+        const usedSet = new Set(realLabels.map(l => l.toUpperCase()));
+        const labels = [];
+        let code = 0;
+        while (labels.length < this.targetCount) {
+            // A=0, B=1, ... Z=25, AA=26, AB=27, ...
+            let label = '';
+            let n = code;
+            do {
+                label = String.fromCharCode(65 + (n % 26)) + label;
+                n = Math.floor(n / 26) - 1;
+            } while (n >= 0);
+            code++;
+            if (!usedSet.has(label)) {
+                labels.push(label);
+            }
+        }
+        return labels;
+    },
+
+    // 티어 할당: Top 10%, Mid 35%, Low 35%, Inactive 20%
+    getTier(index, total) {
+        const pct = index / total;
+        if (pct < 0.10) return 'top';
+        if (pct < 0.45) return 'mid';
+        if (pct < 0.80) return 'low';
+        return 'inactive';
+    },
+
+    // 티어별 파라미터 범위
+    tierParams: {
+        top:      { regRate: [0.22, 0.35], approveRate: [0.60, 0.80], installRate: [0.45, 0.70], amtPer: [8000, 20000] },
+        mid:      { regRate: [0.08, 0.18], approveRate: [0.45, 0.65], installRate: [0.30, 0.50], amtPer: [3000, 8000] },
+        low:      { regRate: [0.025, 0.075], approveRate: [0.30, 0.50], installRate: [0.20, 0.40], amtPer: [1500, 5000] },
+        inactive: { regRate: [0.008, 0.028], approveRate: [0.20, 0.40], installRate: [0.10, 0.30], amtPer: [1000, 3000] }
+    },
+
+    // 범위 내에서 시드 기반 값 선택
+    pickInRange(range, seed) {
+        const r = this.rand(seed);
+        return range[0] + r * (range[1] - range[0]);
+    },
+
+    // 가상 파트너 1개의 전체현황 데이터 생성
+    generatePartnerStats(label, index) {
+        const seed = this.hashStr('vps_' + label + '_v2');
+        const days = this.daysSinceBase();
+        const tier = this.getTier(index, this.targetCount);
+        const tp = this.tierParams[tier];
+
+        // 파트너별 고정 파라미터 (시드 기반)
+        const dailyRegRate = this.pickInRange(tp.regRate, seed + 1);
+        const approveRate = this.pickInRange(tp.approveRate, seed + 2);
+        const installRate = this.pickInRange(tp.installRate, seed + 3);
+        const amtPerInstall = this.pickInRange(tp.amtPer, seed + 4);
+
+        // 활동 시작 오프셋 (0~60일 지연)
+        const startOffset = Math.floor(this.rand(seed + 5) * 60);
+        const activeDays = Math.max(0, days - startOffset);
+
+        // 일별 노이즈 (오늘 날짜 + 파트너 시드)
+        const todayHash = this.hashDate(new Date().toISOString());
+        const dailyNoise = this.rand(seed + todayHash) * 0.8;
+
+        // 등록 건수
+        const totalClients = Math.max(0, Math.floor(activeDays * dailyRegRate + dailyNoise));
+        // 승인 건수
+        const approvedNoise = this.rand(seed + todayHash + 100) * 0.5;
+        const approvedClients = Math.min(totalClients, Math.max(0, Math.floor(totalClients * approveRate + approvedNoise)));
+        // 설치 건수
+        const installNoise = this.rand(seed + todayHash + 200) * 0.3;
+        const installedClients = Math.min(approvedClients, Math.max(0, Math.floor(approvedClients * installRate + installNoise)));
+        // 거래액 (만원 단위 → 10만원 단위 반올림)
+        const rawAmount = installedClients * amtPerInstall;
+        const totalAmount = Math.round(rawAmount / 10) * 10 * 10000; // 10만원 단위, 원 단위로 변환
+
+        return {
+            partner_label: label,
+            is_me: false,
+            total_clients: totalClients,
+            approved_clients: approvedClients,
+            installed_clients: installedClients,
+            total_amount: totalAmount
+        };
+    },
+
+    // 가상 파트너 1개의 월간 데이터 생성
+    generatePartnerMonthly(label, index, month) {
+        const seed = this.hashStr('vps_' + label + '_month_' + month);
+        const tier = this.getTier(index, this.targetCount);
+        const tp = this.tierParams[tier];
+
+        // 해당 월의 일수 계산
+        const [year, mon] = month.split('-').map(Number);
+        const monthStart = new Date(year, mon - 1, 1);
+        const monthEnd = new Date(year, mon, 0);
+        const baseD = new Date(this.baseDate);
+        baseD.setHours(0, 0, 0, 0);
+
+        // 해당 월에 활동했는지 확인
+        if (monthEnd < baseD) return null;
+
+        const effectiveStart = monthStart > baseD ? monthStart : baseD;
+        // 미래 월이면 오늘까지만
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const effectiveEnd = monthEnd > now ? now : monthEnd;
+
+        if (effectiveEnd < effectiveStart) return null;
+
+        const daysInRange = Math.floor((effectiveEnd - effectiveStart) / 86400000) + 1;
+
+        // 활동 시작 오프셋 고려
+        const startOffset = Math.floor(this.rand(this.hashStr('vps_' + label + '_v2') + 5) * 60);
+        const baseTotalDays = Math.floor((effectiveStart - baseD) / 86400000);
+        const activeDaysStart = Math.max(0, baseTotalDays - startOffset);
+        if (activeDaysStart <= 0 && daysInRange < startOffset - baseTotalDays) return null;
+
+        const dailyRegRate = this.pickInRange(tp.regRate, seed + 1);
+        const approveRate = this.pickInRange(tp.approveRate, seed + 2);
+        const amtPer = this.pickInRange(tp.amtPer, seed + 4);
+
+        // 월별 노이즈
+        const monthNoise = this.rand(seed + 300) * 0.8;
+        const effectiveActiveDays = Math.max(0, daysInRange - Math.max(0, startOffset - baseTotalDays));
+        const clientCount = Math.max(0, Math.floor(effectiveActiveDays * dailyRegRate + monthNoise));
+        const approvedCount = Math.min(clientCount, Math.max(0, Math.floor(clientCount * approveRate + this.rand(seed + 400) * 0.5)));
+        const rawAmt = approvedCount * amtPer;
+        const totalAmount = Math.round(rawAmt / 10) * 10 * 10000;
+
+        if (clientCount <= 0) return null;
+
+        return {
+            partner_label: label,
+            is_me: false,
+            client_count: clientCount,
+            total_amount: totalAmount
+        };
+    },
+
+    // 전체현황: 실제 데이터 + 가상 데이터 병합
+    getOverviewData(realData) {
+        if (!this.enabled) return realData;
+
+        const realLabels = (realData || []).map(d => d.partner_label);
+        const virtualLabels = this.generateLabels(realLabels);
+
+        const virtualData = virtualLabels.map((label, i) => this.generatePartnerStats(label, i));
+
+        const merged = [...(realData || []), ...virtualData];
+        // 거래액 내림차순 정렬
+        merged.sort((a, b) => (b.total_amount || 0) - (a.total_amount || 0));
+        return merged;
+    },
+
+    // 월간순위: 실제 데이터 + 가상 데이터 병합, 순위 재부여
+    getLeaderboardData(realData, month) {
+        if (!this.enabled) return realData;
+
+        const realLabels = (realData || []).map(d => d.partner_label);
+        const virtualLabels = this.generateLabels(realLabels);
+
+        const virtualData = virtualLabels
+            .map((label, i) => this.generatePartnerMonthly(label, i, month))
+            .filter(d => d !== null);
+
+        const merged = [...(realData || []), ...virtualData];
+        // 건수 내림차순 정렬
+        merged.sort((a, b) => (b.client_count || 0) - (a.client_count || 0));
+        // 순위 재부여
+        merged.forEach((d, i) => { d.rank = i + 1; });
+        return merged;
+    }
+};
+
 const loginScreen = document.getElementById('loginScreen');
 const dashboard = document.getElementById('partnerDashboard');
 const loginForm = document.getElementById('loginForm');
@@ -430,15 +647,18 @@ async function loadOverview() {
         const { data, error } = await sb.rpc('get_anonymized_stats');
         if (error) throw error;
 
+        // 가상 파트너 데이터 병합
+        const merged = VPS.getOverviewData(data || []);
+
         loading.style.display = 'none';
 
-        if (!data || data.length === 0) {
+        if (!merged || merged.length === 0) {
             empty.style.display = 'block';
             return;
         }
 
         table.style.display = 'table';
-        tbody.innerHTML = data.map(row => `
+        tbody.innerHTML = merged.map(row => `
             <tr style="${row.is_me ? 'background:var(--primary-light);font-weight:600;' : ''}">
                 <td>파트너 ${escapeHtml(row.partner_label)} ${row.is_me ? '(나)' : ''}</td>
                 <td>${row.total_clients}</td>
@@ -470,14 +690,17 @@ async function loadLeaderboard() {
         const { data, error } = await sb.rpc('get_monthly_leaderboard', { p_month: month });
         if (error) throw error;
 
+        // 가상 파트너 데이터 병합 + 순위 재부여
+        const merged = VPS.getLeaderboardData(data || [], month);
+
         loading.style.display = 'none';
 
-        if (!data || data.length === 0) {
+        if (!merged || merged.length === 0) {
             empty.style.display = 'block';
             return;
         }
 
-        list.innerHTML = data.map(row => `
+        list.innerHTML = merged.map(row => `
             <div class="lb-row ${row.is_me ? 'is-me' : ''}">
                 <div class="lb-rank">${row.rank}</div>
                 <div class="lb-name">파트너 ${escapeHtml(row.partner_label)} ${row.is_me ? '(나)' : ''}</div>
