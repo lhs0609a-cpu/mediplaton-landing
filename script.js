@@ -1375,36 +1375,40 @@ function initMarketingCalculator() {
         loanToggle.classList.toggle('active', hasLoan);
         if (brokerToggle) brokerToggle.classList.toggle('active', hasBroker);
 
+        // Biz page: calculate marketing level from card sales + bonuses
+        let bizLevel = 0;
+        if (hasBrokerOption) {
+            const cardSalesSelect = document.getElementById('mktCardSales');
+            const cardSales = cardSalesSelect ? parseInt(cardSalesSelect.value) : 0;
+            if (cardSales >= 10000) bizLevel = 4;
+            else if (cardSales >= 6000) bizLevel = 3;
+            else if (cardSales >= 4000) bizLevel = 2;
+            else if (cardSales >= 2000) bizLevel = 1;
+            else bizLevel = 0;
+            // Loan/broker each give +1 tier upgrade
+            if (hasLoan) bizLevel++;
+            if (hasBroker) bizLevel++;
+            if (bizLevel > 4) bizLevel = 4;
+        }
+
         // Determine tier
         let tier, tierName, tierDescText, savings, savingsNoteText;
 
         if (hasBrokerOption) {
-            // === Biz page: 4-tier with broker ===
-            if (hasLoan && hasBroker && isLarge) {
-                tier = 'platinum';
-                tierName = 'Platinum';
-                tierDescText = 'PG + 대출 + 중개 + 30평 이상';
-                savings = '~600만원/월';
-                savingsNoteText = '(전체 마케팅 무료)';
-            } else if (hasLoan && hasBroker) {
-                tier = 'gold';
-                tierName = 'Gold';
-                tierDescText = 'PG + 대출 + 중개';
-                savings = '~350만원/월';
-                savingsNoteText = '(홈페이지+블로그+플레이스)';
-            } else if (hasLoan) {
-                tier = 'silver';
-                tierName = 'Silver';
-                tierDescText = 'PG + 대출 이용';
-                savings = '~250만원/월';
-                savingsNoteText = '(홈페이지+블로그 운영)';
-            } else {
-                tier = 'basic';
-                tierName = 'Basic';
-                tierDescText = 'PG 단말기 교체 혜택';
-                savings = '~400만원';
-                savingsNoteText = '(홈페이지 제작비 1회)';
-            }
+            // === Biz page: card sales-based tier ===
+            const bizTiers = [
+                { t: 'basic',    n: 'Basic',    d: 'PG 기본 혜택',                      s: '~80만원/월',  sn: '(플레이스 기본관리)' },
+                { t: 'silver',   n: 'Silver',   d: '플레이스 + 블로그 운영',              s: '~330만원/월', sn: '(블로그 운영 포함)' },
+                { t: 'gold',     n: 'Gold',     d: '블로그 + 플레이스 광고',              s: '~430만원/월', sn: '(플레이스 광고 포함)' },
+                { t: 'platinum', n: 'Platinum', d: '블로그 + 광고 + 카페 바이럴',         s: '~580만원/월', sn: '(카페 바이럴 포함)' },
+                { t: 'diamond',  n: 'Diamond',  d: '전체 마케팅 + 홈페이지',              s: '~980만원',    sn: '(전체 마케팅 + 홈페이지 무료)' },
+            ];
+            const bt = bizTiers[bizLevel];
+            tier = bt.t;
+            tierName = bt.n;
+            tierDescText = bt.d;
+            savings = bt.s;
+            savingsNoteText = bt.sn;
         } else {
             // === Medical page: 3-tier without broker ===
             if (hasLoan && isLarge) {
@@ -1444,11 +1448,9 @@ function initMarketingCalculator() {
             let isActive = false;
 
             if (hasBrokerOption) {
-                // Biz page unlock logic
-                if (benefit === 'homepage') isActive = true;
-                if (benefit === 'blog') isActive = hasLoan;
-                if (benefit === 'place') isActive = hasLoan && hasBroker;
-                if (benefit === 'cafe') isActive = hasLoan && hasBroker && isLarge;
+                // Biz page: card sales-based unlock
+                const benefitLevel = { 'place': 0, 'blog': 1, 'place-pro': 2, 'cafe': 3, 'homepage': 4 };
+                isActive = bizLevel >= (benefitLevel[benefit] ?? 99);
             } else {
                 // Medical page unlock logic
                 if (benefit === 'blog') isActive = true;   // PG base
@@ -1473,7 +1475,7 @@ function initMarketingCalculator() {
                 item.classList.add('locked');
                 // Replace check icon with lock icon
                 const checkEl = item.querySelector('.mkt-benefit-check');
-                if (checkEl && !(hasBrokerOption && benefit === 'homepage')) {
+                if (checkEl) {
                     checkEl.outerHTML = '<span class="mkt-benefit-lock"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>';
                 }
                 const unlockEl = item.querySelector('.mkt-benefit-unlock');
@@ -1513,6 +1515,8 @@ function initMarketingCalculator() {
     loanCheck.addEventListener('change', calculate);
     if (brokerCheck) brokerCheck.addEventListener('change', calculate);
     sizeRadios.forEach(radio => radio.addEventListener('change', calculate));
+    const cardSalesSelect = document.getElementById('mktCardSales');
+    if (cardSalesSelect) cardSalesSelect.addEventListener('change', calculate);
 
     // Initial calculation
     calculate();

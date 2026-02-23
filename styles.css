@@ -10784,6 +10784,12 @@ html {
     color: var(--white);
 }
 
+.mkt-tier-badge.diamond {
+    background: linear-gradient(135deg, #1428A0, #2962FF);
+    color: var(--white);
+    box-shadow: 0 0 12px rgba(20, 40, 160, 0.4);
+}
+
 .mkt-tier-desc {
     display: block;
     font-size: 13px;
