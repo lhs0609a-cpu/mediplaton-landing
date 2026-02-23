@@ -1411,14 +1411,14 @@ function initMarketingCalculator() {
                 tier = 'platinum';
                 tierName = 'Platinum';
                 tierDescText = 'PG + 대출 + 50평 이상';
-                savings = '~650만원/월';
-                savingsNoteText = '(전체 마케팅 무료)';
+                savings = '~1,050만원';
+                savingsNoteText = '(전체 마케팅 + 홈페이지 무료)';
             } else if (hasLoan) {
                 tier = 'gold';
                 tierName = 'Gold';
                 tierDescText = 'PG + 대출 이용';
-                savings = '~500만원/월';
-                savingsNoteText = '(홈페이지+블로그+플레이스+카페)';
+                savings = '~650만원/월';
+                savingsNoteText = '(블로그+플레이스+카페+SNS)';
             } else {
                 tier = 'silver';
                 tierName = 'Silver';
@@ -1453,9 +1453,9 @@ function initMarketingCalculator() {
                 // Medical page unlock logic
                 if (benefit === 'blog') isActive = true;   // PG base
                 if (benefit === 'place') isActive = true;   // PG base
-                if (benefit === 'homepage') isActive = hasLoan;
                 if (benefit === 'cafe') isActive = hasLoan;
-                if (benefit === 'sns') isActive = hasLoan && isLarge;
+                if (benefit === 'sns') isActive = hasLoan;
+                if (benefit === 'homepage') isActive = hasLoan && isLarge; // 최종 단계
             }
 
             if (isActive) {
