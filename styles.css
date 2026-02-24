@@ -1586,7 +1586,7 @@ a.contact-value:hover {
     right: 0;
     width: 35%;
     height: 60%;
-    background: url('images/about-i4-pc.webp') center/cover no-repeat;
+    background: url('images/photo-financial-analysis.jpg') center/cover no-repeat;
     opacity: 0.04;
     mask-image: linear-gradient(to top left, black, transparent);
     -webkit-mask-image: linear-gradient(to top left, black, transparent);
@@ -1892,7 +1892,7 @@ div.product-cta .btn {
     left: 0;
     width: 40%;
     height: 100%;
-    background: url('images/about-i3.webp') center/cover no-repeat;
+    background: url('images/photo-dental-clinic.jpg') center/cover no-repeat;
     opacity: 0.05;
     mask-image: linear-gradient(to right, black, transparent);
     -webkit-mask-image: linear-gradient(to right, black, transparent);
