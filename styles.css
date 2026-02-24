@@ -440,6 +440,14 @@ section.hero .hero-trust span {
     gap: 12px;
 }
 
+/* 실제 로고 이미지 */
+.logo-img {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+/* Legacy CSS logo - hidden when image available */
 .logo-mark {
     width: 42px;
     height: 42px;
@@ -3164,6 +3172,7 @@ div.product-cta .btn {
     margin-bottom: 20px;
 }
 
+.footer-logo .logo-img { height: 36px; }
 .footer-logo .logo-main { color: #FFFFFF !important; }
 .footer-logo .logo-sub { color: rgba(255, 255, 255, 0.7) !important; }
 .footer-logo .logo-icon { color: #FFD54F !important; }
@@ -12174,4 +12183,280 @@ html {
         text-align: center;
         padding: 16px 24px;
     }
+}
+
+/* ===== 실사 자료 통합 - 새 컴포넌트 스타일 ===== */
+
+/* 히어로 배경 영상 */
+.hero { position: relative; overflow: hidden; }
+.hero-bg { position: relative; }
+
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.85) 100%);
+    z-index: 1;
+}
+
+.hero .container { position: relative; z-index: 2; }
+
+/* 모바일 메뉴 로고 이미지 */
+.mobile-menu-header .logo-img { height: 32px; }
+
+/* 마퀴 병원 로고 */
+.marquee-logo {
+    height: 36px;
+    width: auto;
+    opacity: 0.7;
+    filter: grayscale(100%);
+    transition: var(--transition);
+    vertical-align: middle;
+    margin-right: 8px;
+}
+.marquee-item:hover .marquee-logo {
+    opacity: 1;
+    filter: none;
+}
+
+/* 병원 로고 마퀴 섹션 */
+.hospital-marquee-section {
+    padding: 60px 0;
+    background: var(--gray-50);
+    overflow: hidden;
+}
+
+.hospital-marquee-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.hospital-marquee-header .section-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: var(--primary-50);
+    color: var(--primary);
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.hospital-marquee-header h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.hospital-marquee-track {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+.hospital-marquee-slide {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    animation: hospitalMarquee 40s linear infinite;
+    flex-shrink: 0;
+    padding-right: 48px;
+}
+
+.hospital-logo-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 4px 12px;
+    opacity: 0.6;
+    filter: grayscale(100%);
+    transition: var(--transition);
+}
+
+.hospital-logo-item:hover {
+    opacity: 1;
+    filter: none;
+}
+
+.hospital-logo-item img {
+    height: 40px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+}
+
+@keyframes hospitalMarquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* 포트폴리오 그리드 */
+.portfolio-section {
+    padding: var(--section-padding) 0;
+    background: var(--white);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.portfolio-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+}
+
+.portfolio-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.portfolio-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.portfolio-info {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.portfolio-logo {
+    height: 32px;
+    width: auto;
+    max-width: 80px;
+    object-fit: contain;
+}
+
+.portfolio-info span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+/* 사례 카드 사진 영역 */
+.case-photo {
+    height: 160px;
+    overflow: hidden;
+    border-radius: var(--radius) var(--radius) 0 0;
+    margin: -24px -24px 16px -24px;
+}
+
+.case-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 협력사 로고 그리드 (확장) */
+.ext-partners-section {
+    padding: 60px 0;
+    background: var(--gray-50);
+}
+
+.ext-partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.ext-partner-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.ext-partner-item:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.ext-partner-item img {
+    height: 48px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: grayscale(30%);
+    transition: var(--transition);
+}
+
+.ext-partner-item:hover img {
+    filter: none;
+}
+
+/* marketing-medical 히어로 비디오 */
+.mkt-hero-v2 .hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.mkt-hero-v2 .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.88) 100%);
+    z-index: 1;
+}
+
+.mkt-hero-v2 .hero-v2-content { z-index: 2; position: relative; }
+
+/* 반응형 - 새 컴포넌트 */
+@media (max-width: 768px) {
+    .logo-img { height: 32px; }
+    .footer-logo .logo-img { height: 28px; }
+    .mobile-menu-header .logo-img { height: 28px; }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .portfolio-img { height: 160px; }
+
+    .case-photo { height: 120px; }
+
+    .ext-partners-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .hospital-logo-item img { height: 28px; }
+    .hospital-marquee-slide { gap: 32px; }
+
+    .hero-video { opacity: 0.1; }
 }
