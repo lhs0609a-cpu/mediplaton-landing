@@ -12594,45 +12594,72 @@ html {
     color: var(--gray-700);
 }
 
-/* 포트폴리오 로고 전용 그리드 */
-.portfolio-logo-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
-    margin-top: 40px;
+/* 포트폴리오 로고 마키 (두 줄 양방향 무한 스크롤) */
+@keyframes logoMarquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
-.portfolio-logo-card {
+.logo-marquee-wrap {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+}
+
+.logo-marquee-row {
+    overflow: hidden;
+    width: 100%;
+}
+
+.logo-marquee-track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    animation: logoMarquee 45s linear infinite;
+}
+
+.logo-marquee-track[style*="--direction:1"] {
+    animation-direction: reverse;
+}
+
+.logo-marquee-row:hover .logo-marquee-track {
+    animation-play-state: paused;
+}
+
+.logo-marquee-item {
+    flex-shrink: 0;
+    width: 180px;
+    height: 80px;
     background: var(--white);
     border: 1.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 24px 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 90px;
+    padding: 14px 16px;
     transition: var(--transition);
 }
 
-.portfolio-logo-card:hover {
+.logo-marquee-item:hover {
     border-color: var(--primary);
     box-shadow: 0 4px 16px rgba(20, 40, 160, 0.1);
-    transform: translateY(-2px);
 }
 
-.portfolio-logo-card img {
-    max-height: 48px;
-    max-width: 100%;
+.logo-marquee-item img {
+    max-height: 44px;
+    max-width: 140px;
     width: auto;
     object-fit: contain;
-    filter: grayscale(30%);
-    opacity: 0.85;
+    filter: grayscale(40%) opacity(0.7);
     transition: var(--transition);
 }
 
-.portfolio-logo-card:hover img {
-    filter: grayscale(0%);
-    opacity: 1;
+.logo-marquee-item:hover img {
+    filter: grayscale(0%) opacity(1);
 }
 
 .portfolio-count {
@@ -12647,29 +12674,18 @@ html {
     font-size: 20px;
 }
 
-@media (max-width: 1024px) {
-    .portfolio-logo-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
 @media (max-width: 768px) {
-    .portfolio-logo-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+    .logo-marquee-item {
+        width: 150px;
+        height: 64px;
+        padding: 10px 12px;
     }
-    .portfolio-logo-card {
-        padding: 16px 12px;
-        min-height: 70px;
-    }
-    .portfolio-logo-card img {
+    .logo-marquee-item img {
         max-height: 36px;
+        max-width: 110px;
     }
-}
-
-@media (max-width: 480px) {
-    .portfolio-logo-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .logo-marquee-track {
+        gap: 12px;
     }
 }
 
