@@ -218,48 +218,65 @@
     <main id="main-content">
 
     <!-- ===== Section 1: Hero ===== -->
-    <section class="mkt-hero" style="position:relative;overflow:hidden;">
-        <div class="mkt-hero-bg">
-            <video class="hero-video" autoplay muted loop playsinline poster="images/video/hero-poster.jpg" style="position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;transform:translate(-50%,-50%);object-fit:cover;opacity:0.1;z-index:0;">
-                <source src="images/video/hero-bg.mp4" type="video/mp4">
-            </video>
-            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.95) 0%,rgba(255,255,255,0.88) 100%);z-index:1;"></div>
-        </div>
+    <section class="biz-hero">
+        <div class="biz-hero-bg"></div>
         <div class="container" style="position:relative;z-index:2;">
-            <div class="mkt-hero-content">
-                <div class="mkt-hero-badges">
-                    <span class="mkt-badge-pill">마케팅 비용, 매달 빠져나가고 있죠?</span>
-                    <span class="mkt-badge-pill accent">이제 0원으로 가능합니다</span>
+            <div class="biz-hero-layout">
+                <div class="biz-hero-text">
+                    <div class="mkt-hero-badges">
+                        <span class="mkt-badge-pill">음식점 · 카페 · 미용실 · 헬스장 사장님</span>
+                        <span class="mkt-badge-pill accent">마케팅 비용 0원 시대</span>
+                    </div>
+
+                    <h1 class="mkt-hero-title">
+                        사장님, 마케팅에<br>
+                        <span class="mkt-highlight">매달 얼마 쓰고 계세요?</span>
+                    </h1>
+
+                    <p class="mkt-hero-subtitle">
+                        PG 단말기 하나만 바꾸면<br>
+                        <strong>홈페이지·블로그·플레이스·바이럴까지 전부 무료</strong>
+                    </p>
+
+                    <div class="mkt-hero-actions">
+                        <a href="#mkt-calculator" class="mkt-btn-primary">내 혜택 계산하기</a>
+                        <a href="#mkt-apply" class="mkt-btn-outline">무료 상담 신청</a>
+                    </div>
+
+                    <div class="mkt-hero-trust">
+                        <span>신협중앙회 정식 제휴</span>
+                        <span class="mkt-trust-divider">|</span>
+                        <span>19년 업력</span>
+                        <span class="mkt-trust-divider">|</span>
+                        <span>332+ 파트너</span>
+                    </div>
                 </div>
 
-                <h1 class="mkt-hero-title">
-                    매달 나가던 마케팅 비용<br>
-                    <span class="mkt-highlight">월 600만원, 돌려받으세요</span>
-                </h1>
-
-                <p class="mkt-hero-subtitle">
-                    PG 단말기 하나만 바꾸면<br>
-                    <strong>홈페이지·블로그·플레이스·바이럴까지 전부 무료</strong>
-                </p>
-
-                <div class="mkt-hero-benefits">
-                    <span class="mkt-benefit-pill">홈페이지 제작</span>
-                    <span class="mkt-benefit-pill">블로그 운영</span>
-                    <span class="mkt-benefit-pill">플레이스 광고</span>
-                    <span class="mkt-benefit-pill">카페 바이럴</span>
-                </div>
-
-                <div class="mkt-hero-actions">
-                    <a href="#mkt-calculator" class="mkt-btn-primary">내 혜택 계산하기</a>
-                    <a href="#mkt-apply" class="mkt-btn-outline">무료 상담 신청</a>
-                </div>
-
-                <div class="mkt-hero-trust">
-                    <span>신협중앙회 정식 제휴</span>
-                    <span class="mkt-trust-divider">|</span>
-                    <span>19년 업력</span>
-                    <span class="mkt-trust-divider">|</span>
-                    <span>332+ 파트너</span>
+                <div class="biz-hero-cards">
+                    <div class="biz-hero-card">
+                        <div class="biz-hero-card-icon">🍽️</div>
+                        <strong>음식점</strong>
+                        <span>블로그 + 플레이스</span>
+                        <span class="biz-hero-card-save">월 250만원 절감</span>
+                    </div>
+                    <div class="biz-hero-card">
+                        <div class="biz-hero-card-icon">☕</div>
+                        <strong>카페</strong>
+                        <span>바이럴 + 플레이스</span>
+                        <span class="biz-hero-card-save">월 180만원 절감</span>
+                    </div>
+                    <div class="biz-hero-card">
+                        <div class="biz-hero-card-icon">💇</div>
+                        <strong>미용실</strong>
+                        <span>홈페이지 + 블로그</span>
+                        <span class="biz-hero-card-save">월 300만원 절감</span>
+                    </div>
+                    <div class="biz-hero-card">
+                        <div class="biz-hero-card-icon">🏋️</div>
+                        <strong>헬스장</strong>
+                        <span>카페 바이럴 + 광고</span>
+                        <span class="biz-hero-card-save">월 200만원 절감</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -309,6 +326,104 @@
 
             <div class="mkt-pain-solution">
                 <p>메디플라톤과 함께하면 이 비용을 <strong class="mkt-free-text">0원</strong>으로 만들 수 있습니다</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Section 2.5: 업종별 활용 사례 ===== -->
+    <section class="biz-usecases">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-badge">업종별 활용</span>
+                <h2 class="section-title">어떤 매장이든<br><span style="color:var(--primary)">맞춤 마케팅</span>을 제공합니다</h2>
+                <p class="section-desc">PG 단말기를 사용하는 모든 소상공인 사장님이 대상입니다</p>
+            </div>
+
+            <div class="biz-usecase-grid">
+                <div class="biz-usecase-card">
+                    <div class="biz-usecase-icon">🍽️</div>
+                    <h3>음식점 · 식당</h3>
+                    <ul>
+                        <li>네이버 플레이스 상위노출</li>
+                        <li>맛집 블로그 리뷰 운영</li>
+                        <li>지역 맘카페 바이럴</li>
+                        <li>메뉴판 홈페이지 제작</li>
+                    </ul>
+                    <div class="biz-usecase-result">
+                        <span>월 평균 절감</span>
+                        <strong>250만원+</strong>
+                    </div>
+                </div>
+                <div class="biz-usecase-card">
+                    <div class="biz-usecase-icon">☕</div>
+                    <h3>카페 · 베이커리</h3>
+                    <ul>
+                        <li>인스타그램 감성 블로그</li>
+                        <li>플레이스 리뷰 관리</li>
+                        <li>동네 커뮤니티 홍보</li>
+                        <li>브랜드 홈페이지 제작</li>
+                    </ul>
+                    <div class="biz-usecase-result">
+                        <span>월 평균 절감</span>
+                        <strong>180만원+</strong>
+                    </div>
+                </div>
+                <div class="biz-usecase-card">
+                    <div class="biz-usecase-icon">💇</div>
+                    <h3>미용실 · 네일</h3>
+                    <ul>
+                        <li>시술 후기 블로그 운영</li>
+                        <li>네이버 예약 플레이스</li>
+                        <li>스타일 포트폴리오 사이트</li>
+                        <li>지역 타겟 바이럴</li>
+                    </ul>
+                    <div class="biz-usecase-result">
+                        <span>월 평균 절감</span>
+                        <strong>300만원+</strong>
+                    </div>
+                </div>
+                <div class="biz-usecase-card">
+                    <div class="biz-usecase-icon">🏋️</div>
+                    <h3>헬스장 · 필라테스</h3>
+                    <ul>
+                        <li>체험 후기 블로그</li>
+                        <li>플레이스 광고 운영</li>
+                        <li>회원모집 랜딩페이지</li>
+                        <li>카페 바이럴 마케팅</li>
+                    </ul>
+                    <div class="biz-usecase-result">
+                        <span>월 평균 절감</span>
+                        <strong>200만원+</strong>
+                    </div>
+                </div>
+                <div class="biz-usecase-card">
+                    <div class="biz-usecase-icon">👕</div>
+                    <h3>의류 · 잡화</h3>
+                    <ul>
+                        <li>쇼핑몰형 홈페이지</li>
+                        <li>패션 블로그 운영</li>
+                        <li>플레이스 매장 노출</li>
+                        <li>SNS 바이럴 마케팅</li>
+                    </ul>
+                    <div class="biz-usecase-result">
+                        <span>월 평균 절감</span>
+                        <strong>220만원+</strong>
+                    </div>
+                </div>
+                <div class="biz-usecase-card">
+                    <div class="biz-usecase-icon">🔧</div>
+                    <h3>기타 소상공인</h3>
+                    <ul>
+                        <li>업종 맞춤 블로그</li>
+                        <li>네이버 플레이스 관리</li>
+                        <li>홈페이지 제작</li>
+                        <li>지역 커뮤니티 홍보</li>
+                    </ul>
+                    <div class="biz-usecase-result">
+                        <span>월 평균 절감</span>
+                        <strong>150만원+</strong>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

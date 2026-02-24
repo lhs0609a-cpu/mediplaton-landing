@@ -10237,6 +10237,145 @@ html {
 }
 
 /* === Hero Section === */
+/* === 소상공인 히어로 === */
+.biz-hero {
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 0 60px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0A0F2E 0%, #0D1B6F 30%, var(--primary) 60%, #1E40AF 100%);
+    color: var(--white);
+}
+
+.biz-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(41, 98, 255, 0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(68, 138, 255, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.biz-hero-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.biz-hero-text {
+    text-align: left;
+}
+
+.biz-hero-text .mkt-hero-badges {
+    justify-content: flex-start;
+}
+
+.biz-hero-text .mkt-hero-actions {
+    justify-content: flex-start;
+}
+
+.biz-hero-text .mkt-hero-trust {
+    justify-content: flex-start;
+}
+
+.biz-hero-text .mkt-hero-title {
+    text-align: left;
+}
+
+.biz-hero-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.biz-hero-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.biz-hero-card:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.biz-hero-card-icon {
+    font-size: 36px;
+    margin-bottom: 4px;
+}
+
+.biz-hero-card strong {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.biz-hero-card > span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.biz-hero-card-save {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 4px 10px;
+    background: rgba(255, 213, 79, 0.25);
+    border-radius: var(--radius-full);
+    font-size: 13px !important;
+    font-weight: 700;
+    color: #FFE082 !important;
+}
+
+@media (max-width: 1024px) {
+    .biz-hero-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .biz-hero-text {
+        text-align: center;
+    }
+    .biz-hero-text .mkt-hero-badges,
+    .biz-hero-text .mkt-hero-actions,
+    .biz-hero-text .mkt-hero-trust {
+        justify-content: center;
+    }
+    .biz-hero-text .mkt-hero-title {
+        text-align: center;
+    }
+    .biz-hero-cards {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .biz-hero-cards {
+        grid-template-columns: 1fr;
+    }
+    .biz-hero-card {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+    }
+    .biz-hero-card-icon {
+        font-size: 28px;
+        margin-bottom: 0;
+    }
+    .biz-hero-card strong {
+        font-size: 15px;
+    }
+}
+
 .mkt-hero {
     position: relative;
     min-height: 90vh;
@@ -10406,6 +10545,103 @@ html {
 
 .mkt-trust-divider {
     opacity: 0.4;
+}
+
+/* === 소상공인 업종별 활용 사례 === */
+.biz-usecases {
+    padding: var(--section-padding) 0;
+    background: var(--white);
+}
+
+.biz-usecase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 48px;
+}
+
+.biz-usecase-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 24px;
+    transition: var(--transition);
+}
+
+.biz-usecase-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 24px rgba(20, 40, 160, 0.08);
+    transform: translateY(-4px);
+}
+
+.biz-usecase-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.biz-usecase-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 16px;
+}
+
+.biz-usecase-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+.biz-usecase-card ul li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 2;
+}
+
+.biz-usecase-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+    opacity: 0.5;
+}
+
+.biz-usecase-result {
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.biz-usecase-result span {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.biz-usecase-result strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+@media (max-width: 1024px) {
+    .biz-usecase-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .biz-usecase-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* === Pain Section === */
@@ -12356,6 +12592,85 @@ html {
     font-size: 14px;
     font-weight: 600;
     color: var(--gray-700);
+}
+
+/* 포트폴리오 로고 전용 그리드 */
+.portfolio-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+}
+
+.portfolio-logo-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+    transition: var(--transition);
+}
+
+.portfolio-logo-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px rgba(20, 40, 160, 0.1);
+    transform: translateY(-2px);
+}
+
+.portfolio-logo-card img {
+    max-height: 48px;
+    max-width: 100%;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(30%);
+    opacity: 0.85;
+    transition: var(--transition);
+}
+
+.portfolio-logo-card:hover img {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.portfolio-count {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 16px;
+    color: var(--gray-500);
+}
+
+.portfolio-count strong {
+    color: var(--primary);
+    font-size: 20px;
+}
+
+@media (max-width: 1024px) {
+    .portfolio-logo-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .portfolio-logo-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    .portfolio-logo-card {
+        padding: 16px 12px;
+        min-height: 70px;
+    }
+    .portfolio-logo-card img {
+        max-height: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-logo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* 사례 카드 사진 영역 */
