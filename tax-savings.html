@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>병원 절세 계산기 | 메디플라톤 - 영업지원금으로 최대 49.5% 절세</title>
+    <meta name="description" content="원장님 연매출 기준, 메디플라톤 영업지원금으로 절세 가능한 금액을 바로 계산해 보세요. 원금+이자 전액 100% 비용처리, 종합소득세 최대 49.5% 절감.">
+    <meta name="keywords" content="병원절세,원장님절세,종합소득세절감,영업지원금,PG비용처리,카드매출담보,메디플라톤,병원세금,의원절세,치과절세">
+    <meta name="author" content="메디플라톤">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="병원 절세 계산기 | 메디플라톤">
+    <meta property="og:description" content="원장님 연매출 기준, 영업지원금으로 절세 가능한 금액을 즉시 계산해 보세요.">
+    <meta property="og:url" content="https://mediplaton.co.kr/tax-savings.html">
+    <meta property="og:site_name" content="메디플라톤">
+    <meta property="og:locale" content="ko_KR">
+
+    <!-- Fonts -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" as="style">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231428A0'/%3E%3Cstop offset='100%25' stop-color='%232962FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M16 8v16M8 16h16' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#1428A0">
+    <link rel="canonical" href="https://mediplaton.co.kr/tax-savings.html">
+
+    <style>
+    /* ===== TAX CALCULATOR PAGE STYLES ===== */
+
+    /* Hero */
+    .tax-hero {
+        position: relative;
+        padding: 120px 0 60px;
+        background: #FFFFFF;
+        overflow: hidden;
+    }
+    .tax-hero::before {
+        content: '';
+        position: absolute;
+        top: -20%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(20,40,160,0.04) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .tax-hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .tax-hero-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 600;
+        background: #EEF2FF;
+        border: 1px solid #C7D2FE;
+        color: #1428A0;
+        margin-bottom: 24px;
+    }
+    .tax-hero-chip .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #1428A0;
+        animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+        0%,100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+    .tax-hero-title {
+        font-size: clamp(28px, 5vw, 48px);
+        font-weight: 900;
+        line-height: 1.25;
+        letter-spacing: -0.03em;
+        color: var(--gray-900);
+        margin-bottom: 16px;
+    }
+    .tax-hero-title .accent {
+        color: #1428A0;
+        position: relative;
+    }
+    .tax-hero-title .accent::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: -3px;
+        right: -3px;
+        height: 14px;
+        background: rgba(255,213,79,0.4);
+        z-index: -1;
+        border-radius: 2px;
+    }
+    .tax-hero-desc {
+        font-size: clamp(15px, 2vw, 18px);
+        color: var(--gray-500);
+        line-height: 1.7;
+        margin-bottom: 12px;
+    }
+    .tax-hero-desc strong { color: var(--gray-800); }
+
+    /* ===== CALCULATOR SECTION ===== */
+    .tax-calc-section {
+        padding: 0 0 80px;
+        background: linear-gradient(180deg, #FFFFFF 0%, #F0F2FF 50%, #FFFFFF 100%);
+    }
+    .tax-calc-layout {
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        gap: 28px;
+        max-width: 1060px;
+        margin: 0 auto;
+    }
+    .tax-calc-input {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 100px;
+        align-self: start;
+    }
+    .tax-calc-result {
+        background: linear-gradient(180deg, #FFFFFF 0%, #EEF2FF 100%);
+        border-radius: var(--radius-xl);
+        padding: 36px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+    }
+    .tax-panel-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid var(--gray-100);
+    }
+    .tax-panel-title svg { color: var(--accent); flex-shrink: 0; }
+
+    /* Input Groups */
+    .tax-input-group {
+        margin-bottom: 20px;
+    }
+    .tax-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 8px;
+    }
+    .tax-input-label .val {
+        font-weight: 800;
+        color: var(--primary);
+        font-size: 15px;
+    }
+
+    /* Toggle buttons (개인/법인, 과세/면세) */
+    .tax-toggle-group {
+        display: flex;
+        gap: 8px;
+    }
+    .tax-toggle-btn {
+        flex: 1;
+        padding: 12px 16px;
+        text-align: center;
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-600);
+        background: var(--white);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .tax-toggle-btn:hover { border-color: var(--primary-100); }
+    .tax-toggle-btn.active {
+        border-color: var(--accent);
+        background: #EEF2FF;
+        color: var(--primary-dark);
+    }
+    .tax-toggle-hint {
+        font-size: 12px;
+        color: var(--gray-400);
+        margin-top: 6px;
+        line-height: 1.5;
+    }
+
+    /* Range slider */
+    .tax-range-wrap {
+        position: relative;
+    }
+    .tax-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--gray-200);
+        outline: none;
+        margin: 8px 0;
+    }
+    .tax-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(41,98,255,0.3);
+        transition: transform 0.15s ease;
+    }
+    .tax-range::-webkit-slider-thumb:hover {
+        transform: scale(1.15);
+    }
+    .tax-range::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 8px rgba(41,98,255,0.3);
+    }
+    .tax-range-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--gray-400);
+    }
+
+    /* Direct input */
+    .tax-direct-input {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+    }
+    .tax-direct-input input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-800);
+        text-align: right;
+        font-family: inherit;
+        transition: border-color 0.2s;
+    }
+    .tax-direct-input input:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+    .tax-direct-input .unit {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-500);
+        white-space: nowrap;
+    }
+
+    /* ===== RESULT PANEL ===== */
+    .tax-result-hero {
+        text-align: center;
+        padding: 32px 24px;
+        background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
+        border-radius: var(--radius-lg);
+        margin-bottom: 28px;
+        position: relative;
+        overflow: hidden;
+    }
+    .tax-result-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.06);
+    }
+    .tax-result-hero-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 8px;
+    }
+    .tax-result-hero-amount {
+        font-size: clamp(36px, 5vw, 52px);
+        font-weight: 900;
+        color: #FFD54F;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+        transition: all 0.3s ease;
+    }
+    .tax-result-hero-sub {
+        font-size: 14px;
+        color: rgba(255,255,255,0.6);
+        margin-top: 8px;
+    }
+
+    /* Breakdown cards */
+    .tax-breakdown {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .tax-breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px;
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border-light);
+    }
+    .tax-breakdown-row.highlight {
+        background: #EEF2FF;
+        border-color: #C7D2FE;
+    }
+    .tax-breakdown-row.total {
+        background: linear-gradient(135deg, #0D1B6F, #1428A0);
+        border: none;
+    }
+    .tax-breakdown-row.total .tax-bd-label,
+    .tax-breakdown-row.total .tax-bd-value { color: #fff; }
+    .tax-breakdown-row.total .tax-bd-value { color: #FFD54F; }
+    .tax-breakdown-row.profit {
+        background: linear-gradient(135deg, #065F46, #059669);
+        border: none;
+    }
+    .tax-breakdown-row.profit .tax-bd-label,
+    .tax-breakdown-row.profit .tax-bd-value { color: #fff; }
+    .tax-breakdown-row.profit .tax-bd-value { color: #A7F3D0; }
+    .tax-bd-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--gray-600);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .tax-bd-value {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--gray-900);
+    }
+    .tax-bd-value.danger { color: var(--danger); }
+    .tax-bd-value.accent { color: var(--accent); }
+
+    /* Comparison bar */
+    .tax-compare-box {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        border: 1px solid var(--border);
+        margin-bottom: 24px;
+    }
+    .tax-compare-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 16px;
+        text-align: center;
+    }
+    .tax-compare-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .tax-bar-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .tax-bar-label {
+        width: 80px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-600);
+        text-align: right;
+        flex-shrink: 0;
+    }
+    .tax-bar-track {
+        flex: 1;
+        height: 28px;
+        background: var(--gray-100);
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+    }
+    .tax-bar-fill {
+        height: 100%;
+        border-radius: 14px;
+        transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 12px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        min-width: fit-content;
+    }
+    .tax-bar-fill.interest {
+        background: linear-gradient(90deg, #EF4444, #F87171);
+    }
+    .tax-bar-fill.savings {
+        background: linear-gradient(90deg, #1428A0, #2962FF);
+    }
+    .tax-bar-amount {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--gray-700);
+        width: 90px;
+        flex-shrink: 0;
+    }
+
+    /* Tax bracket visual */
+    .tax-bracket-section {
+        padding: var(--section-padding) 0;
+        background: var(--white);
+    }
+    .tax-bracket-table-wrap {
+        max-width: 800px;
+        margin: 40px auto 0;
+        overflow-x: auto;
+    }
+    .tax-bracket-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 14px;
+    }
+    .tax-bracket-table th {
+        background: var(--gray-800);
+        color: #fff;
+        padding: 14px 16px;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+    }
+    .tax-bracket-table th:first-child { border-radius: 12px 0 0 0; }
+    .tax-bracket-table th:last-child { border-radius: 0 12px 0 0; }
+    .tax-bracket-table td {
+        padding: 12px 16px;
+        text-align: center;
+        border-bottom: 1px solid var(--border-light);
+        color: var(--gray-700);
+    }
+    .tax-bracket-table tr:last-child td:first-child { border-radius: 0 0 0 12px; }
+    .tax-bracket-table tr:last-child td:last-child { border-radius: 0 0 12px 0; }
+    .tax-bracket-table tr.active-bracket td {
+        background: #EEF2FF;
+        font-weight: 700;
+        color: var(--primary-dark);
+    }
+    .tax-bracket-table .rate-cell {
+        font-weight: 800;
+        color: var(--primary);
+    }
+    .bracket-marker {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        margin-right: 6px;
+        animation: dotPulse 1.5s ease-in-out infinite;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .tax-how-section {
+        padding: var(--section-padding) 0;
+        background: var(--gray-50);
+    }
+    .tax-how-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        max-width: 960px;
+        margin: 48px auto 0;
+    }
+    .tax-how-card {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 32px 24px;
+        border: 1px solid var(--border);
+        text-align: center;
+        transition: var(--transition);
+        position: relative;
+    }
+    .tax-how-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+    }
+    .tax-how-step {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1428A0, #2962FF);
+        color: #fff;
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+    .tax-how-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 12px;
+    }
+    .tax-how-card p {
+        font-size: 14px;
+        color: var(--gray-500);
+        line-height: 1.7;
+    }
+    .tax-how-card .badge-tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #FFF7E6;
+        color: #B45309;
+        margin-top: 12px;
+    }
+
+    /* ===== 과세 vs 면세 ===== */
+    .tax-type-section {
+        padding: var(--section-padding) 0;
+        background: var(--white);
+    }
+    .tax-type-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 800px;
+        margin: 48px auto 0;
+    }
+    .tax-type-card {
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        border: 2px solid var(--border);
+        position: relative;
+    }
+    .tax-type-card.taxable {
+        border-color: #2962FF;
+        background: linear-gradient(180deg, #EEF2FF 0%, #fff 100%);
+    }
+    .tax-type-card.exempt {
+        border-color: #059669;
+        background: linear-gradient(180deg, #ECFDF5 0%, #fff 100%);
+    }
+    .tax-type-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: var(--radius-full);
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+    .tax-type-card.taxable .tax-type-badge {
+        background: #1428A0;
+        color: #fff;
+    }
+    .tax-type-card.exempt .tax-type-badge {
+        background: #059669;
+        color: #fff;
+    }
+    .tax-type-card h3 {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--gray-800);
+        margin-bottom: 8px;
+    }
+    .tax-type-card .sub {
+        font-size: 13px;
+        color: var(--gray-500);
+        margin-bottom: 20px;
+    }
+    .tax-type-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .tax-type-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--gray-700);
+        line-height: 1.5;
+    }
+    .tax-type-list li svg {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    /* ===== EXAMPLES ===== */
+    .tax-examples-section {
+        padding: var(--section-padding) 0;
+        background: var(--gray-50);
+    }
+    .tax-examples-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 960px;
+        margin: 48px auto 0;
+    }
+    .tax-example-card {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 28px 24px;
+        border: 1px solid var(--border);
+        transition: var(--transition);
+    }
+    .tax-example-card:hover {
+        box-shadow: var(--shadow-hover);
+        transform: translateY(-3px);
+    }
+    .tax-example-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-light);
+    }
+    .tax-example-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #EEF2FF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+    .tax-example-top h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--gray-800);
+    }
+    .tax-example-top small {
+        display: block;
+        font-size: 12px;
+        color: var(--gray-500);
+        margin-top: 2px;
+    }
+    .tax-example-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .tax-example-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        padding: 6px 0;
+    }
+    .tax-example-row span:first-child { color: var(--gray-500); }
+    .tax-example-row span:last-child { font-weight: 700; color: var(--gray-800); }
+    .tax-example-row.result {
+        padding: 10px 12px;
+        background: linear-gradient(135deg, #1428A0, #2962FF);
+        border-radius: 8px;
+        margin-top: 8px;
+    }
+    .tax-example-row.result span { color: #fff !important; }
+    .tax-example-row.result span:last-child { color: #FFD54F !important; font-size: 16px; }
+
+    /* ===== FAQ ===== */
+    .tax-faq-section {
+        padding: var(--section-padding) 0;
+        background: var(--white);
+    }
+    .tax-faq-list {
+        max-width: 760px;
+        margin: 40px auto 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .tax-faq-item {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+    .tax-faq-item.active {
+        border-color: var(--accent);
+        box-shadow: 0 2px 12px rgba(20,40,160,0.08);
+    }
+    .tax-faq-q {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 20px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--gray-800);
+        background: var(--white);
+        transition: var(--transition);
+    }
+    .tax-faq-q:hover { background: var(--gray-50); }
+    .tax-faq-q .q-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #EEF2FF;
+        color: #1428A0;
+        font-weight: 800;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+    .tax-faq-q .arrow {
+        margin-left: auto;
+        transition: transform 0.3s ease;
+        color: var(--gray-400);
+    }
+    .tax-faq-item.active .tax-faq-q .arrow { transform: rotate(180deg); }
+    .tax-faq-a {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .tax-faq-item.active .tax-faq-a { max-height: 500px; }
+    .tax-faq-a-inner {
+        padding: 0 20px 20px 60px;
+        font-size: 14px;
+        color: var(--gray-600);
+        line-height: 1.8;
+    }
+
+    /* ===== CTA SECTION ===== */
+    .tax-cta-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #0D1B6F 0%, #1428A0 50%, #2962FF 100%);
+        text-align: center;
+        color: #fff;
+    }
+    .tax-cta-section h2 {
+        font-size: clamp(24px, 4vw, 36px);
+        font-weight: 900;
+        margin-bottom: 12px;
+    }
+    .tax-cta-section p {
+        font-size: 16px;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 32px;
+    }
+    .tax-cta-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .tax-cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 18px 40px;
+        border-radius: 14px;
+        font-size: 18px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    .tax-cta-btn.primary {
+        background: linear-gradient(135deg, #FFD54F, #FFC107);
+        color: #1a1a2e;
+        box-shadow: 0 4px 16px rgba(255,193,7,0.25);
+    }
+    .tax-cta-btn.primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 28px rgba(255,193,7,0.35);
+    }
+    .tax-cta-btn.ghost {
+        background: transparent;
+        color: #fff;
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+    .tax-cta-btn.ghost:hover {
+        border-color: #fff;
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Section titles */
+    .tax-section-header {
+        text-align: center;
+        max-width: 640px;
+        margin: 0 auto;
+    }
+    .tax-section-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: var(--radius-full);
+        font-size: 13px;
+        font-weight: 700;
+        background: #EEF2FF;
+        color: #1428A0;
+        margin-bottom: 16px;
+    }
+    .tax-section-header h2 {
+        font-size: clamp(24px, 4vw, 34px);
+        font-weight: 800;
+        color: var(--gray-900);
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+    }
+    .tax-section-header p {
+        font-size: 16px;
+        color: var(--gray-500);
+        line-height: 1.7;
+    }
+
+    /* VAT tag in results */
+    .vat-tag {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        background: #DBEAFE;
+        color: #1E40AF;
+    }
+    .vat-tag.exempt {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .tax-calc-layout {
+            grid-template-columns: 1fr;
+            max-width: 600px;
+        }
+        .tax-calc-input {
+            position: static;
+        }
+    }
+    @media (max-width: 768px) {
+        .tax-hero { padding: 100px 0 40px; }
+        .tax-how-grid,
+        .tax-examples-grid { grid-template-columns: 1fr; max-width: 480px; }
+        .tax-type-grid { grid-template-columns: 1fr; max-width: 480px; }
+        .tax-calc-input,
+        .tax-calc-result { padding: 24px; }
+        .tax-result-hero { padding: 24px 16px; }
+        .tax-cta-btn {
+            width: 100%;
+            justify-content: center;
+            font-size: 16px;
+            padding: 16px 32px;
+        }
+        .tax-cta-actions { flex-direction: column; padding: 0 16px; }
+        .tax-bar-label { width: 60px; font-size: 12px; }
+        .tax-bar-amount { width: 75px; font-size: 12px; }
+    }
+    @media (max-width: 480px) {
+        .tax-hero-title .accent::after { height: 10px; }
+        .tax-breakdown-row { padding: 10px 12px; }
+        .tax-bd-label { font-size: 13px; }
+        .tax-bd-value { font-size: 14px; }
+    }
+    </style>
+</head>
+<body data-page="tax-savings">
+    <a href="#main-content" class="skip-to-content">본문으로 바로가기</a>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-left">
+                <span>
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    상담전화: <a href="tel:0507-1375-2717">0507-1375-2717</a>
+                </span>
+                <span class="divider">|</span>
+                <span>
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    평일 09:00 ~ 18:00
+                </span>
+            </div>
+            <div class="top-bar-right">
+                <a href="news.html">공지사항</a>
+                <a href="company.html#contact">오시는 길</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo" aria-label="메디플라톤 홈">
+                    <img src="images/logo/logo-horizontal.png" alt="MEDI-PLATON 메디플라톤" class="logo-img" height="40">
+                </a>
+                <nav class="main-nav" id="mainNav" aria-label="메인 메뉴">
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="index.html#about" class="nav-link">회사소개</a>
+                            <div class="nav-dropdown"><a href="index.html#about">메디플라톤 소개</a><a href="company.html#partners">제휴기관</a><a href="company.html#contact">오시는 길</a></div>
+                        </li>
+                        <li class="nav-item"><a href="products.html" class="nav-link">금융상품</a>
+                            <div class="nav-dropdown"><a href="products.html#product-loan">카드매출 담보대출</a><a href="products.html#product-credit">신협 데일리론</a><a href="products.html#product-kb">KB국민카드 특별한도</a><a href="products.html#product-rental">의료장비 렌탈</a></div>
+                        </li>
+                        <li class="nav-item"><a href="guide.html" class="nav-link">이용안내</a>
+                            <div class="nav-dropdown"><a href="guide.html#process">신청 절차</a><a href="guide.html#qualification">자격 조건</a><a href="guide.html#faq">자주 묻는 질문</a></div>
+                        </li>
+                        <li class="nav-item"><a href="cases.html" class="nav-link">성공사례</a></li>
+                        <li class="nav-item highlight"><a href="marketing-medical.html" class="nav-link marketing-link">무료 마케팅</a>
+                            <div class="nav-dropdown"><a href="marketing-medical.html">병원·약국</a><a href="marketing-biz.html">소상공인·자영업</a></div>
+                        </li>
+                        <li class="nav-item highlight"><a href="tax-savings.html" class="nav-link promo-link" style="color:#FFB300">절세 계산기</a></li>
+                        <li class="nav-item highlight"><a href="partner.html" class="nav-link partner-link">파트너 모집</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="tel:0507-1375-2717" class="header-phone">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        0507-1375-2717
+                    </a>
+                    <a href="#tax-calc" class="header-cta">절세액 계산하기</a>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="메뉴 열기"><span></span><span></span><span></span></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-inner">
+            <div class="mobile-menu-header">
+                <img src="images/logo/logo-horizontal.png" alt="메디플라톤" class="logo-img" height="32">
+                <button class="mobile-menu-close" id="mobileMenuClose" aria-label="메뉴 닫기">&times;</button>
+            </div>
+            <nav class="mobile-nav" aria-label="모바일 메뉴">
+                <div class="mobile-nav-group"><span class="mobile-nav-title">회사소개</span><a href="index.html#about">메디플라톤 소개</a><a href="company.html#partners">제휴기관</a></div>
+                <div class="mobile-nav-group"><span class="mobile-nav-title">금융상품</span><a href="products.html#product-loan">카드매출 담보대출</a><a href="products.html#product-rental">의료장비 렌탈</a></div>
+                <div class="mobile-nav-group"><span class="mobile-nav-title">이용안내</span><a href="guide.html#process">신청 절차</a><a href="guide.html#faq">자주 묻는 질문</a></div>
+                <div class="mobile-nav-group"><a href="cases.html" class="mobile-nav-title single">성공사례</a></div>
+                <div class="mobile-nav-group partner-highlight"><span class="mobile-nav-title marketing-link">무료 마케팅</span><a href="marketing-medical.html">병원·약국</a><a href="marketing-biz.html">소상공인·자영업</a></div>
+                <div class="mobile-nav-group partner-highlight"><a href="tax-savings.html" class="mobile-nav-title single promo-link">절세 계산기</a></div>
+                <div class="mobile-nav-group partner-highlight"><a href="partner.html" class="mobile-nav-title single partner-link">파트너 모집</a></div>
+            </nav>
+            <div class="mobile-menu-footer">
+                <a href="#tax-calc" class="mobile-cta">절세액 계산하기</a>
+                <a href="tel:0507-1375-2717" class="mobile-phone">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    0507-1375-2717
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main id="main-content">
+
+    <!-- ===== HERO ===== -->
+    <section class="tax-hero">
+        <div class="container">
+            <div class="tax-hero-content">
+                <div class="tax-hero-chip">
+                    <span class="dot"></span>
+                    개인·법인 / 과세·면세 모두 적용 가능
+                </div>
+                <h1 class="tax-hero-title">
+                    원장님, 매년 5월<br>
+                    종소세 <span class="accent">수천만 원</span> 절세하세요
+                </h1>
+                <p class="tax-hero-desc">
+                    메디플라톤 <strong>영업지원금</strong>은 상환하는 <strong>원금+이자 전액이 100% 경비 처리</strong>됩니다.<br>
+                    일반 대출과 달리 <strong>B2B 상거래 구조</strong>로 비용 인정되어 합법적으로 세금을 절감합니다.
+                </p>
+                <p class="tax-hero-desc" style="font-size:14px;color:var(--gray-400)">
+                    아래 계산기에 원장님 조건을 입력하시면, 절세 가능 금액을 즉시 확인하실 수 있습니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CALCULATOR ===== -->
+    <section class="tax-calc-section" id="tax-calc">
+        <div class="container">
+            <div class="tax-calc-layout">
+
+                <!-- INPUT PANEL -->
+                <div class="tax-calc-input">
+                    <div class="tax-panel-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+                        원장님 조건 입력
+                    </div>
+
+                    <!-- 사업자 구분 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">사업자 구분</div>
+                        <div class="tax-toggle-group" id="bizTypeGroup">
+                            <button class="tax-toggle-btn active" data-value="individual">개인사업자</button>
+                            <button class="tax-toggle-btn" data-value="corporate">법인사업자</button>
+                        </div>
+                    </div>
+
+                    <!-- 과세 유형 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">과세 유형</div>
+                        <div class="tax-toggle-group" id="taxTypeGroup">
+                            <button class="tax-toggle-btn active" data-value="taxable">과세 사업자</button>
+                            <button class="tax-toggle-btn" data-value="exempt">면세 사업자</button>
+                        </div>
+                        <div class="tax-toggle-hint" id="taxTypeHint">
+                            피부과, 성형외과, 동물병원 등 = 과세 (부가세 환급 O)
+                        </div>
+                    </div>
+
+                    <!-- 연매출 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">
+                            연간 매출
+                            <span class="val" id="revenueDisplay">20억원</span>
+                        </div>
+                        <input type="range" class="tax-range" id="revenueRange" min="100000000" max="10000000000" step="100000000" value="2000000000">
+                        <div class="tax-range-labels"><span>1억</span><span>50억</span><span>100억</span></div>
+                        <div class="tax-direct-input">
+                            <input type="text" id="revenueInput" value="2,000,000,000" inputmode="numeric">
+                            <span class="unit">원</span>
+                        </div>
+                    </div>
+
+                    <!-- 예상 경비율 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">
+                            예상 경비율
+                            <span class="val" id="expenseRatioDisplay">65%</span>
+                        </div>
+                        <input type="range" class="tax-range" id="expenseRatioRange" min="30" max="85" step="1" value="65">
+                        <div class="tax-range-labels"><span>30%</span><span>경비율 높을수록 과세표준 낮음</span><span>85%</span></div>
+                    </div>
+
+                    <!-- 조달 금액 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">
+                            영업지원금 (조달 금액)
+                            <span class="val" id="fundingDisplay">1.5억원</span>
+                        </div>
+                        <input type="range" class="tax-range" id="fundingRange" min="10000000" max="500000000" step="10000000" value="150000000">
+                        <div class="tax-range-labels"><span>1,000만</span><span>2.5억</span><span>5억</span></div>
+                        <div class="tax-direct-input">
+                            <input type="text" id="fundingInput" value="150,000,000" inputmode="numeric">
+                            <span class="unit">원</span>
+                        </div>
+                    </div>
+
+                    <!-- 이자율 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">
+                            연 이자율 (서비스 수수료율)
+                            <span class="val" id="rateDisplay">6.0%</span>
+                        </div>
+                        <input type="range" class="tax-range" id="rateRange" min="4" max="10" step="0.1" value="6">
+                        <div class="tax-range-labels"><span>4%</span><span>평균 5.3~6.9%</span><span>10%</span></div>
+                    </div>
+                </div>
+
+                <!-- RESULT PANEL -->
+                <div class="tax-calc-result">
+                    <div class="tax-panel-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        절세 분석 결과
+                    </div>
+
+                    <!-- Hero amount -->
+                    <div class="tax-result-hero">
+                        <div class="tax-result-hero-label">총 절세 가능 금액</div>
+                        <div class="tax-result-hero-amount" id="totalSavingsAmount">7,345만원</div>
+                        <div class="tax-result-hero-sub" id="totalSavingsSub">적용 세율: 종합소득세 42% + 지방소득세 4.2% = 46.2%</div>
+                    </div>
+
+                    <!-- Breakdown -->
+                    <div class="tax-breakdown" id="breakdownArea">
+                        <div class="tax-breakdown-row">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
+                                예상 과세표준
+                            </span>
+                            <span class="tax-bd-value" id="bdTaxableIncome">7억원</span>
+                        </div>
+                        <div class="tax-breakdown-row">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                                적용 세율 구간
+                            </span>
+                            <span class="tax-bd-value accent" id="bdBracket">46.2%</span>
+                        </div>
+                        <div class="tax-breakdown-row highlight">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                영업지원금 수령액 (원금)
+                            </span>
+                            <span class="tax-bd-value" id="bdPrincipal">1억 5,000만원</span>
+                        </div>
+                        <div class="tax-breakdown-row">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                이자 (서비스 수수료)
+                            </span>
+                            <span class="tax-bd-value danger" id="bdInterest">900만원</span>
+                        </div>
+                        <div class="tax-breakdown-row highlight">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg>
+                                100% 비용처리 금액 (원금+이자)
+                            </span>
+                            <span class="tax-bd-value accent" id="bdDeductible">1억 5,900만원</span>
+                        </div>
+
+                        <!-- 소득세 절감 -->
+                        <div class="tax-breakdown-row">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                소득세 절감액
+                            </span>
+                            <span class="tax-bd-value" id="bdIncomeTax">6,678만원</span>
+                        </div>
+
+                        <!-- 부가세 환급 (과세만) -->
+                        <div class="tax-breakdown-row" id="bdVatRow">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                                부가세(VAT) 환급
+                                <span class="vat-tag" id="vatTag">과세</span>
+                            </span>
+                            <span class="tax-bd-value" id="bdVatRefund">1,445만원</span>
+                        </div>
+
+                        <!-- 총 절세 -->
+                        <div class="tax-breakdown-row total">
+                            <span class="tax-bd-label">총 절세 효과</span>
+                            <span class="tax-bd-value" id="bdTotalSavings">8,123만원</span>
+                        </div>
+
+                        <!-- 순이익 -->
+                        <div class="tax-breakdown-row profit">
+                            <span class="tax-bd-label">실질 순이익 (절세 - 이자)</span>
+                            <span class="tax-bd-value" id="bdNetProfit">+7,223만원</span>
+                        </div>
+                    </div>
+
+                    <!-- Comparison bars -->
+                    <div class="tax-compare-box">
+                        <div class="tax-compare-title">내는 이자 vs 아끼는 세금</div>
+                        <div class="tax-compare-bars">
+                            <div class="tax-bar-item">
+                                <span class="tax-bar-label">이자 부담</span>
+                                <div class="tax-bar-track">
+                                    <div class="tax-bar-fill interest" id="barInterest" style="width:11%">900만</div>
+                                </div>
+                                <span class="tax-bar-amount" id="barInterestAmt" style="color:var(--danger)">900만원</span>
+                            </div>
+                            <div class="tax-bar-item">
+                                <span class="tax-bar-label">절세 효과</span>
+                                <div class="tax-bar-track">
+                                    <div class="tax-bar-fill savings" id="barSavings" style="width:100%">8,123만</div>
+                                </div>
+                                <span class="tax-bar-amount" id="barSavingsAmt" style="color:var(--accent)">8,123만원</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA -->
+                    <a href="tel:0507-1375-2717" class="tax-cta-btn primary" style="width:100%;justify-content:center;font-size:16px;padding:16px 24px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        지금 바로 무료 상담 받기
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="tax-how-section">
+        <div class="container">
+            <div class="tax-section-header">
+                <span class="tax-section-badge">구조 이해하기</span>
+                <h2>왜 원금+이자 전액이 비용 처리될까요?</h2>
+                <p>메디플라톤 영업지원금은 은행 대출이 아닌 <strong>B2B 상거래</strong> 구조입니다</p>
+            </div>
+            <div class="tax-how-grid">
+                <div class="tax-how-card">
+                    <div class="tax-how-step">1</div>
+                    <h3>B2B 상거래 계약 체결</h3>
+                    <p>PG사가 병원에게 <strong>경영지원금</strong>을 지급합니다. 은행 대출이 아닌, B2B 물품/서비스 대금의 <strong>선지급(팩토링)</strong> 형태로 합법적인 상거래 계약서가 작성됩니다.</p>
+                    <span class="badge-tag">대출 기록 0원</span>
+                </div>
+                <div class="tax-how-card">
+                    <div class="tax-how-step">2</div>
+                    <h3>PG 매출에서 일(日)상환</h3>
+                    <p>매일 발생하는 <strong>카드 매출에서 소액이 자동 차감</strong>되어 상환됩니다. 목돈 부담 없이 매출 흐름에 맞춰 자연스럽게 갚아나가는 구조입니다.</p>
+                    <span class="badge-tag">목돈 부담 제로</span>
+                </div>
+                <div class="tax-how-card">
+                    <div class="tax-how-step">3</div>
+                    <h3>매월 세금계산서 발행</h3>
+                    <p>PG사가 차감 금액 전체에 대해 <strong>"경영지원 서비스 이용료" 명목으로 세금계산서를 발행</strong>합니다. 국세청 입장에서 병원이 정당한 세금계산서를 수취한 사업상 경비로 <strong>100% 비용 처리</strong>가 인정됩니다.</p>
+                    <span class="badge-tag">세금계산서 = 비용 인정</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TAX BRACKET TABLE ===== -->
+    <section class="tax-bracket-section" id="tax-brackets">
+        <div class="container">
+            <div class="tax-section-header">
+                <span class="tax-section-badge">세율 구간 안내</span>
+                <h2>원장님의 세율 구간은 몇 %인가요?</h2>
+                <p>연매출이 높을수록 한계세율이 높아져, 동일한 비용처리 금액으로도 더 큰 절세 효과를 얻습니다</p>
+            </div>
+
+            <!-- Individual Tax -->
+            <div class="tax-bracket-table-wrap" id="individualBracketWrap">
+                <h3 style="text-align:center;font-size:18px;font-weight:700;margin-bottom:16px;color:var(--gray-800)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428A0" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    개인사업자 종합소득세율 (지방소득세 포함)
+                </h3>
+                <table class="tax-bracket-table" id="individualBracketTable">
+                    <thead>
+                        <tr>
+                            <th>과세표준 구간</th>
+                            <th>기본세율</th>
+                            <th>지방소득세</th>
+                            <th>실효세율 합계</th>
+                            <th>누진공제</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-max="14000000"><td>1,400만원 이하</td><td>6%</td><td>0.6%</td><td class="rate-cell">6.6%</td><td>-</td></tr>
+                        <tr data-max="50000000"><td>1,400만 ~ 5,000만원</td><td>15%</td><td>1.5%</td><td class="rate-cell">16.5%</td><td>126만원</td></tr>
+                        <tr data-max="88000000"><td>5,000만 ~ 8,800만원</td><td>24%</td><td>2.4%</td><td class="rate-cell">26.4%</td><td>576만원</td></tr>
+                        <tr data-max="150000000"><td>8,800만 ~ 1.5억원</td><td>35%</td><td>3.5%</td><td class="rate-cell">38.5%</td><td>1,544만원</td></tr>
+                        <tr data-max="300000000"><td>1.5억 ~ 3억원</td><td>38%</td><td>3.8%</td><td class="rate-cell">41.8%</td><td>1,994만원</td></tr>
+                        <tr data-max="500000000"><td>3억 ~ 5억원</td><td>40%</td><td>4.0%</td><td class="rate-cell">44.0%</td><td>2,594만원</td></tr>
+                        <tr data-max="1000000000"><td>5억 ~ 10억원</td><td>42%</td><td>4.2%</td><td class="rate-cell">46.2%</td><td>3,594만원</td></tr>
+                        <tr data-max="99999999999"><td>10억원 초과</td><td>45%</td><td>4.5%</td><td class="rate-cell">49.5%</td><td>6,594만원</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Corporate Tax -->
+            <div class="tax-bracket-table-wrap" id="corporateBracketWrap" style="display:none;margin-top:32px;">
+                <h3 style="text-align:center;font-size:18px;font-weight:700;margin-bottom:16px;color:var(--gray-800)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428A0" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/></svg>
+                    법인사업자 법인세율 (지방소득세 포함)
+                </h3>
+                <table class="tax-bracket-table" id="corporateBracketTable">
+                    <thead>
+                        <tr>
+                            <th>과세표준 구간</th>
+                            <th>기본세율</th>
+                            <th>지방소득세</th>
+                            <th>실효세율 합계</th>
+                            <th>누진공제</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-max="200000000"><td>2억원 이하</td><td>9%</td><td>0.9%</td><td class="rate-cell">9.9%</td><td>-</td></tr>
+                        <tr data-max="20000000000"><td>2억 ~ 200억원</td><td>19%</td><td>1.9%</td><td class="rate-cell">20.9%</td><td>2,000만원</td></tr>
+                        <tr data-max="300000000000"><td>200억 ~ 3,000억원</td><td>21%</td><td>2.1%</td><td class="rate-cell">23.1%</td><td>4.2억원</td></tr>
+                        <tr data-max="99999999999999"><td>3,000억원 초과</td><td>24%</td><td>2.4%</td><td class="rate-cell">26.4%</td><td>94.2억원</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 과세 vs 면세 ===== -->
+    <section class="tax-type-section">
+        <div class="container">
+            <div class="tax-section-header">
+                <span class="tax-section-badge">과세 / 면세 비교</span>
+                <h2>과세 사업자 vs 면세 사업자, 절세 구조가 다릅니다</h2>
+                <p>두 유형 모두 절세 효과가 발생하지만, 세부 구조가 다릅니다</p>
+            </div>
+            <div class="tax-type-grid">
+                <div class="tax-type-card taxable">
+                    <span class="tax-type-badge">과세 사업자</span>
+                    <h3>소득세 절감 + 부가세 환급</h3>
+                    <p class="sub">피부과, 성형외과, 동물병원, 치과(임플란트 등 비급여) 등</p>
+                    <ul class="tax-type-list">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2962FF" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            상환 금액의 <strong>공급가(90.9%)</strong>가 소득세 경비 처리
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2962FF" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            상환 금액의 <strong>부가세(9.1%)</strong>가 별도 환급
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2962FF" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            소득세 절감 + VAT 환급 = <strong>이중 절세</strong>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2962FF" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            세금계산서 기반 100% 적법 처리
+                        </li>
+                    </ul>
+                </div>
+                <div class="tax-type-card exempt">
+                    <span class="tax-type-badge">면세 사업자</span>
+                    <h3>전액 경비처리로 종소세 절감</h3>
+                    <p class="sub">일반 내과, 소아과, 한의원, 요양병원 등</p>
+                    <ul class="tax-type-list">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            부가세 환급 대상이 아닌 대신
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            부가세 포함 <strong>전체 결제금액이 통째로 경비 처리</strong>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            <strong>종합소득세 경비 인정 금액이 더 큼</strong>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            종소세 폭탄을 막는 <strong>강력한 절세 수단</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== EXAMPLES ===== -->
+    <section class="tax-examples-section">
+        <div class="container">
+            <div class="tax-section-header">
+                <span class="tax-section-badge">실전 시뮬레이션</span>
+                <h2>이런 원장님이라면, 이만큼 절세됩니다</h2>
+                <p>실제 매출 구간별 절세 효과를 확인해 보세요</p>
+            </div>
+            <div class="tax-examples-grid">
+                <!-- Example 1 -->
+                <div class="tax-example-card">
+                    <div class="tax-example-top">
+                        <div class="tax-example-icon">&#x1F3E5;</div>
+                        <div>
+                            <h4>내과 원장님 A</h4>
+                            <small>면세 사업자 / 개인</small>
+                        </div>
+                    </div>
+                    <div class="tax-example-rows">
+                        <div class="tax-example-row"><span>연매출</span><span>10억원</span></div>
+                        <div class="tax-example-row"><span>과세표준 (경비율 65%)</span><span>3.5억원</span></div>
+                        <div class="tax-example-row"><span>적용 세율</span><span>44.0% (3억~5억 구간)</span></div>
+                        <div class="tax-example-row"><span>조달 금액</span><span>1억원</span></div>
+                        <div class="tax-example-row"><span>상환 총액 (이자 6%)</span><span>1억 600만원</span></div>
+                        <div class="tax-example-row"><span>비용처리 금액</span><span>1억 600만원 (전액)</span></div>
+                        <div class="tax-example-row"><span>이자 부담</span><span style="color:#EF4444">-600만원</span></div>
+                        <div class="tax-example-row result"><span>절세 효과</span><span>+4,664만원</span></div>
+                    </div>
+                </div>
+                <!-- Example 2 -->
+                <div class="tax-example-card">
+                    <div class="tax-example-top">
+                        <div class="tax-example-icon">&#x1FA7B;</div>
+                        <div>
+                            <h4>피부과 원장님 B</h4>
+                            <small>과세 사업자 / 개인</small>
+                        </div>
+                    </div>
+                    <div class="tax-example-rows">
+                        <div class="tax-example-row"><span>연매출</span><span>20억원</span></div>
+                        <div class="tax-example-row"><span>과세표준 (경비율 65%)</span><span>7억원</span></div>
+                        <div class="tax-example-row"><span>적용 세율</span><span>46.2% (5억~10억 구간)</span></div>
+                        <div class="tax-example-row"><span>조달 금액</span><span>1.5억원</span></div>
+                        <div class="tax-example-row"><span>상환 총액 (이자 6%)</span><span>1억 5,900만원</span></div>
+                        <div class="tax-example-row"><span>비용처리 금액</span><span>1억 4,455만원 (공급가)</span></div>
+                        <div class="tax-example-row"><span>소득세 절감 + 부가세 환급</span><span>6,678만 + 1,445만</span></div>
+                        <div class="tax-example-row result"><span>총 절세 효과</span><span>+8,123만원</span></div>
+                    </div>
+                </div>
+                <!-- Example 3 -->
+                <div class="tax-example-card">
+                    <div class="tax-example-top">
+                        <div class="tax-example-icon">&#x1F9B7;</div>
+                        <div>
+                            <h4>치과 원장님 C</h4>
+                            <small>면세 사업자 / 개인</small>
+                        </div>
+                    </div>
+                    <div class="tax-example-rows">
+                        <div class="tax-example-row"><span>연매출</span><span>35억원</span></div>
+                        <div class="tax-example-row"><span>과세표준 (경비율 70%)</span><span>10.5억원</span></div>
+                        <div class="tax-example-row"><span>적용 세율</span><span>49.5% (10억 초과 구간)</span></div>
+                        <div class="tax-example-row"><span>조달 금액</span><span>3억원</span></div>
+                        <div class="tax-example-row"><span>상환 총액 (이자 5.5%)</span><span>3억 1,650만원</span></div>
+                        <div class="tax-example-row"><span>비용처리 금액</span><span>3억 1,650만원 (전액)</span></div>
+                        <div class="tax-example-row"><span>이자 부담</span><span style="color:#EF4444">-1,650만원</span></div>
+                        <div class="tax-example-row result"><span>절세 효과</span><span>+1억 5,667만원</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="tax-faq-section">
+        <div class="container">
+            <div class="tax-section-header">
+                <span class="tax-section-badge">자주 묻는 질문</span>
+                <h2>원장님들이 가장 많이 궁금해하시는 것들</h2>
+            </div>
+            <div class="tax-faq-list">
+                <div class="tax-faq-item active">
+                    <div class="tax-faq-q" onclick="toggleFaq(this)">
+                        <span class="q-badge">Q</span>
+                        일반 은행 대출과 뭐가 다른가요?
+                        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="tax-faq-a">
+                        <div class="tax-faq-a-inner">
+                            은행 대출(닥터론 등)은 <strong>원금 상환이 비용 처리되지 않습니다</strong>. 이자만 비용 처리되죠. 반면 메디플라톤 영업지원금은 B2B 상거래 구조이므로, 상환하는 <strong>원금과 이자 전액이 100% 비용 처리</strong>됩니다. 또한 대출 기록이 전혀 남지 않아 신용등급에도 영향이 없습니다.
+                        </div>
+                    </div>
+                </div>
+                <div class="tax-faq-item">
+                    <div class="tax-faq-q" onclick="toggleFaq(this)">
+                        <span class="q-badge">Q</span>
+                        세무적으로 문제는 없나요?
+                        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="tax-faq-a">
+                        <div class="tax-faq-a-inner">
+                            합법적인 B2B 상거래 계약과 세금계산서 발행을 통한 <strong>100% 적법한 구조</strong>입니다. PG사(또는 파트너사)가 매월 정식 세금계산서를 발행하며, 국세청 입장에서 병원이 세금계산서를 수취하고 지불한 사업상 경비로 비용 처리가 인정됩니다. 실제로 수많은 병의원에서 세무사 검토 후 활용하고 있습니다.
+                        </div>
+                    </div>
+                </div>
+                <div class="tax-faq-item">
+                    <div class="tax-faq-q" onclick="toggleFaq(this)">
+                        <span class="q-badge">Q</span>
+                        신용등급(대출 기록)에 영향이 있나요?
+                        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="tax-faq-a">
+                        <div class="tax-faq-a-inner">
+                            <strong>대출 기록이 전혀 남지 않습니다.</strong> 은행 대출이 아닌 B2B 상거래이므로 금융기관 대출 기록에 잡히지 않습니다. DSR(총부채원리금상환비율)에도 영향을 주지 않아, 추후 부동산 대출이나 사업 확장 시 아무런 제약이 없습니다.
+                        </div>
+                    </div>
+                </div>
+                <div class="tax-faq-item">
+                    <div class="tax-faq-q" onclick="toggleFaq(this)">
+                        <span class="q-badge">Q</span>
+                        면세 사업자인데, 부가세 환급을 못 받으면 손해 아닌가요?
+                        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="tax-faq-a">
+                        <div class="tax-faq-a-inner">
+                            면세 사업자는 부가세 환급 대상이 아닌 대신, <strong>부가세를 포함한 전체 결제 금액이 통째로 종합소득세 경비 처리</strong>됩니다. 즉, 과세 사업자는 공급가(90.9%)만 소득세 경비로 잡히고 VAT(9.1%)는 별도 환급받지만, 면세 사업자는 100% 전액이 소득세 경비가 됩니다. 종합소득세 세율이 높은 구간이라면 면세 사업자의 소득세 절감액이 오히려 더 클 수도 있습니다.
+                        </div>
+                    </div>
+                </div>
+                <div class="tax-faq-item">
+                    <div class="tax-faq-q" onclick="toggleFaq(this)">
+                        <span class="q-badge">Q</span>
+                        상환은 어떻게 하나요? 목돈이 필요한가요?
+                        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="tax-faq-a">
+                        <div class="tax-faq-a-inner">
+                            목돈이 전혀 필요 없습니다. <strong>매일 발생하는 카드 매출에서 소액이 자동으로 차감</strong>되어 상환됩니다. 예를 들어, 1.5억원을 365일에 걸쳐 상환한다면 하루 약 43만원씩 매출에서 차감되는 구조입니다. 원장님이 별도로 신경 쓸 것이 없습니다.
+                        </div>
+                    </div>
+                </div>
+                <div class="tax-faq-item">
+                    <div class="tax-faq-q" onclick="toggleFaq(this)">
+                        <span class="q-badge">Q</span>
+                        얼마까지 조달 가능한가요?
+                        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="tax-faq-a">
+                        <div class="tax-faq-a-inner">
+                            카드 매출 규모에 따라 <strong>최소 1,000만원에서 최대 5억원</strong>까지 가능합니다. 정확한 한도는 최근 3개월~6개월 카드 매출을 기반으로 산정되며, 무료 상담을 통해 정확한 금액을 안내받으실 수 있습니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="tax-cta-section">
+        <div class="container">
+            <h2>지금 바로 절세 상담을 시작하세요</h2>
+            <p>전문 상담사가 원장님의 매출과 세금 구조를 분석하여 최적의 절세 방안을 안내해 드립니다</p>
+            <div class="tax-cta-actions">
+                <a href="tel:0507-1375-2717" class="tax-cta-btn primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    전화 상담 (0507-1375-2717)
+                </a>
+                <a href="https://open.kakao.com/o/sW043VVg" class="tax-cta-btn ghost" target="_blank" rel="noopener noreferrer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.48 3 2 6.58 2 10.94c0 2.8 1.86 5.27 4.66 6.67-.15.53-.96 3.4-.99 3.62 0 0-.02.17.09.23.11.07.24.02.24.02.32-.04 3.7-2.44 4.28-2.86.56.08 1.14.13 1.72.13 5.52 0 10-3.58 10-7.81C22 6.58 17.52 3 12 3z"/></svg>
+                    카카오톡 상담
+                </a>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo" aria-label="메디플라톤 홈">
+                        <img src="images/logo/logo-horizontal.png" alt="MEDI-PLATON 메디플라톤" class="logo-img" height="36">
+                    </a>
+                    <p class="footer-desc">병의원 원장님의 금융 파트너</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col"><h4>회사소개</h4><a href="index.html#about">메디플라톤 소개</a><a href="company.html#partners">제휴기관</a></div>
+                    <div class="footer-col"><h4>금융상품</h4><a href="products.html#product-loan">카드매출 담보대출</a><a href="products.html#product-rental">의료장비 렌탈</a></div>
+                    <div class="footer-col"><h4>고객지원</h4><a href="guide.html#faq">자주 묻는 질문</a><a href="tax-savings.html">절세 계산기</a></div>
+                    <div class="footer-col"><h4>고객센터</h4><p class="footer-phone"><a href="tel:0507-1375-2717">0507-1375-2717</a></p><p class="footer-time">평일 09:00 ~ 18:00</p></div>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p><strong>메디플라톤</strong> | 대표: 이현석 | 사업자등록번호: 451-22-01529<br>주소: 서울 서초구 양재동 257-10 4층 | 대표전화: 0507-1375-2717</p>
+            </div>
+            <div class="footer-legal">
+                <p>
+                    <strong>[금융상품 안내]</strong><br>
+                    ※ 본 절세 계산기의 결과는 예상 추정치이며, 실제 절세 금액은 원장님의 세무 상황에 따라 달라질 수 있습니다.<br>
+                    ※ 정확한 절세 금액은 세무사와 상담 후 확인하시기 바랍니다.<br>
+                    ※ 대출금리: 연 5.3%~6.9% (개인 신용도, 대출 상품, 거래 실적에 따라 차등 적용)<br>
+                    ※ 대출한도: 최소 1,000만원 ~ 최대 3억원 (카드매출, 신용도에 따라 차등)<br>
+                    ※ <strong>고객 부담 수수료: 0원</strong><br><br>
+                    <strong>[유의사항]</strong><br>
+                    ※ 과도한 대출은 개인신용에 부정적 영향을 미칠 수 있습니다.<br>
+                    ※ 금융소비자보호법에 따른 금융상품 유의사항을 확인하시기 바랍니다.<br>
+                    ※ 본 서비스는 금융상품 중개 서비스이며, 메디플라톤은 대출 여부 및 조건을 최종 결정하지 않습니다.
+                </p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 메디플라톤. All rights reserved.</p>
+                <div class="footer-policy"><a href="#" class="privacy-link">개인정보처리방침</a><a href="#" class="privacy-link">이용약관</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Actions -->
+    <div class="floating-actions" id="floatingActions">
+        <a href="https://open.kakao.com/o/sW043VVg" class="float-btn kakao" aria-label="카카오톡 상담" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.48 3 2 6.58 2 10.94c0 2.8 1.86 5.27 4.66 6.67-.15.53-.96 3.4-.99 3.62 0 0-.02.17.09.23.11.07.24.02.24.02.32-.04 3.7-2.44 4.28-2.86.56.08 1.14.13 1.72.13 5.52 0 10-3.58 10-7.81C22 6.58 17.52 3 12 3z"/></svg>
+            <span>카톡상담</span>
+        </a>
+        <a href="tel:0507-1375-2717" class="float-btn phone" aria-label="전화 상담 연결">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>전화상담</span>
+        </a>
+        <button class="float-btn top" id="scrollTop" aria-label="페이지 맨 위로 이동">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+            <span>맨위로</span>
+        </button>
+    </div>
+
+    <!-- Mobile Floating CTA -->
+    <div class="mobile-floating-cta" id="mobileFloatingCta">
+        <div class="cta-inner">
+            <a href="tel:0507-1375-2717" class="btn btn-outline btn-phone">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </a>
+            <a href="#tax-calc" class="btn btn-primary">
+                절세액 계산하기
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+    /* ===== TAX SAVINGS CALCULATOR ENGINE ===== */
+    (function() {
+        'use strict';
+
+        // ===== State =====
+        const state = {
+            bizType: 'individual',   // individual | corporate
+            taxType: 'taxable',      // taxable | exempt
+            revenue: 2000000000,     // 20억
+            expenseRatio: 65,        // 65%
+            funding: 150000000,      // 1.5억
+            rate: 6.0               // 6%
+        };
+
+        // ===== Tax Brackets =====
+        const INDIVIDUAL_BRACKETS = [
+            { limit: 14000000,     rate: 0.06, name: '1,400만원 이하' },
+            { limit: 50000000,     rate: 0.15, name: '1,400만~5,000만원' },
+            { limit: 88000000,     rate: 0.24, name: '5,000만~8,800만원' },
+            { limit: 150000000,    rate: 0.35, name: '8,800만~1.5억원' },
+            { limit: 300000000,    rate: 0.38, name: '1.5억~3억원' },
+            { limit: 500000000,    rate: 0.40, name: '3억~5억원' },
+            { limit: 1000000000,   rate: 0.42, name: '5억~10억원' },
+            { limit: Infinity,     rate: 0.45, name: '10억원 초과' }
+        ];
+
+        const CORPORATE_BRACKETS = [
+            { limit: 200000000,      rate: 0.09, name: '2억원 이하' },
+            { limit: 20000000000,    rate: 0.19, name: '2억~200억원' },
+            { limit: 300000000000,   rate: 0.21, name: '200억~3,000억원' },
+            { limit: Infinity,       rate: 0.24, name: '3,000억원 초과' }
+        ];
+
+        // ===== Calculate progressive tax =====
+        function calcTax(income, brackets) {
+            let tax = 0, prev = 0;
+            for (const b of brackets) {
+                if (income <= prev) break;
+                const taxable = Math.min(income, b.limit) - prev;
+                tax += taxable * b.rate;
+                prev = b.limit;
+            }
+            return tax * 1.1; // +10% local tax
+        }
+
+        // ===== Get marginal bracket info =====
+        function getBracketInfo(income, brackets) {
+            let prev = 0;
+            for (let i = 0; i < brackets.length; i++) {
+                if (income <= brackets[i].limit) {
+                    return {
+                        index: i,
+                        rate: brackets[i].rate,
+                        effectiveRate: brackets[i].rate * 1.1,
+                        name: brackets[i].name
+                    };
+                }
+                prev = brackets[i].limit;
+            }
+            const last = brackets[brackets.length - 1];
+            return { index: brackets.length - 1, rate: last.rate, effectiveRate: last.rate * 1.1, name: last.name };
+        }
+
+        // ===== Format numbers =====
+        function formatKRW(n) {
+            const abs = Math.abs(Math.round(n));
+            if (abs >= 100000000) {
+                const eok = Math.floor(abs / 100000000);
+                const man = Math.round((abs % 100000000) / 10000);
+                return (n < 0 ? '-' : '') + (man > 0 ? `${eok}억 ${man.toLocaleString()}만원` : `${eok}억원`);
+            }
+            if (abs >= 10000) {
+                return (n < 0 ? '-' : '') + `${Math.round(abs / 10000).toLocaleString()}만원`;
+            }
+            return (n < 0 ? '-' : '') + abs.toLocaleString() + '원';
+        }
+
+        function formatShort(n) {
+            const abs = Math.abs(Math.round(n));
+            if (abs >= 100000000) {
+                const eok = Math.floor(abs / 100000000);
+                const man = Math.round((abs % 100000000) / 10000);
+                return (n < 0 ? '-' : '') + (man > 0 ? `${eok}억${man.toLocaleString()}만` : `${eok}억`);
+            }
+            return (n < 0 ? '-' : '') + `${Math.round(abs / 10000).toLocaleString()}만`;
+        }
+
+        function formatComma(n) { return Math.round(n).toLocaleString(); }
+
+        // ===== Main calculation =====
+        function calculate() {
+            const brackets = state.bizType === 'individual' ? INDIVIDUAL_BRACKETS : CORPORATE_BRACKETS;
+            const taxableIncome = Math.max(0, state.revenue * (1 - state.expenseRatio / 100));
+            const interest = state.funding * (state.rate / 100);
+            const totalRepayment = state.funding + interest;
+
+            // Deductible amount depends on tax type
+            let incomeDeduction, vatRefund;
+            if (state.taxType === 'taxable') {
+                incomeDeduction = totalRepayment / 1.1;  // supply price only
+                vatRefund = totalRepayment - incomeDeduction; // VAT portion
+            } else {
+                incomeDeduction = totalRepayment; // full amount
+                vatRefund = 0;
+            }
+
+            // Tax savings = tax(income) - tax(income - deduction)
+            const taxBefore = calcTax(taxableIncome, brackets);
+            const taxAfter = calcTax(Math.max(0, taxableIncome - incomeDeduction), brackets);
+            const incomeTaxSavings = taxBefore - taxAfter;
+
+            const totalSavings = incomeTaxSavings + vatRefund;
+            const netProfit = totalSavings - interest;
+
+            const bracketInfo = getBracketInfo(taxableIncome, brackets);
+
+            return {
+                taxableIncome,
+                interest,
+                totalRepayment,
+                incomeDeduction,
+                vatRefund,
+                incomeTaxSavings,
+                totalSavings,
+                netProfit,
+                bracketInfo
+            };
+        }
+
+        // ===== Update UI =====
+        function updateUI() {
+            const r = calculate();
+            const taxLabel = state.bizType === 'individual' ? '종합소득세' : '법인세';
+            const ratePercent = (r.bracketInfo.effectiveRate * 100).toFixed(1);
+            const baseRatePercent = (r.bracketInfo.rate * 100).toFixed(0);
+            const localRatePercent = (r.bracketInfo.rate * 10).toFixed(1);
+
+            // Hero amount
+            document.getElementById('totalSavingsAmount').textContent = formatKRW(r.totalSavings);
+            document.getElementById('totalSavingsSub').textContent =
+                `적용 세율: ${taxLabel} ${baseRatePercent}% + 지방소득세 ${localRatePercent}% = ${ratePercent}%`;
+
+            // Breakdown
+            document.getElementById('bdTaxableIncome').textContent = formatKRW(r.taxableIncome);
+            document.getElementById('bdBracket').textContent = `${ratePercent}% (${r.bracketInfo.name})`;
+            document.getElementById('bdPrincipal').textContent = formatKRW(state.funding);
+            document.getElementById('bdInterest').textContent = formatKRW(r.interest);
+            document.getElementById('bdDeductible').textContent = formatKRW(state.taxType === 'taxable' ? r.incomeDeduction : r.totalRepayment);
+            document.getElementById('bdIncomeTax').textContent = formatKRW(r.incomeTaxSavings);
+
+            // VAT row
+            const vatRow = document.getElementById('bdVatRow');
+            const vatTag = document.getElementById('vatTag');
+            if (state.taxType === 'taxable') {
+                vatRow.style.display = '';
+                vatTag.textContent = '과세';
+                vatTag.className = 'vat-tag';
+                document.getElementById('bdVatRefund').textContent = formatKRW(r.vatRefund);
+            } else {
+                vatRow.style.display = 'none';
+            }
+
+            document.getElementById('bdTotalSavings').textContent = formatKRW(r.totalSavings);
+            document.getElementById('bdNetProfit').textContent =
+                (r.netProfit >= 0 ? '+' : '') + formatKRW(r.netProfit);
+
+            // Comparison bars
+            const maxVal = Math.max(r.interest, r.totalSavings);
+            const interestPct = maxVal > 0 ? Math.max(5, (r.interest / maxVal) * 100) : 5;
+            const savingsPct = maxVal > 0 ? Math.max(5, (r.totalSavings / maxVal) * 100) : 5;
+
+            document.getElementById('barInterest').style.width = interestPct + '%';
+            document.getElementById('barInterest').textContent = formatShort(r.interest);
+            document.getElementById('barInterestAmt').textContent = formatKRW(r.interest);
+
+            document.getElementById('barSavings').style.width = savingsPct + '%';
+            document.getElementById('barSavings').textContent = formatShort(r.totalSavings);
+            document.getElementById('barSavingsAmt').textContent = formatKRW(r.totalSavings);
+
+            // Highlight bracket table
+            highlightBracketTable(r.taxableIncome);
+
+            // Show/hide bracket tables
+            document.getElementById('individualBracketWrap').style.display = state.bizType === 'individual' ? '' : 'none';
+            document.getElementById('corporateBracketWrap').style.display = state.bizType === 'corporate' ? '' : 'none';
+
+            // Tax type hint
+            const hint = document.getElementById('taxTypeHint');
+            if (state.taxType === 'taxable') {
+                hint.textContent = '피부과, 성형외과, 동물병원 등 = 과세 (부가세 환급 O)';
+            } else {
+                hint.textContent = '일반 내과, 소아과, 한의원, 요양병원 등 = 면세 (전액 경비처리)';
+            }
+
+            // Display values for sliders
+            document.getElementById('revenueDisplay').textContent = formatShortLabel(state.revenue);
+            document.getElementById('expenseRatioDisplay').textContent = state.expenseRatio + '%';
+            document.getElementById('fundingDisplay').textContent = formatShortLabel(state.funding);
+            document.getElementById('rateDisplay').textContent = state.rate.toFixed(1) + '%';
+        }
+
+        function formatShortLabel(n) {
+            if (n >= 100000000) {
+                const eok = (n / 100000000).toFixed(n % 100000000 === 0 ? 0 : 1);
+                return eok + '억원';
+            }
+            return (n / 10000).toLocaleString() + '만원';
+        }
+
+        function highlightBracketTable(taxableIncome) {
+            const tableId = state.bizType === 'individual' ? 'individualBracketTable' : 'corporateBracketTable';
+            const table = document.getElementById(tableId);
+            if (!table) return;
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                row.classList.remove('active-bracket');
+                const marker = row.querySelector('.bracket-marker');
+                if (marker) marker.remove();
+            });
+
+            let prev = 0;
+            for (const row of rows) {
+                const max = parseInt(row.dataset.max);
+                if (taxableIncome <= max && taxableIncome > prev) {
+                    row.classList.add('active-bracket');
+                    const firstCell = row.querySelector('td');
+                    if (firstCell && !firstCell.querySelector('.bracket-marker')) {
+                        const marker = document.createElement('span');
+                        marker.className = 'bracket-marker';
+                        firstCell.prepend(marker);
+                    }
+                    break;
+                }
+                prev = max;
+            }
+        }
+
+        // ===== Event Bindings =====
+
+        // Toggle buttons
+        function setupToggle(groupId, stateKey) {
+            const btns = document.querySelectorAll(`#${groupId} .tax-toggle-btn`);
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state[stateKey] = btn.dataset.value;
+                    updateUI();
+                });
+            });
+        }
+        setupToggle('bizTypeGroup', 'bizType');
+        setupToggle('taxTypeGroup', 'taxType');
+
+        // Range sliders
+        function setupRange(rangeId, inputId, stateKey, formatter) {
+            const range = document.getElementById(rangeId);
+            const input = inputId ? document.getElementById(inputId) : null;
+
+            range.addEventListener('input', () => {
+                const val = stateKey === 'rate' ? parseFloat(range.value) : parseInt(range.value);
+                state[stateKey] = val;
+                if (input) input.value = stateKey === 'rate' ? val.toFixed(1) : formatComma(val);
+                updateUI();
+            });
+
+            if (input) {
+                input.addEventListener('focus', () => {
+                    input.value = input.value.replace(/,/g, '');
+                    input.select();
+                });
+                input.addEventListener('blur', () => {
+                    let val = parseInt(input.value.replace(/,/g, ''));
+                    const min = parseInt(range.min);
+                    const max = parseInt(range.max);
+                    if (isNaN(val)) val = state[stateKey];
+                    val = Math.max(min, Math.min(max, val));
+                    state[stateKey] = val;
+                    range.value = val;
+                    input.value = formatComma(val);
+                    updateUI();
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+                });
+            }
+        }
+
+        setupRange('revenueRange', 'revenueInput', 'revenue');
+        setupRange('expenseRatioRange', null, 'expenseRatio');
+        setupRange('fundingRange', 'fundingInput', 'funding');
+        setupRange('rateRange', null, 'rate');
+
+        // Initial calculation
+        updateUI();
+    })();
+
+    // ===== FAQ Toggle =====
+    function toggleFaq(el) {
+        const item = el.closest('.tax-faq-item');
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.tax-faq-item').forEach(i => i.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+    }
+    </script>
+</body>
+</html>
