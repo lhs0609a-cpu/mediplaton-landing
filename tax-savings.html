@@ -866,6 +866,187 @@
         color: #065F46;
     }
 
+    /* Specialty select */
+    .tax-select {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-700);
+        background: var(--white);
+        font-family: inherit;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+    }
+    .tax-select:focus { outline: none; border-color: var(--accent); }
+
+    /* Daily/Monthly info strip */
+    .tax-daily-strip {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .tax-daily-card {
+        padding: 14px 12px;
+        border-radius: var(--radius);
+        text-align: center;
+        border: 1px solid var(--border-light);
+    }
+    .tax-daily-card.daily { background: #FFF7ED; border-color: #FED7AA; }
+    .tax-daily-card.monthly { background: #ECFDF5; border-color: #A7F3D0; }
+    .tax-daily-card .dc-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gray-500);
+        margin-bottom: 4px;
+    }
+    .tax-daily-card .dc-value {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--gray-800);
+    }
+    .tax-daily-card.daily .dc-value { color: #B45309; }
+    .tax-daily-card.monthly .dc-value { color: #059669; }
+
+    /* Bracket savings detail table */
+    .tax-bracket-detail {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    .tax-bracket-detail-title {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 16px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--gray-700);
+        background: var(--gray-50);
+        border-bottom: 1px solid var(--border-light);
+        cursor: pointer;
+        user-select: none;
+    }
+    .tax-bracket-detail-title .toggle-arrow {
+        margin-left: auto;
+        transition: transform 0.3s;
+        color: var(--gray-400);
+    }
+    .tax-bracket-detail-title.open .toggle-arrow { transform: rotate(180deg); }
+    .tax-bracket-detail-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+    }
+    .tax-bracket-detail-body.open { max-height: 600px; }
+    .tax-bd-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+    .tax-bd-table th {
+        padding: 8px 12px;
+        background: var(--gray-50);
+        color: var(--gray-600);
+        font-weight: 600;
+        text-align: center;
+        border-bottom: 1px solid var(--border-light);
+    }
+    .tax-bd-table td {
+        padding: 8px 12px;
+        text-align: center;
+        border-bottom: 1px solid var(--border-light);
+        color: var(--gray-700);
+    }
+    .tax-bd-table tr:last-child td { border-bottom: none; }
+    .tax-bd-table tr.active td {
+        background: #EEF2FF;
+        font-weight: 700;
+        color: var(--primary-dark);
+    }
+    .tax-bd-table .savings-cell {
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    /* Before/After comparison */
+    .tax-before-after {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .tax-ba-card {
+        padding: 16px 14px;
+        border-radius: var(--radius);
+        text-align: center;
+    }
+    .tax-ba-card.before {
+        background: #FEF2F2;
+        border: 1px solid #FECACA;
+    }
+    .tax-ba-card.after {
+        background: #EEF2FF;
+        border: 1px solid #C7D2FE;
+    }
+    .tax-ba-card .ba-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .tax-ba-card.before .ba-label { color: #B91C1C; }
+    .tax-ba-card.after .ba-label { color: #1428A0; }
+    .tax-ba-card .ba-amount {
+        font-size: 18px;
+        font-weight: 900;
+    }
+    .tax-ba-card.before .ba-amount { color: #DC2626; }
+    .tax-ba-card.after .ba-amount { color: #1428A0; }
+    .tax-ba-arrow {
+        font-size: 20px;
+        color: var(--gray-300);
+    }
+
+    /* Effective rate badge */
+    .tax-effective-rate {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 14px;
+        border-radius: var(--radius);
+        background: linear-gradient(135deg, #065F46, #059669);
+        margin-bottom: 20px;
+    }
+    .tax-effective-rate .er-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.8);
+    }
+    .tax-effective-rate .er-value {
+        font-size: 22px;
+        font-weight: 900;
+        color: #A7F3D0;
+    }
+    .tax-effective-rate.negative {
+        background: linear-gradient(135deg, #065F46, #059669);
+    }
+    .tax-effective-rate.positive {
+        background: linear-gradient(135deg, #7F1D1D, #B91C1C);
+    }
+    .tax-effective-rate.positive .er-value { color: #FECACA; }
+
     /* Responsive */
     @media (max-width: 1024px) {
         .tax-calc-layout {
@@ -1049,6 +1230,30 @@
                         </div>
                     </div>
 
+                    <!-- 진료과목 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">진료과목 (경비율 자동 적용)</div>
+                        <select class="tax-select" id="specialtySelect">
+                            <option value="custom">직접 입력</option>
+                            <option value="internal">내과 (경비율 60%)</option>
+                            <option value="pediatrics">소아과 (경비율 62%)</option>
+                            <option value="dermatology" selected>피부과 (경비율 65%)</option>
+                            <option value="plastic">성형외과 (경비율 60%)</option>
+                            <option value="dental">치과 (경비율 65%)</option>
+                            <option value="oriental">한의원 (경비율 58%)</option>
+                            <option value="ophthalmology">안과 (경비율 62%)</option>
+                            <option value="orthopedics">정형외과 (경비율 63%)</option>
+                            <option value="obgyn">산부인과 (경비율 62%)</option>
+                            <option value="ent">이비인후과 (경비율 60%)</option>
+                            <option value="urology">비뇨기과 (경비율 60%)</option>
+                            <option value="psychiatry">정신건강의학과 (경비율 55%)</option>
+                            <option value="rehab">재활의학과 (경비율 62%)</option>
+                            <option value="animal">동물병원 (경비율 65%)</option>
+                            <option value="pharmacy">약국 (경비율 80%)</option>
+                            <option value="nursing">요양병원 (경비율 75%)</option>
+                        </select>
+                    </div>
+
                     <!-- 연매출 -->
                     <div class="tax-input-group">
                         <div class="tax-input-label">
@@ -1066,7 +1271,7 @@
                     <!-- 예상 경비율 -->
                     <div class="tax-input-group">
                         <div class="tax-input-label">
-                            예상 경비율
+                            예상 경비율 (과목 선택 시 자동)
                             <span class="val" id="expenseRatioDisplay">65%</span>
                         </div>
                         <input type="range" class="tax-range" id="expenseRatioRange" min="30" max="85" step="1" value="65">
@@ -1096,6 +1301,16 @@
                         <input type="range" class="tax-range" id="rateRange" min="4" max="10" step="0.1" value="6">
                         <div class="tax-range-labels"><span>4%</span><span>평균 5.3~6.9%</span><span>10%</span></div>
                     </div>
+
+                    <!-- 상환 기간 -->
+                    <div class="tax-input-group">
+                        <div class="tax-input-label">
+                            상환 기간
+                            <span class="val" id="daysDisplay">365일 (12개월)</span>
+                        </div>
+                        <input type="range" class="tax-range" id="daysRange" min="180" max="700" step="5" value="365">
+                        <div class="tax-range-labels"><span>180일</span><span>1년(365일)</span><span>700일</span></div>
+                    </div>
                 </div>
 
                 <!-- RESULT PANEL -->
@@ -1112,19 +1327,50 @@
                         <div class="tax-result-hero-sub" id="totalSavingsSub">적용 세율: 종합소득세 42% + 지방소득세 4.2% = 46.2%</div>
                     </div>
 
+                    <!-- Daily/Monthly strip -->
+                    <div class="tax-daily-strip">
+                        <div class="tax-daily-card daily">
+                            <div class="dc-label">일일 상환액 (PG 차감)</div>
+                            <div class="dc-value" id="dailyPayment">43.6만원</div>
+                        </div>
+                        <div class="tax-daily-card monthly">
+                            <div class="dc-label">일일 절세 환산액</div>
+                            <div class="dc-value" id="dailySavings">22.3만원</div>
+                        </div>
+                    </div>
+
+                    <!-- Effective rate -->
+                    <div class="tax-effective-rate negative" id="effectiveRateBox">
+                        <span class="er-label">절세 반영 실질 금리</span>
+                        <span class="er-value" id="effectiveRate">-48.2%</span>
+                    </div>
+
+                    <!-- Before/After comparison -->
+                    <div class="tax-before-after">
+                        <div class="tax-ba-card before">
+                            <div class="ba-label">영업지원금 미사용 시 세금</div>
+                            <div class="ba-amount" id="baTaxBefore">2억 8,387만원</div>
+                        </div>
+                        <div class="tax-ba-arrow">&rarr;</div>
+                        <div class="tax-ba-card after">
+                            <div class="ba-label">영업지원금 사용 시 세금</div>
+                            <div class="ba-amount" id="baTaxAfter">2억 1,041만원</div>
+                        </div>
+                    </div>
+
                     <!-- Breakdown -->
                     <div class="tax-breakdown" id="breakdownArea">
                         <div class="tax-breakdown-row">
                             <span class="tax-bd-label">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
-                                예상 과세표준
+                                예상 과세표준 (매출 x 소득률)
                             </span>
                             <span class="tax-bd-value" id="bdTaxableIncome">7억원</span>
                         </div>
                         <div class="tax-breakdown-row">
                             <span class="tax-bd-label">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-                                적용 세율 구간
+                                적용 한계세율 구간
                             </span>
                             <span class="tax-bd-value accent" id="bdBracket">46.2%</span>
                         </div>
@@ -1138,7 +1384,7 @@
                         <div class="tax-breakdown-row">
                             <span class="tax-bd-label">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                이자 (서비스 수수료)
+                                이자 (연 <span id="bdRateLabel">6.0</span>% x <span id="bdDaysLabel">365</span>일)
                             </span>
                             <span class="tax-bd-value danger" id="bdInterest">900만원</span>
                         </div>
@@ -1148,6 +1394,13 @@
                                 100% 비용처리 금액 (원금+이자)
                             </span>
                             <span class="tax-bd-value accent" id="bdDeductible">1억 5,900만원</span>
+                        </div>
+                        <div class="tax-breakdown-row">
+                            <span class="tax-bd-label">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg>
+                                월 상환액 (30일 기준)
+                            </span>
+                            <span class="tax-bd-value" id="bdMonthly">1,308만원</span>
                         </div>
 
                         <!-- 소득세 절감 -->
@@ -1179,6 +1432,29 @@
                         <div class="tax-breakdown-row profit">
                             <span class="tax-bd-label">실질 순이익 (절세 - 이자)</span>
                             <span class="tax-bd-value" id="bdNetProfit">+7,223만원</span>
+                        </div>
+                    </div>
+
+                    <!-- Bracket-by-bracket savings detail -->
+                    <div class="tax-bracket-detail">
+                        <div class="tax-bracket-detail-title" id="bracketDetailToggle" onclick="toggleBracketDetail()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                            세율 구간별 절세 상세 내역
+                            <svg class="toggle-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </div>
+                        <div class="tax-bracket-detail-body" id="bracketDetailBody">
+                            <table class="tax-bd-table" id="bracketDetailTable">
+                                <thead>
+                                    <tr>
+                                        <th>세율 구간</th>
+                                        <th>구간 내 비용처리</th>
+                                        <th>적용 세율</th>
+                                        <th>절세액</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bracketDetailTbody">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -1621,21 +1897,43 @@
     <script src="script.js"></script>
 
     <script>
-    /* ===== TAX SAVINGS CALCULATOR ENGINE ===== */
+    /* ===== TAX SAVINGS CALCULATOR ENGINE v2.0 ===== */
     (function() {
         'use strict';
 
-        // ===== State =====
-        const state = {
-            bizType: 'individual',   // individual | corporate
-            taxType: 'taxable',      // taxable | exempt
-            revenue: 2000000000,     // 20억
-            expenseRatio: 65,        // 65%
-            funding: 150000000,      // 1.5억
-            rate: 6.0               // 6%
+        // ===== Specialty presets: { expenseRatio, taxType } =====
+        const SPECIALTY = {
+            custom:        { ratio: null,  tax: null },
+            internal:      { ratio: 60, tax: 'exempt' },    // 내과 - 면세
+            pediatrics:    { ratio: 62, tax: 'exempt' },    // 소아과 - 면세
+            dermatology:   { ratio: 65, tax: 'taxable' },   // 피부과 - 과세
+            plastic:       { ratio: 60, tax: 'taxable' },   // 성형외과 - 과세
+            dental:        { ratio: 65, tax: 'exempt' },    // 치과 - 면세 (급여 위주)
+            oriental:      { ratio: 58, tax: 'exempt' },    // 한의원 - 면세
+            ophthalmology: { ratio: 62, tax: 'taxable' },   // 안과 - 과세 (라식 등)
+            orthopedics:   { ratio: 63, tax: 'exempt' },    // 정형외과 - 면세
+            obgyn:         { ratio: 62, tax: 'exempt' },    // 산부인과 - 면세
+            ent:           { ratio: 60, tax: 'exempt' },    // 이비인후과 - 면세
+            urology:       { ratio: 60, tax: 'exempt' },    // 비뇨기과 - 면세
+            psychiatry:    { ratio: 55, tax: 'exempt' },    // 정신건강 - 면세
+            rehab:         { ratio: 62, tax: 'exempt' },    // 재활의학 - 면세
+            animal:        { ratio: 65, tax: 'taxable' },   // 동물병원 - 과세
+            pharmacy:      { ratio: 80, tax: 'exempt' },    // 약국 - 면세
+            nursing:       { ratio: 75, tax: 'exempt' }     // 요양병원 - 면세
         };
 
-        // ===== Tax Brackets =====
+        // ===== State =====
+        const state = {
+            bizType: 'individual',
+            taxType: 'taxable',
+            revenue: 2000000000,
+            expenseRatio: 65,
+            funding: 150000000,
+            rate: 6.0,
+            days: 365               // 상환 기간 (일)
+        };
+
+        // ===== Tax Brackets (2024 기준) =====
         const INDIVIDUAL_BRACKETS = [
             { limit: 14000000,     rate: 0.06, name: '1,400만원 이하' },
             { limit: 50000000,     rate: 0.15, name: '1,400만~5,000만원' },
@@ -1654,8 +1952,9 @@
             { limit: Infinity,       rate: 0.24, name: '3,000억원 초과' }
         ];
 
-        // ===== Calculate progressive tax =====
+        // ===== Calculate progressive tax (지방소득세 포함) =====
         function calcTax(income, brackets) {
+            if (income <= 0) return 0;
             let tax = 0, prev = 0;
             for (const b of brackets) {
                 if (income <= prev) break;
@@ -1663,12 +1962,37 @@
                 tax += taxable * b.rate;
                 prev = b.limit;
             }
-            return tax * 1.1; // +10% local tax
+            return tax * 1.1; // 지방소득세 10% 가산
+        }
+
+        // ===== 구간별 절세 상세 계산 =====
+        function calcBracketDetail(incomeBefore, incomeAfter, brackets) {
+            const details = [];
+            let prev = 0;
+            for (const b of brackets) {
+                // 이 구간에서 차감된 금액 = (이 구간 내 원래 소득) - (이 구간 내 차감 후 소득)
+                const beforeInBracket = Math.max(0, Math.min(incomeBefore, b.limit) - prev);
+                const afterInBracket = Math.max(0, Math.min(incomeAfter, b.limit) - prev);
+                const deductedInBracket = beforeInBracket - afterInBracket;
+                if (deductedInBracket > 0) {
+                    const effectiveRate = b.rate * 1.1;
+                    details.push({
+                        name: b.name,
+                        rate: b.rate,
+                        effectiveRate: effectiveRate,
+                        deducted: deductedInBracket,
+                        savings: deductedInBracket * effectiveRate
+                    });
+                }
+                prev = b.limit;
+                if (incomeBefore <= prev && incomeAfter <= prev) break;
+            }
+            return details;
         }
 
         // ===== Get marginal bracket info =====
         function getBracketInfo(income, brackets) {
-            let prev = 0;
+            if (income <= 0) return { index: 0, rate: brackets[0].rate, effectiveRate: brackets[0].rate * 1.1, name: brackets[0].name };
             for (let i = 0; i < brackets.length; i++) {
                 if (income <= brackets[i].limit) {
                     return {
@@ -1678,7 +2002,6 @@
                         name: brackets[i].name
                     };
                 }
-                prev = brackets[i].limit;
             }
             const last = brackets[brackets.length - 1];
             return { index: brackets.length - 1, rate: last.rate, effectiveRate: last.rate * 1.1, name: last.name };
@@ -1698,6 +2021,20 @@
             return (n < 0 ? '-' : '') + abs.toLocaleString() + '원';
         }
 
+        function formatMan(n) {
+            const abs = Math.abs(Math.round(n));
+            if (abs >= 100000000) {
+                const eok = Math.floor(abs / 100000000);
+                const man = Math.round((abs % 100000000) / 10000);
+                return (n < 0 ? '-' : '') + (man > 0 ? `${eok}억${man.toLocaleString()}만` : `${eok}억`);
+            }
+            if (abs >= 10000) {
+                const manVal = (abs / 10000);
+                return (n < 0 ? '-' : '') + `${manVal < 10 ? manVal.toFixed(1) : Math.round(manVal).toLocaleString()}만원`;
+            }
+            return (n < 0 ? '-' : '') + abs.toLocaleString() + '원';
+        }
+
         function formatShort(n) {
             const abs = Math.abs(Math.round(n));
             if (abs >= 100000000) {
@@ -1710,43 +2047,77 @@
 
         function formatComma(n) { return Math.round(n).toLocaleString(); }
 
+        function formatShortLabel(n) {
+            if (n >= 100000000) {
+                const eok = (n / 100000000);
+                return (eok === Math.floor(eok) ? eok.toFixed(0) : eok.toFixed(1)) + '억원';
+            }
+            return (n / 10000).toLocaleString() + '만원';
+        }
+
         // ===== Main calculation =====
         function calculate() {
             const brackets = state.bizType === 'individual' ? INDIVIDUAL_BRACKETS : CORPORATE_BRACKETS;
             const taxableIncome = Math.max(0, state.revenue * (1 - state.expenseRatio / 100));
-            const interest = state.funding * (state.rate / 100);
+
+            // 이자 = 원금 × 연이자율 × (상환일수 / 365)
+            const interest = state.funding * (state.rate / 100) * (state.days / 365);
             const totalRepayment = state.funding + interest;
 
-            // Deductible amount depends on tax type
+            // 일일/월 상환
+            const dailyPayment = totalRepayment / state.days;
+            const monthlyPayment = dailyPayment * 30;
+
+            // 비용처리 금액 (과세/면세)
             let incomeDeduction, vatRefund;
             if (state.taxType === 'taxable') {
-                incomeDeduction = totalRepayment / 1.1;  // supply price only
-                vatRefund = totalRepayment - incomeDeduction; // VAT portion
+                incomeDeduction = totalRepayment / 1.1;
+                vatRefund = totalRepayment - incomeDeduction;
             } else {
-                incomeDeduction = totalRepayment; // full amount
+                incomeDeduction = totalRepayment;
                 vatRefund = 0;
             }
 
-            // Tax savings = tax(income) - tax(income - deduction)
+            // 세금 비교: before vs after
             const taxBefore = calcTax(taxableIncome, brackets);
-            const taxAfter = calcTax(Math.max(0, taxableIncome - incomeDeduction), brackets);
+            const incomeAfterDeduction = Math.max(0, taxableIncome - incomeDeduction);
+            const taxAfter = calcTax(incomeAfterDeduction, brackets);
             const incomeTaxSavings = taxBefore - taxAfter;
+
+            // 구간별 상세
+            const bracketDetails = calcBracketDetail(taxableIncome, incomeAfterDeduction, brackets);
 
             const totalSavings = incomeTaxSavings + vatRefund;
             const netProfit = totalSavings - interest;
+
+            // 실질 금리 = (이자 - 절세) / 원금 × 100, 연환산
+            const netCost = interest - totalSavings;
+            const annualFactor = 365 / state.days;
+            const effectiveRate = (netCost / state.funding) * 100 * annualFactor;
+
+            // 일일 절세 환산
+            const dailySavings = totalSavings / state.days;
 
             const bracketInfo = getBracketInfo(taxableIncome, brackets);
 
             return {
                 taxableIncome,
+                incomeAfterDeduction,
                 interest,
                 totalRepayment,
+                dailyPayment,
+                monthlyPayment,
                 incomeDeduction,
                 vatRefund,
                 incomeTaxSavings,
                 totalSavings,
                 netProfit,
-                bracketInfo
+                effectiveRate,
+                dailySavings,
+                taxBefore,
+                taxAfter,
+                bracketInfo,
+                bracketDetails
             };
         }
 
@@ -1758,76 +2129,112 @@
             const baseRatePercent = (r.bracketInfo.rate * 100).toFixed(0);
             const localRatePercent = (r.bracketInfo.rate * 10).toFixed(1);
 
-            // Hero amount
+            // Hero
             document.getElementById('totalSavingsAmount').textContent = formatKRW(r.totalSavings);
             document.getElementById('totalSavingsSub').textContent =
                 `적용 세율: ${taxLabel} ${baseRatePercent}% + 지방소득세 ${localRatePercent}% = ${ratePercent}%`;
+
+            // Daily strip
+            document.getElementById('dailyPayment').textContent = formatMan(r.dailyPayment);
+            document.getElementById('dailySavings').textContent = formatMan(r.dailySavings);
+
+            // Effective rate
+            const erBox = document.getElementById('effectiveRateBox');
+            const erVal = document.getElementById('effectiveRate');
+            erVal.textContent = r.effectiveRate.toFixed(1) + '%';
+            if (r.effectiveRate < 0) {
+                erBox.className = 'tax-effective-rate negative';
+            } else {
+                erBox.className = 'tax-effective-rate positive';
+            }
+
+            // Before/After
+            document.getElementById('baTaxBefore').textContent = formatKRW(r.taxBefore);
+            document.getElementById('baTaxAfter').textContent = formatKRW(r.taxAfter);
 
             // Breakdown
             document.getElementById('bdTaxableIncome').textContent = formatKRW(r.taxableIncome);
             document.getElementById('bdBracket').textContent = `${ratePercent}% (${r.bracketInfo.name})`;
             document.getElementById('bdPrincipal').textContent = formatKRW(state.funding);
+            document.getElementById('bdRateLabel').textContent = state.rate.toFixed(1);
+            document.getElementById('bdDaysLabel').textContent = state.days;
             document.getElementById('bdInterest').textContent = formatKRW(r.interest);
             document.getElementById('bdDeductible').textContent = formatKRW(state.taxType === 'taxable' ? r.incomeDeduction : r.totalRepayment);
+            document.getElementById('bdMonthly').textContent = formatKRW(r.monthlyPayment);
             document.getElementById('bdIncomeTax').textContent = formatKRW(r.incomeTaxSavings);
 
             // VAT row
             const vatRow = document.getElementById('bdVatRow');
-            const vatTag = document.getElementById('vatTag');
             if (state.taxType === 'taxable') {
                 vatRow.style.display = '';
-                vatTag.textContent = '과세';
-                vatTag.className = 'vat-tag';
+                document.getElementById('vatTag').textContent = '과세';
+                document.getElementById('vatTag').className = 'vat-tag';
                 document.getElementById('bdVatRefund').textContent = formatKRW(r.vatRefund);
             } else {
                 vatRow.style.display = 'none';
             }
 
             document.getElementById('bdTotalSavings').textContent = formatKRW(r.totalSavings);
-            document.getElementById('bdNetProfit').textContent =
-                (r.netProfit >= 0 ? '+' : '') + formatKRW(r.netProfit);
+            document.getElementById('bdNetProfit').textContent = (r.netProfit >= 0 ? '+' : '') + formatKRW(r.netProfit);
+
+            // Bracket detail table
+            renderBracketDetail(r.bracketDetails);
 
             // Comparison bars
-            const maxVal = Math.max(r.interest, r.totalSavings);
-            const interestPct = maxVal > 0 ? Math.max(5, (r.interest / maxVal) * 100) : 5;
-            const savingsPct = maxVal > 0 ? Math.max(5, (r.totalSavings / maxVal) * 100) : 5;
-
-            document.getElementById('barInterest').style.width = interestPct + '%';
+            const maxVal = Math.max(r.interest, r.totalSavings, 1);
+            const iPct = Math.max(5, (r.interest / maxVal) * 100);
+            const sPct = Math.max(5, (r.totalSavings / maxVal) * 100);
+            document.getElementById('barInterest').style.width = iPct + '%';
             document.getElementById('barInterest').textContent = formatShort(r.interest);
             document.getElementById('barInterestAmt').textContent = formatKRW(r.interest);
-
-            document.getElementById('barSavings').style.width = savingsPct + '%';
+            document.getElementById('barSavings').style.width = sPct + '%';
             document.getElementById('barSavings').textContent = formatShort(r.totalSavings);
             document.getElementById('barSavingsAmt').textContent = formatKRW(r.totalSavings);
 
-            // Highlight bracket table
+            // Bracket table highlights
             highlightBracketTable(r.taxableIncome);
-
-            // Show/hide bracket tables
             document.getElementById('individualBracketWrap').style.display = state.bizType === 'individual' ? '' : 'none';
             document.getElementById('corporateBracketWrap').style.display = state.bizType === 'corporate' ? '' : 'none';
 
             // Tax type hint
             const hint = document.getElementById('taxTypeHint');
-            if (state.taxType === 'taxable') {
-                hint.textContent = '피부과, 성형외과, 동물병원 등 = 과세 (부가세 환급 O)';
-            } else {
-                hint.textContent = '일반 내과, 소아과, 한의원, 요양병원 등 = 면세 (전액 경비처리)';
-            }
+            hint.textContent = state.taxType === 'taxable'
+                ? '피부과, 성형외과, 동물병원 등 = 과세 (부가세 환급 O)'
+                : '일반 내과, 소아과, 한의원, 요양병원 등 = 면세 (전액 경비처리)';
 
-            // Display values for sliders
+            // Slider displays
             document.getElementById('revenueDisplay').textContent = formatShortLabel(state.revenue);
             document.getElementById('expenseRatioDisplay').textContent = state.expenseRatio + '%';
             document.getElementById('fundingDisplay').textContent = formatShortLabel(state.funding);
             document.getElementById('rateDisplay').textContent = state.rate.toFixed(1) + '%';
+            const months = Math.round(state.days / 30);
+            document.getElementById('daysDisplay').textContent = `${state.days}일 (${months}개월)`;
         }
 
-        function formatShortLabel(n) {
-            if (n >= 100000000) {
-                const eok = (n / 100000000).toFixed(n % 100000000 === 0 ? 0 : 1);
-                return eok + '억원';
+        function renderBracketDetail(details) {
+            const tbody = document.getElementById('bracketDetailTbody');
+            if (!tbody) return;
+            let html = '';
+            let totalSavings = 0;
+            for (const d of details) {
+                totalSavings += d.savings;
+                html += `<tr class="active">
+                    <td>${d.name}</td>
+                    <td>${formatKRW(d.deducted)}</td>
+                    <td>${(d.effectiveRate * 100).toFixed(1)}%</td>
+                    <td class="savings-cell">${formatKRW(d.savings)}</td>
+                </tr>`;
             }
-            return (n / 10000).toLocaleString() + '만원';
+            if (details.length > 1) {
+                html += `<tr style="background:var(--gray-50);font-weight:700">
+                    <td colspan="3" style="text-align:right;color:var(--gray-700)">소득세 절감 합계</td>
+                    <td class="savings-cell">${formatKRW(totalSavings)}</td>
+                </tr>`;
+            }
+            if (details.length === 0) {
+                html = '<tr><td colspan="4" style="color:var(--gray-400);padding:16px">과세표준이 0원이면 절세 효과가 발생하지 않습니다</td></tr>';
+            }
+            tbody.innerHTML = html;
         }
 
         function highlightBracketTable(taxableIncome) {
@@ -1840,17 +2247,16 @@
                 const marker = row.querySelector('.bracket-marker');
                 if (marker) marker.remove();
             });
-
             let prev = 0;
             for (const row of rows) {
                 const max = parseInt(row.dataset.max);
-                if (taxableIncome <= max && taxableIncome > prev) {
+                if (taxableIncome > prev && taxableIncome <= max) {
                     row.classList.add('active-bracket');
                     const firstCell = row.querySelector('td');
                     if (firstCell && !firstCell.querySelector('.bracket-marker')) {
-                        const marker = document.createElement('span');
-                        marker.className = 'bracket-marker';
-                        firstCell.prepend(marker);
+                        const m = document.createElement('span');
+                        m.className = 'bracket-marker';
+                        firstCell.prepend(m);
                     }
                     break;
                 }
@@ -1868,6 +2274,10 @@
                     btns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     state[stateKey] = btn.dataset.value;
+                    // 진료과목 custom으로 전환
+                    if (stateKey === 'taxType') {
+                        document.getElementById('specialtySelect').value = 'custom';
+                    }
                     updateUI();
                 });
             });
@@ -1875,15 +2285,39 @@
         setupToggle('bizTypeGroup', 'bizType');
         setupToggle('taxTypeGroup', 'taxType');
 
+        // Specialty selector
+        document.getElementById('specialtySelect').addEventListener('change', function() {
+            const spec = SPECIALTY[this.value];
+            if (!spec || this.value === 'custom') return;
+            // 경비율 자동 설정
+            if (spec.ratio !== null) {
+                state.expenseRatio = spec.ratio;
+                document.getElementById('expenseRatioRange').value = spec.ratio;
+            }
+            // 과세유형 자동 설정
+            if (spec.tax !== null) {
+                state.taxType = spec.tax;
+                const btns = document.querySelectorAll('#taxTypeGroup .tax-toggle-btn');
+                btns.forEach(b => {
+                    b.classList.toggle('active', b.dataset.value === spec.tax);
+                });
+            }
+            updateUI();
+        });
+
         // Range sliders
-        function setupRange(rangeId, inputId, stateKey, formatter) {
+        function setupRange(rangeId, inputId, stateKey) {
             const range = document.getElementById(rangeId);
             const input = inputId ? document.getElementById(inputId) : null;
 
             range.addEventListener('input', () => {
-                const val = stateKey === 'rate' ? parseFloat(range.value) : parseInt(range.value);
+                const val = (stateKey === 'rate') ? parseFloat(range.value) : parseInt(range.value);
                 state[stateKey] = val;
-                if (input) input.value = stateKey === 'rate' ? val.toFixed(1) : formatComma(val);
+                if (input) input.value = formatComma(val);
+                // 경비율 수동 변경 시 custom
+                if (stateKey === 'expenseRatio') {
+                    document.getElementById('specialtySelect').value = 'custom';
+                }
                 updateUI();
             });
 
@@ -1913,10 +2347,19 @@
         setupRange('expenseRatioRange', null, 'expenseRatio');
         setupRange('fundingRange', 'fundingInput', 'funding');
         setupRange('rateRange', null, 'rate');
+        setupRange('daysRange', null, 'days');
 
         // Initial calculation
         updateUI();
     })();
+
+    // ===== Bracket detail toggle =====
+    function toggleBracketDetail() {
+        const title = document.getElementById('bracketDetailToggle');
+        const body = document.getElementById('bracketDetailBody');
+        title.classList.toggle('open');
+        body.classList.toggle('open');
+    }
 
     // ===== FAQ Toggle =====
     function toggleFaq(el) {
