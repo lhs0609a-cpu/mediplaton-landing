@@ -1304,12 +1304,11 @@
 
                     <!-- 상환 기간 -->
                     <div class="tax-input-group">
-                        <div class="tax-input-label">
-                            상환 기간
-                            <span class="val" id="daysDisplay">365일 (12개월)</span>
+                        <div class="tax-input-label">상환 기간</div>
+                        <div class="tax-toggle-group" id="daysGroup">
+                            <button class="tax-toggle-btn active" data-value="365">365일 (12개월)</button>
+                            <button class="tax-toggle-btn" data-value="700">700일 (약 23개월)</button>
                         </div>
-                        <input type="range" class="tax-range" id="daysRange" min="180" max="700" step="5" value="365">
-                        <div class="tax-range-labels"><span>180일</span><span>1년(365일)</span><span>700일</span></div>
                     </div>
                 </div>
 
@@ -2207,8 +2206,6 @@
             document.getElementById('expenseRatioDisplay').textContent = state.expenseRatio + '%';
             document.getElementById('fundingDisplay').textContent = formatShortLabel(state.funding);
             document.getElementById('rateDisplay').textContent = state.rate.toFixed(1) + '%';
-            const months = Math.round(state.days / 30);
-            document.getElementById('daysDisplay').textContent = `${state.days}일 (${months}개월)`;
         }
 
         function renderBracketDetail(details) {
@@ -2347,7 +2344,16 @@
         setupRange('expenseRatioRange', null, 'expenseRatio');
         setupRange('fundingRange', 'fundingInput', 'funding');
         setupRange('rateRange', null, 'rate');
-        setupRange('daysRange', null, 'days');
+
+        // 상환 기간 토글 (365일 / 700일)
+        document.querySelectorAll('#daysGroup .tax-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#daysGroup .tax-toggle-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.days = parseInt(btn.dataset.value);
+                updateUI();
+            });
+        });
 
         // Initial calculation
         updateUI();
