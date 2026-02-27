@@ -496,6 +496,8 @@ section.hero .hero-trust span {
 .nav-list {
     display: flex;
     gap: 8px;
+    list-style: none;
+    align-items: center;
 }
 
 .nav-item {
@@ -566,8 +568,6 @@ section.hero .hero-trust span {
     text-align: center;
     margin-top: 8px;
     border: 1.5px solid var(--primary);
-}
-    margin-top: 8px;
 }
 
 .nav-dropdown {
