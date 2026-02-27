@@ -542,6 +542,28 @@ section.hero .hero-trust span {
     background: var(--primary-50);
 }
 
+/* 절세 계산기 - 독립 네비게이션 강조 */
+.nav-link.nav-link--tax {
+    color: var(--primary);
+    font-weight: 600;
+    background: var(--primary-50);
+    border-radius: 6px;
+    padding: 6px 14px !important;
+}
+
+.nav-link.nav-link--tax:hover {
+    color: var(--white);
+    background: var(--primary);
+}
+
+.mobile-nav--tax {
+    color: var(--primary) !important;
+    font-weight: 700 !important;
+    background: var(--primary-50);
+    border-radius: 8px;
+    padding: 12px 16px !important;
+}
+
 /* 파트너 모집 링크 - outline style (secondary CTA) */
 .nav-item.highlight .nav-link.partner-link {
     background: transparent;
