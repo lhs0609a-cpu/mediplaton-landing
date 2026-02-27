@@ -444,6 +444,7 @@ section.hero .hero-trust span {
     height: 40px;
     width: auto;
     display: block;
+    background: transparent;
 }
 
 /* Legacy CSS logo - hidden when image available */
