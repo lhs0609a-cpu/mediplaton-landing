@@ -415,8 +415,7 @@ section.hero .hero-trust span {
 .header {
     position: sticky;
     top: 0;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(20px);
+    background: #ffffff;
     border-bottom: 1px solid var(--border-light);
     z-index: 1000;
     transition: var(--transition);
