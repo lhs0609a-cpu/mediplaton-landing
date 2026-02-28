@@ -49,6 +49,16 @@ const VPS = {
         return Math.max(0, Math.floor((now - base) / 86400000));
     },
 
+    // 성장 포화: linearUntil까지 선형 성장, 이후 ceiling에 점진 수렴
+    // → 현재 수치는 유지하면서 장기적으로 비현실적 증가 방지
+    softCap(activeDays, linearUntil, ceiling) {
+        if (activeDays <= 0) return 0;
+        if (activeDays <= linearUntil) return activeDays;
+        const excess = activeDays - linearUntil;
+        const remaining = ceiling - linearUntil;
+        return linearUntil + remaining * (1 - Math.exp(-excess / remaining));
+    },
+
     // 실제 파트너 라벨 → MP 코드로 변환
     toLabelCode(originalLabel) {
         const h = this.hashStr('mp_label_' + originalLabel);
@@ -84,11 +94,12 @@ const VPS = {
     },
 
     // 티어별 파라미터 범위
+    // growth: [linearUntil, ceiling] — 선형 성장 일수 한도, 최대 유효 일수
     tierParams: {
-        top:      { regRate: [0.22, 0.35], approveRate: [0.60, 0.80], installRate: [0.45, 0.70], amtPer: [8000, 20000] },
-        mid:      { regRate: [0.08, 0.18], approveRate: [0.45, 0.65], installRate: [0.30, 0.50], amtPer: [3000, 8000] },
-        low:      { regRate: [0.025, 0.075], approveRate: [0.30, 0.50], installRate: [0.20, 0.40], amtPer: [1500, 5000] },
-        inactive: { regRate: [0.008, 0.028], approveRate: [0.20, 0.40], installRate: [0.10, 0.30], amtPer: [1000, 3000] }
+        top:      { regRate: [0.22, 0.35], approveRate: [0.60, 0.80], installRate: [0.45, 0.70], amtPer: [8000, 20000], growth: [300, 500] },
+        mid:      { regRate: [0.08, 0.18], approveRate: [0.45, 0.65], installRate: [0.30, 0.50], amtPer: [3000, 8000], growth: [250, 380] },
+        low:      { regRate: [0.025, 0.075], approveRate: [0.30, 0.50], installRate: [0.20, 0.40], amtPer: [1500, 5000], growth: [200, 300] },
+        inactive: { regRate: [0.008, 0.028], approveRate: [0.20, 0.40], installRate: [0.10, 0.30], amtPer: [1000, 3000], growth: [150, 220] }
     },
 
     // 범위 내에서 시드 기반 값 선택
@@ -112,7 +123,9 @@ const VPS = {
 
         // 활동 시작 오프셋 (0~60일 지연)
         const startOffset = Math.floor(this.rand(seed + 5) * 60);
-        const activeDays = Math.max(0, days - startOffset);
+        const rawActiveDays = Math.max(0, days - startOffset);
+        // 성장 포화 적용: 장기적으로 비현실적 숫자 방지
+        const activeDays = this.softCap(rawActiveDays, tp.growth[0], tp.growth[1]);
 
         // 일별 노이즈 (오늘 날짜 + 파트너 시드)
         const todayHash = this.hashDate(new Date().toISOString());
