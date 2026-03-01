@@ -355,6 +355,32 @@
         .board-empty { text-align: center; padding: 40px; color: var(--gray-500); }
         .board-arrow { transition: transform 0.2s; color: var(--gray-400); }
         .board-arrow.open { transform: rotate(180deg); }
+
+        /* Contract Status Badges */
+        .contract-status { display: inline-flex; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .contract-status.draft { background: #F3F4F6; color: #374151; }
+        .contract-status.sent { background: #DBEAFE; color: #1D4ED8; }
+        .contract-status.signed { background: #EDE9FE; color: #6D28D9; }
+        .contract-status.active { background: #D1FAE5; color: #047857; }
+        .contract-status.expired { background: #FEF3C7; color: #B45309; }
+        .contract-status.terminated { background: #FEE2E2; color: #B91C1C; }
+
+        /* Contract Modal */
+        .contract-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 16px; background: var(--gray-50); border-radius: var(--radius); margin-bottom: 20px; }
+        .contract-summary-item { text-align: center; }
+        .contract-summary-item .label { font-size: 12px; color: var(--gray-500); margin-bottom: 4px; }
+        .contract-summary-item .value { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+        .contract-form { display: none; padding: 20px; background: var(--primary-light); border-radius: var(--radius); margin-bottom: 20px; }
+        .contract-form.show { display: block; }
+        .contract-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .contract-history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .contract-history-table th, .contract-history-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--gray-200); }
+        .contract-history-table th { background: var(--gray-50); font-weight: 600; color: var(--gray-500); font-size: 12px; }
+        .contract-body-preview { padding: 32px; font-size: 14px; line-height: 1.8; }
+        .contract-body-preview h2 { text-align: center; font-size: 20px; margin-bottom: 24px; }
+        .contract-body-preview h3 { font-size: 15px; margin: 20px 0 8px; color: var(--primary); }
+        .contract-body-preview p { margin-bottom: 8px; }
+        .contract-body-preview .parties { margin: 20px 0; padding: 16px; background: var(--gray-50); border-radius: var(--radius); }
     </style>
 </head>
 <body>
@@ -1123,6 +1149,109 @@
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px;">등록</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contract Manager Modal -->
+    <div class="modal-overlay" id="contractModal">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3>계약 관리</h3>
+                <button class="modal-close" onclick="document.getElementById('contractModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Partner Summary -->
+                <div class="contract-summary" id="contractPartnerSummary">
+                    <div class="contract-summary-item">
+                        <div class="label">파트너명</div>
+                        <div class="value" id="contractPartnerName">-</div>
+                    </div>
+                    <div class="contract-summary-item">
+                        <div class="label">연락처</div>
+                        <div class="value" id="contractPartnerPhone">-</div>
+                    </div>
+                    <div class="contract-summary-item">
+                        <div class="label">현재 수수료율</div>
+                        <div class="value" id="contractPartnerRate">-</div>
+                    </div>
+                </div>
+
+                <!-- New Contract Toggle -->
+                <div style="margin-bottom: 16px;">
+                    <button class="btn btn-primary btn-sm" id="contractFormToggleBtn" onclick="showContractForm()">+ 신규 계약 작성</button>
+                </div>
+
+                <!-- New Contract Form -->
+                <div class="contract-form" id="contractFormArea">
+                    <h4 style="margin-bottom: 16px; font-size: 15px;">신규 계약서 작성</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>수수료율 (%)</label>
+                            <input type="number" id="contractRate" step="0.01" value="1.50" min="0" max="100" style="width:100%;padding:10px 14px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:14px;">
+                        </div>
+                        <div class="form-group">
+                            <label>계약 기간</label>
+                            <select id="contractPeriod" onchange="updateContractEndDate()" style="width:100%;padding:10px 14px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:14px;">
+                                <option value="6">6개월</option>
+                                <option value="12" selected>12개월</option>
+                                <option value="24">24개월</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>시작일</label>
+                            <input type="date" id="contractStartDate" onchange="updateContractEndDate()" style="width:100%;padding:10px 14px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:14px;">
+                        </div>
+                        <div class="form-group">
+                            <label>종료일 (자동계산)</label>
+                            <input type="date" id="contractEndDate" readonly style="width:100%;padding:10px 14px;border:1px solid var(--gray-200);border-radius:var(--radius);font-size:14px;background:var(--gray-50);">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="contractAutoRenewal" checked> 자동 갱신</label>
+                    </div>
+                    <div class="form-group">
+                        <label>관리자 메모</label>
+                        <textarea id="contractAdminNotes" rows="2" placeholder="관리자 메모 (선택)" style="width:100%;padding:10px 14px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:14px;font-family:inherit;resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button class="btn btn-primary btn-sm" onclick="createContract()">계약서 생성</button>
+                        <button class="btn btn-outline btn-sm" onclick="cancelContractForm()">취소</button>
+                    </div>
+                </div>
+
+                <!-- Contract History -->
+                <h4 style="font-size: 15px; margin-bottom: 12px;">계약 이력</h4>
+                <div id="contractHistoryArea">
+                    <div style="text-align:center;padding:20px;color:var(--gray-500);">계약 이력이 없습니다.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contract Preview Modal -->
+    <div class="modal-overlay" id="contractPreviewModal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 id="contractPreviewTitle">계약서 미리보기</h3>
+                <button class="modal-close" onclick="document.getElementById('contractPreviewModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="contract-body-preview" id="contractPreviewBody"></div>
+            </div>
+            <div class="modal-footer">
+                <select class="filter-select" id="contractStatusSelect">
+                    <option value="draft">작성중</option>
+                    <option value="sent">발송</option>
+                    <option value="signed">서명완료</option>
+                    <option value="active">활성</option>
+                    <option value="expired">만료</option>
+                    <option value="terminated">해지</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="updateContractStatus()">상태 저장</button>
+                <button class="btn btn-outline btn-sm" onclick="document.getElementById('contractPreviewModal').classList.remove('active')">닫기</button>
             </div>
         </div>
     </div>

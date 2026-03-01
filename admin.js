@@ -521,6 +521,7 @@ async function loadPartners() {
                                 <button class="action-btn approve" onclick="approvePartner(${row.id})">승인</button>
                                 <button class="action-btn reject" onclick="openRejectModal(${row.id})">반려</button>
                             ` : ''}
+                            ${row.status === 'approved' ? `<button class="action-btn edit" onclick="openContractManager(${row.id})">계약</button>` : ''}
                         </div>
                     </td>
                 </tr>
@@ -876,7 +877,13 @@ async function viewPartner(id) {
                 }
             </span>
         </div>
+        <div id="partnerContractsArea" style="border-top: 2px solid var(--gray-200); margin-top: 12px; padding-top: 12px;"></div>
     `;
+
+    // 최근 계약 3건 로드
+    if (data.status === 'approved') {
+        loadPartnerRecentContracts(id);
+    }
 
     const statusSelect = document.getElementById('statusSelect');
     statusSelect.innerHTML = `
@@ -1726,6 +1733,476 @@ function setupAdminBoard() {
 document.addEventListener('DOMContentLoaded', () => {
     setupAdminBoard();
 });
+
+// ─── Contract Management (계약 관리) ───
+
+let currentContractPartnerId = null;
+let currentContractId = null;
+
+function getContractStatusLabel(status) {
+    const labels = { draft: '작성중', sent: '발송', signed: '서명완료', active: '활성', expired: '만료', terminated: '해지' };
+    return labels[status] || status;
+}
+
+const CONTRACT_TRANSITIONS = {
+    draft: ['sent', 'terminated'],
+    sent: ['signed', 'terminated'],
+    signed: ['active', 'terminated'],
+    active: ['expired', 'terminated'],
+    expired: ['active'],
+    terminated: []
+};
+
+async function openContractManager(partnerId) {
+    currentContractPartnerId = partnerId;
+
+    const { data: partner, error } = await sb.from('partners').select('*').eq('id', partnerId).single();
+    if (error) { showToast('파트너 정보를 불러올 수 없습니다.', 'error'); return; }
+
+    document.getElementById('contractPartnerName').textContent = partner.name + (partner.hospital_name ? ' (' + partner.hospital_name + ')' : '');
+    document.getElementById('contractPartnerPhone').textContent = partner.phone;
+    document.getElementById('contractPartnerRate').textContent = partner.commission_rate ? (Number(partner.commission_rate) * 100).toFixed(2) + '%' : '1.50%';
+
+    // 수수료율 기본값 설정
+    document.getElementById('contractRate').value = partner.commission_rate ? (Number(partner.commission_rate) * 100).toFixed(2) : '1.50';
+
+    // 시작일 기본값: 오늘
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('contractStartDate').value = today;
+    updateContractEndDate();
+
+    cancelContractForm();
+    loadContracts(partnerId);
+    document.getElementById('contractModal').classList.add('active');
+}
+
+async function loadContracts(partnerId) {
+    const area = document.getElementById('contractHistoryArea');
+
+    try {
+        const { data, error } = await sb
+            .from('partner_contracts')
+            .select('*')
+            .eq('partner_id', partnerId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray-500);">계약 이력이 없습니다.</div>';
+            return;
+        }
+
+        area.innerHTML = `
+            <table class="contract-history-table">
+                <thead>
+                    <tr>
+                        <th>계약번호</th>
+                        <th>기간</th>
+                        <th>수수료율</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.map(c => `
+                        <tr>
+                            <td style="font-weight:600;">${escapeHtml(c.contract_number)}</td>
+                            <td>${c.start_date} ~ ${c.end_date}</td>
+                            <td>${(Number(c.commission_rate) * 100).toFixed(2)}%</td>
+                            <td><span class="contract-status ${c.status}">${getContractStatusLabel(c.status)}</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="action-btn view" onclick="previewContract(${c.id})">미리보기</button>
+                                    ${['draft', 'sent'].includes(c.status) ? `<button class="action-btn delete" onclick="deleteContract(${c.id})">삭제</button>` : ''}
+                                    ${['active', 'signed', 'sent'].includes(c.status) ? `<button class="action-btn reject" onclick="terminateContract(${c.id})">해지</button>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    } catch (err) {
+        console.error('Load contracts error:', err);
+        area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--danger);">계약 이력을 불러올 수 없습니다.</div>';
+    }
+}
+
+function showContractForm() {
+    document.getElementById('contractFormArea').classList.add('show');
+    document.getElementById('contractFormToggleBtn').style.display = 'none';
+}
+
+function cancelContractForm() {
+    document.getElementById('contractFormArea').classList.remove('show');
+    document.getElementById('contractFormToggleBtn').style.display = '';
+    document.getElementById('contractAdminNotes').value = '';
+    document.getElementById('contractAutoRenewal').checked = true;
+    document.getElementById('contractPeriod').value = '12';
+}
+
+function updateContractEndDate() {
+    const startStr = document.getElementById('contractStartDate').value;
+    const months = parseInt(document.getElementById('contractPeriod').value) || 12;
+
+    if (!startStr) return;
+
+    const start = new Date(startStr);
+    const end = new Date(start);
+    end.setMonth(end.getMonth() + months);
+    end.setDate(end.getDate() - 1);
+
+    document.getElementById('contractEndDate').value = end.toISOString().split('T')[0];
+}
+
+function generateContractBody(partner, options) {
+    const { commissionRate, startDate, endDate, autoRenewal, periodMonths } = options;
+    const ratePercent = (Number(commissionRate) * 100).toFixed(2);
+    const bankInfo = partner.bank_name && partner.bank_account
+        ? `${getBankLabel(partner.bank_name)} ${partner.bank_account}`
+        : '(정산 계좌 미등록)';
+
+    return `
+<h2>업무 제휴 계약서</h2>
+<div class="parties">
+    <p><strong>갑 (위탁자):</strong> 주식회사 메디플라톤 (이하 "갑")</p>
+    <p><strong>을 (수탁자):</strong> ${escapeHtml(partner.name)}${partner.hospital_name ? ' / ' + escapeHtml(partner.hospital_name) : ''} (이하 "을")</p>
+    <p><strong>연락처:</strong> ${escapeHtml(partner.phone)}${partner.email ? ' / ' + escapeHtml(partner.email) : ''}</p>
+</div>
+
+<p>갑과 을은 상호 신뢰를 바탕으로 다음과 같이 업무 제휴 계약을 체결한다.</p>
+
+<h3>제1조 (목적)</h3>
+<p>본 계약은 갑이 제공하는 PG 결제 서비스 및 대출 중개 서비스의 영업 확대를 위해 을에게 업무를 위탁하고, 이에 따른 권리·의무를 규정함을 목적으로 한다.</p>
+
+<h3>제2조 (을의 업무 범위)</h3>
+<p>1. 갑의 서비스에 적합한 가맹점 후보 발굴 및 소개<br>
+2. 갑이 제공하는 파트너 대시보드를 통한 고객 정보 등록<br>
+3. 고객 초기 안내 및 필요 서류 수집 지원<br>
+4. 기타 갑이 서면으로 요청한 영업 관련 업무</p>
+
+<h3>제3조 (갑의 업무 범위)</h3>
+<p>1. 을이 소개한 고객에 대한 심사 및 서비스 제공<br>
+2. 을의 영업 활동에 필요한 자료 및 교육 지원<br>
+3. 파트너 대시보드를 통한 진행 상태 공유<br>
+4. 수수료의 정확한 산정 및 적시 지급</p>
+
+<h3>제4조 (수수료)</h3>
+<p>1. <strong>수수료율:</strong> 성사된 거래 금액의 <strong>${ratePercent}%</strong><br>
+2. <strong>정산 주기:</strong> 매월 말일 마감, 익월 15일 지급<br>
+3. <strong>정산 계좌:</strong> ${bankInfo}<br>
+4. 수수료는 고객의 서비스가 정상 실행(PG 설치 완료 또는 대출 실행)된 건에 한해 발생한다.<br>
+5. 고객의 중도 해지, 미납 등으로 갑에 손해가 발생한 경우, 해당 건의 수수료는 조정될 수 있다.</p>
+
+<h3>제5조 (계약 기간)</h3>
+<p>1. <strong>계약 기간:</strong> ${startDate} ~ ${endDate} (${periodMonths}개월)<br>
+2. <strong>자동 갱신:</strong> ${autoRenewal ? '본 계약은 만료일 30일 전까지 어느 일방이 서면으로 해지 의사를 통보하지 않는 한, 동일 조건으로 1년간 자동 갱신된다.' : '본 계약은 자동 갱신되지 않으며, 갱신 시 별도 합의가 필요하다.'}</p>
+
+<h3>제6조 (비밀유지)</h3>
+<p>1. 갑과 을은 본 계약의 이행 과정에서 알게 된 상대방의 영업비밀, 고객정보 등을 제3자에게 누설하거나 본 계약 이외의 목적으로 사용하지 아니한다.<br>
+2. 본 조의 의무는 계약 종료 후 2년간 유효하다.</p>
+
+<h3>제7조 (금지 행위)</h3>
+<p>을은 다음 각 호의 행위를 하여서는 아니 된다:<br>
+1. 갑의 서비스에 대한 허위 또는 과장 안내<br>
+2. 고객 정보의 허위 등록 또는 위·변조<br>
+3. 고객에게 별도의 수수료, 사례금 등을 요구하는 행위<br>
+4. 갑의 사전 동의 없이 갑의 상호, 로고 등을 사용하는 행위<br>
+5. 기타 갑의 신뢰와 명예를 훼손하는 행위</p>
+
+<h3>제8조 (계약 해지)</h3>
+<p>1. 갑 또는 을은 상대방에게 30일 전 서면 통보로 본 계약을 해지할 수 있다.<br>
+2. 다음 각 호에 해당하는 경우 갑은 별도 통보 없이 즉시 계약을 해지할 수 있다:<br>
+&nbsp;&nbsp;가. 을이 제7조의 금지 행위를 한 경우<br>
+&nbsp;&nbsp;나. 을이 파산, 회생절차 개시 등 정상적 영업이 불가능한 경우<br>
+&nbsp;&nbsp;다. 을이 본 계약의 중대한 조항을 위반한 경우<br>
+3. 해지 시 이미 성사된 거래에 대한 수수료는 정상 지급한다.</p>
+
+<h3>제9조 (손해배상)</h3>
+<p>갑 또는 을이 본 계약을 위반하여 상대방에게 손해를 입힌 경우, 그 손해를 배상할 책임을 진다.</p>
+
+<h3>제10조 (독립 당사자 관계)</h3>
+<p>을은 갑의 직원, 대리인이 아닌 독립된 사업자이며, 을의 영업 활동에 따른 비용, 세금 등은 을이 부담한다.</p>
+
+<h3>제11조 (분쟁 해결)</h3>
+<p>본 계약과 관련하여 발생하는 분쟁은 서울중앙지방법원을 관할법원으로 한다.</p>
+
+<h3>제12조 (기타)</h3>
+<p>1. 본 계약에 명시되지 아니한 사항은 갑과 을이 상호 협의하여 결정한다.<br>
+2. 본 계약의 수정 또는 변경은 양 당사자의 서면 합의에 의해서만 효력을 갖는다.</p>
+
+<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 13px;">
+    <p>본 계약의 체결을 증명하기 위해 본 계약서를 작성한다.</p>
+    <p style="margin-top: 16px;">${startDate}</p>
+</div>
+`;
+}
+
+function getBankLabel(code) {
+    const labels = { kb: 'KB국민', shinhan: '신한', woori: '우리', hana: '하나', nh: 'NH농협', ibk: 'IBK기업', kakao: '카카오뱅크', toss: '토스뱅크', other: '기타' };
+    return labels[code] || code || '';
+}
+
+async function createContract() {
+    if (!currentContractPartnerId) return;
+
+    const rate = Number(document.getElementById('contractRate').value) / 100;
+    const periodMonths = parseInt(document.getElementById('contractPeriod').value);
+    const startDate = document.getElementById('contractStartDate').value;
+    const endDate = document.getElementById('contractEndDate').value;
+    const autoRenewal = document.getElementById('contractAutoRenewal').checked;
+    const adminNotes = document.getElementById('contractAdminNotes').value.trim() || null;
+
+    if (!startDate || !endDate) {
+        showToast('시작일을 입력하세요.', 'error');
+        return;
+    }
+    if (rate <= 0 || rate > 1) {
+        showToast('수수료율을 올바르게 입력하세요. (0~100%)', 'error');
+        return;
+    }
+
+    try {
+        // 계약번호 채번
+        const { data: numData, error: numError } = await sb.rpc('generate_contract_number');
+        if (numError) throw numError;
+        const contractNumber = numData;
+
+        // 파트너 정보 조회
+        const { data: partner } = await sb.from('partners').select('*').eq('id', currentContractPartnerId).single();
+        if (!partner) throw new Error('파트너 정보를 찾을 수 없습니다.');
+
+        // 계약서 본문 생성
+        const contractBody = generateContractBody(partner, {
+            commissionRate: rate,
+            startDate,
+            endDate,
+            autoRenewal,
+            periodMonths
+        });
+
+        // DB 삽입
+        const { data: contract, error: insertError } = await sb.from('partner_contracts').insert({
+            contract_number: contractNumber,
+            partner_id: currentContractPartnerId,
+            commission_rate: rate,
+            contract_period_months: periodMonths,
+            start_date: startDate,
+            end_date: endDate,
+            auto_renewal: autoRenewal,
+            contract_body: contractBody,
+            status: 'draft',
+            admin_notes: adminNotes,
+            created_by: currentUser.id
+        }).select().single();
+
+        if (insertError) throw insertError;
+
+        // 상태 로그 기록
+        await sb.from('contract_status_logs').insert({
+            contract_id: contract.id,
+            from_status: null,
+            to_status: 'draft',
+            changed_by: currentUser.id,
+            notes: '계약서 신규 생성'
+        });
+
+        showToast(`계약서 ${contractNumber}이(가) 생성되었습니다.`, 'success');
+        cancelContractForm();
+        loadContracts(currentContractPartnerId);
+    } catch (err) {
+        console.error('Create contract error:', err);
+        showToast('계약서 생성 실패: ' + err.message, 'error');
+    }
+}
+
+async function previewContract(contractId) {
+    currentContractId = contractId;
+
+    try {
+        const { data, error } = await sb.from('partner_contracts').select('*').eq('id', contractId).single();
+        if (error) throw error;
+
+        document.getElementById('contractPreviewTitle').textContent = `계약서 미리보기 — ${data.contract_number}`;
+        document.getElementById('contractPreviewBody').innerHTML = data.contract_body || '<p style="color:var(--gray-500);">계약서 본문이 없습니다.</p>';
+
+        // 상태 select 설정
+        const statusSelect = document.getElementById('contractStatusSelect');
+        const allowed = CONTRACT_TRANSITIONS[data.status] || [];
+
+        statusSelect.innerHTML = `<option value="${data.status}">${getContractStatusLabel(data.status)} (현재)</option>`;
+        allowed.forEach(s => {
+            statusSelect.innerHTML += `<option value="${s}">${getContractStatusLabel(s)}</option>`;
+        });
+        statusSelect.value = data.status;
+
+        document.getElementById('contractPreviewModal').classList.add('active');
+    } catch (err) {
+        console.error('Preview contract error:', err);
+        showToast('계약서를 불러올 수 없습니다.', 'error');
+    }
+}
+
+async function updateContractStatus() {
+    if (!currentContractId) return;
+
+    const newStatus = document.getElementById('contractStatusSelect').value;
+
+    try {
+        // 현재 계약 상태 확인
+        const { data: contract, error: fetchError } = await sb.from('partner_contracts').select('status').eq('id', currentContractId).single();
+        if (fetchError) throw fetchError;
+
+        const currentStatus = contract.status;
+        if (currentStatus === newStatus) {
+            showToast('상태가 동일합니다.', 'error');
+            return;
+        }
+
+        // 전이 유효성 검사
+        const allowed = CONTRACT_TRANSITIONS[currentStatus] || [];
+        if (!allowed.includes(newStatus)) {
+            showToast(`${getContractStatusLabel(currentStatus)} → ${getContractStatusLabel(newStatus)} 전환은 허용되지 않습니다.`, 'error');
+            return;
+        }
+
+        const updateData = { status: newStatus };
+        if (newStatus === 'terminated') {
+            updateData.terminated_at = new Date().toISOString();
+            updateData.terminated_by = currentUser.id;
+        }
+
+        const { error: updateError } = await sb.from('partner_contracts').update(updateData).eq('id', currentContractId);
+        if (updateError) throw updateError;
+
+        // 상태 로그 기록
+        await sb.from('contract_status_logs').insert({
+            contract_id: currentContractId,
+            from_status: currentStatus,
+            to_status: newStatus,
+            changed_by: currentUser.id
+        });
+
+        showToast(`상태가 ${getContractStatusLabel(newStatus)}(으)로 변경되었습니다.`, 'success');
+        document.getElementById('contractPreviewModal').classList.remove('active');
+        if (currentContractPartnerId) loadContracts(currentContractPartnerId);
+    } catch (err) {
+        console.error('Update contract status error:', err);
+        showToast('상태 변경 실패: ' + err.message, 'error');
+    }
+}
+
+async function deleteContract(contractId) {
+    if (!confirm('이 계약서를 삭제하시겠습니까?')) return;
+
+    try {
+        // draft/sent 상태만 삭제 가능
+        const { data: contract } = await sb.from('partner_contracts').select('status').eq('id', contractId).single();
+        if (!['draft', 'sent'].includes(contract?.status)) {
+            showToast('작성중 또는 발송 상태의 계약만 삭제할 수 있습니다.', 'error');
+            return;
+        }
+
+        const { error } = await sb.from('partner_contracts').delete().eq('id', contractId);
+        if (error) throw error;
+
+        showToast('계약서가 삭제되었습니다.', 'success');
+        if (currentContractPartnerId) loadContracts(currentContractPartnerId);
+    } catch (err) {
+        console.error('Delete contract error:', err);
+        showToast('삭제 실패: ' + err.message, 'error');
+    }
+}
+
+async function terminateContract(contractId) {
+    const reason = prompt('해지 사유를 입력하세요:');
+    if (reason === null) return;
+    if (!reason.trim()) {
+        showToast('해지 사유를 입력하세요.', 'error');
+        return;
+    }
+
+    try {
+        const { data: contract } = await sb.from('partner_contracts').select('status').eq('id', contractId).single();
+        if (!contract || contract.status === 'terminated') {
+            showToast('이미 해지된 계약입니다.', 'error');
+            return;
+        }
+
+        const fromStatus = contract.status;
+
+        const { error } = await sb.from('partner_contracts').update({
+            status: 'terminated',
+            terminated_at: new Date().toISOString(),
+            terminated_by: currentUser.id,
+            termination_reason: reason.trim()
+        }).eq('id', contractId);
+
+        if (error) throw error;
+
+        await sb.from('contract_status_logs').insert({
+            contract_id: contractId,
+            from_status: fromStatus,
+            to_status: 'terminated',
+            changed_by: currentUser.id,
+            notes: '해지 사유: ' + reason.trim()
+        });
+
+        showToast('계약이 해지되었습니다.', 'success');
+        if (currentContractPartnerId) loadContracts(currentContractPartnerId);
+    } catch (err) {
+        console.error('Terminate contract error:', err);
+        showToast('해지 실패: ' + err.message, 'error');
+    }
+}
+
+async function loadPartnerRecentContracts(partnerId) {
+    const area = document.getElementById('partnerContractsArea');
+    if (!area) return;
+
+    try {
+        const { data, error } = await sb
+            .from('partner_contracts')
+            .select('contract_number, start_date, end_date, commission_rate, status')
+            .eq('partner_id', partnerId)
+            .order('created_at', { ascending: false })
+            .limit(3);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            area.innerHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">최근 계약</span>
+                    <span class="detail-value" style="color:var(--gray-500);">계약 이력 없음</span>
+                </div>
+                <div style="margin-top:8px;">
+                    <button class="btn btn-outline btn-sm" onclick="closeModal(); openContractManager(${partnerId});">계약 관리</button>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div style="font-size:13px;font-weight:600;color:var(--gray-500);margin-bottom:8px;">최근 계약</div>';
+        html += data.map(c => `
+            <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px;">
+                <span style="font-weight:600;">${escapeHtml(c.contract_number)}</span>
+                <span>${c.start_date} ~ ${c.end_date}</span>
+                <span>${(Number(c.commission_rate) * 100).toFixed(2)}%</span>
+                <span class="contract-status ${c.status}">${getContractStatusLabel(c.status)}</span>
+            </div>
+        `).join('');
+        html += `<div style="margin-top:8px;">
+            <button class="btn btn-outline btn-sm" onclick="closeModal(); openContractManager(${partnerId});">전체 계약 관리</button>
+        </div>`;
+
+        area.innerHTML = html;
+    } catch (err) {
+        console.error('Load recent contracts error:', err);
+        area.innerHTML = '';
+    }
+}
 
 function debounce(func, wait) {
     let timeout;
