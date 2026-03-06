@@ -125,3 +125,8 @@ CREATE POLICY "Allow authenticated full access on contract_status_logs"
     TO authenticated
     USING (true)
     WITH CHECK (true);
+
+-- 7. 서명 관련 컬럼 추가
+ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS signer_name VARCHAR(50);
+ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS signed_at TIMESTAMPTZ;
+ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS signature_data TEXT;

@@ -6,6 +6,7 @@
     <title>관리자 페이지 | 메디플라톤</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1428A0;
@@ -381,6 +382,9 @@
         .contract-body-preview h3 { font-size: 15px; margin: 20px 0 8px; color: var(--primary); }
         .contract-body-preview p { margin-bottom: 8px; }
         .contract-body-preview .parties { margin: 20px 0; padding: 16px; background: var(--gray-50); border-radius: var(--radius); }
+        .signature-display { margin-top: 24px; padding: 20px; border-top: 2px solid var(--gray-300); background: #FFFEF5; border-radius: var(--radius); }
+        .signature-display .signer-name { font-family: 'Nanum Pen Script', cursive; font-size: 28px; color: #1a1a1a; }
+        .signature-display .signed-date { font-size: 13px; color: var(--gray-500); margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -601,6 +605,9 @@
                 </button>
                 <button class="tab-btn" data-tab="board-manage">
                     게시판 관리
+                </button>
+                <button class="tab-btn" data-tab="new-clinics">
+                    신규 개원
                 </button>
             </div>
 
@@ -969,7 +976,211 @@
                 </div>
             </div>
 
+            <!-- New Clinics Section -->
+            <div class="data-section" id="newClinicsSection" style="display: none;">
+                <div class="data-header">
+                    <h2>신규 개원 의료기관 관리</h2>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-primary btn-sm" id="syncHiraBtn">공공데이터 동기화</button>
+                        <button class="btn btn-outline btn-sm" id="openNewClinicFormBtn">수동 등록</button>
+                        <button class="btn btn-outline btn-sm" id="csvUploadClinicBtn">CSV 업로드</button>
+                        <button class="btn btn-outline btn-sm" id="exportClinicsBtn">CSV 내보내기</button>
+                    </div>
+                </div>
+
+                <!-- HIRA Sync Status -->
+                <div id="hiraSyncStatus" style="display:none;padding:12px 16px;margin-bottom:16px;border-radius:8px;background:var(--primary-light);color:var(--primary);font-size:14px;"></div>
+
+                <!-- Filters -->
+                <div class="data-filters" style="margin-bottom:16px;">
+                    <select class="filter-select" id="ncRegionFilter">
+                        <option value="">전체 지역</option>
+                        <option value="seoul">서울</option>
+                        <option value="gyeonggi">경기</option>
+                        <option value="incheon">인천</option>
+                        <option value="busan">부산</option>
+                        <option value="daegu">대구</option>
+                        <option value="daejeon">대전</option>
+                        <option value="gwangju">광주</option>
+                        <option value="ulsan">울산</option>
+                        <option value="sejong">세종</option>
+                        <option value="gangwon">강원</option>
+                        <option value="chungbuk">충북</option>
+                        <option value="chungnam">충남</option>
+                        <option value="jeonbuk">전북</option>
+                        <option value="jeonnam">전남</option>
+                        <option value="gyeongbuk">경북</option>
+                        <option value="gyeongnam">경남</option>
+                        <option value="jeju">제주</option>
+                    </select>
+                    <select class="filter-select" id="ncSpecialtyFilter">
+                        <option value="">전체 진료과</option>
+                        <option value="내과">내과</option>
+                        <option value="외과">외과</option>
+                        <option value="정형외과">정형외과</option>
+                        <option value="피부과">피부과</option>
+                        <option value="안과">안과</option>
+                        <option value="이비인후과">이비인후과</option>
+                        <option value="산부인과">산부인과</option>
+                        <option value="소아청소년과">소아청소년과</option>
+                        <option value="비뇨의학과">비뇨의학과</option>
+                        <option value="신경외과">신경외과</option>
+                        <option value="성형외과">성형외과</option>
+                        <option value="재활의학과">재활의학과</option>
+                        <option value="가정의학과">가정의학과</option>
+                        <option value="치과">치과</option>
+                        <option value="한의원">한의원</option>
+                        <option value="약국">약국</option>
+                    </select>
+                    <select class="filter-select" id="ncClaimFilter">
+                        <option value="">전체 상태</option>
+                        <option value="unclaimed">미선점</option>
+                        <option value="claimed">선점됨</option>
+                        <option value="contacted">컨택 완료</option>
+                        <option value="converted">고객 전환</option>
+                    </select>
+                    <input type="text" class="filter-search" id="ncSearch" placeholder="기관명/주소 검색...">
+                </div>
+
+                <!-- Table -->
+                <div class="loading" id="ncLoading" style="display:none;"><div class="spinner"></div></div>
+                <table class="data-table" id="ncTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>의료기관명</th>
+                            <th>대표자</th>
+                            <th>진료과</th>
+                            <th>지역</th>
+                            <th>개설일</th>
+                            <th>선점 상태</th>
+                            <th>선점 파트너</th>
+                            <th>출처</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ncTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="ncEmpty" style="display:none;">
+                    <h3>등록된 신규 개원 의료기관이 없습니다</h3>
+                </div>
+            </div>
+
         </main>
+    </div>
+
+    <!-- New Clinic Form Modal -->
+    <div class="modal-overlay" id="newClinicModal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <h3 id="newClinicModalTitle">신규 개원 등록</h3>
+                <button class="modal-close" onclick="document.getElementById('newClinicModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newClinicForm">
+                    <div class="form-group">
+                        <label>의료기관명 *</label>
+                        <input type="text" id="ncClinicName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>대표자명</label>
+                        <input type="text" id="ncRepName">
+                    </div>
+                    <div class="form-group">
+                        <label>진료과목</label>
+                        <input type="text" id="ncSpecialty" placeholder="예: 내과, 정형외과">
+                    </div>
+                    <div class="form-group">
+                        <label>주소</label>
+                        <input type="text" id="ncAddress">
+                    </div>
+                    <div class="form-group">
+                        <label>지역</label>
+                        <select id="ncRegion">
+                            <option value="">선택</option>
+                            <option value="seoul">서울</option>
+                            <option value="gyeonggi">경기</option>
+                            <option value="incheon">인천</option>
+                            <option value="busan">부산</option>
+                            <option value="daegu">대구</option>
+                            <option value="daejeon">대전</option>
+                            <option value="gwangju">광주</option>
+                            <option value="ulsan">울산</option>
+                            <option value="sejong">세종</option>
+                            <option value="gangwon">강원</option>
+                            <option value="chungbuk">충북</option>
+                            <option value="chungnam">충남</option>
+                            <option value="jeonbuk">전북</option>
+                            <option value="jeonnam">전남</option>
+                            <option value="gyeongbuk">경북</option>
+                            <option value="gyeongnam">경남</option>
+                            <option value="jeju">제주</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>개설일자</label>
+                        <input type="date" id="ncOpeningDate">
+                    </div>
+                    <div class="form-group">
+                        <label>전화번호</label>
+                        <input type="tel" id="ncPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>HIRA 요양기관기호</label>
+                        <input type="text" id="ncHiraCode" placeholder="선택사항">
+                    </div>
+                    <div class="form-group">
+                        <label>관리자 메모</label>
+                        <textarea id="ncAdminNotes" rows="2"></textarea>
+                    </div>
+                    <input type="hidden" id="ncEditId" value="">
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:12px;">저장</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSV Upload Modal -->
+    <div class="modal-overlay" id="csvClinicModal">
+        <div class="modal" style="max-width:700px;">
+            <div class="modal-header">
+                <h3>CSV 일괄 업로드</h3>
+                <button class="modal-close" onclick="document.getElementById('csvClinicModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:12px;color:var(--gray-500);font-size:14px;">
+                    CSV 파일 형식: 의료기관명, 대표자명, 진료과목, 주소, 지역코드, 개설일(YYYY-MM-DD), 전화번호, 요양기관기호(선택)
+                </p>
+                <input type="file" id="csvClinicFile" accept=".csv" style="margin-bottom:16px;">
+                <div id="csvPreviewArea" style="display:none;">
+                    <h4 style="margin-bottom:8px;">미리보기 (최대 10건)</h4>
+                    <div style="overflow-x:auto;max-height:300px;overflow-y:auto;">
+                        <table class="data-table" id="csvPreviewTable">
+                            <thead><tr>
+                                <th>의료기관명</th><th>대표자</th><th>진료과</th><th>주소</th><th>지역</th><th>개설일</th><th>전화번호</th><th>기호</th>
+                            </tr></thead>
+                            <tbody id="csvPreviewBody"></tbody>
+                        </table>
+                    </div>
+                    <p id="csvTotalCount" style="margin-top:8px;font-size:14px;color:var(--gray-500);"></p>
+                    <button class="btn btn-primary" id="csvImportBtn" style="margin-top:12px;width:100%;">일괄 등록</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Clinic Detail Modal -->
+    <div class="modal-overlay" id="clinicDetailModal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <h3>신규 개원 상세</h3>
+                <button class="modal-close" onclick="document.getElementById('clinicDetailModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body" id="clinicDetailBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="document.getElementById('clinicDetailModal').classList.remove('active')">닫기</button>
+                <button class="btn btn-danger btn-sm" id="deleteClinicBtn" style="display:none;">삭제</button>
+            </div>
+        </div>
     </div>
 
     <!-- Detail Modal -->
@@ -1149,6 +1360,60 @@
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px;">등록</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approve & Contract Settings Modal -->
+    <div class="modal-overlay" id="approveContractModal">
+        <div class="modal" style="max-width: 520px;">
+            <div class="modal-header">
+                <h3>파트너 승인 및 계약 조건 설정</h3>
+                <button class="modal-close" onclick="document.getElementById('approveContractModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="background:var(--primary-light);padding:16px;border-radius:var(--radius);margin-bottom:20px;">
+                    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;" id="approvePartnerInfo">-</div>
+                    <div style="font-size:13px;color:var(--gray-500);">승인과 동시에 아래 조건으로 계약서가 생성됩니다.</div>
+                </div>
+                <div class="form-group">
+                    <label style="display:block;font-size:14px;font-weight:500;margin-bottom:8px;color:var(--gray-700);">수수료율 (%)</label>
+                    <div style="position:relative;">
+                        <input type="number" id="approveContractRate" step="0.01" value="1.50" min="0.01" max="100" style="width:100%;padding:12px 16px;padding-right:40px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                        <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gray-500);font-size:14px;">%</span>
+                    </div>
+                    <div style="font-size:12px;color:var(--gray-400);margin-top:4px;">파트너에게 지급할 수수료율을 설정하세요.</div>
+                </div>
+                <div class="form-group" style="margin-top:16px;">
+                    <label style="display:block;font-size:14px;font-weight:500;margin-bottom:8px;color:var(--gray-700);">계약 기간</label>
+                    <select id="approveContractPeriod" style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                        <option value="6">6개월</option>
+                        <option value="12" selected>12개월</option>
+                        <option value="24">24개월</option>
+                        <option value="36">36개월</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top:16px;">
+                    <label style="display:block;font-size:14px;font-weight:500;margin-bottom:8px;color:var(--gray-700);">시작일</label>
+                    <input type="date" id="approveContractStartDate" style="width:100%;padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;">
+                </div>
+                <div class="form-group" style="margin-top:16px;">
+                    <label style="font-size:14px;font-weight:500;color:var(--gray-700);display:flex;align-items:center;gap:8px;">
+                        <input type="checkbox" id="approveContractAutoRenewal" checked style="width:18px;height:18px;">
+                        자동 갱신
+                    </label>
+                </div>
+                <div class="form-group" style="margin-top:16px;">
+                    <label style="font-size:14px;font-weight:500;color:var(--gray-700);display:flex;align-items:center;gap:8px;">
+                        <input type="checkbox" id="approveContractAutoSend" checked style="width:18px;height:18px;">
+                        생성 후 즉시 파트너에게 발송
+                    </label>
+                    <div style="font-size:12px;color:var(--gray-400);margin-top:4px;margin-left:26px;">체크 해제 시 초안(draft)으로 저장되며, 계약 관리에서 수동 발송할 수 있습니다.</div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:24px;">
+                    <button class="btn btn-primary" id="confirmApproveContractBtn" style="flex:1;">승인 및 계약서 생성</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('approveContractModal').classList.remove('active')" style="flex:0 0 auto;">취소</button>
+                </div>
             </div>
         </div>
     </div>

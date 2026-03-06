@@ -131,6 +131,19 @@ function setupEventListeners() {
             autoCalcCommission();
         }
     });
+
+    // New Clinics
+    document.getElementById('syncHiraBtn').addEventListener('click', syncHiraData);
+    document.getElementById('openNewClinicFormBtn').addEventListener('click', () => openNewClinicForm());
+    document.getElementById('csvUploadClinicBtn').addEventListener('click', () => document.getElementById('csvClinicModal').classList.add('active'));
+    document.getElementById('exportClinicsBtn').addEventListener('click', exportClinicsCSV);
+    document.getElementById('newClinicForm').addEventListener('submit', handleNewClinicSubmit);
+    document.getElementById('csvClinicFile').addEventListener('change', handleCsvClinicPreview);
+    document.getElementById('csvImportBtn').addEventListener('click', handleCsvClinicImport);
+    document.getElementById('ncRegionFilter').addEventListener('change', loadAdminNewClinics);
+    document.getElementById('ncSpecialtyFilter').addEventListener('change', loadAdminNewClinics);
+    document.getElementById('ncClaimFilter').addEventListener('change', loadAdminNewClinics);
+    document.getElementById('ncSearch').addEventListener('input', debounce(loadAdminNewClinics, 300));
 }
 
 // ─── Auth ───
@@ -399,6 +412,7 @@ function switchTab(tab) {
     document.getElementById('adminSettlementsSection').style.display = tab === 'admin-settlements' ? 'block' : 'none';
     document.getElementById('partnerQnaSection').style.display = tab === 'partner-qna' ? 'block' : 'none';
     document.getElementById('boardManageSection').style.display = tab === 'board-manage' ? 'block' : 'none';
+    document.getElementById('newClinicsSection').style.display = tab === 'new-clinics' ? 'block' : 'none';
 
     if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'partners') loadPartners();
@@ -412,6 +426,7 @@ function switchTab(tab) {
         window._qnaInitialized = true;
     }
     if (tab === 'board-manage') loadAdminBoardPosts();
+    if (tab === 'new-clinics') loadAdminNewClinics();
 }
 
 // ─── Consultations ───
@@ -484,7 +499,7 @@ async function loadPartners() {
     empty.style.display = 'none';
 
     try {
-        let query = sb.from('partners').select('*').order('created_at', { ascending: false });
+        let query = sb.from('partners').select('*, partner_contracts(status)').order('created_at', { ascending: false });
 
         const statusFilter = document.getElementById('partnerStatusFilter').value;
         if (statusFilter !== 'all') query = query.eq('status', statusFilter);
@@ -505,6 +520,16 @@ async function loadPartners() {
         table.style.display = 'table';
         tbody.innerHTML = data.map(row => {
             const needsAction = ['new', 'pending', 'reviewing'].includes(row.status);
+
+            // 계약 상태 배지 생성
+            let contractBadge = '';
+            if (row.status === 'approved' && row.partner_contracts && row.partner_contracts.length > 0) {
+                const contractStatuses = row.partner_contracts.map(c => c.status);
+                const priorityOrder = ['active', 'signed', 'sent', 'draft', 'expired', 'terminated'];
+                const topStatus = priorityOrder.find(s => contractStatuses.includes(s)) || contractStatuses[0];
+                contractBadge = `<span class="contract-status ${topStatus}" style="font-size:11px;margin-left:4px;">${getContractStatusLabel(topStatus)}</span>`;
+            }
+
             return `
                 <tr>
                     <td>${formatDate(row.created_at)}</td>
@@ -513,7 +538,7 @@ async function loadPartners() {
                     <td>${escapeHtml(row.hospital_name || '-')}</td>
                     <td>${getBusinessLabel(row.business)}</td>
                     <td>${getRegionLabel(row.region)}</td>
-                    <td><span class="status-badge status-${row.status}">${getPartnerStatusLabel(row.status)}</span></td>
+                    <td><span class="status-badge status-${row.status}">${getPartnerStatusLabel(row.status)}</span>${contractBadge}</td>
                     <td>
                         <div class="action-btns">
                             <button class="action-btn view" onclick="viewPartner(${row.id})">상세</button>
@@ -537,41 +562,160 @@ async function loadPartners() {
 // ─── Partner Approve / Reject ───
 
 async function approvePartner(id) {
-    if (!confirm('이 파트너를 승인하시겠습니까?')) return;
+    // 파트너 정보 조회 후 모달 표시
+    const { data: partner } = await sb.from('partners').select('*').eq('id', id).single();
+    if (!partner) { showToast('파트너 정보를 불러올 수 없습니다.', 'error'); return; }
 
-    try {
-        // Get partner's user_id for notification
-        const { data: partner } = await sb.from('partners').select('user_id, name').eq('id', id).single();
+    // 모달 초기값 설정
+    document.getElementById('approvePartnerInfo').textContent = `${partner.name}${partner.hospital_name ? ' / ' + partner.hospital_name : ''}`;
+    document.getElementById('approveContractRate').value = partner.commission_rate ? (Number(partner.commission_rate) * 100).toFixed(2) : '1.50';
+    document.getElementById('approveContractPeriod').value = '12';
+    document.getElementById('approveContractStartDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('approveContractAutoRenewal').checked = true;
+    document.getElementById('approveContractAutoSend').checked = true;
 
-        const { error } = await sb
-            .from('partners')
-            .update({
-                status: 'approved',
-                approved_at: new Date().toISOString(),
-                approved_by: currentUser.id,
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', id);
+    // 모달 열기
+    document.getElementById('approveContractModal').classList.add('active');
 
-        if (error) throw error;
+    // 제출 핸들러 (매번 새로 바인딩)
+    const confirmBtn = document.getElementById('confirmApproveContractBtn');
+    const newBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
 
-        // Send notification if partner has user_id
-        if (partner?.user_id) {
-            await sb.rpc('create_notification', {
-                p_user_id: partner.user_id,
-                p_type: 'partner_approved',
-                p_title: '파트너 승인 완료',
-                p_message: `${partner.name}님의 파트너 가입이 승인되었습니다. 파트너 대시보드를 이용하실 수 있습니다.`
+    newBtn.addEventListener('click', async () => {
+        newBtn.disabled = true;
+        newBtn.textContent = '처리 중...';
+
+        try {
+            // 1. 파트너 승인
+            const { error } = await sb
+                .from('partners')
+                .update({
+                    status: 'approved',
+                    approved_at: new Date().toISOString(),
+                    approved_by: currentUser.id,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            // 2. 승인 알림
+            if (partner.user_id) {
+                await sb.rpc('create_notification', {
+                    p_user_id: partner.user_id,
+                    p_type: 'partner_approved',
+                    p_title: '파트너 승인 완료',
+                    p_message: `${partner.name}님의 파트너 가입이 승인되었습니다. 파트너 대시보드를 이용하실 수 있습니다.`
+                });
+            }
+
+            // 3. 모달에서 입력한 조건으로 계약서 생성
+            const ratePercent = Number(document.getElementById('approveContractRate').value);
+            const periodMonths = parseInt(document.getElementById('approveContractPeriod').value);
+            const startDate = document.getElementById('approveContractStartDate').value;
+            const autoRenewal = document.getElementById('approveContractAutoRenewal').checked;
+            const autoSend = document.getElementById('approveContractAutoSend').checked;
+
+            if (!startDate || ratePercent <= 0 || ratePercent > 100) {
+                showToast('파트너는 승인되었습니다. 계약 조건을 확인 후 계약 관리에서 수동 생성하세요.', 'warning');
+                document.getElementById('approveContractModal').classList.remove('active');
+                loadPartners(); loadStats(); loadPartnersCache();
+                return;
+            }
+
+            const contract = await autoCreateDraftContract(id, {
+                rate: ratePercent / 100,
+                periodMonths,
+                startDate,
+                autoRenewal
             });
-        }
 
-        showToast('파트너가 승인되었습니다.', 'success');
-        loadPartners();
-        loadStats();
-        loadPartnersCache();
-    } catch (error) {
-        showToast('승인 실패: ' + error.message, 'error');
+            if (contract) {
+                if (autoSend) {
+                    // 즉시 발송 (confirm 없이)
+                    await quickSendContractSilent(contract.id);
+                    showToast(`파트너 승인 + 계약서(${contract.contract_number}) 발송 완료`, 'success');
+                } else {
+                    showToast(`파트너 승인 + 계약서(${contract.contract_number}) 생성 완료 (초안)`, 'success');
+                }
+            } else {
+                showToast('파트너가 승인되었습니다. (기존 계약 존재로 자동 생성 생략)', 'success');
+            }
+
+            document.getElementById('approveContractModal').classList.remove('active');
+            loadPartners();
+            loadStats();
+            loadPartnersCache();
+        } catch (err) {
+            showToast('승인 실패: ' + err.message, 'error');
+        } finally {
+            newBtn.disabled = false;
+            newBtn.textContent = '승인 및 계약서 생성';
+        }
+    });
+}
+
+async function approvePartnerContractOnly(partnerId, partner) {
+    // 이미 승인된 파트너에 대해 계약 조건 설정 모달만 열기
+    if (!partner) {
+        const { data } = await sb.from('partners').select('*').eq('id', partnerId).single();
+        partner = data;
     }
+    if (!partner) { showToast('파트너 정보를 불러올 수 없습니다.', 'error'); return; }
+
+    document.getElementById('approvePartnerInfo').textContent = `${partner.name}${partner.hospital_name ? ' / ' + partner.hospital_name : ''}`;
+    document.getElementById('approveContractRate').value = partner.commission_rate ? (Number(partner.commission_rate) * 100).toFixed(2) : '1.50';
+    document.getElementById('approveContractPeriod').value = '12';
+    document.getElementById('approveContractStartDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('approveContractAutoRenewal').checked = true;
+    document.getElementById('approveContractAutoSend').checked = true;
+
+    document.getElementById('approveContractModal').classList.add('active');
+
+    const confirmBtn = document.getElementById('confirmApproveContractBtn');
+    const newBtn = confirmBtn.cloneNode(true);
+    newBtn.textContent = '계약서 생성';
+    confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+    newBtn.addEventListener('click', async () => {
+        newBtn.disabled = true;
+        newBtn.textContent = '처리 중...';
+
+        try {
+            const ratePercent = Number(document.getElementById('approveContractRate').value);
+            const periodMonths = parseInt(document.getElementById('approveContractPeriod').value);
+            const startDate = document.getElementById('approveContractStartDate').value;
+            const autoRenewal = document.getElementById('approveContractAutoRenewal').checked;
+            const autoSend = document.getElementById('approveContractAutoSend').checked;
+
+            const contract = await autoCreateDraftContract(partnerId, {
+                rate: ratePercent / 100,
+                periodMonths,
+                startDate,
+                autoRenewal
+            });
+
+            if (contract) {
+                if (autoSend) {
+                    await quickSendContractSilent(contract.id);
+                    showToast(`계약서(${contract.contract_number}) 발송 완료`, 'success');
+                } else {
+                    showToast(`계약서(${contract.contract_number}) 생성 완료 (초안)`, 'success');
+                }
+            } else {
+                showToast('기존 계약이 존재하여 자동 생성이 생략되었습니다.', 'success');
+            }
+
+            document.getElementById('approveContractModal').classList.remove('active');
+            loadPartners();
+        } catch (err) {
+            showToast('계약서 생성 실패: ' + err.message, 'error');
+        } finally {
+            newBtn.disabled = false;
+            newBtn.textContent = '계약서 생성';
+        }
+    });
 }
 
 function openRejectModal(id) {
@@ -927,7 +1071,32 @@ async function saveStatus() {
         const { error } = await sb.from(table).update(updateData).eq('id', currentDetailId);
         if (error) throw error;
 
-        showToast('상태가 저장되었습니다.', 'success');
+        // 파트너 승인 시 → 상세 모달 닫고, 계약 조건 설정 모달 열기
+        if (currentDetailType === 'partner' && newStatus === 'approved') {
+            const partnerId = currentDetailId;
+
+            // 알림 발송
+            const { data: partner } = await sb.from('partners').select('user_id, name').eq('id', partnerId).single();
+            if (partner?.user_id) {
+                await sb.rpc('create_notification', {
+                    p_user_id: partner.user_id,
+                    p_type: 'partner_approved',
+                    p_title: '파트너 승인 완료',
+                    p_message: `${partner.name}님의 파트너 가입이 승인되었습니다. 파트너 대시보드를 이용하실 수 있습니다.`
+                });
+            }
+
+            showToast('파트너가 승인되었습니다. 계약 조건을 설정하세요.', 'success');
+            closeModal();
+            loadPartners(); loadPartnersCache(); loadStats();
+
+            // 계약 조건 설정 모달 열기 (approvePartner 로직 재사용)
+            approvePartnerContractOnly(partnerId, partner);
+            return;
+        } else {
+            showToast('상태가 저장되었습니다.', 'success');
+        }
+
         closeModal();
 
         if (currentDetailType === 'consultation') loadConsultations();
@@ -1814,6 +1983,7 @@ async function loadContracts(partnerId) {
                             <td>
                                 <div class="action-btns">
                                     <button class="action-btn view" onclick="previewContract(${c.id})">미리보기</button>
+                                    ${c.status === 'draft' ? `<button class="action-btn approve" onclick="quickSendContract(${c.id})">발송</button>` : ''}
                                     ${['draft', 'sent'].includes(c.status) ? `<button class="action-btn delete" onclick="deleteContract(${c.id})">삭제</button>` : ''}
                                     ${['active', 'signed', 'sent'].includes(c.status) ? `<button class="action-btn reject" onclick="terminateContract(${c.id})">해지</button>` : ''}
                                 </div>
@@ -1880,28 +2050,37 @@ function generateContractBody(partner, options) {
 <p>1. 갑의 서비스에 적합한 가맹점 후보 발굴 및 소개<br>
 2. 갑이 제공하는 파트너 대시보드를 통한 고객 정보 등록<br>
 3. 고객 초기 안내 및 필요 서류 수집 지원<br>
-4. 기타 갑이 서면으로 요청한 영업 관련 업무</p>
+4. 기타 갑이 서면으로 요청한 영업 관련 업무<br>
+5. 을은 갑이 제공하는 가이드라인 및 영업 매뉴얼을 준수하여야 한다.<br>
+6. 을은 갑의 사전 서면 동의 없이 본 계약상 업무를 제3자에게 재위탁할 수 없다.<br>
+7. 을은 갑이 승인한 자료 및 홍보물만을 사용하여야 한다.</p>
 
 <h3>제3조 (갑의 업무 범위)</h3>
 <p>1. 을이 소개한 고객에 대한 심사 및 서비스 제공<br>
 2. 을의 영업 활동에 필요한 자료 및 교육 지원<br>
 3. 파트너 대시보드를 통한 진행 상태 공유<br>
-4. 수수료의 정확한 산정 및 적시 지급</p>
+4. 수수료의 정확한 산정 및 적시 지급<br>
+5. 갑은 사업 환경의 변화에 따라 서비스의 범위, 내용 및 조건을 변경할 수 있으며, 이 경우 을에게 사전 통보한다.</p>
 
 <h3>제4조 (수수료)</h3>
 <p>1. <strong>수수료율:</strong> 성사된 거래 금액의 <strong>${ratePercent}%</strong><br>
 2. <strong>정산 주기:</strong> 매월 말일 마감, 익월 15일 지급<br>
 3. <strong>정산 계좌:</strong> ${bankInfo}<br>
 4. 수수료는 고객의 서비스가 정상 실행(PG 설치 완료 또는 대출 실행)된 건에 한해 발생한다.<br>
-5. 고객의 중도 해지, 미납 등으로 갑에 손해가 발생한 경우, 해당 건의 수수료는 조정될 수 있다.</p>
+5. 고객의 중도 해지, 미납 등으로 갑에 손해가 발생한 경우, 해당 건의 수수료는 조정될 수 있다.<br>
+6. 고객의 차지백(chargeback), 환불, 취소 등이 발생한 경우 해당 건에 대하여 이미 지급된 수수료를 환수할 수 있다.<br>
+7. 수수료에 대한 세금(부가가치세, 소득세 등)은 을이 부담하며, 갑은 관련 법령에 따라 원천징수할 수 있다.<br>
+8. 갑은 을에 대한 채권(환수금, 손해배상금 등)이 있는 경우 수수료에서 상계할 수 있다.</p>
 
 <h3>제5조 (계약 기간)</h3>
 <p>1. <strong>계약 기간:</strong> ${startDate} ~ ${endDate} (${periodMonths}개월)<br>
-2. <strong>자동 갱신:</strong> ${autoRenewal ? '본 계약은 만료일 30일 전까지 어느 일방이 서면으로 해지 의사를 통보하지 않는 한, 동일 조건으로 1년간 자동 갱신된다.' : '본 계약은 자동 갱신되지 않으며, 갱신 시 별도 합의가 필요하다.'}</p>
+2. <strong>자동 갱신:</strong> ${autoRenewal ? '본 계약은 만료일 전까지 어느 일방이 서면으로 해지 의사를 통보하지 않는 한, 동일 조건으로 1년간 자동 갱신된다. 다만, 갑은 만료일 30일 전까지, 을은 만료일 60일 전까지 통보하여야 한다.' : '본 계약은 자동 갱신되지 않으며, 갱신 시 별도 합의가 필요하다.'}</p>
 
 <h3>제6조 (비밀유지)</h3>
-<p>1. 갑과 을은 본 계약의 이행 과정에서 알게 된 상대방의 영업비밀, 고객정보 등을 제3자에게 누설하거나 본 계약 이외의 목적으로 사용하지 아니한다.<br>
-2. 본 조의 의무는 계약 종료 후 2년간 유효하다.</p>
+<p>1. 갑과 을은 본 계약의 이행 과정에서 알게 된 상대방의 영업비밀, 고객정보, 기술정보, 경영정보 등 일체의 비밀정보를 제3자에게 누설하거나 본 계약 이외의 목적으로 사용하지 아니한다.<br>
+2. 본 조의 의무는 계약 종료 후 3년간 유효하다.<br>
+3. 을이 본 조를 위반하는 경우 갑에게 위반 건당 금 1,000만 원의 위약벌을 지급하며, 이는 손해배상 청구권의 행사에 영향을 미치지 아니한다.<br>
+4. 계약 종료 시 을은 갑으로부터 제공받은 일체의 자료(사본 포함)를 반환하거나 폐기하고, 그 사실을 서면으로 확인하여야 한다.</p>
 
 <h3>제7조 (금지 행위)</h3>
 <p>을은 다음 각 호의 행위를 하여서는 아니 된다:<br>
@@ -1909,28 +2088,85 @@ function generateContractBody(partner, options) {
 2. 고객 정보의 허위 등록 또는 위·변조<br>
 3. 고객에게 별도의 수수료, 사례금 등을 요구하는 행위<br>
 4. 갑의 사전 동의 없이 갑의 상호, 로고 등을 사용하는 행위<br>
-5. 기타 갑의 신뢰와 명예를 훼손하는 행위</p>
+5. 갑의 서비스와 경쟁하는 타사 서비스를 갑의 고객에게 홍보·권유하는 행위<br>
+6. 갑을 통하지 아니하고 갑의 고객에게 직접 영업하거나 계약을 체결하는 행위<br>
+7. 갑, 갑의 서비스, 갑의 임직원 또는 다른 파트너를 비방하는 행위<br>
+8. 기타 갑의 신뢰와 명예를 훼손하는 행위</p>
 
-<h3>제8조 (계약 해지)</h3>
-<p>1. 갑 또는 을은 상대방에게 30일 전 서면 통보로 본 계약을 해지할 수 있다.<br>
+<h3>제8조 (지식재산권)</h3>
+<p>1. 본 계약의 이행과 관련하여 발생하는 모든 지식재산권(상표, 저작권, 노하우 등)은 갑에게 귀속된다.<br>
+2. 을이 본 계약 수행 과정에서 수집·생성한 고객 데이터 및 영업 자료에 대한 소유권은 갑에게 귀속된다.<br>
+3. 을은 갑의 지식재산(상표, 로고, 시스템, 콘텐츠 등)을 본 계약의 목적 범위 내에서만 사용할 수 있으며, 계약 종료 시 즉시 사용을 중단하여야 한다.</p>
+
+<h3>제9조 (경업금지 및 고객유인금지)</h3>
+<p>1. 을은 본 계약 기간 중 및 계약 종료 후 1년간, 갑의 사전 서면 동의 없이 갑의 서비스와 실질적으로 동일하거나 유사한 서비스에 관한 영업활동을 합리적 범위 내에서 제한받는다.<br>
+2. 을은 본 계약 기간 중 및 계약 종료 후 1년간, 갑의 기존 고객을 갑의 경쟁 서비스로 유인하거나 이탈을 권유하여서는 아니 된다.<br>
+3. 본 조 제1항의 제한은 을이 본 계약 체결 이전부터 영위하고 있던 기존 사업에는 적용되지 아니한다.</p>
+
+<h3>제10조 (수수료 조정)</h3>
+<p>1. 갑은 시장 환경, 경영 여건 등을 고려하여 수수료율을 조정할 수 있다.<br>
+2. 갑이 수수료율을 조정하는 경우, 변경일로부터 30일 전까지 을에게 서면(이메일 또는 파트너 대시보드 알림 포함)으로 통보하여야 한다.<br>
+3. 을은 변경된 수수료율에 이의가 있는 경우, 통보일로부터 14일 이내에 서면으로 이의를 제기할 수 있다.<br>
+4. 을이 변경된 수수료율에 동의하지 않는 경우, 변경 적용일까지 서면 통보로 본 계약을 해지할 수 있으며, 이 경우 해지일까지의 수수료는 변경 전 수수료율을 적용한다.</p>
+
+<h3>제11조 (개인정보보호)</h3>
+<p>1. 을은 본 계약의 이행 과정에서 취득한 개인정보를 「개인정보 보호법」 등 관련 법령에 따라 적법하게 처리하여야 한다.<br>
+2. 을은 개인정보의 유출, 도난, 분실 등의 사고가 발생한 경우 즉시 갑에게 통보하고 필요한 조치를 취하여야 한다.<br>
+3. 계약 종료 시 을은 본 계약의 이행 과정에서 수집한 개인정보를 지체 없이 파기하고, 그 사실을 갑에게 서면으로 통보하여야 한다.</p>
+
+<h3>제12조 (법령 준수)</h3>
+<p>1. 을은 본 계약의 이행과 관련하여 「여신전문금융업법」, 「전자금융거래법」, 「대부업 등의 등록 및 금융이용자 보호에 관한 법률」 등 관련 법령을 준수하여야 한다.<br>
+2. 을은 관련 법령의 변경으로 인하여 본 계약의 이행에 영향이 있는 경우 즉시 갑에게 통보하여야 한다.</p>
+
+<h3>제13조 (손해배상)</h3>
+<p>1. 갑 또는 을이 본 계약을 위반하여 상대방에게 손해를 입힌 경우, 직접 손해 및 간접 손해를 포함하여 그 손해를 배상할 책임을 진다.<br>
+2. 갑의 을에 대한 손해배상 총액은 손해 발생일 이전 12개월간 을에게 지급한 수수료 총액을 상한으로 한다.<br>
+3. 을의 고의 또는 중과실로 인한 손해배상에는 상한을 두지 아니한다.</p>
+
+<h3>제14조 (면책 및 보증면제)</h3>
+<p>1. 을의 귀책사유로 고객 또는 제3자에게 손해가 발생한 경우, 을이 독립적으로 그 책임을 부담하며, 갑은 이에 대하여 면책된다.<br>
+2. 갑은 을의 영업활동을 통한 특정 수준의 수익이나 실적을 보증하지 아니한다.<br>
+3. 갑의 시스템 장애, 정기 점검, 업데이트 등으로 인한 서비스 일시 중단에 대하여 갑은 을에 대한 손해배상 책임을 부담하지 아니한다. 다만, 갑의 고의 또는 중과실에 의한 경우는 그러하지 아니한다.</p>
+
+<h3>제15조 (불가항력)</h3>
+<p>1. 천재지변, 전쟁, 테러, 감염병 대유행, 정부의 규제 변경 등 당사자의 합리적 통제를 벗어난 사유(이하 "불가항력 사유")로 인하여 본 계약상 의무를 이행할 수 없는 경우, 그 이행 불능 기간 동안 해당 의무의 불이행에 대한 책임을 면한다.<br>
+2. 불가항력 사유가 3개월 이상 계속되는 경우, 어느 일방은 서면 통보로 본 계약을 해지할 수 있다.<br>
+3. 불가항력 사유로 인한 면제 기간 동안에는 수수료가 발생하지 아니한다.</p>
+
+<h3>제16조 (계약 해지)</h3>
+<p>1. 갑은 을에게 30일 전 서면 통보로, 을은 갑에게 60일 전 서면 통보로 본 계약을 해지할 수 있다.<br>
 2. 다음 각 호에 해당하는 경우 갑은 별도 통보 없이 즉시 계약을 해지할 수 있다:<br>
 &nbsp;&nbsp;가. 을이 제7조의 금지 행위를 한 경우<br>
-&nbsp;&nbsp;나. 을이 파산, 회생절차 개시 등 정상적 영업이 불가능한 경우<br>
-&nbsp;&nbsp;다. 을이 본 계약의 중대한 조항을 위반한 경우<br>
-3. 해지 시 이미 성사된 거래에 대한 수수료는 정상 지급한다.</p>
+&nbsp;&nbsp;나. 을이 제9조의 경업금지 또는 고객유인금지 의무를 위반한 경우<br>
+&nbsp;&nbsp;다. 을이 파산, 회생절차 개시, 영업정지 등 정상적 영업이 불가능한 경우<br>
+&nbsp;&nbsp;라. 을이 연속 3개월 이상 실적(고객 소개)이 없는 경우<br>
+&nbsp;&nbsp;마. 을이 본 계약의 중대한 조항을 위반하고, 갑의 시정 요구에도 불구하고 14일 이내에 시정하지 아니한 경우<br>
+3. 해지 시 이미 성사된 거래에 대한 수수료는 정상 지급한다. 다만, 갑은 을에 대한 채권이 확정될 때까지 수수료 지급을 보류할 수 있다.</p>
 
-<h3>제9조 (손해배상)</h3>
-<p>갑 또는 을이 본 계약을 위반하여 상대방에게 손해를 입힌 경우, 그 손해를 배상할 책임을 진다.</p>
+<h3>제17조 (계약 해지 후 의무)</h3>
+<p>1. 계약 종료 시 을은 갑으로부터 제공받은 일체의 자료, 시스템 접근 권한, 홍보물 등을 즉시 반환 또는 폐기하여야 한다.<br>
+2. 계약 종료 시점에 진행 중인 미완료 건(접수된 고객 건)에 대하여는 갑이 인수하며, 해당 건이 성사된 경우 수수료를 정상 지급한다.<br>
+3. 을은 계약 종료 후 7일 이내에 상기 의무의 이행을 확인하는 서면 확인서를 갑에게 제출하여야 한다.</p>
 
-<h3>제10조 (독립 당사자 관계)</h3>
-<p>을은 갑의 직원, 대리인이 아닌 독립된 사업자이며, 을의 영업 활동에 따른 비용, 세금 등은 을이 부담한다.</p>
+<h3>제18조 (양도 금지)</h3>
+<p>1. 을은 갑의 사전 서면 동의 없이 본 계약상 권리·의무의 전부 또는 일부를 제3자에게 양도하거나 담보로 제공할 수 없다.<br>
+2. 갑은 갑의 관계회사(모회사, 자회사, 계열사)에 본 계약상 권리·의무를 양도할 수 있다.</p>
 
-<h3>제11조 (분쟁 해결)</h3>
-<p>본 계약과 관련하여 발생하는 분쟁은 서울중앙지방법원을 관할법원으로 한다.</p>
+<h3>제19조 (독립 당사자 관계)</h3>
+<p>을은 갑의 직원, 대리인이 아닌 독립된 사업자이며, 을의 영업 활동에 따른 비용, 세금, 보험 등 일체의 비용은 을이 부담한다.</p>
 
-<h3>제12조 (기타)</h3>
+<h3>제20조 (통지)</h3>
+<p>1. 본 계약에 따른 통지는 이메일 또는 파트너 대시보드 알림을 통하여 할 수 있으며, 이메일 발송 또는 대시보드 알림 게시 시 상대방에게 도달한 것으로 간주한다.<br>
+2. 각 당사자는 연락처(이메일, 전화번호, 주소)가 변경된 경우 변경일로부터 7일 이내에 상대방에게 통보하여야 하며, 통보하지 아니한 경우 기존 연락처로의 통지는 유효한 것으로 본다.</p>
+
+<h3>제21조 (준거법 및 관할)</h3>
+<p>1. 본 계약은 대한민국 법률에 의하여 해석되고 적용된다.<br>
+2. 본 계약과 관련하여 발생하는 분쟁은 서울중앙지방법원을 제1심 전속 관할법원으로 한다.</p>
+
+<h3>제22조 (기타)</h3>
 <p>1. 본 계약에 명시되지 아니한 사항은 갑과 을이 상호 협의하여 결정한다.<br>
-2. 본 계약의 수정 또는 변경은 양 당사자의 서면 합의에 의해서만 효력을 갖는다.</p>
+2. 본 계약의 수정 또는 변경은 양 당사자의 서면 합의에 의해서만 효력을 갖는다.<br>
+3. 본 계약의 일부 조항이 무효이거나 이행 불능인 경우에도 나머지 조항의 효력에는 영향을 미치지 아니한다.</p>
 
 <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 13px;">
     <p>본 계약의 체결을 증명하기 위해 본 계약서를 작성한다.</p>
@@ -2017,6 +2253,177 @@ async function createContract() {
     }
 }
 
+async function autoCreateDraftContract(partnerId, options = {}) {
+    try {
+        // 기존 활성 계약(draft/sent/signed/active) 존재 시 중복 생성 방지
+        const { data: existing, error: checkError } = await sb
+            .from('partner_contracts')
+            .select('id, status')
+            .eq('partner_id', partnerId)
+            .in('status', ['draft', 'sent', 'signed', 'active']);
+
+        if (checkError) throw checkError;
+        if (existing && existing.length > 0) {
+            console.log('이미 활성 계약이 존재하여 자동 생성을 건너뜁니다:', existing);
+            return null;
+        }
+
+        // 파트너 정보 조회
+        const { data: partner } = await sb.from('partners').select('*').eq('id', partnerId).single();
+        if (!partner) throw new Error('파트너 정보를 찾을 수 없습니다.');
+
+        // 관리자 지정 값 > 파트너 저장 값 > 기본값
+        const defaultRate = partner.commission_rate ? Number(partner.commission_rate) : 0.015;
+        const actualRate = options.rate || defaultRate;
+        const periodMonths = options.periodMonths || 12;
+        const today = new Date();
+        const startDate = options.startDate || today.toISOString().split('T')[0];
+        const endDate = (() => {
+            const start = new Date(startDate);
+            const end = new Date(start);
+            end.setMonth(end.getMonth() + periodMonths);
+            end.setDate(end.getDate() - 1);
+            return end.toISOString().split('T')[0];
+        })();
+        const autoRenewal = options.autoRenewal !== undefined ? options.autoRenewal : true;
+
+        // 계약번호 채번
+        const { data: numData, error: numError } = await sb.rpc('generate_contract_number');
+        if (numError) throw numError;
+
+        // 계약서 본문 생성
+        const contractBody = generateContractBody(partner, {
+            commissionRate: actualRate,
+            startDate,
+            endDate,
+            autoRenewal,
+            periodMonths
+        });
+
+        // DB 삽입
+        const { data: contract, error: insertError } = await sb.from('partner_contracts').insert({
+            contract_number: numData,
+            partner_id: partnerId,
+            commission_rate: actualRate,
+            contract_period_months: periodMonths,
+            start_date: startDate,
+            end_date: endDate,
+            auto_renewal: autoRenewal,
+            contract_body: contractBody,
+            status: 'draft',
+            admin_notes: '파트너 승인 시 자동 생성',
+            created_by: currentUser.id
+        }).select().single();
+
+        if (insertError) throw insertError;
+
+        // 상태 로그 기록
+        await sb.from('contract_status_logs').insert({
+            contract_id: contract.id,
+            from_status: null,
+            to_status: 'draft',
+            changed_by: currentUser.id,
+            notes: '파트너 승인에 따른 계약서 자동 생성'
+        });
+
+        return contract;
+    } catch (err) {
+        console.error('Auto create draft contract error:', err);
+        return null;
+    }
+}
+
+async function quickSendContractSilent(contractId) {
+    try {
+        const { data: contract, error: fetchError } = await sb
+            .from('partner_contracts')
+            .select('*, partners(user_id, name)')
+            .eq('id', contractId)
+            .single();
+
+        if (fetchError) throw fetchError;
+        if (contract.status !== 'draft') return;
+
+        const { error: updateError } = await sb
+            .from('partner_contracts')
+            .update({ status: 'sent' })
+            .eq('id', contractId);
+
+        if (updateError) throw updateError;
+
+        await sb.from('contract_status_logs').insert({
+            contract_id: contractId,
+            from_status: 'draft',
+            to_status: 'sent',
+            changed_by: currentUser.id,
+            notes: '승인 시 자동 발송'
+        });
+
+        if (contract.partners?.user_id) {
+            await sb.rpc('create_notification', {
+                p_user_id: contract.partners.user_id,
+                p_type: 'contract_sent',
+                p_title: '계약서 발송',
+                p_message: `계약서(${contract.contract_number})가 발송되었습니다. 파트너 대시보드에서 확인 및 서명해주세요.`
+            });
+        }
+    } catch (err) {
+        console.error('Silent send contract error:', err);
+    }
+}
+
+async function quickSendContract(contractId) {
+    if (!confirm('이 계약서를 파트너에게 발송하시겠습니까?')) return;
+
+    try {
+        // 현재 계약 정보 조회
+        const { data: contract, error: fetchError } = await sb
+            .from('partner_contracts')
+            .select('*, partners(user_id, name)')
+            .eq('id', contractId)
+            .single();
+
+        if (fetchError) throw fetchError;
+        if (contract.status !== 'draft') {
+            showToast('작성중 상태의 계약서만 발송할 수 있습니다.', 'error');
+            return;
+        }
+
+        // 상태 변경: draft → sent
+        const { error: updateError } = await sb
+            .from('partner_contracts')
+            .update({ status: 'sent' })
+            .eq('id', contractId);
+
+        if (updateError) throw updateError;
+
+        // 상태 로그 기록
+        await sb.from('contract_status_logs').insert({
+            contract_id: contractId,
+            from_status: 'draft',
+            to_status: 'sent',
+            changed_by: currentUser.id,
+            notes: '빠른 발송'
+        });
+
+        // 파트너에게 알림 발송
+        if (contract.partners?.user_id) {
+            await sb.rpc('create_notification', {
+                p_user_id: contract.partners.user_id,
+                p_type: 'contract_sent',
+                p_title: '계약서 발송',
+                p_message: `계약서(${contract.contract_number})가 발송되었습니다. 파트너 대시보드에서 확인 및 서명해주세요.`
+            });
+        }
+
+        showToast('계약서가 발송되었습니다.', 'success');
+        if (currentContractPartnerId) loadContracts(currentContractPartnerId);
+    } catch (err) {
+        console.error('Quick send contract error:', err);
+        showToast('발송 실패: ' + err.message, 'error');
+    }
+}
+
 async function previewContract(contractId) {
     currentContractId = contractId;
 
@@ -2025,7 +2432,21 @@ async function previewContract(contractId) {
         if (error) throw error;
 
         document.getElementById('contractPreviewTitle').textContent = `계약서 미리보기 — ${data.contract_number}`;
-        document.getElementById('contractPreviewBody').innerHTML = data.contract_body || '<p style="color:var(--gray-500);">계약서 본문이 없습니다.</p>';
+        let bodyHtml = data.contract_body || '<p style="color:var(--gray-500);">계약서 본문이 없습니다.</p>';
+
+        // 서명 정보가 있으면 하단에 표시
+        if (data.signer_name && data.signed_at) {
+            const signedDate = new Date(data.signed_at).toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+            bodyHtml += `
+<div class="signature-display" style="margin-top:24px;padding:20px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;">
+<p style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:12px;">서명 정보</p>
+<p style="margin-bottom:8px;">서명자: <strong>${escapeHtml(data.signer_name)}</strong></p>
+${data.signature_data ? `<div style="margin:12px 0;padding:12px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;display:inline-block;"><img src="${data.signature_data}" alt="서명" style="max-height:80px;max-width:300px;"></div>` : ''}
+<p style="font-size:13px;color:var(--gray-500);">서명일시: ${signedDate}</p>
+</div>`;
+        }
+
+        document.getElementById('contractPreviewBody').innerHTML = bodyHtml;
 
         // 상태 select 설정
         const statusSelect = document.getElementById('contractStatusSelect');
@@ -2083,6 +2504,24 @@ async function updateContractStatus() {
             to_status: newStatus,
             changed_by: currentUser.id
         });
+
+        // 발송 상태로 변경 시 파트너에게 알림
+        if (newStatus === 'sent') {
+            const { data: contractFull } = await sb
+                .from('partner_contracts')
+                .select('contract_number, partners(user_id, name)')
+                .eq('id', currentContractId)
+                .single();
+
+            if (contractFull?.partners?.user_id) {
+                await sb.rpc('create_notification', {
+                    p_user_id: contractFull.partners.user_id,
+                    p_type: 'contract_sent',
+                    p_title: '계약서 발송',
+                    p_message: `계약서(${contractFull.contract_number})가 발송되었습니다. 파트너 대시보드에서 확인 및 서명해주세요.`
+                });
+            }
+        }
 
         showToast(`상태가 ${getContractStatusLabel(newStatus)}(으)로 변경되었습니다.`, 'success');
         document.getElementById('contractPreviewModal').classList.remove('active');
@@ -2210,4 +2649,537 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func(...args), wait);
     };
+}
+
+// ─── New Clinic Openings (신규 개원) ───
+
+let csvClinicData = [];
+
+async function loadAdminNewClinics() {
+    const loading = document.getElementById('ncLoading');
+    const table = document.getElementById('ncTable');
+    const empty = document.getElementById('ncEmpty');
+    const tbody = document.getElementById('ncTableBody');
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        let query = sb
+            .from('new_clinic_openings')
+            .select('*, partners:claimed_by(name, hospital_name)')
+            .order('opening_date', { ascending: false });
+
+        const regionFilter = document.getElementById('ncRegionFilter').value;
+        if (regionFilter) query = query.eq('region', regionFilter);
+
+        const specialtyFilter = document.getElementById('ncSpecialtyFilter').value;
+        if (specialtyFilter) query = query.eq('specialty', specialtyFilter);
+
+        const claimFilter = document.getElementById('ncClaimFilter').value;
+        if (claimFilter) query = query.eq('claim_status', claimFilter);
+
+        const search = document.getElementById('ncSearch').value.trim();
+        if (search) query = query.or(`clinic_name.ilike.%${search}%,address.ilike.%${search}%`);
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(row => {
+            const claimBadge = getClaimBadge(row.claim_status);
+            const partnerName = row.partners ? escapeHtml(row.partners.name) : '-';
+            const sourceBadge = row.data_source === 'hira_api'
+                ? '<span style="color:var(--primary);font-size:12px;">API</span>'
+                : row.data_source === 'csv_upload'
+                    ? '<span style="color:var(--warning);font-size:12px;">CSV</span>'
+                    : '<span style="color:var(--gray-500);font-size:12px;">수동</span>';
+            return `
+                <tr>
+                    <td><strong>${escapeHtml(row.clinic_name)}</strong></td>
+                    <td>${escapeHtml(row.representative_name || '-')}</td>
+                    <td>${escapeHtml(row.specialty || '-')}</td>
+                    <td>${getRegionLabel(row.region)}</td>
+                    <td>${row.opening_date || '-'}</td>
+                    <td>${claimBadge}</td>
+                    <td>${partnerName}</td>
+                    <td>${sourceBadge}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="action-btn view" onclick="viewClinicAdmin(${row.id})">상세</button>
+                            <button class="action-btn edit" onclick="openNewClinicForm(${row.id})">수정</button>
+                            <button class="action-btn delete" onclick="deleteClinic(${row.id})">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Load new clinics error:', error);
+        loading.style.display = 'none';
+        showToast('신규 개원 데이터를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+function getClaimBadge(status) {
+    const badges = {
+        'unclaimed': '<span class="status-badge" style="background:#E8EDFF;color:var(--primary);">미선점</span>',
+        'claimed': '<span class="status-badge" style="background:#DBEAFE;color:#1D4ED8;">선점됨</span>',
+        'contacted': '<span class="status-badge" style="background:#EDE9FE;color:#7C3AED;">컨택완료</span>',
+        'converted': '<span class="status-badge" style="background:#FEF3C7;color:#D97706;">고객전환</span>'
+    };
+    return badges[status] || status;
+}
+
+async function openNewClinicForm(editId) {
+    const modal = document.getElementById('newClinicModal');
+    const form = document.getElementById('newClinicForm');
+    form.reset();
+    document.getElementById('ncEditId').value = '';
+
+    if (editId) {
+        document.getElementById('newClinicModalTitle').textContent = '신규 개원 수정';
+        const { data, error } = await sb.from('new_clinic_openings').select('*').eq('id', editId).single();
+        if (error) { showToast('데이터를 불러올 수 없습니다.', 'error'); return; }
+
+        document.getElementById('ncEditId').value = editId;
+        document.getElementById('ncClinicName').value = data.clinic_name || '';
+        document.getElementById('ncRepName').value = data.representative_name || '';
+        document.getElementById('ncSpecialty').value = data.specialty || '';
+        document.getElementById('ncAddress').value = data.address || '';
+        document.getElementById('ncRegion').value = data.region || '';
+        document.getElementById('ncOpeningDate').value = data.opening_date || '';
+        document.getElementById('ncPhone').value = data.phone || '';
+        document.getElementById('ncHiraCode').value = data.hira_ykiho || '';
+        document.getElementById('ncAdminNotes').value = data.admin_notes || '';
+    } else {
+        document.getElementById('newClinicModalTitle').textContent = '신규 개원 등록';
+    }
+
+    modal.classList.add('active');
+}
+
+async function handleNewClinicSubmit(e) {
+    e.preventDefault();
+
+    const editId = document.getElementById('ncEditId').value;
+    const record = {
+        clinic_name: document.getElementById('ncClinicName').value.trim(),
+        representative_name: document.getElementById('ncRepName').value.trim() || null,
+        specialty: document.getElementById('ncSpecialty').value.trim() || null,
+        address: document.getElementById('ncAddress').value.trim() || null,
+        region: document.getElementById('ncRegion').value || null,
+        opening_date: document.getElementById('ncOpeningDate').value || null,
+        phone: document.getElementById('ncPhone').value.trim() || null,
+        hira_ykiho: document.getElementById('ncHiraCode').value.trim() || null,
+        admin_notes: document.getElementById('ncAdminNotes').value.trim() || null,
+        data_source: 'manual'
+    };
+
+    if (!record.clinic_name) {
+        showToast('의료기관명을 입력하세요.', 'error');
+        return;
+    }
+
+    try {
+        if (editId) {
+            const { error } = await sb.from('new_clinic_openings').update(record).eq('id', editId);
+            if (error) throw error;
+            showToast('수정되었습니다.', 'success');
+        } else {
+            const { error } = await sb.from('new_clinic_openings').insert(record);
+            if (error) throw error;
+            showToast('등록되었습니다.', 'success');
+        }
+
+        document.getElementById('newClinicModal').classList.remove('active');
+        loadAdminNewClinics();
+    } catch (error) {
+        showToast('저장 실패: ' + error.message, 'error');
+    }
+}
+
+async function deleteClinic(id) {
+    if (!confirm('이 신규 개원 정보를 삭제하시겠습니까?')) return;
+
+    try {
+        const { error } = await sb.from('new_clinic_openings').delete().eq('id', id);
+        if (error) throw error;
+        showToast('삭제되었습니다.', 'success');
+        loadAdminNewClinics();
+    } catch (error) {
+        showToast('삭제 실패: ' + error.message, 'error');
+    }
+}
+
+async function viewClinicAdmin(id) {
+    const { data, error } = await sb
+        .from('new_clinic_openings')
+        .select('*, partners:claimed_by(name, hospital_name)')
+        .eq('id', id)
+        .single();
+
+    if (error) { showToast('데이터를 불러올 수 없습니다.', 'error'); return; }
+
+    const body = document.getElementById('clinicDetailBody');
+    body.innerHTML = `
+        <div class="detail-row"><span class="detail-label">의료기관명</span><span class="detail-value"><strong>${escapeHtml(data.clinic_name)}</strong></span></div>
+        <div class="detail-row"><span class="detail-label">대표자명</span><span class="detail-value">${escapeHtml(data.representative_name || '-')}</span></div>
+        <div class="detail-row"><span class="detail-label">진료과목</span><span class="detail-value">${escapeHtml(data.specialty || '-')}</span></div>
+        <div class="detail-row"><span class="detail-label">주소</span><span class="detail-value">${escapeHtml(data.address || '-')}</span></div>
+        <div class="detail-row"><span class="detail-label">지역</span><span class="detail-value">${getRegionLabel(data.region)}</span></div>
+        <div class="detail-row"><span class="detail-label">개설일자</span><span class="detail-value">${data.opening_date || '-'}</span></div>
+        <div class="detail-row"><span class="detail-label">전화번호</span><span class="detail-value">${data.phone ? '<a href="tel:' + data.phone + '">' + escapeHtml(data.phone) + '</a>' : '-'}</span></div>
+        <div class="detail-row"><span class="detail-label">HIRA 기호</span><span class="detail-value">${escapeHtml(data.hira_ykiho || '-')}</span></div>
+        <div class="detail-row"><span class="detail-label">데이터 출처</span><span class="detail-value">${data.data_source || '-'}</span></div>
+        <div class="detail-row" style="border-top:2px solid var(--gray-200);margin-top:12px;padding-top:12px;">
+            <span class="detail-label">선점 상태</span><span class="detail-value">${getClaimBadge(data.claim_status)}</span>
+        </div>
+        ${data.partners ? `<div class="detail-row"><span class="detail-label">선점 파트너</span><span class="detail-value">${escapeHtml(data.partners.name)} ${data.partners.hospital_name ? '(' + escapeHtml(data.partners.hospital_name) + ')' : ''}</span></div>` : ''}
+        ${data.claimed_at ? `<div class="detail-row"><span class="detail-label">선점 시각</span><span class="detail-value">${formatDate(data.claimed_at)}</span></div>` : ''}
+        ${data.notes ? `<div class="detail-row"><span class="detail-label">파트너 메모</span><span class="detail-value">${escapeHtml(data.notes)}</span></div>` : ''}
+        ${data.admin_notes ? `<div class="detail-row"><span class="detail-label">관리자 메모</span><span class="detail-value">${escapeHtml(data.admin_notes)}</span></div>` : ''}
+        <div class="detail-row"><span class="detail-label">등록일</span><span class="detail-value">${formatDate(data.created_at)}</span></div>
+    `;
+
+    const deleteBtn = document.getElementById('deleteClinicBtn');
+    deleteBtn.style.display = 'inline-block';
+    deleteBtn.onclick = () => {
+        deleteClinic(data.id);
+        document.getElementById('clinicDetailModal').classList.remove('active');
+    };
+
+    document.getElementById('clinicDetailModal').classList.add('active');
+}
+
+// ─── HIRA API Sync ───
+
+const SIDO_CODES = {
+    'seoul': '110000', 'gyeonggi': '410000', 'incheon': '280000',
+    'busan': '260000', 'daegu': '270000', 'daejeon': '300000',
+    'gwangju': '290000', 'ulsan': '310000', 'sejong': '360000',
+    'gangwon': '320000', 'chungbuk': '330000', 'chungnam': '340000',
+    'jeonbuk': '350000', 'jeonnam': '460000', 'gyeongbuk': '370000',
+    'gyeongnam': '380000', 'jeju': '390000'
+};
+
+const SIDO_REVERSE = Object.fromEntries(
+    Object.entries(SIDO_CODES).map(([k, v]) => [v, k])
+);
+
+async function syncHiraData() {
+    if (typeof HIRA_API_CONFIG === 'undefined' || HIRA_API_CONFIG.serviceKey === 'YOUR_HIRA_API_KEY') {
+        showToast('config.js에서 HIRA API 키를 설정하세요.', 'error');
+        return;
+    }
+
+    const statusEl = document.getElementById('hiraSyncStatus');
+    statusEl.style.display = 'block';
+    statusEl.textContent = '공공데이터 동기화를 시작합니다...';
+
+    const btn = document.getElementById('syncHiraBtn');
+    btn.disabled = true;
+
+    const cutoffDate = new Date();
+    cutoffDate.setMonth(cutoffDate.getMonth() - (HIRA_API_CONFIG.recentMonths || 6));
+    const cutoffStr = cutoffDate.toISOString().split('T')[0].replace(/-/g, '');
+
+    let totalInserted = 0;
+    let totalSkipped = 0;
+    let totalErrors = 0;
+
+    try {
+        // Fetch from each major region
+        const sidoKeys = Object.keys(SIDO_CODES);
+
+        for (let i = 0; i < sidoKeys.length; i++) {
+            const region = sidoKeys[i];
+            const sidoCd = SIDO_CODES[region];
+            statusEl.textContent = `동기화 중... (${getRegionLabel(region)} - ${i + 1}/${sidoKeys.length})`;
+
+            try {
+                let pageNo = 1;
+                let hasMore = true;
+
+                while (hasMore) {
+                    const params = new URLSearchParams({
+                        ServiceKey: HIRA_API_CONFIG.serviceKey,
+                        numOfRows: '100',
+                        pageNo: String(pageNo),
+                        sidoCd: sidoCd
+                    });
+
+                    const url = `${HIRA_API_CONFIG.baseUrl}?${params.toString()}`;
+                    const response = await fetch(url);
+
+                    if (!response.ok) {
+                        totalErrors++;
+                        break;
+                    }
+
+                    const text = await response.text();
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(text, 'text/xml');
+
+                    const items = xml.querySelectorAll('item');
+                    if (items.length === 0) {
+                        hasMore = false;
+                        break;
+                    }
+
+                    const records = [];
+                    items.forEach(item => {
+                        const getVal = (tag) => {
+                            const el = item.querySelector(tag);
+                            return el ? el.textContent.trim() : null;
+                        };
+
+                        const estDt = getVal('estDt') || '';
+                        // Filter: only recent openings
+                        if (estDt && estDt >= cutoffStr) {
+                            const formattedDate = estDt.length === 8
+                                ? `${estDt.slice(0,4)}-${estDt.slice(4,6)}-${estDt.slice(6,8)}`
+                                : null;
+
+                            records.push({
+                                clinic_name: getVal('yadmNm') || '(미상)',
+                                representative_name: getVal('drNm') || null,
+                                specialty: getVal('dgsbjtCdNm') || getVal('clCdNm') || null,
+                                address: getVal('addr') || null,
+                                region: region,
+                                opening_date: formattedDate,
+                                phone: getVal('telno') || null,
+                                hira_ykiho: getVal('ykiho') || null,
+                                data_source: 'hira_api'
+                            });
+                        }
+                    });
+
+                    if (records.length > 0) {
+                        const { data, error } = await sb
+                            .from('new_clinic_openings')
+                            .upsert(records, { onConflict: 'hira_ykiho', ignoreDuplicates: true });
+
+                        if (error) {
+                            // Try individual inserts for rows without hira_ykiho
+                            for (const rec of records) {
+                                if (!rec.hira_ykiho) {
+                                    await sb.from('new_clinic_openings').insert(rec);
+                                    totalInserted++;
+                                } else {
+                                    const { error: singleErr } = await sb
+                                        .from('new_clinic_openings')
+                                        .upsert(rec, { onConflict: 'hira_ykiho', ignoreDuplicates: true });
+                                    if (!singleErr) totalInserted++;
+                                    else totalSkipped++;
+                                }
+                            }
+                        } else {
+                            totalInserted += records.length;
+                        }
+                    }
+
+                    // Check if there are more pages
+                    const totalCount = xml.querySelector('totalCount');
+                    const total = totalCount ? parseInt(totalCount.textContent) : 0;
+                    if (pageNo * 100 >= total || items.length < 100) {
+                        hasMore = false;
+                    } else {
+                        pageNo++;
+                    }
+                }
+            } catch (regionErr) {
+                console.error(`HIRA sync error for ${region}:`, regionErr);
+                totalErrors++;
+            }
+        }
+
+        statusEl.style.background = '#D1FAE5';
+        statusEl.style.color = '#065F46';
+        statusEl.textContent = `동기화 완료! 신규 ${totalInserted}건 추가, ${totalSkipped}건 중복 스킵, ${totalErrors}건 오류`;
+        loadAdminNewClinics();
+    } catch (error) {
+        console.error('HIRA sync error:', error);
+        statusEl.style.background = '#FEE2E2';
+        statusEl.style.color = '#991B1B';
+        statusEl.textContent = `동기화 실패: ${error.message}`;
+    } finally {
+        btn.disabled = false;
+        setTimeout(() => { statusEl.style.display = 'none'; }, 10000);
+    }
+}
+
+// ─── CSV Upload ───
+
+function handleCsvClinicPreview(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const text = evt.target.result;
+        const lines = text.split('\n').filter(l => l.trim());
+
+        // Skip header if it looks like a header
+        let startIdx = 0;
+        if (lines[0] && (lines[0].includes('의료기관') || lines[0].includes('clinic_name'))) {
+            startIdx = 1;
+        }
+
+        csvClinicData = [];
+        for (let i = startIdx; i < lines.length; i++) {
+            const cols = parseCSVLine(lines[i]);
+            if (cols.length >= 1 && cols[0].trim()) {
+                csvClinicData.push({
+                    clinic_name: cols[0]?.trim() || '',
+                    representative_name: cols[1]?.trim() || null,
+                    specialty: cols[2]?.trim() || null,
+                    address: cols[3]?.trim() || null,
+                    region: cols[4]?.trim() || null,
+                    opening_date: cols[5]?.trim() || null,
+                    phone: cols[6]?.trim() || null,
+                    hira_ykiho: cols[7]?.trim() || null,
+                    data_source: 'csv_upload'
+                });
+            }
+        }
+
+        // Show preview
+        const previewArea = document.getElementById('csvPreviewArea');
+        const previewBody = document.getElementById('csvPreviewBody');
+        const totalCount = document.getElementById('csvTotalCount');
+
+        if (csvClinicData.length === 0) {
+            previewArea.style.display = 'none';
+            showToast('CSV 파일에서 데이터를 찾을 수 없습니다.', 'error');
+            return;
+        }
+
+        previewBody.innerHTML = csvClinicData.slice(0, 10).map(r => `
+            <tr>
+                <td>${escapeHtml(r.clinic_name)}</td>
+                <td>${escapeHtml(r.representative_name || '-')}</td>
+                <td>${escapeHtml(r.specialty || '-')}</td>
+                <td>${escapeHtml(r.address || '-')}</td>
+                <td>${getRegionLabel(r.region)}</td>
+                <td>${r.opening_date || '-'}</td>
+                <td>${escapeHtml(r.phone || '-')}</td>
+                <td>${escapeHtml(r.hira_ykiho || '-')}</td>
+            </tr>
+        `).join('');
+
+        totalCount.textContent = `총 ${csvClinicData.length}건`;
+        previewArea.style.display = 'block';
+    };
+    reader.readAsText(file, 'UTF-8');
+}
+
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+                current += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (ch === ',' && !inQuotes) {
+            result.push(current);
+            current = '';
+        } else {
+            current += ch;
+        }
+    }
+    result.push(current);
+    return result;
+}
+
+async function handleCsvClinicImport() {
+    if (csvClinicData.length === 0) {
+        showToast('업로드할 데이터가 없습니다.', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('csvImportBtn');
+    btn.disabled = true;
+    btn.textContent = '등록 중...';
+
+    let inserted = 0;
+    let skipped = 0;
+
+    try {
+        // Process in batches of 50
+        for (let i = 0; i < csvClinicData.length; i += 50) {
+            const batch = csvClinicData.slice(i, i + 50);
+            const withHira = batch.filter(r => r.hira_ykiho);
+            const withoutHira = batch.filter(r => !r.hira_ykiho);
+
+            if (withHira.length > 0) {
+                const { error } = await sb
+                    .from('new_clinic_openings')
+                    .upsert(withHira, { onConflict: 'hira_ykiho', ignoreDuplicates: true });
+                if (!error) inserted += withHira.length;
+                else skipped += withHira.length;
+            }
+
+            if (withoutHira.length > 0) {
+                const { error } = await sb.from('new_clinic_openings').insert(withoutHira);
+                if (!error) inserted += withoutHira.length;
+                else skipped += withoutHira.length;
+            }
+        }
+
+        showToast(`CSV 등록 완료: ${inserted}건 추가, ${skipped}건 스킵`, 'success');
+        document.getElementById('csvClinicModal').classList.remove('active');
+        csvClinicData = [];
+        loadAdminNewClinics();
+    } catch (error) {
+        showToast('CSV 등록 실패: ' + error.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '일괄 등록';
+    }
+}
+
+async function exportClinicsCSV() {
+    try {
+        const { data, error } = await sb
+            .from('new_clinic_openings')
+            .select('*, partners:claimed_by(name)')
+            .order('opening_date', { ascending: false });
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            showToast('내보낼 데이터가 없습니다.', 'error');
+            return;
+        }
+
+        let csv = '의료기관명,대표자,진료과,주소,지역,개설일,전화번호,HIRA기호,선점상태,선점파트너,출처\n';
+        csv += data.map(row =>
+            `"${(row.clinic_name || '').replace(/"/g, '""')}","${(row.representative_name || '').replace(/"/g, '""')}","${(row.specialty || '').replace(/"/g, '""')}","${(row.address || '').replace(/"/g, '""')}","${getRegionLabel(row.region)}","${row.opening_date || ''}","${(row.phone || '').replace(/"/g, '""')}","${row.hira_ykiho || ''}","${row.claim_status}","${row.partners ? row.partners.name : ''}","${row.data_source || ''}"`
+        ).join('\n');
+
+        const bom = '\uFEFF';
+        const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `new_clinics_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+        showToast('다운로드가 시작되었습니다.', 'success');
+    } catch (error) {
+        showToast('CSV 내보내기 실패: ' + error.message, 'error');
+    }
 }

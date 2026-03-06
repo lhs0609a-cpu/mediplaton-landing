@@ -6,6 +6,7 @@
     <title>파트너 대시보드 | 메디플라톤</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1428A0;
@@ -119,6 +120,24 @@
         .status-installed { background: #E0E7FF; color: #4338CA; }
         .status-rejected { background: #FEE2E2; color: #B91C1C; }
         .status-pending { background: #FEF3C7; color: #B45309; }
+
+        /* Claim Status */
+        .claim-unclaimed { background: #D1FAE5; color: #047857; }
+        .claim-claimed { background: #DBEAFE; color: #1D4ED8; }
+        .claim-contacted { background: #EDE9FE; color: #7C3AED; }
+        .claim-converted { background: #FEF3C7; color: #D97706; }
+        .claim-other { background: #F3F4F6; color: #6B7280; }
+
+        .claim-btn { padding: 6px 14px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .claim-btn:hover { opacity: 0.85; }
+        .claim-btn-start { background: var(--success); color: white; }
+        .claim-btn-mine { background: var(--primary); color: white; }
+        .claim-dropdown { position: relative; display: inline-block; }
+        .claim-dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid var(--gray-200); border-radius: 8px; box-shadow: var(--shadow-lg); z-index: 50; min-width: 140px; overflow: hidden; }
+        .claim-dropdown.open .claim-dropdown-menu { display: block; }
+        .claim-dropdown-item { display: block; width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; font-size: 13px; cursor: pointer; color: var(--gray-700); }
+        .claim-dropdown-item:hover { background: var(--gray-50); }
+        .claim-dropdown-item.danger { color: var(--danger); }
         .status-confirmed { background: #DBEAFE; color: #1D4ED8; }
         .status-paid { background: #D1FAE5; color: #047857; }
 
@@ -256,6 +275,86 @@
         .board-empty { text-align: center; padding: 40px; color: var(--gray-500); }
         .board-arrow { transition: transform 0.2s; color: var(--gray-400); }
         .board-arrow.open { transform: rotate(180deg); }
+
+        /* ===== 계약 관련 스타일 ===== */
+        .contract-status { display: inline-flex; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .contract-status.draft { background: #F3F4F6; color: #374151; }
+        .contract-status.sent { background: #DBEAFE; color: #1D4ED8; }
+        .contract-status.signed { background: #EDE9FE; color: #6D28D9; }
+        .contract-status.active { background: #D1FAE5; color: #047857; }
+        .contract-status.expired { background: #FEF3C7; color: #B45309; }
+        .contract-status.terminated { background: #FEE2E2; color: #B91C1C; }
+
+        .signature-input {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--gray-300);
+            border-radius: var(--radius); font-size: 16px; font-family: inherit;
+            transition: all 0.2s;
+        }
+        .signature-input:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        .signature-pad-wrap {
+            border: 2px solid var(--gray-300); border-radius: var(--radius);
+            background: #FFFEF5; position: relative; margin-top: 8px;
+            touch-action: none; user-select: none;
+        }
+        .signature-pad-wrap canvas {
+            display: block; width: 100%; border-radius: var(--radius);
+            cursor: crosshair;
+        }
+        .signature-pad-placeholder {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: var(--gray-300); font-size: 16px; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .signature-pad-actions {
+            display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;
+        }
+        .signature-pad-actions button {
+            padding: 6px 14px; font-size: 13px; border-radius: 6px;
+            border: 1px solid var(--gray-300); background: var(--white);
+            color: var(--gray-700); cursor: pointer; font-family: inherit;
+        }
+        .signature-pad-actions button:hover { background: var(--gray-50); }
+        .contract-body-preview {
+            padding: 32px; font-size: 14px; line-height: 1.8;
+            max-height: 400px; overflow-y: auto;
+            border: 1px solid var(--gray-200); border-radius: var(--radius);
+            background: var(--white); margin-bottom: 20px;
+        }
+        .contract-body-preview h2 { text-align: center; font-size: 20px; margin-bottom: 24px; }
+        .contract-body-preview h3 { font-size: 15px; margin: 20px 0 8px; color: var(--primary); }
+        .contract-body-preview p { margin-bottom: 8px; }
+        .contract-body-preview .parties { margin: 20px 0; padding: 16px; background: var(--gray-50); border-radius: var(--radius); }
+        .sign-agreement {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 16px; background: var(--gray-50);
+            border-radius: var(--radius); margin-top: 12px;
+            font-size: 14px; color: var(--gray-700);
+        }
+        .sign-agreement input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+
+        /* ===== 계약 게이트 화면 ===== */
+        .contract-gate { display: none; min-height: 100vh; background: var(--gray-100); }
+        .contract-gate-header { background: var(--white); padding: 16px 24px; box-shadow: var(--shadow); }
+        .contract-gate-header-inner { max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .contract-gate-body { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+        .contract-gate-card { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); padding: 48px 40px; text-align: center; }
+        .contract-gate-icon { font-size: 48px; margin-bottom: 16px; }
+        .contract-gate-card h2 { font-size: 22px; color: var(--gray-900); margin-bottom: 12px; }
+        .contract-gate-card p { color: var(--gray-500); font-size: 15px; line-height: 1.6; margin-bottom: 8px; }
+        .contract-gate-status { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: var(--radius); font-size: 14px; font-weight: 600; margin: 24px 0; }
+        .contract-gate-status.waiting { background: #FEF3C7; color: #B45309; }
+        .contract-gate-status.ready { background: #DBEAFE; color: #1D4ED8; }
+        .contract-gate-steps { text-align: left; margin: 32px 0; padding: 24px; background: var(--gray-50); border-radius: var(--radius); }
+        .contract-gate-steps h4 { font-size: 14px; color: var(--gray-700); margin-bottom: 16px; }
+        .contract-gate-step { display: flex; align-items: center; gap: 12px; padding: 10px 0; font-size: 14px; color: var(--gray-700); }
+        .contract-gate-step .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+        .contract-gate-step .step-num.done { background: var(--success); color: var(--white); }
+        .contract-gate-step .step-num.current { background: var(--primary); color: var(--white); }
+        .contract-gate-step .step-num.pending { background: var(--gray-200); color: var(--gray-500); }
+        .contract-gate-step.done-step { color: var(--gray-400); text-decoration: line-through; }
     </style>
 </head>
 <body>
@@ -281,6 +380,63 @@
             </form>
             <div class="register-link">
                 계정이 없으신가요? <a href="partner-register.html">파트너 가입</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contract Gate (계약 서명 전 차단 화면) -->
+    <div class="contract-gate" id="contractGate">
+        <header class="contract-gate-header">
+            <div class="contract-gate-header-inner">
+                <div class="dashboard-logo">메디플라톤 파트너</div>
+                <div class="dashboard-user">
+                    <div>
+                        <div class="partner-name" id="gatePartnerName"></div>
+                        <div class="partner-email" id="gatePartnerEmail"></div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" id="gateLogoutBtn">로그아웃</button>
+                </div>
+            </div>
+        </header>
+        <div class="contract-gate-body">
+            <div class="contract-gate-card">
+                <div class="contract-gate-icon" id="gateIcon">&#128221;</div>
+                <h2 id="gateTitle">계약서 서명이 필요합니다</h2>
+                <p id="gateMessage">파트너 대시보드를 이용하시려면 제휴 계약서에 서명해주세요.</p>
+
+                <div id="gateStatusBadge" class="contract-gate-status waiting">
+                    계약서 발송 대기 중
+                </div>
+
+                <div class="contract-gate-steps">
+                    <h4>파트너 가입 절차</h4>
+                    <div class="contract-gate-step done-step">
+                        <span class="step-num done">&#10003;</span>
+                        <span>파트너 가입 신청</span>
+                    </div>
+                    <div class="contract-gate-step done-step">
+                        <span class="step-num done">&#10003;</span>
+                        <span>관리자 승인 완료</span>
+                    </div>
+                    <div class="contract-gate-step" id="gateStep3">
+                        <span class="step-num current" id="gateStep3Num">3</span>
+                        <span id="gateStep3Text">계약서 서명 대기</span>
+                    </div>
+                    <div class="contract-gate-step" id="gateStep4">
+                        <span class="step-num pending" id="gateStep4Num">4</span>
+                        <span>대시보드 이용 시작</span>
+                    </div>
+                </div>
+
+                <div id="gateContractAction" style="display:none;">
+                    <button class="btn btn-primary" onclick="openGateContractForSign()" style="max-width:320px;margin:0 auto;">
+                        계약서 확인 및 서명하기
+                    </button>
+                </div>
+
+                <p style="font-size:13px;color:var(--gray-400);margin-top:24px;" id="gateHelpText">
+                    문의사항은 관리자에게 연락해주세요.
+                </p>
             </div>
         </div>
     </div>
@@ -338,6 +494,8 @@
                 <button class="tab-btn" data-tab="notices">공지사항</button>
                 <button class="tab-btn" data-tab="qna">상품 Q&amp;A</button>
                 <button class="tab-btn" data-tab="board">게시판</button>
+                <button class="tab-btn" data-tab="contracts">계약</button>
+                <button class="tab-btn" data-tab="newclinics">신규 개원</button>
                 <button class="tab-btn" data-tab="notifications">알림</button>
             </div>
 
@@ -998,6 +1156,126 @@ Tip: 미리 건물주한테 양해 구해두시면 좋아요.
                 </div>
             </div>
 
+            <!-- Tab: Contracts (계약) -->
+            <div class="tab-content" id="contractsSection" style="display: none;">
+                <div class="data-section">
+                    <div class="data-header"><h2>내 계약서</h2></div>
+                    <div class="loading" id="contractLoading" style="display:none;"><div class="spinner"></div></div>
+                    <table class="data-table" id="contractTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>계약번호</th>
+                                <th>기간</th>
+                                <th>수수료율</th>
+                                <th>상태</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contractTableBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="contractEmpty" style="display: none;">
+                        <h3>계약서가 없습니다</h3>
+                        <p>관리자가 계약서를 발송하면 여기에 표시됩니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: New Clinics -->
+            <div class="tab-content" id="newclinicsSection" style="display: none;">
+                <!-- Summary Cards -->
+                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-label">이번 주 신규</div>
+                        <div class="stat-value" id="ncWeeklyCount">0</div>
+                        <div class="stat-sub">건</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">미선점</div>
+                        <div class="stat-value" id="ncUnclaimedCount" style="color:var(--success);">0</div>
+                        <div class="stat-sub">건</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">내 선점</div>
+                        <div class="stat-value" id="ncMyClaimCount" style="color:var(--primary);">0</div>
+                        <div class="stat-sub">건</div>
+                    </div>
+                </div>
+
+                <div class="data-section">
+                    <div class="data-header">
+                        <h2>신규 개원 의료기관</h2>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="data-filters" style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;">
+                        <select class="filter-select" id="ncpRegionFilter">
+                            <option value="">전체 지역</option>
+                            <option value="seoul">서울</option>
+                            <option value="gyeonggi">경기</option>
+                            <option value="incheon">인천</option>
+                            <option value="busan">부산</option>
+                            <option value="daegu">대구</option>
+                            <option value="daejeon">대전</option>
+                            <option value="gwangju">광주</option>
+                            <option value="ulsan">울산</option>
+                            <option value="sejong">세종</option>
+                            <option value="gangwon">강원</option>
+                            <option value="chungbuk">충북</option>
+                            <option value="chungnam">충남</option>
+                            <option value="jeonbuk">전북</option>
+                            <option value="jeonnam">전남</option>
+                            <option value="gyeongbuk">경북</option>
+                            <option value="gyeongnam">경남</option>
+                            <option value="jeju">제주</option>
+                        </select>
+                        <select class="filter-select" id="ncpSpecialtyFilter">
+                            <option value="">전체 진료과</option>
+                            <option value="내과">내과</option>
+                            <option value="외과">외과</option>
+                            <option value="정형외과">정형외과</option>
+                            <option value="피부과">피부과</option>
+                            <option value="안과">안과</option>
+                            <option value="이비인후과">이비인후과</option>
+                            <option value="산부인과">산부인과</option>
+                            <option value="소아청소년과">소아청소년과</option>
+                            <option value="비뇨의학과">비뇨의학과</option>
+                            <option value="신경외과">신경외과</option>
+                            <option value="성형외과">성형외과</option>
+                            <option value="재활의학과">재활의학과</option>
+                            <option value="가정의학과">가정의학과</option>
+                            <option value="치과">치과</option>
+                            <option value="한의원">한의원</option>
+                            <option value="약국">약국</option>
+                        </select>
+                        <select class="filter-select" id="ncpStatusFilter">
+                            <option value="">전체 상태</option>
+                            <option value="unclaimed">선점 가능</option>
+                            <option value="mine">내 선점</option>
+                        </select>
+                        <input type="text" class="filter-search" id="ncpSearch" placeholder="기관명/주소 검색..." style="flex:1;min-width:150px;">
+                    </div>
+
+                    <!-- Table -->
+                    <div class="loading" id="ncpLoading" style="display:none;"><div class="spinner"></div></div>
+                    <table class="data-table" id="ncpTable" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>의료기관명</th>
+                                <th>진료과</th>
+                                <th>지역</th>
+                                <th>개설일</th>
+                                <th>상태</th>
+                                <th>액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ncpTableBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="ncpEmpty" style="display:none;">
+                        <h3>신규 개원 정보가 없습니다</h3>
+                    </div>
+                </div>
+            </div>
+
             <!-- Tab: Notifications -->
             <div class="tab-content" id="notificationsSection" style="display: none;">
                 <div class="data-section">
@@ -1012,6 +1290,20 @@ Tip: 미리 건물주한테 양해 구해두시면 좋아요.
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Clinic Detail Modal -->
+    <div class="modal-overlay" id="clinicModal">
+        <div class="modal" style="max-width:550px;">
+            <div class="modal-header">
+                <h3 id="clinicModalTitle">신규 개원 상세</h3>
+                <button class="modal-close" onclick="document.getElementById('clinicModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body" id="clinicModalBody"></div>
+            <div class="modal-footer" id="clinicModalFooter">
+                <button class="btn btn-outline btn-sm" onclick="document.getElementById('clinicModal').classList.remove('active')">닫기</button>
+            </div>
+        </div>
     </div>
 
     <!-- Detail Modal -->
@@ -1047,6 +1339,48 @@ Tip: 미리 건물주한테 양해 구해두시면 좋아요.
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px;">등록</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contract Sign Modal -->
+    <div class="modal-overlay" id="contractSignModal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 id="contractSignTitle">계약서</h3>
+                <button class="modal-close" onclick="document.getElementById('contractSignModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <span id="contractSignNumber" style="font-weight:600;font-size:15px;color:var(--gray-700);"></span>
+                    <span id="contractSignStatus"></span>
+                </div>
+                <div class="contract-body-preview" id="contractSignBody"></div>
+                <div id="contractSignArea" style="display:none;">
+                    <div style="background:var(--primary-light);padding:16px;border-radius:var(--radius);margin-bottom:20px;">
+                        <p style="font-size:14px;font-weight:600;color:var(--primary);margin-bottom:4px;">계약서 서명</p>
+                        <p style="font-size:13px;color:var(--gray-500);">아래에 서명자 이름을 입력하고 서명란에 직접 서명해주세요.</p>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:14px;color:var(--gray-700);margin-bottom:8px;display:block;">서명자 이름 <span style="color:var(--danger);">*</span></label>
+                        <input type="text" class="signature-input" id="signerNameInput" placeholder="이름을 입력하세요" maxlength="50" oninput="updateSignBtnState()">
+                    </div>
+                    <div class="form-group" style="margin-top:16px;">
+                        <label style="font-size:14px;color:var(--gray-700);margin-bottom:8px;display:block;">서명 <span style="color:var(--danger);">*</span></label>
+                        <div class="signature-pad-wrap" id="signaturePadWrap">
+                            <canvas id="signatureCanvas" height="160"></canvas>
+                            <div class="signature-pad-placeholder" id="signaturePlaceholder">여기에 서명하세요</div>
+                        </div>
+                        <div class="signature-pad-actions">
+                            <button type="button" onclick="clearSignaturePad()">지우기</button>
+                        </div>
+                    </div>
+                    <label class="sign-agreement">
+                        <input type="checkbox" id="signAgreementCheck" onchange="updateSignBtnState()">
+                        본 계약 내용을 확인하였으며 이에 동의합니다
+                    </label>
+                    <button class="btn btn-primary" id="signContractBtn" style="width:100%;margin-top:16px;" disabled onclick="signContract()">서명 완료</button>
+                </div>
             </div>
         </div>
     </div>

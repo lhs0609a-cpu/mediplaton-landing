@@ -297,6 +297,12 @@ function setupEventListeners() {
     // Mark all read
     document.getElementById('markAllReadBtn').addEventListener('click', markAllNotificationsRead);
 
+    // New Clinics filters
+    document.getElementById('ncpRegionFilter').addEventListener('change', loadNewClinics);
+    document.getElementById('ncpSpecialtyFilter').addEventListener('change', loadNewClinics);
+    document.getElementById('ncpStatusFilter').addEventListener('change', loadNewClinics);
+    document.getElementById('ncpSearch').addEventListener('input', debounce(loadNewClinics, 300));
+
     // Modal
     document.getElementById('closeModal').addEventListener('click', closeModal);
     document.getElementById('closeModalBtn').addEventListener('click', closeModal);
@@ -357,14 +363,122 @@ async function checkPartnerStatus() {
             return;
         }
 
-        // approved - proceed
+        // approved - 계약 상태 확인
         currentPartner = partner;
-        showDashboard();
+
+        const { data: contracts } = await sb
+            .from('partner_contracts')
+            .select('id, status, contract_number')
+            .eq('partner_id', partner.id)
+            .in('status', ['draft', 'sent', 'signed', 'active'])
+            .order('created_at', { ascending: false });
+
+        // signed 또는 active 계약이 있으면 대시보드 진입
+        const hasSignedContract = contracts && contracts.some(c => c.status === 'signed' || c.status === 'active');
+
+        if (hasSignedContract) {
+            showDashboard();
+        } else {
+            // 서명 전 → 계약 게이트 표시
+            const sentContract = contracts && contracts.find(c => c.status === 'sent');
+            const draftContract = contracts && contracts.find(c => c.status === 'draft');
+            showContractGate(sentContract, draftContract);
+        }
     } catch (error) {
         loginError.textContent = '로그인 처리 중 오류가 발생했습니다.';
         loginError.style.display = 'block';
         await sb.auth.signOut();
         currentUser = null;
+    }
+}
+
+let gateContractId = null;
+
+function showContractGate(sentContract, draftContract) {
+    loginScreen.style.display = 'none';
+    dashboard.style.display = 'none';
+    document.getElementById('contractGate').style.display = 'block';
+
+    document.getElementById('gatePartnerName').textContent = currentPartner.name || '파트너';
+    document.getElementById('gatePartnerEmail').textContent = currentPartner.email || currentUser.email;
+
+    // 로그아웃 버튼
+    document.getElementById('gateLogoutBtn').addEventListener('click', handleLogout);
+
+    const statusBadge = document.getElementById('gateStatusBadge');
+    const actionArea = document.getElementById('gateContractAction');
+    const step3Num = document.getElementById('gateStep3Num');
+    const step3Text = document.getElementById('gateStep3Text');
+    const helpText = document.getElementById('gateHelpText');
+    const gateTitle = document.getElementById('gateTitle');
+    const gateMessage = document.getElementById('gateMessage');
+
+    if (sentContract) {
+        // 계약서가 발송됨 → 서명 가능
+        gateContractId = sentContract.id;
+        gateTitle.textContent = '계약서가 도착했습니다';
+        gateMessage.textContent = `계약서(${sentContract.contract_number})를 확인하고 서명해주세요.`;
+        statusBadge.className = 'contract-gate-status ready';
+        statusBadge.textContent = '계약서 서명 대기';
+        actionArea.style.display = 'block';
+        step3Text.textContent = '계약서 서명 대기';
+        helpText.textContent = '계약서를 확인한 후 서명하시면 대시보드를 이용하실 수 있습니다.';
+    } else if (draftContract) {
+        // 초안만 있고 아직 발송 안 됨
+        gateContractId = null;
+        gateTitle.textContent = '계약서 준비 중입니다';
+        gateMessage.textContent = '관리자가 계약서를 준비하고 있습니다. 곧 발송될 예정입니다.';
+        statusBadge.className = 'contract-gate-status waiting';
+        statusBadge.textContent = '계약서 준비 중';
+        actionArea.style.display = 'none';
+        step3Text.textContent = '계약서 발송 대기';
+        helpText.textContent = '계약서가 발송되면 알림을 받으실 수 있습니다. 잠시만 기다려주세요.';
+    } else {
+        // 계약서 자체가 없음
+        gateContractId = null;
+        gateTitle.textContent = '계약서 발송 대기 중';
+        gateMessage.textContent = '파트너 승인이 완료되었습니다. 관리자가 계약서를 발송할 예정입니다.';
+        statusBadge.className = 'contract-gate-status waiting';
+        statusBadge.textContent = '계약서 발송 대기';
+        actionArea.style.display = 'none';
+        step3Text.textContent = '계약서 발송 대기';
+        helpText.textContent = '계약서가 발송되면 알림을 받으실 수 있습니다. 잠시만 기다려주세요.';
+    }
+}
+
+async function openGateContractForSign() {
+    if (!gateContractId) return;
+
+    // 기존 서명 모달 재사용
+    currentSignContractId = gateContractId;
+
+    try {
+        const { data, error } = await sb.from('partner_contracts').select('*').eq('id', gateContractId).single();
+        if (error) throw error;
+
+        document.getElementById('contractSignTitle').textContent = '제휴 계약서';
+        document.getElementById('contractSignNumber').textContent = data.contract_number;
+        document.getElementById('contractSignStatus').innerHTML = `<span class="contract-status ${data.status}">${getContractStatusLabel(data.status)}</span>`;
+        document.getElementById('contractSignBody').innerHTML = data.contract_body || '<p style="color:var(--gray-500);">계약서 본문이 없습니다.</p>';
+
+        const signArea = document.getElementById('contractSignArea');
+        if (data.status === 'sent') {
+            signArea.style.display = 'block';
+            document.getElementById('signerNameInput').value = '';
+            document.getElementById('signAgreementCheck').checked = false;
+            document.getElementById('signContractBtn').disabled = true;
+        } else {
+            signArea.style.display = 'none';
+        }
+
+        document.getElementById('contractSignModal').classList.add('active');
+
+        if (data.status === 'sent') {
+            setTimeout(() => initSignaturePad(), 100);
+        }
+    } catch (err) {
+        console.error('Open gate contract error:', err);
+        showToast('계약서를 불러올 수 없습니다.', 'error');
     }
 }
 
@@ -376,7 +490,9 @@ async function handleLogout() {
     await sb.auth.signOut();
     currentUser = null;
     currentPartner = null;
+    gateContractId = null;
     dashboard.style.display = 'none';
+    document.getElementById('contractGate').style.display = 'none';
     loginScreen.style.display = 'flex';
     loginForm.reset();
     loginError.style.display = 'none';
@@ -421,6 +537,16 @@ function setupRealtime() {
             if (currentTab === 'notifications') loadNotifications();
             showToast(payload.new.title, 'success');
         })
+        .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'new_clinic_openings'
+        }, () => {
+            if (currentTab === 'newclinics') {
+                loadNewClinics();
+                loadNewClinicStats();
+            }
+        })
         .subscribe();
 }
 
@@ -439,6 +565,8 @@ function switchTab(tab) {
     document.getElementById('noticesSection').style.display = tab === 'notices' ? 'block' : 'none';
     document.getElementById('qnaSection').style.display = tab === 'qna' ? 'block' : 'none';
     document.getElementById('boardSection').style.display = tab === 'board' ? 'block' : 'none';
+    document.getElementById('contractsSection').style.display = tab === 'contracts' ? 'block' : 'none';
+    document.getElementById('newclinicsSection').style.display = tab === 'newclinics' ? 'block' : 'none';
     document.getElementById('notificationsSection').style.display = tab === 'notifications' ? 'block' : 'none';
 
     if (tab === 'clients') loadClients();
@@ -446,6 +574,8 @@ function switchTab(tab) {
     if (tab === 'settlements') loadSettlements();
     if (tab === 'notices') loadPartnerNotices();
     if (tab === 'board') loadBoardPosts();
+    if (tab === 'contracts') loadPartnerContracts();
+    if (tab === 'newclinics') { loadNewClinics(); loadNewClinicStats(); }
     if (tab === 'notifications') loadNotifications();
 }
 
@@ -1181,10 +1311,620 @@ document.addEventListener('DOMContentLoaded', () => {
     setupBoard();
 });
 
+// ─── Contracts (계약) ───
+
+let currentSignContractId = null;
+
+function getContractStatusLabel(status) {
+    const labels = { 'draft': '작성중', 'sent': '발송됨', 'signed': '서명완료', 'active': '활성', 'expired': '만료', 'terminated': '해지' };
+    return labels[status] || status;
+}
+
+async function loadPartnerContracts() {
+    const loading = document.getElementById('contractLoading');
+    const table = document.getElementById('contractTable');
+    const empty = document.getElementById('contractEmpty');
+    const tbody = document.getElementById('contractTableBody');
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        const { data, error } = await sb
+            .from('partner_contracts')
+            .select('*')
+            .eq('partner_id', currentPartner.id)
+            .in('status', ['sent', 'signed', 'active', 'expired', 'terminated'])
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(c => `
+            <tr>
+                <td><strong>${escapeHtml(c.contract_number)}</strong></td>
+                <td>${c.start_date} ~ ${c.end_date}</td>
+                <td>${(Number(c.commission_rate) * 100).toFixed(2)}%</td>
+                <td><span class="contract-status ${c.status}">${getContractStatusLabel(c.status)}</span></td>
+                <td>
+                    ${c.status === 'sent'
+                        ? `<button class="action-btn view" onclick="openContractForSign(${c.id})" style="background:#EDE9FE;color:#6D28D9;">서명하기</button>`
+                        : `<button class="action-btn view" onclick="openContractForSign(${c.id})">보기</button>`
+                    }
+                </td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Load contracts error:', error);
+        loading.style.display = 'none';
+        showToast('계약서를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+async function openContractForSign(contractId) {
+    currentSignContractId = contractId;
+
+    try {
+        const { data, error } = await sb.from('partner_contracts').select('*').eq('id', contractId).single();
+        if (error) throw error;
+
+        document.getElementById('contractSignTitle').textContent = '계약서';
+        document.getElementById('contractSignNumber').textContent = data.contract_number;
+        document.getElementById('contractSignStatus').innerHTML = `<span class="contract-status ${data.status}">${getContractStatusLabel(data.status)}</span>`;
+        document.getElementById('contractSignBody').innerHTML = data.contract_body || '<p style="color:var(--gray-500);">계약서 본문이 없습니다.</p>';
+
+        const signArea = document.getElementById('contractSignArea');
+        if (data.status === 'sent') {
+            signArea.style.display = 'block';
+            document.getElementById('signerNameInput').value = '';
+            document.getElementById('signAgreementCheck').checked = false;
+            document.getElementById('signContractBtn').disabled = true;
+        } else {
+            signArea.style.display = 'none';
+        }
+
+        document.getElementById('contractSignModal').classList.add('active');
+
+        // 서명 패드 초기화 (모달이 보인 후)
+        if (data.status === 'sent') {
+            setTimeout(() => initSignaturePad(), 100);
+        }
+    } catch (err) {
+        console.error('Open contract error:', err);
+        showToast('계약서를 불러올 수 없습니다.', 'error');
+    }
+}
+
+// ─── Signature Pad (캔버스 서명) ───
+
+let signaturePadCtx = null;
+let signaturePadDrawing = false;
+let signaturePadHasContent = false;
+
+function initSignaturePad() {
+    const canvas = document.getElementById('signatureCanvas');
+    if (!canvas) return;
+
+    const wrap = document.getElementById('signaturePadWrap');
+    const rect = wrap.getBoundingClientRect();
+    canvas.width = rect.width - 4; // border 보정
+    canvas.height = 160;
+
+    signaturePadCtx = canvas.getContext('2d');
+    signaturePadCtx.strokeStyle = '#1a1a1a';
+    signaturePadCtx.lineWidth = 2.5;
+    signaturePadCtx.lineCap = 'round';
+    signaturePadCtx.lineJoin = 'round';
+    signaturePadDrawing = false;
+    signaturePadHasContent = false;
+
+    document.getElementById('signaturePlaceholder').style.opacity = '1';
+
+    // Mouse events
+    canvas.addEventListener('mousedown', sigPadStart);
+    canvas.addEventListener('mousemove', sigPadMove);
+    canvas.addEventListener('mouseup', sigPadEnd);
+    canvas.addEventListener('mouseleave', sigPadEnd);
+
+    // Touch events
+    canvas.addEventListener('touchstart', sigPadTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', sigPadTouchMove, { passive: false });
+    canvas.addEventListener('touchend', sigPadEnd);
+}
+
+function sigPadGetPos(e, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: (e.clientX - rect.left) * (canvas.width / rect.width),
+        y: (e.clientY - rect.top) * (canvas.height / rect.height)
+    };
+}
+
+function sigPadStart(e) {
+    signaturePadDrawing = true;
+    const pos = sigPadGetPos(e, e.target);
+    signaturePadCtx.beginPath();
+    signaturePadCtx.moveTo(pos.x, pos.y);
+    document.getElementById('signaturePlaceholder').style.opacity = '0';
+    signaturePadHasContent = true;
+    updateSignBtnState();
+}
+
+function sigPadMove(e) {
+    if (!signaturePadDrawing) return;
+    const pos = sigPadGetPos(e, e.target);
+    signaturePadCtx.lineTo(pos.x, pos.y);
+    signaturePadCtx.stroke();
+}
+
+function sigPadEnd() {
+    signaturePadDrawing = false;
+}
+
+function sigPadTouchStart(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const canvas = document.getElementById('signatureCanvas');
+    const rect = canvas.getBoundingClientRect();
+    signaturePadDrawing = true;
+    const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+    signaturePadCtx.beginPath();
+    signaturePadCtx.moveTo(x, y);
+    document.getElementById('signaturePlaceholder').style.opacity = '0';
+    signaturePadHasContent = true;
+    updateSignBtnState();
+}
+
+function sigPadTouchMove(e) {
+    e.preventDefault();
+    if (!signaturePadDrawing) return;
+    const touch = e.touches[0];
+    const canvas = document.getElementById('signatureCanvas');
+    const rect = canvas.getBoundingClientRect();
+    const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+    signaturePadCtx.lineTo(x, y);
+    signaturePadCtx.stroke();
+}
+
+function clearSignaturePad() {
+    const canvas = document.getElementById('signatureCanvas');
+    if (!canvas || !signaturePadCtx) return;
+    signaturePadCtx.clearRect(0, 0, canvas.width, canvas.height);
+    signaturePadHasContent = false;
+    document.getElementById('signaturePlaceholder').style.opacity = '1';
+    updateSignBtnState();
+}
+
+function getSignatureDataURL() {
+    const canvas = document.getElementById('signatureCanvas');
+    if (!canvas || !signaturePadHasContent) return null;
+    return canvas.toDataURL('image/png');
+}
+
+function updateSignBtnState() {
+    const name = document.getElementById('signerNameInput').value.trim();
+    const agreed = document.getElementById('signAgreementCheck').checked;
+    document.getElementById('signContractBtn').disabled = !(name && signaturePadHasContent && agreed);
+}
+
+async function signContract() {
+    if (!currentSignContractId) return;
+
+    const signerName = document.getElementById('signerNameInput').value.trim();
+    const agreed = document.getElementById('signAgreementCheck').checked;
+    const signatureData = getSignatureDataURL();
+
+    if (!signerName) {
+        showToast('서명자 이름을 입력해주세요.', 'error');
+        return;
+    }
+    if (!signatureData) {
+        showToast('서명란에 서명을 해주세요.', 'error');
+        return;
+    }
+    if (!agreed) {
+        showToast('계약 내용에 동의해주세요.', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('signContractBtn');
+    btn.disabled = true;
+    btn.textContent = '서명 처리 중...';
+
+    try {
+        const signedAt = new Date().toISOString();
+
+        // 현재 계약 본문 가져오기
+        const { data: contract, error: fetchErr } = await sb
+            .from('partner_contracts')
+            .select('contract_body, status, contract_number')
+            .eq('id', currentSignContractId)
+            .single();
+        if (fetchErr) throw fetchErr;
+
+        if (contract.status !== 'sent') {
+            showToast('이미 서명되었거나 서명할 수 없는 상태입니다.', 'error');
+            return;
+        }
+
+        // 계약 본문에 서명란 HTML 추가 (이미지 포함)
+        const signatureHtml = `
+<div style="margin-top:40px;padding-top:20px;border-top:2px solid #333;">
+<h3 style="font-size:15px;margin-bottom:16px;">서명란</h3>
+<div style="display:flex;gap:32px;align-items:flex-start;">
+    <div style="flex:1;">
+        <p style="margin-bottom:8px;"><strong>갑 (위탁자):</strong> 주식회사 메디플라톤</p>
+        <div style="height:80px;border-bottom:1px solid #999;margin-bottom:4px;"></div>
+        <p style="font-size:12px;color:#666;">(서명 또는 기명날인)</p>
+    </div>
+    <div style="flex:1;">
+        <p style="margin-bottom:8px;"><strong>을 (수탁자):</strong> ${escapeHtml(signerName)}</p>
+        <div style="border-bottom:1px solid #999;margin-bottom:4px;padding:4px 0;">
+            <img src="${signatureData}" alt="서명" style="max-height:72px;max-width:100%;">
+        </div>
+        <p style="font-size:12px;color:#666;">(서명 또는 기명날인)</p>
+    </div>
+</div>
+<p style="font-size:13px;color:#333;margin-top:16px;text-align:center;"><strong>서명일시:</strong> ${new Date(signedAt).toLocaleString('ko-KR')}</p>
+<p style="font-size:12px;color:#666;margin-top:4px;text-align:center;">본 계약 내용을 확인하였으며 이에 동의합니다.</p>
+</div>`;
+
+        const updatedBody = (contract.contract_body || '') + signatureHtml;
+
+        // 계약 상태 업데이트
+        const { error: updateErr } = await sb
+            .from('partner_contracts')
+            .update({
+                status: 'signed',
+                signer_name: signerName,
+                signed_at: signedAt,
+                signature_data: signatureData,
+                contract_body: updatedBody
+            })
+            .eq('id', currentSignContractId);
+        if (updateErr) throw updateErr;
+
+        // 상태 로그 기록
+        await sb.from('contract_status_logs').insert({
+            contract_id: currentSignContractId,
+            from_status: 'sent',
+            to_status: 'signed',
+            notes: `파트너 서명: ${signerName}`
+        });
+
+        // 관리자에게 알림 발송 (created_by 조회)
+        const { data: contractFull } = await sb
+            .from('partner_contracts')
+            .select('created_by')
+            .eq('id', currentSignContractId)
+            .single();
+
+        if (contractFull?.created_by) {
+            await sb.rpc('create_notification', {
+                p_user_id: contractFull.created_by,
+                p_type: 'contract_signed',
+                p_title: '계약서 서명 완료',
+                p_message: `${currentPartner.name}님이 계약서(${contract.contract_number})에 서명하였습니다. 확인해주세요.`
+            });
+        }
+
+        showToast('계약서에 서명이 완료되었습니다!', 'success');
+        document.getElementById('contractSignModal').classList.remove('active');
+
+        // 계약 게이트에서 서명한 경우 → 대시보드로 전환
+        const contractGate = document.getElementById('contractGate');
+        if (contractGate && contractGate.style.display === 'block') {
+            contractGate.style.display = 'none';
+            showDashboard();
+            return;
+        }
+
+        loadPartnerContracts();
+    } catch (err) {
+        console.error('Sign contract error:', err);
+        showToast('서명 처리 중 오류가 발생했습니다.', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '서명 완료';
+    }
+}
+
 function debounce(func, wait) {
     let timeout;
     return function (...args) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func(...args), wait);
     };
+}
+
+// ─── New Clinic Openings (신규 개원) ───
+
+async function loadNewClinicStats() {
+    if (!currentPartner) return;
+
+    try {
+        // This week's new openings
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        const weekStr = weekAgo.toISOString().split('T')[0];
+
+        const [
+            { count: weeklyCount },
+            { count: unclaimedCount },
+            { count: myClaimCount }
+        ] = await Promise.all([
+            sb.from('new_clinic_openings').select('*', { count: 'exact', head: true }).gte('created_at', weekStr),
+            sb.from('new_clinic_openings').select('*', { count: 'exact', head: true }).eq('claim_status', 'unclaimed'),
+            sb.from('new_clinic_openings').select('*', { count: 'exact', head: true }).eq('claimed_by', currentPartner.id)
+        ]);
+
+        document.getElementById('ncWeeklyCount').textContent = weeklyCount || 0;
+        document.getElementById('ncUnclaimedCount').textContent = unclaimedCount || 0;
+        document.getElementById('ncMyClaimCount').textContent = myClaimCount || 0;
+    } catch (error) {
+        console.error('New clinic stats error:', error);
+    }
+}
+
+async function loadNewClinics() {
+    if (!currentPartner) return;
+
+    const loading = document.getElementById('ncpLoading');
+    const table = document.getElementById('ncpTable');
+    const empty = document.getElementById('ncpEmpty');
+    const tbody = document.getElementById('ncpTableBody');
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        let query = sb
+            .from('new_clinic_openings')
+            .select('*')
+            .order('opening_date', { ascending: false });
+
+        const regionFilter = document.getElementById('ncpRegionFilter').value;
+        if (regionFilter) query = query.eq('region', regionFilter);
+
+        const specialtyFilter = document.getElementById('ncpSpecialtyFilter').value;
+        if (specialtyFilter) query = query.eq('specialty', specialtyFilter);
+
+        const statusFilter = document.getElementById('ncpStatusFilter').value;
+        if (statusFilter === 'unclaimed') {
+            query = query.eq('claim_status', 'unclaimed');
+        } else if (statusFilter === 'mine') {
+            query = query.eq('claimed_by', currentPartner.id);
+        }
+
+        const search = document.getElementById('ncpSearch').value.trim();
+        if (search) query = query.or(`clinic_name.ilike.%${search}%,address.ilike.%${search}%`);
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        loading.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = data.map(row => {
+            const isMine = row.claimed_by === currentPartner.id;
+            const dateStr = row.opening_date ? new Date(row.opening_date).toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }) : '-';
+
+            let statusHtml = '';
+            let actionHtml = '';
+
+            if (row.claim_status === 'unclaimed') {
+                statusHtml = '<span class="status-badge claim-unclaimed">선점가능</span>';
+                actionHtml = `<button class="claim-btn claim-btn-start" onclick="claimClinic(${row.id})">컨택 시작</button>`;
+            } else if (row.claim_status === 'claimed' && isMine) {
+                statusHtml = '<span class="status-badge claim-claimed">내가 선점</span>';
+                actionHtml = `
+                    <div class="claim-dropdown" id="claimDd${row.id}">
+                        <button class="claim-btn claim-btn-mine" onclick="toggleClaimDropdown(${row.id})">상태 변경</button>
+                        <div class="claim-dropdown-menu">
+                            <button class="claim-dropdown-item" onclick="updateClaimStatus(${row.id}, 'contacted')">컨택 완료</button>
+                            <button class="claim-dropdown-item" onclick="updateClaimStatus(${row.id}, 'converted')">고객 전환</button>
+                            <button class="claim-dropdown-item danger" onclick="unclaimClinic(${row.id})">선점 취소</button>
+                        </div>
+                    </div>`;
+            } else if (row.claim_status === 'contacted' && isMine) {
+                statusHtml = '<span class="status-badge claim-contacted">컨택완료</span>';
+                actionHtml = `<button class="claim-btn" style="background:var(--warning);color:white;" onclick="updateClaimStatus(${row.id}, 'converted')">고객 전환</button>`;
+            } else if (row.claim_status === 'converted' && isMine) {
+                statusHtml = '<span class="status-badge claim-converted">전환완료</span>';
+                actionHtml = '';
+            } else {
+                // Someone else claimed
+                statusHtml = '<span class="status-badge claim-other">선점됨</span>';
+                actionHtml = '';
+            }
+
+            return `
+                <tr onclick="openClinicDetail(${row.id})" style="cursor:pointer;">
+                    <td><strong>${escapeHtml(row.clinic_name)}</strong></td>
+                    <td>${escapeHtml(row.specialty || '-')}</td>
+                    <td>${getRegionLabel(row.region)}</td>
+                    <td>${dateStr}</td>
+                    <td>${statusHtml}</td>
+                    <td onclick="event.stopPropagation();">${actionHtml}</td>
+                </tr>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Load new clinics error:', error);
+        loading.style.display = 'none';
+        showToast('신규 개원 데이터를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+function toggleClaimDropdown(id) {
+    const dd = document.getElementById('claimDd' + id);
+    // Close all other dropdowns
+    document.querySelectorAll('.claim-dropdown.open').forEach(el => {
+        if (el.id !== 'claimDd' + id) el.classList.remove('open');
+    });
+    dd.classList.toggle('open');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.claim-dropdown')) {
+        document.querySelectorAll('.claim-dropdown.open').forEach(el => el.classList.remove('open'));
+    }
+});
+
+async function claimClinic(id) {
+    if (!currentPartner) return;
+
+    try {
+        const { error } = await sb
+            .from('new_clinic_openings')
+            .update({
+                claimed_by: currentPartner.id,
+                claimed_at: new Date().toISOString(),
+                claim_status: 'claimed'
+            })
+            .eq('id', id)
+            .eq('claim_status', 'unclaimed');
+
+        if (error) throw error;
+        showToast('선점되었습니다! 컨택을 시작하세요.', 'success');
+        loadNewClinics();
+        loadNewClinicStats();
+    } catch (error) {
+        showToast('선점 실패: ' + error.message, 'error');
+        loadNewClinics();
+    }
+}
+
+async function updateClaimStatus(id, status) {
+    if (!currentPartner) return;
+
+    try {
+        const { error } = await sb
+            .from('new_clinic_openings')
+            .update({
+                claim_status: status
+            })
+            .eq('id', id)
+            .eq('claimed_by', currentPartner.id);
+
+        if (error) throw error;
+
+        const labels = { 'contacted': '컨택 완료', 'converted': '고객 전환' };
+        showToast(`${labels[status] || status} 처리되었습니다.`, 'success');
+        loadNewClinics();
+        loadNewClinicStats();
+    } catch (error) {
+        showToast('상태 변경 실패: ' + error.message, 'error');
+    }
+}
+
+async function unclaimClinic(id) {
+    if (!confirm('선점을 취소하시겠습니까?')) return;
+
+    try {
+        const { error } = await sb
+            .from('new_clinic_openings')
+            .update({
+                claimed_by: null,
+                claimed_at: null,
+                claim_status: 'unclaimed',
+                notes: null
+            })
+            .eq('id', id)
+            .eq('claimed_by', currentPartner.id);
+
+        if (error) throw error;
+        showToast('선점이 취소되었습니다.', 'success');
+        loadNewClinics();
+        loadNewClinicStats();
+    } catch (error) {
+        showToast('선점 취소 실패: ' + error.message, 'error');
+    }
+}
+
+async function openClinicDetail(id) {
+    try {
+        const { data, error } = await sb
+            .from('new_clinic_openings')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+
+        const isMine = data.claimed_by === currentPartner.id;
+        const phoneMasked = (!isMine && data.claim_status !== 'unclaimed' && data.phone)
+            ? data.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+            : data.phone;
+
+        const body = document.getElementById('clinicModalBody');
+        body.innerHTML = `
+            <div class="detail-row"><span class="detail-label">의료기관명</span><span class="detail-value"><strong>${escapeHtml(data.clinic_name)}</strong></span></div>
+            ${data.representative_name ? `<div class="detail-row"><span class="detail-label">대표자명</span><span class="detail-value">${escapeHtml(data.representative_name)}</span></div>` : ''}
+            ${data.specialty ? `<div class="detail-row"><span class="detail-label">진료과목</span><span class="detail-value">${escapeHtml(data.specialty)}</span></div>` : ''}
+            ${data.address ? `<div class="detail-row"><span class="detail-label">주소</span><span class="detail-value">${escapeHtml(data.address)}</span></div>` : ''}
+            <div class="detail-row"><span class="detail-label">지역</span><span class="detail-value">${getRegionLabel(data.region)}</span></div>
+            ${data.opening_date ? `<div class="detail-row"><span class="detail-label">개설일자</span><span class="detail-value">${data.opening_date}</span></div>` : ''}
+            <div class="detail-row"><span class="detail-label">전화번호</span><span class="detail-value">${phoneMasked ? (isMine || data.claim_status === 'unclaimed' ? '<a href="tel:' + data.phone + '">' + escapeHtml(data.phone) + '</a>' : escapeHtml(phoneMasked)) : '-'}</span></div>
+            ${isMine ? `
+            <div class="detail-row" style="border-top:2px solid var(--gray-200);margin-top:12px;padding-top:12px;">
+                <span class="detail-label">메모</span>
+                <span class="detail-value">
+                    <textarea id="clinicNoteInput" rows="3" placeholder="메모를 남겨보세요..." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:14px;font-family:inherit;">${escapeHtml(data.notes || '')}</textarea>
+                </span>
+            </div>
+            ` : ''}
+        `;
+
+        const footer = document.getElementById('clinicModalFooter');
+        footer.innerHTML = '<button class="btn btn-outline btn-sm" onclick="document.getElementById(\'clinicModal\').classList.remove(\'active\')">닫기</button>';
+
+        if (isMine) {
+            footer.innerHTML += `<button class="btn btn-primary btn-sm" onclick="saveClinicNote(${data.id})">메모 저장</button>`;
+        }
+
+        if (data.claim_status === 'unclaimed') {
+            footer.innerHTML += `<button class="btn btn-primary btn-sm" onclick="claimClinic(${data.id}); document.getElementById('clinicModal').classList.remove('active');">컨택 시작</button>`;
+        }
+
+        document.getElementById('clinicModalTitle').textContent = escapeHtml(data.clinic_name);
+        document.getElementById('clinicModal').classList.add('active');
+    } catch (error) {
+        showToast('상세 정보를 불러올 수 없습니다.', 'error');
+    }
+}
+
+async function saveClinicNote(id) {
+    const noteInput = document.getElementById('clinicNoteInput');
+    if (!noteInput) return;
+
+    try {
+        const { error } = await sb
+            .from('new_clinic_openings')
+            .update({ notes: noteInput.value.trim() || null })
+            .eq('id', id)
+            .eq('claimed_by', currentPartner.id);
+
+        if (error) throw error;
+        showToast('메모가 저장되었습니다.', 'success');
+    } catch (error) {
+        showToast('메모 저장 실패: ' + error.message, 'error');
+    }
 }
