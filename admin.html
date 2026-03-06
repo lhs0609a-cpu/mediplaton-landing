@@ -365,6 +365,7 @@
         .contract-status.active { background: #D1FAE5; color: #047857; }
         .contract-status.expired { background: #FEF3C7; color: #B45309; }
         .contract-status.terminated { background: #FEE2E2; color: #B91C1C; }
+        .contract-status.termination_requested { background: #FFF7ED; color: #C2410C; border: 1px solid #FB923C; }
 
         /* Contract Modal */
         .contract-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 16px; background: var(--gray-50); border-radius: var(--radius); margin-bottom: 20px; }
@@ -979,7 +980,7 @@
             <!-- New Clinics Section -->
             <div class="data-section" id="newClinicsSection" style="display: none;">
                 <div class="data-header">
-                    <h2>신규 개원 의료기관 관리</h2>
+                    <h2>신규 개원 의료기관 관리 <span id="lastSyncTime" style="font-size:13px;font-weight:400;color:var(--gray-500);margin-left:8px;"></span></h2>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
                         <button class="btn btn-primary btn-sm" id="syncHiraBtn">공공데이터 동기화</button>
                         <button class="btn btn-outline btn-sm" id="openNewClinicFormBtn">수동 등록</button>

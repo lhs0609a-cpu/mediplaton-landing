@@ -1,0 +1,17 @@
+{
+  "crons": [
+    {
+      "path": "/api/sync-hira",
+      "schedule": "0 21 * * *"
+    },
+    {
+      "path": "/api/sync-hira",
+      "schedule": "0 9 * * *"
+    }
+  ],
+  "functions": {
+    "api/sync-hira.js": {
+      "maxDuration": 60
+    }
+  }
+}

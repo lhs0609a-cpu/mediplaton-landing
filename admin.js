@@ -525,7 +525,7 @@ async function loadPartners() {
             let contractBadge = '';
             if (row.status === 'approved' && row.partner_contracts && row.partner_contracts.length > 0) {
                 const contractStatuses = row.partner_contracts.map(c => c.status);
-                const priorityOrder = ['active', 'signed', 'sent', 'draft', 'expired', 'terminated'];
+                const priorityOrder = ['termination_requested', 'active', 'signed', 'sent', 'draft', 'expired', 'terminated'];
                 const topStatus = priorityOrder.find(s => contractStatuses.includes(s)) || contractStatuses[0];
                 contractBadge = `<span class="contract-status ${topStatus}" style="font-size:11px;margin-left:4px;">${getContractStatusLabel(topStatus)}</span>`;
             }
@@ -1909,7 +1909,7 @@ let currentContractPartnerId = null;
 let currentContractId = null;
 
 function getContractStatusLabel(status) {
-    const labels = { draft: '작성중', sent: '발송', signed: '서명완료', active: '활성', expired: '만료', terminated: '해지' };
+    const labels = { draft: '작성중', sent: '발송', signed: '서명완료', active: '활성', expired: '만료', terminated: '해지', termination_requested: '해지신청' };
     return labels[status] || status;
 }
 
@@ -1919,7 +1919,8 @@ const CONTRACT_TRANSITIONS = {
     signed: ['active', 'terminated'],
     active: ['expired', 'terminated'],
     expired: ['active'],
-    terminated: []
+    terminated: [],
+    termination_requested: ['terminated']
 };
 
 async function openContractManager(partnerId) {
@@ -1986,6 +1987,7 @@ async function loadContracts(partnerId) {
                                     ${c.status === 'draft' ? `<button class="action-btn approve" onclick="quickSendContract(${c.id})">발송</button>` : ''}
                                     ${['draft', 'sent'].includes(c.status) ? `<button class="action-btn delete" onclick="deleteContract(${c.id})">삭제</button>` : ''}
                                     ${['active', 'signed', 'sent'].includes(c.status) ? `<button class="action-btn reject" onclick="terminateContract(${c.id})">해지</button>` : ''}
+                                    ${c.status === 'termination_requested' ? `<button class="action-btn approve" onclick="approveTermination(${c.id})">승인</button><button class="action-btn reject" onclick="rejectTermination(${c.id})">반려</button>` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -2446,6 +2448,20 @@ ${data.signature_data ? `<div style="margin:12px 0;padding:12px;background:#fff;
 </div>`;
         }
 
+        // 해지 신청 정보 표시
+        if (data.status === 'termination_requested') {
+            const reqDate = data.termination_requested_at
+                ? new Date(data.termination_requested_at).toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+                : '-';
+            bodyHtml += `
+<div style="margin-top:24px;padding:20px;background:#FFF7ED;border-radius:8px;border:1px solid #FB923C;">
+<p style="font-size:14px;font-weight:700;color:#C2410C;margin-bottom:12px;">해지 신청 정보</p>
+<p style="margin-bottom:8px;font-size:13px;"><strong>신청일:</strong> ${reqDate}</p>
+<p style="margin-bottom:8px;font-size:13px;"><strong>사유:</strong> ${escapeHtml(data.termination_requested_reason || '-')}</p>
+<p style="font-size:13px;"><strong>법적 고지 확인:</strong> ${data.termination_legal_acknowledged ? '확인 완료' : '미확인'}</p>
+</div>`;
+        }
+
         document.getElementById('contractPreviewBody').innerHTML = bodyHtml;
 
         // 상태 select 설정
@@ -2564,8 +2580,8 @@ async function terminateContract(contractId) {
 
     try {
         const { data: contract } = await sb.from('partner_contracts').select('status').eq('id', contractId).single();
-        if (!contract || contract.status === 'terminated') {
-            showToast('이미 해지된 계약입니다.', 'error');
+        if (!contract || contract.status === 'terminated' || contract.status === 'termination_requested') {
+            showToast(contract?.status === 'termination_requested' ? '파트너가 해지 신청한 계약입니다. 승인/반려로 처리해주세요.' : '이미 해지된 계약입니다.', 'error');
             return;
         }
 
@@ -2593,6 +2609,140 @@ async function terminateContract(contractId) {
     } catch (err) {
         console.error('Terminate contract error:', err);
         showToast('해지 실패: ' + err.message, 'error');
+    }
+}
+
+async function approveTermination(contractId) {
+    if (!confirm('해지 신청을 승인하시겠습니까? 계약이 최종 해지됩니다.')) return;
+
+    try {
+        const { data: contract, error: fetchErr } = await sb
+            .from('partner_contracts')
+            .select('status, partner_id, contract_number, termination_requested_reason')
+            .eq('id', contractId)
+            .single();
+        if (fetchErr) throw fetchErr;
+
+        if (contract.status !== 'termination_requested') {
+            showToast('해지 신청 상태가 아닙니다.', 'error');
+            return;
+        }
+
+        const { error: updateErr } = await sb
+            .from('partner_contracts')
+            .update({
+                status: 'terminated',
+                terminated_at: new Date().toISOString(),
+                terminated_by: currentUser.id,
+                termination_reason: contract.termination_requested_reason
+            })
+            .eq('id', contractId);
+        if (updateErr) throw updateErr;
+
+        await sb.from('contract_status_logs').insert({
+            contract_id: contractId,
+            from_status: 'termination_requested',
+            to_status: 'terminated',
+            changed_by: currentUser.id,
+            notes: '관리자 해지 승인'
+        });
+
+        // 파트너에게 알림
+        const { data: partner } = await sb
+            .from('partners')
+            .select('user_id')
+            .eq('id', contract.partner_id)
+            .single();
+
+        if (partner?.user_id) {
+            await sb.rpc('create_notification', {
+                p_user_id: partner.user_id,
+                p_type: 'termination_approved',
+                p_title: '계약 해지 승인',
+                p_message: `계약서(${contract.contract_number})의 해지가 승인되었습니다. 제17조에 따른 해지 후 의무를 이행해주세요.`
+            });
+        }
+
+        showToast('해지가 승인되었습니다.', 'success');
+        if (currentContractPartnerId) loadContracts(currentContractPartnerId);
+    } catch (err) {
+        console.error('Approve termination error:', err);
+        showToast('승인 실패: ' + err.message, 'error');
+    }
+}
+
+async function rejectTermination(contractId) {
+    const reason = prompt('반려 사유를 입력하세요:');
+    if (reason === null) return;
+    if (!reason.trim()) {
+        showToast('반려 사유를 입력하세요.', 'error');
+        return;
+    }
+
+    try {
+        const { data: contract, error: fetchErr } = await sb
+            .from('partner_contracts')
+            .select('status, partner_id, contract_number')
+            .eq('id', contractId)
+            .single();
+        if (fetchErr) throw fetchErr;
+
+        if (contract.status !== 'termination_requested') {
+            showToast('해지 신청 상태가 아닙니다.', 'error');
+            return;
+        }
+
+        // 원래 상태 조회 (contract_status_logs에서 from_status)
+        const { data: logs } = await sb
+            .from('contract_status_logs')
+            .select('from_status')
+            .eq('contract_id', contractId)
+            .eq('to_status', 'termination_requested')
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        const restoreStatus = logs && logs.length > 0 ? logs[0].from_status : 'signed';
+
+        const { error: updateErr } = await sb
+            .from('partner_contracts')
+            .update({
+                status: restoreStatus,
+                termination_requested_at: null,
+                termination_requested_reason: null,
+                termination_legal_acknowledged: false
+            })
+            .eq('id', contractId);
+        if (updateErr) throw updateErr;
+
+        await sb.from('contract_status_logs').insert({
+            contract_id: contractId,
+            from_status: 'termination_requested',
+            to_status: restoreStatus,
+            changed_by: currentUser.id,
+            notes: '해지 반려: ' + reason.trim()
+        });
+
+        // 파트너에게 알림
+        const { data: partner } = await sb
+            .from('partners')
+            .select('user_id')
+            .eq('id', contract.partner_id)
+            .single();
+
+        if (partner?.user_id) {
+            await sb.rpc('create_notification', {
+                p_user_id: partner.user_id,
+                p_type: 'termination_rejected',
+                p_title: '계약 해지 반려',
+                p_message: `계약서(${contract.contract_number})의 해지 신청이 반려되었습니다. 사유: ${reason.trim()}`
+            });
+        }
+
+        showToast('해지 신청이 반려되었습니다.', 'success');
+        if (currentContractPartnerId) loadContracts(currentContractPartnerId);
+    } catch (err) {
+        console.error('Reject termination error:', err);
+        showToast('반려 실패: ' + err.message, 'error');
     }
 }
 
@@ -2664,6 +2814,26 @@ async function loadAdminNewClinics() {
     loading.style.display = 'flex';
     table.style.display = 'none';
     empty.style.display = 'none';
+
+    // 마지막 동기화 시간 표시
+    try {
+        const { data: logData } = await sb
+            .from('hira_sync_logs')
+            .select('sync_type, inserted_count, created_at')
+            .order('created_at', { ascending: false })
+            .limit(1);
+        const syncEl = document.getElementById('lastSyncTime');
+        if (logData && logData.length > 0) {
+            const log = logData[0];
+            const dt = new Date(log.created_at);
+            const typeLabel = log.sync_type === 'auto' ? '자동' : '수동';
+            syncEl.textContent = `마지막 동기화: ${dt.toLocaleString('ko-KR')} (${typeLabel}, ${log.inserted_count}건)`;
+        } else {
+            syncEl.textContent = '';
+        }
+    } catch (e) {
+        console.warn('sync log load failed:', e);
+    }
 
     try {
         let query = sb
@@ -2888,6 +3058,7 @@ async function syncHiraData() {
     const btn = document.getElementById('syncHiraBtn');
     btn.disabled = true;
 
+    const syncStartTime = Date.now();
     const cutoffDate = new Date();
     cutoffDate.setMonth(cutoffDate.getMonth() - (HIRA_API_CONFIG.recentMonths || 6));
     const cutoffStr = cutoffDate.toISOString().split('T')[0].replace(/-/g, '');
@@ -3002,6 +3173,16 @@ async function syncHiraData() {
             }
         }
 
+        // 수동 동기화 로그 기록
+        const syncDuration = Date.now() - syncStartTime;
+        await sb.from('hira_sync_logs').insert({
+            sync_type: 'manual',
+            inserted_count: totalInserted,
+            skipped_count: totalSkipped,
+            error_count: totalErrors,
+            duration_ms: syncDuration
+        });
+
         statusEl.style.background = '#D1FAE5';
         statusEl.style.color = '#065F46';
         statusEl.textContent = `동기화 완료! 신규 ${totalInserted}건 추가, ${totalSkipped}건 중복 스킵, ${totalErrors}건 오류`;
@@ -3011,6 +3192,17 @@ async function syncHiraData() {
         statusEl.style.background = '#FEE2E2';
         statusEl.style.color = '#991B1B';
         statusEl.textContent = `동기화 실패: ${error.message}`;
+
+        // 실패 로그 기록
+        const syncDuration = Date.now() - syncStartTime;
+        await sb.from('hira_sync_logs').insert({
+            sync_type: 'manual',
+            inserted_count: totalInserted,
+            skipped_count: totalSkipped,
+            error_count: totalErrors + 1,
+            duration_ms: syncDuration,
+            error_message: error.message
+        }).catch(() => {});
     } finally {
         btn.disabled = false;
         setTimeout(() => { statusEl.style.display = 'none'; }, 10000);
