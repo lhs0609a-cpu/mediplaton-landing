@@ -328,7 +328,14 @@ async function handleLogin(e) {
         currentUser = data.user;
         await checkPartnerStatus();
     } catch (error) {
-        loginError.textContent = error.message || '이메일 또는 비밀번호가 올바르지 않습니다.';
+        const msg = error.message || '';
+        if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials')) {
+            loginError.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
+        } else if (msg.includes('Email not confirmed')) {
+            loginError.textContent = '이메일 인증이 완료되지 않았습니다. 이메일을 확인해주세요.';
+        } else {
+            loginError.textContent = msg || '로그인 중 오류가 발생했습니다.';
+        }
         loginError.style.display = 'block';
     }
 }
@@ -341,7 +348,21 @@ async function checkPartnerStatus() {
             .eq('user_id', currentUser.id)
             .single();
 
-        if (error || !partner) {
+        if (error) {
+            // DB 에러 시 관리자로 잘못 리다이렉트 방지
+            if (error.code === 'PGRST116') {
+                // no rows found = 관리자 (파트너 레코드 없음)
+                window.location.href = 'admin.html';
+                return;
+            }
+            console.error('Partner check error:', error);
+            loginError.textContent = '데이터베이스 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+            loginError.style.display = 'block';
+            await sb.auth.signOut();
+            currentUser = null;
+            return;
+        }
+        if (!partner) {
             // Admin user (no partner record) - redirect to admin page
             window.location.href = 'admin.html';
             return;
@@ -1316,7 +1337,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let currentSignContractId = null;
 
 function getContractStatusLabel(status) {
-    const labels = { 'draft': '작성중', 'sent': '발송됨', 'signed': '서명완료', 'active': '활성', 'expired': '만료', 'terminated': '해지' };
+    const labels = { 'draft': '작성중', 'sent': '발송됨', 'signed': '서명완료', 'active': '활성', 'expired': '만료', 'terminated': '해지', 'termination_requested': '해지신청' };
     return labels[status] || status;
 }
 
@@ -1335,7 +1356,7 @@ async function loadPartnerContracts() {
             .from('partner_contracts')
             .select('*')
             .eq('partner_id', currentPartner.id)
-            .in('status', ['sent', 'signed', 'active', 'expired', 'terminated'])
+            .in('status', ['sent', 'signed', 'active', 'expired', 'terminated', 'termination_requested'])
             .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -1358,6 +1379,14 @@ async function loadPartnerContracts() {
                     ${c.status === 'sent'
                         ? `<button class="action-btn view" onclick="openContractForSign(${c.id})" style="background:#EDE9FE;color:#6D28D9;">서명하기</button>`
                         : `<button class="action-btn view" onclick="openContractForSign(${c.id})">보기</button>`
+                    }
+                    ${['signed', 'active'].includes(c.status)
+                        ? `<button class="action-btn" onclick="openTerminationRequest(${c.id})" style="background:#FEE2E2;color:#B91C1C;margin-left:4px;">해지 신청</button>`
+                        : ''
+                    }
+                    ${c.status === 'termination_requested'
+                        ? `<span style="font-size:12px;color:#C2410C;">승인 대기중</span>`
+                        : ''
                     }
                 </td>
             </tr>
@@ -1636,6 +1665,98 @@ async function signContract() {
     } finally {
         btn.disabled = false;
         btn.textContent = '서명 완료';
+    }
+}
+
+// ─── Termination Request (해지 신청) ───
+
+let currentTerminationContractId = null;
+
+function openTerminationRequest(contractId) {
+    currentTerminationContractId = contractId;
+    // 체크박스 초기화
+    document.querySelectorAll('.termination-check').forEach(cb => cb.checked = false);
+    document.getElementById('terminationReason').value = '';
+    document.getElementById('submitTerminationBtn').disabled = true;
+    document.getElementById('terminationRequestModal').classList.add('active');
+}
+
+function updateTerminationBtnState() {
+    const checks = document.querySelectorAll('.termination-check');
+    const allChecked = Array.from(checks).every(cb => cb.checked);
+    const reason = document.getElementById('terminationReason').value.trim();
+    document.getElementById('submitTerminationBtn').disabled = !(allChecked && reason);
+}
+
+async function submitTerminationRequest() {
+    if (!currentTerminationContractId) return;
+
+    const reason = document.getElementById('terminationReason').value.trim();
+    const checks = document.querySelectorAll('.termination-check');
+    const allChecked = Array.from(checks).every(cb => cb.checked);
+
+    if (!allChecked || !reason) {
+        showToast('모든 법적 고지를 확인하고 사유를 입력해주세요.', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('submitTerminationBtn');
+    btn.disabled = true;
+    btn.textContent = '처리 중...';
+
+    try {
+        // 현재 상태 확인
+        const { data: contract, error: fetchErr } = await sb
+            .from('partner_contracts')
+            .select('status, created_by, contract_number')
+            .eq('id', currentTerminationContractId)
+            .single();
+        if (fetchErr) throw fetchErr;
+
+        if (!['signed', 'active'].includes(contract.status)) {
+            showToast('해지 신청이 불가능한 상태입니다.', 'error');
+            return;
+        }
+
+        // 상태 업데이트
+        const { error: updateErr } = await sb
+            .from('partner_contracts')
+            .update({
+                status: 'termination_requested',
+                termination_requested_at: new Date().toISOString(),
+                termination_requested_reason: reason,
+                termination_legal_acknowledged: true
+            })
+            .eq('id', currentTerminationContractId);
+        if (updateErr) throw updateErr;
+
+        // 상태 로그 기록
+        await sb.from('contract_status_logs').insert({
+            contract_id: currentTerminationContractId,
+            from_status: contract.status,
+            to_status: 'termination_requested',
+            notes: '파트너 해지 신청: ' + reason
+        });
+
+        // 관리자에게 알림 발송
+        if (contract.created_by) {
+            await sb.rpc('create_notification', {
+                p_user_id: contract.created_by,
+                p_type: 'termination_requested',
+                p_title: '계약 해지 신청',
+                p_message: `${currentPartner.name}님이 계약서(${contract.contract_number})의 해지를 신청하였습니다. 확인해주세요.`
+            });
+        }
+
+        showToast('해지 신청이 완료되었습니다. 관리자 승인 후 최종 처리됩니다.', 'success');
+        document.getElementById('terminationRequestModal').classList.remove('active');
+        loadPartnerContracts();
+    } catch (err) {
+        console.error('Termination request error:', err);
+        showToast('해지 신청 실패: ' + err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '해지 신청';
     }
 }
 

@@ -97,6 +97,26 @@ const GOOGLE_SHEETS_CONFIG = {
 };
 
 /**
+ * ============================================================
+ * 건강보험심사평가원 공공데이터 API 설정
+ * ============================================================
+ *
+ * Step 1: 공공데이터포털 가입
+ *   1. https://www.data.go.kr 접속 → 회원가입
+ *   2. "건강보험심사평가원_의료기관 기본정보" 검색
+ *   3. 활용신청 → API Key 발급
+ *
+ * Step 2: 아래 serviceKey에 발급받은 키를 입력
+ *
+ * ============================================================
+ */
+const HIRA_API_CONFIG = {
+    serviceKey: 'YOUR_HIRA_API_KEY',
+    baseUrl: 'https://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList',
+    recentMonths: 6
+};
+
+/**
  * Google Sheets 설정 여부 확인
  */
 function isGoogleSheetsConfigured() {

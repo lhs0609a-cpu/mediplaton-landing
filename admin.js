@@ -33,11 +33,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentUser = session.user;
 
         // 파트너인지 관리자인지 체크 후 라우팅
-        const { data: partner } = await sb
+        const { data: partner, error: partnerError } = await sb
             .from('partners')
             .select('status')
             .eq('user_id', currentUser.id)
-            .single();
+            .maybeSingle();
+
+        // DB 에러 시 관리자로 잘못 진입하는 것 방지
+        if (partnerError) {
+            console.error('Partner check error:', partnerError);
+            alert('데이터베이스 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            await sb.auth.signOut();
+            currentUser = null;
+            return;
+        }
 
         if (partner?.status === 'approved') {
             window.location.href = 'partner-dashboard.html';
@@ -47,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await sb.auth.signOut();
             currentUser = null;
         } else {
-            // 관리자
+            // partners 테이블에 레코드 없음 = 관리자
             showDashboard();
         }
     }
@@ -415,6 +424,7 @@ function switchTab(tab) {
     document.getElementById('newClinicsSection').style.display = tab === 'new-clinics' ? 'block' : 'none';
 
     if (tab === 'all-inquiries') loadAllInquiries();
+    if (tab === 'consultations') loadConsultations();
     if (tab === 'partners') loadPartners();
     if (tab === 'customers') loadCustomers();
     if (tab === 'admin-settlements') {
@@ -499,6 +509,7 @@ async function loadPartners() {
     empty.style.display = 'none';
 
     try {
+        // partner_contracts 테이블이 없을 수 있으므로 fallback 처리
         let query = sb.from('partners').select('*, partner_contracts(status)').order('created_at', { ascending: false });
 
         const statusFilter = document.getElementById('partnerStatusFilter').value;
@@ -507,8 +518,19 @@ async function loadPartners() {
         const search = document.getElementById('partnerSearch').value.trim();
         if (search) query = query.or(`name.ilike.%${search}%,hospital_name.ilike.%${search}%`);
 
-        const { data, error } = await query;
-        if (error) throw error;
+        let { data, error } = await query;
+
+        // partner_contracts 테이블이 없으면 계약 조인 없이 재시도
+        if (error) {
+            console.warn('partner_contracts join failed, loading without contracts:', error.message);
+            let fallbackQuery = sb.from('partners').select('*').order('created_at', { ascending: false });
+            if (statusFilter !== 'all') fallbackQuery = fallbackQuery.eq('status', statusFilter);
+            if (search) fallbackQuery = fallbackQuery.or(`name.ilike.%${search}%,hospital_name.ilike.%${search}%`);
+            const result = await fallbackQuery;
+            data = result.data;
+            error = result.error;
+            if (error) throw error;
+        }
 
         loading.style.display = 'none';
 
@@ -1728,7 +1750,7 @@ async function loadAdminBoardPosts() {
     loading.style.display = 'flex';
 
     try {
-        const { data: posts, error } = await supabase
+        const { data: posts, error } = await sb
             .from('board_posts')
             .select('*, board_replies(*)')
             .order('created_at', { ascending: false });
@@ -1808,7 +1830,7 @@ async function handleBoardReplySubmit(e) {
     if (!content) return;
 
     try {
-        const { error: replyError } = await supabase.from('board_replies').insert({
+        const { error: replyError } = await sb.from('board_replies').insert({
             post_id: parseInt(postId),
             content,
             author_name: '관리자'
@@ -1816,7 +1838,7 @@ async function handleBoardReplySubmit(e) {
 
         if (replyError) throw replyError;
 
-        const { error: updateError } = await supabase
+        const { error: updateError } = await sb
             .from('board_posts')
             .update({ is_answered: true })
             .eq('id', parseInt(postId));
@@ -1837,7 +1859,7 @@ async function deleteBoardPost(id) {
     if (!confirm('이 게시글을 삭제하시겠습니까?')) return;
 
     try {
-        const { error } = await supabase
+        const { error } = await sb
             .from('board_posts')
             .delete()
             .eq('id', id);
@@ -1859,8 +1881,8 @@ async function handleAdminBoardPostSubmit(e) {
     if (!title || !content) return;
 
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        const { error } = await supabase.from('board_posts').insert({
+        const { data: { user } } = await sb.auth.getUser();
+        const { error } = await sb.from('board_posts').insert({
             title,
             content,
             author_id: user.id,
@@ -2836,24 +2858,31 @@ async function loadAdminNewClinics() {
     }
 
     try {
+        const regionFilter = document.getElementById('ncRegionFilter').value;
+        const specialtyFilter = document.getElementById('ncSpecialtyFilter').value;
+        const claimFilter = document.getElementById('ncClaimFilter').value;
+        const search = document.getElementById('ncSearch').value.trim();
+
         let query = sb
             .from('new_clinic_openings')
             .select('*, partners:claimed_by(name, hospital_name)')
             .order('opening_date', { ascending: false });
 
-        const regionFilter = document.getElementById('ncRegionFilter').value;
         if (regionFilter) query = query.eq('region', regionFilter);
-
-        const specialtyFilter = document.getElementById('ncSpecialtyFilter').value;
         if (specialtyFilter) query = query.eq('specialty', specialtyFilter);
-
-        const claimFilter = document.getElementById('ncClaimFilter').value;
         if (claimFilter) query = query.eq('claim_status', claimFilter);
-
-        const search = document.getElementById('ncSearch').value.trim();
         if (search) query = query.or(`clinic_name.ilike.%${search}%,address.ilike.%${search}%`);
 
-        const { data, error } = await query;
+        let { data, error } = await query;
+
+        // new_clinic_openings 테이블이 없으면 빈 상태로 표시
+        if (error && (error.code === '404' || error.code === 'PGRST204' || error.message?.includes('relation') || error.code === '42P01')) {
+            console.warn('new_clinic_openings table not found. Run supabase-migration-new-clinics.sql to create it.');
+            loading.style.display = 'none';
+            empty.style.display = 'block';
+            empty.querySelector('h3').textContent = '신규 개원 테이블이 아직 생성되지 않았습니다.';
+            return;
+        }
         if (error) throw error;
 
         loading.style.display = 'none';

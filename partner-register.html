@@ -381,19 +381,29 @@
                 // 1. Supabase Auth signUp
                 const { data: authData, error: authError } = await supabase.auth.signUp({
                     email,
-                    password
+                    password,
+                    options: { data: { display_name: name } }
                 });
 
                 if (authError) {
-                    if (authError.message.includes('already registered')) {
+                    if (authError.message.includes('already registered') || authError.message.includes('already been registered')) {
                         throw new Error('이미 등록된 이메일입니다.');
                     }
-                    throw authError;
+                    if (authError.message.includes('Signups not allowed') || authError.message.includes('signups')) {
+                        throw new Error('현재 회원가입이 비활성화되어 있습니다. 관리자에게 문의하세요.');
+                    }
+                    if (authError.message.includes('valid email')) {
+                        throw new Error('올바른 이메일 주소를 입력해주세요.');
+                    }
+                    throw new Error('회원가입 오류: ' + authError.message);
                 }
 
                 const userId = authData.user?.id;
-                if (!userId) {
-                    throw new Error('계정 생성에 실패했습니다. 다시 시도해주세요.');
+                // Supabase 보안 정책: 이미 등록된 이메일이면 에러 없이 빈 identities 반환
+                const isRealNewUser = authData.user?.identities?.length > 0;
+
+                if (!userId || !isRealNewUser) {
+                    throw new Error('이미 등록된 이메일입니다. 로그인 페이지에서 로그인해주세요.');
                 }
 
                 // 2. partners 테이블에 INSERT
@@ -412,7 +422,16 @@
                         commission_rate: 0.015
                     }]);
 
-                if (insertError) throw insertError;
+                if (insertError) {
+                    console.error('Partner insert error:', insertError);
+                    if (insertError.code === '23505') {
+                        throw new Error('이미 등록된 계정입니다. 로그인 페이지에서 로그인해주세요.');
+                    }
+                    if (insertError.code === '42501') {
+                        throw new Error('가입 권한 오류입니다. 관리자에게 문의하세요.');
+                    }
+                    throw new Error('파트너 정보 저장 중 오류: ' + insertError.message);
+                }
 
                 // 3. 즉시 로그아웃 (승인 전이므로)
                 await supabase.auth.signOut();
@@ -422,6 +441,7 @@
                 document.getElementById('successScreen').style.display = 'block';
 
             } catch (error) {
+                console.error('Registration error:', error);
                 errorMsg.textContent = error.message || '가입 처리 중 오류가 발생했습니다.';
                 errorMsg.style.display = 'block';
                 submitBtn.disabled = false;

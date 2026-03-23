@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS partner_contracts (
     auto_renewal BOOLEAN NOT NULL DEFAULT true,
     contract_body TEXT,
     status VARCHAR(20) NOT NULL DEFAULT 'draft'
-        CHECK (status IN ('draft','sent','signed','active','expired','terminated')),
+        CHECK (status IN ('draft','sent','signed','active','expired','terminated','termination_requested')),
     terminated_at TIMESTAMPTZ,
     terminated_by UUID,
     termination_reason TEXT,
@@ -126,7 +126,12 @@ CREATE POLICY "Allow authenticated full access on contract_status_logs"
     USING (true)
     WITH CHECK (true);
 
--- 7. 서명 관련 컬럼 추가
+-- 7. 해지 신청 관련 컬럼 추가
+ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS termination_requested_at TIMESTAMPTZ;
+ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS termination_requested_reason TEXT;
+ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS termination_legal_acknowledged BOOLEAN DEFAULT false;
+
+-- 8. 서명 관련 컬럼 추가
 ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS signer_name VARCHAR(50);
 ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS signed_at TIMESTAMPTZ;
 ALTER TABLE partner_contracts ADD COLUMN IF NOT EXISTS signature_data TEXT;

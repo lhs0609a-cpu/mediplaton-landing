@@ -284,6 +284,7 @@
         .contract-status.active { background: #D1FAE5; color: #047857; }
         .contract-status.expired { background: #FEF3C7; color: #B45309; }
         .contract-status.terminated { background: #FEE2E2; color: #B91C1C; }
+        .contract-status.termination_requested { background: #FFF7ED; color: #C2410C; border: 1px solid #FB923C; }
 
         .signature-input {
             width: 100%; padding: 12px 16px; border: 1px solid var(--gray-300);
@@ -1381,6 +1382,65 @@ Tip: 미리 건물주한테 양해 구해두시면 좋아요.
                     </label>
                     <button class="btn btn-primary" id="signContractBtn" style="width:100%;margin-top:16px;" disabled onclick="signContract()">서명 완료</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Termination Request Modal -->
+    <div class="modal-overlay" id="terminationRequestModal">
+        <div class="modal" style="max-width: 640px;">
+            <div class="modal-header">
+                <h3>계약 해지 신청</h3>
+                <button class="modal-close" onclick="document.getElementById('terminationRequestModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 경고 배너 -->
+                <div style="background:#FEE2E2;border:1px solid #FECACA;border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;">
+                    <p style="font-size:14px;font-weight:700;color:#B91C1C;margin-bottom:4px;">계약 해지 시 되돌릴 수 없습니다</p>
+                    <p style="font-size:13px;color:#DC2626;">해지 신청은 관리자 승인 후 최종 처리됩니다. 신중하게 결정해주세요.</p>
+                </div>
+
+                <!-- 법적 고지 체크리스트 -->
+                <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:20px;">
+                    <p style="font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:12px;">법적 고지 확인 (모두 체크 필수)</p>
+
+                    <label style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;cursor:pointer;font-size:13px;color:var(--gray-700);line-height:1.5;">
+                        <input type="checkbox" class="termination-check" onchange="updateTerminationBtnState()" style="margin-top:3px;flex-shrink:0;">
+                        <span><strong>제16조 (해지)</strong> — 을은 갑에게 해지일 60일 전까지 서면으로 통보하여야 하며, 본 해지 신청이 서면 통보에 해당함을 인지합니다.</span>
+                    </label>
+
+                    <label style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;cursor:pointer;font-size:13px;color:var(--gray-700);line-height:1.5;">
+                        <input type="checkbox" class="termination-check" onchange="updateTerminationBtnState()" style="margin-top:3px;flex-shrink:0;">
+                        <span><strong>제17조 1항 (해지 후 의무)</strong> — 갑으로부터 제공받은 자료, 시스템 접근 권한, 홍보물 등 일체를 반환 또는 폐기할 의무가 있음을 인지합니다.</span>
+                    </label>
+
+                    <label style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;cursor:pointer;font-size:13px;color:var(--gray-700);line-height:1.5;">
+                        <input type="checkbox" class="termination-check" onchange="updateTerminationBtnState()" style="margin-top:3px;flex-shrink:0;">
+                        <span><strong>제17조 2항</strong> — 진행 중인 미완료 건에 대해 갑이 인수하여 처리하는 것에 동의합니다.</span>
+                    </label>
+
+                    <label style="display:flex;gap:10px;align-items:flex-start;margin-bottom:0;cursor:pointer;font-size:13px;color:var(--gray-700);line-height:1.5;">
+                        <input type="checkbox" class="termination-check" onchange="updateTerminationBtnState()" style="margin-top:3px;flex-shrink:0;">
+                        <span><strong>제17조 3항</strong> — 해지 후 7일 이내에 서면 확인서를 제출할 의무가 있음을 인지합니다.</span>
+                    </label>
+                </div>
+
+                <!-- 추가 의무 안내 -->
+                <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;">
+                    <p style="font-size:13px;color:#92400E;margin-bottom:6px;"><strong>제6조 (비밀유지)</strong> — 계약 종료 후 3년간 비밀유지 의무가 계속됩니다.</p>
+                    <p style="font-size:13px;color:#92400E;"><strong>제9조 (경업금지)</strong> — 계약 종료 후 1년간 경업금지 의무가 적용됩니다.</p>
+                </div>
+
+                <!-- 해지 사유 -->
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="font-size:14px;font-weight:600;color:var(--gray-700);margin-bottom:8px;display:block;">해지 사유 <span style="color:var(--danger);">*</span></label>
+                    <textarea id="terminationReason" placeholder="해지 사유를 상세히 입력해주세요" style="width:100%;padding:12px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:14px;font-family:inherit;resize:vertical;min-height:100px;" oninput="updateTerminationBtnState()"></textarea>
+                </div>
+
+                <!-- 해지 신청 버튼 -->
+                <button class="btn" id="submitTerminationBtn" disabled onclick="submitTerminationRequest()" style="width:100%;background:#DC2626;color:white;padding:14px;font-size:15px;font-weight:700;border-radius:var(--radius);cursor:pointer;border:none;">
+                    해지 신청
+                </button>
             </div>
         </div>
     </div>
