@@ -342,7 +342,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script>
-        const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+        const sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
         document.getElementById('partnerRegForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -379,7 +379,7 @@
 
             try {
                 // 1. Supabase Auth signUp
-                const { data: authData, error: authError } = await supabase.auth.signUp({
+                const { data: authData, error: authError } = await sb.auth.signUp({
                     email,
                     password,
                     options: { data: { display_name: name } }
@@ -407,7 +407,7 @@
                 }
 
                 // 2. partners 테이블에 INSERT
-                const { error: insertError } = await supabase
+                const { error: insertError } = await sb
                     .from('partners')
                     .insert([{
                         name,
@@ -434,7 +434,7 @@
                 }
 
                 // 3. 즉시 로그아웃 (승인 전이므로)
-                await supabase.auth.signOut();
+                await sb.auth.signOut();
 
                 // 4. 성공 화면
                 document.getElementById('registerForm').style.display = 'none';
