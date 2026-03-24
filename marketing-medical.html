@@ -35,343 +35,8 @@
 
     <link rel="canonical" href="https://mediplaton.co.kr/marketing-medical.html">
 
-    <!-- Page-specific Hero Styles -->
+    <!-- Page-specific Styles -->
     <style>
-        /* ===== HERO V2 - Clean White + Samsung Blue ===== */
-        .mkt-hero-v2 {
-            position: relative;
-            min-height: 92vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 120px 0 80px;
-            overflow: hidden;
-            background: #FFFFFF;
-            color: var(--gray-900);
-        }
-
-        /* Subtle background accent */
-        .hero-v2-bg {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .hero-v2-bg::before {
-            content: '';
-            position: absolute;
-            top: -20%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(20, 40, 160, 0.04) 0%, transparent 70%);
-        }
-
-        .hero-v2-bg::after {
-            content: '';
-            position: absolute;
-            bottom: -15%;
-            left: -5%;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(20, 40, 160, 0.03) 0%, transparent 70%);
-        }
-
-        .hero-v2-grid { display: none; }
-        .hero-v2-glow { display: none; }
-
-        /* Content */
-        .hero-v2-content {
-            text-align: center;
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Top chip */
-        .hero-v2-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 600;
-            background: #EEF2FF;
-            border: 1px solid #C7D2FE;
-            color: #1428A0;
-            margin-bottom: 28px;
-        }
-
-        .chip-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #1428A0;
-            animation: chipDotPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes chipDotPulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(20, 40, 160, 0.3); }
-            50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(20, 40, 160, 0); }
-        }
-
-        /* Main title */
-        .hero-v2-title {
-            font-size: 56px;
-            font-weight: 900;
-            line-height: 1.2;
-            letter-spacing: -0.03em;
-            margin-bottom: 20px;
-            color: var(--gray-900);
-        }
-
-        .hero-v2-sub-title {
-            display: block;
-            font-size: 20px;
-            font-weight: 500;
-            color: var(--gray-500);
-            margin-bottom: 8px;
-            letter-spacing: -0.01em;
-        }
-
-        .hero-v2-amount {
-            display: block;
-            margin: 8px 0;
-        }
-
-        .hero-v2-strike {
-            color: var(--gray-400);
-            text-decoration: line-through;
-            text-decoration-color: #EF4444;
-            text-decoration-thickness: 3px;
-            font-weight: 800;
-        }
-
-        .hero-v2-arrow {
-            display: inline-block;
-            margin: 0 16px;
-            color: var(--gray-300);
-            font-weight: 400;
-            font-size: 44px;
-            vertical-align: middle;
-        }
-
-        .hero-v2-free {
-            font-size: 72px;
-            font-weight: 900;
-            color: #1428A0;
-            letter-spacing: -0.04em;
-            position: relative;
-        }
-
-        .hero-v2-free::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            left: -4px;
-            right: -4px;
-            height: 18px;
-            background: rgba(255, 213, 79, 0.4);
-            z-index: -1;
-            border-radius: 2px;
-        }
-
-        /* Description */
-        .hero-v2-desc {
-            font-size: 18px;
-            line-height: 1.7;
-            color: var(--gray-500);
-            margin-bottom: 36px;
-        }
-
-        .hero-v2-desc strong {
-            color: var(--gray-800);
-            font-weight: 700;
-        }
-
-        /* Floating benefit cards */
-        .hero-v2-cards {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 36px;
-        }
-
-        .hero-float-card {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: #FAFBFC;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-700);
-            transition: all 0.25s ease;
-        }
-
-        .hero-float-card:hover {
-            border-color: #1428A0;
-            background: #EEF2FF;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(20, 40, 160, 0.08);
-        }
-
-        .hero-float-card svg {
-            color: #1428A0;
-            flex-shrink: 0;
-        }
-
-        .hero-float-card span {
-            color: #1428A0;
-            font-weight: 800;
-        }
-
-        /* CTA Buttons */
-        .hero-v2-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-        }
-
-        .hero-v2-btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 18px 40px;
-            background: linear-gradient(135deg, #FFD54F, #FFC107);
-            color: #1a1a2e;
-            font-size: 18px;
-            font-weight: 800;
-            border-radius: 14px;
-            text-decoration: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 16px rgba(255, 193, 7, 0.25);
-        }
-
-        .hero-v2-btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 28px rgba(255, 193, 7, 0.35);
-            background: linear-gradient(135deg, #FFE082, #FFD54F);
-        }
-
-        .hero-v2-btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 18px 40px;
-            background: transparent;
-            color: #1428A0;
-            font-size: 18px;
-            font-weight: 700;
-            border-radius: 14px;
-            border: 2px solid #1428A0;
-            text-decoration: none;
-            transition: all 0.25s ease;
-        }
-
-        .hero-v2-btn-ghost:hover {
-            background: #1428A0;
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(20, 40, 160, 0.2);
-        }
-
-        /* Trust bar */
-        .hero-v2-trust {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .hero-v2-trust-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--gray-400);
-        }
-
-        .hero-v2-trust-check {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #EEF2FF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .hero-v2-trust-check svg {
-            width: 10px;
-            height: 10px;
-            color: #1428A0;
-        }
-
-        /* Target badge row */
-        .hero-v2-targets {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-
-        .hero-v2-target-chip {
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            background: #FAFBFC;
-            border: 1px solid var(--border);
-            color: var(--gray-500);
-        }
-
-        /* Scroll indicator */
-        .hero-v2-scroll {
-            position: absolute;
-            bottom: 28px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: var(--gray-300);
-            font-size: 12px;
-            font-weight: 500;
-            animation: scrollBounce 2s ease-in-out infinite;
-        }
-
-        .hero-v2-scroll-line {
-            width: 1px;
-            height: 28px;
-            background: linear-gradient(180deg, var(--gray-300), transparent);
-        }
-
-        @keyframes scrollBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(8px); }
-        }
-
-        /* ===== Yellow highlight for key "0원" / "무료" elements ===== */
         .mkt-pain-solution .mkt-free-text {
             color: #1428A0;
             position: relative;
@@ -387,109 +52,20 @@
             z-index: -1;
             border-radius: 2px;
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .mkt-hero-v2 {
-                min-height: 90svh;
-                padding: 100px 0 60px;
-            }
-
-            .hero-v2-title {
-                font-size: 34px;
-            }
-
-            .hero-v2-sub-title {
-                font-size: 16px;
-            }
-
-            .hero-v2-free {
-                font-size: 48px;
-            }
-
-            .hero-v2-free::after {
-                height: 12px;
-                bottom: 2px;
-            }
-
-            .hero-v2-arrow {
-                font-size: 28px;
-                margin: 0 8px;
-            }
-
-            .hero-v2-desc {
-                font-size: 15px;
-            }
-
-            .hero-v2-cards {
-                gap: 8px;
-            }
-
-            .hero-float-card {
-                padding: 10px 14px;
-                font-size: 13px;
-            }
-
-            .hero-v2-btn-primary,
-            .hero-v2-btn-ghost {
-                width: 100%;
-                justify-content: center;
-                font-size: 16px;
-                padding: 16px 32px;
-            }
-
-            .hero-v2-actions {
-                flex-direction: column;
-                padding: 0 16px;
-            }
-
-            .hero-v2-trust {
-                gap: 16px;
-                max-width: 100%;
-            }
-
-            .hero-v2-scroll {
-                display: none;
-            }
+        .mkt-pain-icon-svg {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            background: #EEF2FF;
+            color: #1428A0;
         }
-
-        @media (max-width: 480px) {
-            .hero-v2-title {
-                font-size: 28px;
-            }
-
-            .hero-v2-free {
-                font-size: 40px;
-            }
-
-            .hero-v2-free::after {
-                height: 10px;
-            }
-
-            .hero-v2-arrow {
-                font-size: 22px;
-                margin: 0 6px;
-            }
-
-            .hero-v2-chip {
-                font-size: 12px;
-                padding: 6px 14px;
-            }
-
-            .hero-float-card {
-                padding: 8px 12px;
-                font-size: 12px;
-                border-radius: 8px;
-            }
-
-            .hero-v2-targets {
-                gap: 6px;
-            }
-
-            .hero-v2-target-chip {
-                font-size: 11px;
-                padding: 4px 10px;
-            }
+        .mkt-pain-card.mkt-pain-total .mkt-pain-icon-svg {
+            background: linear-gradient(135deg, #1428A0, #2962FF);
+            color: #fff;
         }
     </style>
 </head>
@@ -582,8 +158,8 @@
                         <li class="nav-item">
                             <a href="marketing-medical.html" class="nav-link nav-link--accent">무료 마케팅</a>
                             <div class="nav-dropdown">
-                                <a href="marketing-medical.html">🏥 병원·약국</a>
-                                <a href="marketing-biz.html">🏪 소상공인·자영업</a>
+                                <a href="marketing-medical.html">병원·약국</a>
+                                <a href="marketing-biz.html">소상공인·자영업</a>
                             </div>
                         </li>
                         <li class="nav-item highlight">
@@ -648,8 +224,8 @@
                 </div>
                 <div class="mobile-nav-group">
                     <span class="mobile-nav-title">무료 마케팅</span>
-                    <a href="marketing-medical.html">🏥 병원·약국</a>
-                    <a href="marketing-biz.html">🏪 소상공인·자영업</a>
+                    <a href="marketing-medical.html">병원·약국</a>
+                    <a href="marketing-biz.html">소상공인·자영업</a>
                 </div>
                 <div class="mobile-nav-group partner-highlight">
                     <a href="partner.html" class="mobile-nav-title single partner-link">파트너 모집</a>
@@ -672,108 +248,82 @@
 
     <main id="main-content">
 
-    <!-- ===== Section 1: NEW HERO V2 ===== -->
-    <section class="mkt-hero-v2">
-        <!-- Background effects -->
-        <div class="hero-v2-bg">
-            <video class="hero-video" autoplay muted loop playsinline poster="images/video/hero-poster.jpg">
-                <source src="images/video/hero-bg.mp4" type="video/mp4">
-            </video>
-            <div class="hero-overlay"></div>
+    <!-- ===== Section 1: Hero ===== -->
+    <section class="biz-hero">
+        <div class="biz-hero-bg">
+            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1920&q=80" alt="" class="biz-hero-bg-img">
         </div>
-
-        <div class="container">
-            <div class="hero-v2-content">
-                <!-- Live indicator chip -->
-                <div class="hero-v2-chip">
-                    <span class="chip-dot"></span>
-                    신규 개원 · 기존 병원 모두 신청 가능
-                </div>
-
-                <!-- Target audience -->
-                <div class="hero-v2-targets">
-                    <span class="hero-v2-target-chip">의원</span>
-                    <span class="hero-v2-target-chip">치과</span>
-                    <span class="hero-v2-target-chip">한의원</span>
-                    <span class="hero-v2-target-chip">피부과</span>
-                    <span class="hero-v2-target-chip">성형외과</span>
-                    <span class="hero-v2-target-chip">안과</span>
-                    <span class="hero-v2-target-chip">약국</span>
-                </div>
-
-                <!-- Headline -->
-                <h1 class="hero-v2-title">
-                    <span class="hero-v2-sub-title">병원 마케팅비</span>
-                    <span class="hero-v2-amount">
-                        <span class="hero-v2-strike">월 600만원</span>
-                        <span class="hero-v2-arrow">&rarr;</span>
-                        <span class="hero-v2-free">0원</span>
-                    </span>
-                </h1>
-
-                <!-- Description -->
-                <p class="hero-v2-desc">
-                    PG 단말기 하나만 교체하면<br>
-                    <strong>홈페이지 · 블로그 · 플레이스 · SNS 마케팅까지 전부 무료</strong>
-                </p>
-
-                <!-- Floating benefit cards -->
-                <div class="hero-v2-cards">
-                    <div class="hero-float-card">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                        홈페이지 제작 <span>0원</span>
+        <div class="container" style="position:relative;z-index:2;">
+            <div class="biz-hero-layout">
+                <div class="biz-hero-text">
+                    <div class="mkt-hero-badges">
+                        <span class="mkt-badge-pill">의원 · 치과 · 한의원 · 피부과 · 안과 · 약국</span>
+                        <span class="mkt-badge-pill accent">마케팅 비용 0원 시대</span>
                     </div>
-                    <div class="hero-float-card">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        블로그 운영 <span>0원</span>
+
+                    <h1 class="mkt-hero-title">
+                        원장님, 마케팅에<br>
+                        <span class="mkt-highlight">매달 얼마 쓰고 계세요?</span>
+                    </h1>
+
+                    <p class="mkt-hero-subtitle">
+                        PG 단말기 하나만 바꾸면<br>
+                        <strong>홈페이지·블로그·플레이스·SNS까지 전부 무료</strong>
+                    </p>
+
+                    <div class="mkt-hero-actions">
+                        <a href="#mkt-calculator" class="mkt-btn-primary">내 혜택 계산하기</a>
+                        <a href="#mkt-apply" class="mkt-btn-outline">무료 상담 신청</a>
                     </div>
-                    <div class="hero-float-card">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        플레이스 광고 <span>0원</span>
-                    </div>
-                    <div class="hero-float-card">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                        SNS 마케팅 <span>0원</span>
+
+                    <div class="mkt-hero-trust">
+                        <span>신협중앙회 정식 제휴</span>
+                        <span class="mkt-trust-divider">|</span>
+                        <span>19년 업력</span>
+                        <span class="mkt-trust-divider">|</span>
+                        <span>332+ 제휴 병의원</span>
                     </div>
                 </div>
 
-                <!-- CTA Buttons -->
-                <div class="hero-v2-actions">
-                    <a href="#mkt-calculator" class="hero-v2-btn-primary">
-                        내 혜택 계산하기
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
-                    <a href="#mkt-apply" class="hero-v2-btn-ghost">무료 상담 신청</a>
-                </div>
-
-                <!-- Trust indicators -->
-                <div class="hero-v2-trust">
-                    <div class="hero-v2-trust-item">
-                        <span class="hero-v2-trust-check">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
-                        </span>
-                        신협중앙회 정식 제휴
+                <div class="biz-hero-cards">
+                    <div class="biz-hero-card">
+                        <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80" alt="의원" class="biz-hero-card-photo" loading="lazy">
+                        <div class="biz-hero-card-overlay"></div>
+                        <div class="biz-hero-card-content">
+                            <strong>의원 / 내과</strong>
+                            <span>블로그 + 플레이스</span>
+                            <span class="biz-hero-card-save">월 350만원 절감</span>
+                        </div>
                     </div>
-                    <div class="hero-v2-trust-item">
-                        <span class="hero-v2-trust-check">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
-                        </span>
-                        19년 업력
+                    <div class="biz-hero-card">
+                        <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&w=600&q=80" alt="치과" class="biz-hero-card-photo" loading="lazy">
+                        <div class="biz-hero-card-overlay"></div>
+                        <div class="biz-hero-card-content">
+                            <strong>치과</strong>
+                            <span>홈페이지 + 블로그</span>
+                            <span class="biz-hero-card-save">월 450만원 절감</span>
+                        </div>
                     </div>
-                    <div class="hero-v2-trust-item">
-                        <span class="hero-v2-trust-check">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
-                        </span>
-                        332+ 제휴 병의원
+                    <div class="biz-hero-card">
+                        <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=600&q=80" alt="한의원" class="biz-hero-card-photo" loading="lazy">
+                        <div class="biz-hero-card-overlay"></div>
+                        <div class="biz-hero-card-content">
+                            <strong>한의원</strong>
+                            <span>바이럴 + 플레이스</span>
+                            <span class="biz-hero-card-save">월 300만원 절감</span>
+                        </div>
+                    </div>
+                    <div class="biz-hero-card">
+                        <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80" alt="피부과" class="biz-hero-card-photo" loading="lazy">
+                        <div class="biz-hero-card-overlay"></div>
+                        <div class="biz-hero-card-content">
+                            <strong>피부과 / 성형</strong>
+                            <span>SNS + 홈페이지</span>
+                            <span class="biz-hero-card-save">월 500만원 절감</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Scroll indicator -->
-        <div class="hero-v2-scroll">
-            <span>아래로 스크롤</span>
-            <div class="hero-v2-scroll-line"></div>
         </div>
     </section>
 
@@ -788,37 +338,49 @@
 
             <div class="mkt-pain-grid">
                 <div class="mkt-pain-card">
-                    <div class="mkt-pain-icon">🌐</div>
+                    <div class="mkt-pain-icon-svg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
                     <h3>홈페이지 제작</h3>
                     <p class="mkt-pain-cost">300~500만원 <span>(1회)</span></p>
                     <p class="mkt-pain-desc">반응형 웹사이트 제작 + 유지보수 비용 별도</p>
                 </div>
                 <div class="mkt-pain-card">
-                    <div class="mkt-pain-icon">📝</div>
+                    <div class="mkt-pain-icon-svg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </div>
                     <h3>블로그 운영</h3>
                     <p class="mkt-pain-cost">월 150~300만원</p>
                     <p class="mkt-pain-desc">전문 의료 콘텐츠 제작 + SEO 최적화 관리</p>
                 </div>
                 <div class="mkt-pain-card">
-                    <div class="mkt-pain-icon">📍</div>
+                    <div class="mkt-pain-icon-svg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
                     <h3>플레이스 광고</h3>
                     <p class="mkt-pain-cost">월 80~150만원</p>
                     <p class="mkt-pain-desc">네이버 플레이스 상위노출 + 리뷰 관리</p>
                 </div>
                 <div class="mkt-pain-card">
-                    <div class="mkt-pain-icon">💬</div>
+                    <div class="mkt-pain-icon-svg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
                     <h3>카페 바이럴</h3>
                     <p class="mkt-pain-cost">월 100~200만원</p>
                     <p class="mkt-pain-desc">지역 맘카페, 의료 커뮤니티 바이럴 마케팅</p>
                 </div>
                 <div class="mkt-pain-card">
-                    <div class="mkt-pain-icon">📱</div>
+                    <div class="mkt-pain-icon-svg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </div>
                     <h3>SNS 마케팅</h3>
                     <p class="mkt-pain-cost">월 100~200만원</p>
                     <p class="mkt-pain-desc">인스타그램, 페이스북 콘텐츠 제작 및 광고</p>
                 </div>
                 <div class="mkt-pain-card mkt-pain-total">
-                    <div class="mkt-pain-icon">💸</div>
+                    <div class="mkt-pain-icon-svg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
                     <h3>합계</h3>
                     <p class="mkt-pain-cost total">월 430만원+</p>
                     <p class="mkt-pain-desc">매달 빠져나가는 마케팅 비용, 부담되시죠?</p>
