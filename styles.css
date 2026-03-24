@@ -12987,33 +12987,46 @@ html {
     z-index: 2;
 }
 
-/* 3. Text color inversion */
-.hero .hero-title {
+/* 3. Text color inversion — section.hero for specificity match */
+section.hero .hero-content {
     color: #FFFFFF;
 }
 
-.hero .hero-title .highlight {
+section.hero .hero-title {
+    color: #FFFFFF;
+}
+
+section.hero .hero-title .highlight,
+section.hero .hero-title .highlight strong {
     color: #82B1FF;
 }
 
-.hero .hero-title .text-danger {
+section.hero .hero-title .highlight strong.text-danger {
     color: #FF6B6B;
     background: rgba(255, 107, 107, 0.12);
 }
 
-.hero .hero-subtitle {
+section.hero .hero-subtitle {
     color: rgba(255, 255, 255, 0.8);
 }
 
-.hero .hero-subtitle strong {
+section.hero .hero-subtitle strong {
     color: #FFFFFF;
 }
 
-.hero .hero-trust span {
+section.hero .hero-feature .feature-text strong {
+    color: #FFFFFF;
+}
+
+section.hero .hero-feature .feature-text span {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+section.hero .hero-trust span {
     color: rgba(255, 255, 255, 0.7);
 }
 
-.hero .hero-trust svg {
+section.hero .hero-trust svg {
     stroke: #82B1FF;
 }
 
@@ -13052,14 +13065,6 @@ html {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(130, 177, 255, 0.3);
     box-shadow: 0 8px 32px rgba(41, 98, 255, 0.15);
-}
-
-.hero .hero-feature .feature-text strong {
-    color: #FFFFFF;
-}
-
-.hero .hero-feature .feature-text span {
-    color: rgba(255, 255, 255, 0.6);
 }
 
 .hero .hero-card {
