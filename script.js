@@ -1415,20 +1415,20 @@ function initMarketingCalculator() {
                 tier = 'platinum';
                 tierName = 'Platinum';
                 tierDescText = 'PG + 대출 + 50평 이상';
-                savings = '~1,050만원';
-                savingsNoteText = '(전체 마케팅 + 홈페이지 무료)';
+                savings = '~1,100만원';
+                savingsNoteText = '(기본3종 + 카페·SNS 3개월 + 홈페이지 1회)';
             } else if (hasLoan) {
                 tier = 'gold';
                 tierName = 'Gold';
                 tierDescText = 'PG + 대출 이용';
-                savings = '~650만원/월';
-                savingsNoteText = '(블로그+플레이스+카페+SNS)';
+                savings = '~700만원';
+                savingsNoteText = '(기본3종 + 카페·SNS 3개월 제공)';
             } else {
                 tier = 'silver';
                 tierName = 'Silver';
                 tierDescText = 'PG 단말기 교체 혜택';
-                savings = '~350만원/월';
-                savingsNoteText = '(블로그+플레이스 무료)';
+                savings = '~500만원/월';
+                savingsNoteText = '(블로그20건 + 플레이스 최적화 + 파워링크AI)';
             }
         }
 
@@ -1453,11 +1453,12 @@ function initMarketingCalculator() {
                 isActive = bizLevel >= (benefitLevel[benefit] ?? 99);
             } else {
                 // Medical page unlock logic
-                if (benefit === 'blog') isActive = true;   // PG base
-                if (benefit === 'place') isActive = true;   // PG base
-                if (benefit === 'cafe') isActive = hasLoan;
-                if (benefit === 'sns') isActive = hasLoan;
-                if (benefit === 'homepage') isActive = hasLoan && isLarge; // 최종 단계
+                if (benefit === 'blog') isActive = true;       // PG 기본
+                if (benefit === 'place') isActive = true;      // PG 기본
+                if (benefit === 'powerlink') isActive = true;  // PG 기본
+                if (benefit === 'cafe') isActive = hasLoan;    // 대출 시 3개월
+                if (benefit === 'sns') isActive = hasLoan;     // 대출 시 3개월
+                if (benefit === 'homepage') isActive = hasLoan && isLarge; // 대출+50평 1회
             }
 
             if (isActive) {
