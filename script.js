@@ -1399,7 +1399,7 @@ function initMarketingCalculator() {
             const bizTiers = [
                 { t: 'basic',    n: 'Basic',    d: 'PG 기본 혜택',                      s: '~80만원/월',  sn: '(플레이스 기본관리)' },
                 { t: 'silver',   n: 'Silver',   d: '플레이스 + 블로그 운영',              s: '~330만원/월', sn: '(블로그 운영 포함)' },
-                { t: 'gold',     n: 'Gold',     d: '블로그 + 플레이스 광고',              s: '~430만원/월', sn: '(플레이스 광고 포함)' },
+                { t: 'gold',     n: 'Gold',     d: '블로그 + 플레이스 배포·최적화',              s: '~430만원/월', sn: '(플레이스 배포·최적화 포함)' },
                 { t: 'platinum', n: 'Platinum', d: '블로그 + 광고 + 카페 바이럴',         s: '~580만원/월', sn: '(카페 바이럴 포함)' },
                 { t: 'diamond',  n: 'Diamond',  d: '전체 마케팅 + 홈페이지',              s: '~980만원',    sn: '(전체 마케팅 + 홈페이지 무료)' },
             ];
@@ -1427,8 +1427,8 @@ function initMarketingCalculator() {
                 tier = 'silver';
                 tierName = 'Silver';
                 tierDescText = 'PG 단말기 교체 혜택';
-                savings = '~500만원/월';
-                savingsNoteText = '(블로그20건 + 플레이스 최적화 + 파워링크AI)';
+                savings = '~430만원/월';
+                savingsNoteText = '(블로그20건 + 플레이스 배포·최적화 + 파워링크AI)';
             }
         }
 
