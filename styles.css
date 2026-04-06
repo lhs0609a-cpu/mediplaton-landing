@@ -10814,6 +10814,7 @@ html {
 .mkt-pain-total {
     background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
     border-color: #D1D5DB;
+    grid-column: 2 / 3;
 }
 
 .mkt-pain-solution {
@@ -11699,6 +11700,293 @@ html {
     }
 }
 
+/* === Fee Table Section (카드 수수료 안내) === */
+.mkt-fee-section {
+    padding: var(--section-padding) 0;
+    background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 100%);
+}
+
+.mkt-fee-table-wrap {
+    max-width: 700px;
+    margin: 48px auto 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.mkt-fee-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 15px;
+}
+
+.mkt-fee-th-group {
+    background: var(--primary);
+    color: var(--white);
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    border-right: 1px solid rgba(255,255,255,0.15);
+}
+
+.mkt-fee-th-group:last-child {
+    border-right: none;
+}
+
+.mkt-fee-th {
+    background: var(--gray-800);
+    color: var(--white);
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.mkt-fee-th:last-child {
+    border-right: none;
+}
+
+.mkt-fee-th.mkt-fee-highlight {
+    background: var(--primary-dark);
+    color: #FFD54F;
+}
+
+.mkt-fee-table tbody tr {
+    transition: background 0.15s;
+}
+
+.mkt-fee-table tbody tr:hover {
+    background: var(--primary-50);
+}
+
+.mkt-fee-table tbody tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+.mkt-fee-table tbody tr:nth-child(even):hover {
+    background: var(--primary-50);
+}
+
+.mkt-fee-row-alt {
+    border-top: 2px solid var(--gray-200);
+}
+
+.mkt-fee-tier {
+    padding: 14px 16px;
+    font-size: 15px;
+    border-right: 1px solid var(--gray-200);
+}
+
+.mkt-fee-revenue {
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--gray-500);
+    border-right: 1px solid var(--gray-200);
+}
+
+.mkt-fee-rate {
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gray-700);
+    border-right: 1px solid var(--gray-200);
+}
+
+.mkt-fee-rate:last-child {
+    border-right: none;
+}
+
+.mkt-fee-rate.mkt-fee-best {
+    color: var(--primary);
+}
+
+/* Fee Notes */
+.mkt-fee-notes {
+    max-width: 700px;
+    margin: 24px auto 0;
+    padding: 20px 24px;
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--primary);
+}
+
+.mkt-fee-notes-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--gray-700);
+    margin-bottom: 10px;
+}
+
+.mkt-fee-notes-title svg {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.mkt-fee-notes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mkt-fee-notes-list li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 13px;
+    color: var(--gray-500);
+    line-height: 1.9;
+}
+
+.mkt-fee-notes-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gray-300);
+}
+
+/* Fee Documents */
+.mkt-fee-docs {
+    max-width: 700px;
+    margin: 32px auto 0;
+}
+
+.mkt-fee-docs-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.mkt-fee-docs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.mkt-fee-docs-card {
+    padding: 20px 22px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.mkt-fee-docs-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.mkt-fee-docs-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--gray-800);
+    margin-bottom: 10px;
+}
+
+.mkt-fee-docs-card-title svg {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.mkt-fee-docs-desc {
+    font-size: 13px;
+    color: var(--gray-500);
+    line-height: 1.7;
+}
+
+/* Fee CTA */
+.mkt-fee-cta {
+    max-width: 700px;
+    margin: 36px auto 0;
+    text-align: center;
+    padding: 28px 24px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: var(--radius-lg);
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.mkt-fee-cta strong {
+    color: #FFD54F;
+}
+
+.mkt-fee-cta-btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 12px 32px;
+    background: var(--white);
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mkt-fee-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+    .mkt-fee-table-wrap {
+        margin-top: 32px;
+        border-radius: var(--radius);
+    }
+
+    .mkt-fee-table {
+        font-size: 13px;
+    }
+
+    .mkt-fee-th-group {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+
+    .mkt-fee-th {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .mkt-fee-tier,
+    .mkt-fee-revenue,
+    .mkt-fee-rate {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+
+    .mkt-fee-rate {
+        font-size: 14px;
+    }
+
+    .mkt-fee-docs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mkt-fee-cta {
+        font-size: 14px;
+        padding: 24px 20px;
+    }
+
+    .mkt-fee-cta-btn {
+        font-size: 14px;
+        padding: 10px 28px;
+    }
+}
+
 /* === Package Section (단말기 교체 기본 제공) === */
 .mkt-package {
     padding: var(--section-padding) 0;
@@ -12361,6 +12649,13 @@ html {
         gap: 12px;
     }
 
+    .mkt-pain-total {
+        grid-column: 1 / -1;
+        max-width: 360px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
     .mkt-loan-highlights {
         flex-direction: column;
         padding: 0;
@@ -12448,6 +12743,13 @@ html {
 
     .mkt-pain-grid {
         grid-template-columns: 1fr;
+    }
+
+    .mkt-pain-total {
+        grid-column: auto;
+        max-width: 100%;
+        margin: 0 auto;
+        width: 100%;
     }
 
     .mkt-pain-cost {
