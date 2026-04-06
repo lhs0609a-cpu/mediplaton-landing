@@ -677,6 +677,7 @@ async function handleClientSubmit(e) {
         region: document.getElementById('clientRegion').value || null,
         product: document.getElementById('clientProduct').value || null,
         message: document.getElementById('clientMessage').value.trim() || null,
+        preferred_time: document.getElementById('clientPreferredTime').value || null,
         partner_id: currentPartner.id,
         pipeline_status: 'received',
         status: 'new'

@@ -2576,6 +2576,19 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <label>상담 가능 시간</label>
+                <select name="preferred_time">
+                    <option value="">선택해주세요</option>
+                    <option value="09-10">오전 9시~10시</option>
+                    <option value="10-12">오전 10시~12시</option>
+                    <option value="12-14">오후 12시~2시</option>
+                    <option value="14-16">오후 2시~4시</option>
+                    <option value="16-18">오후 4시~6시</option>
+                    <option value="anytime">언제든 가능</option>
+                </select>
+            </div>
+
             <div class="form-agreement">
                 <input type="checkbox" id="promoAgree" required>
                 <label for="promoAgree">
@@ -2783,6 +2796,7 @@
                 phone: formData.get('phone'),
                 business_type: formData.get('business_type'),
                 monthly_sales: formData.get('monthly_sales') || '미입력',
+                preferred_time: formData.get('preferred_time') || '',
                 source: 'promo_meta_ad',
                 timestamp: new Date().toISOString()
             };
@@ -2796,6 +2810,7 @@
                         phone: data.phone,
                         business_type: data.business_type,
                         monthly_sales: data.monthly_sales,
+                        preferred_time: data.preferred_time,
                         source_page: 'promo'
                     });
                     console.log('✅ Supabase에 프로모션 신청 데이터 저장 완료');

@@ -364,6 +364,7 @@ function initForm() {
                         region: data.region,
                         product: data.product || '',
                         message: data.message || '',
+                        preferred_time: data.preferred_time || '',
                         source_page: sourcePage
                     });
                     console.log('✅ Supabase에 상담 신청 데이터 저장 완료');
@@ -394,6 +395,7 @@ function initForm() {
                             region: data.region,
                             product: data.product || '',
                             message: data.message || '',
+                            preferred_time: data.preferred_time || '',
                             source_page: sourcePage
                         })
                     });
@@ -1660,6 +1662,7 @@ function initMarketingForm() {
                         business_type: data.business_type,
                         clinic_size: data.clinic_size,
                         interests: interests,
+                        preferred_time: data.preferred_time || '',
                         source_page: mktSourcePage
                     });
                     console.log('✅ Supabase에 마케팅 신청 데이터 저장 완료');
@@ -1671,6 +1674,7 @@ function initMarketingForm() {
                         business_type: data.business_type,
                         clinic_size: data.clinic_size,
                         interests: interests,
+                        preferred_time: data.preferred_time || '',
                         source_page: mktSourcePage
                     });
                 }
@@ -1683,6 +1687,7 @@ function initMarketingForm() {
                     business_type: data.business_type,
                     clinic_size: data.clinic_size,
                     interests: interests,
+                    preferred_time: data.preferred_time || '',
                     source_page: mktSourcePage
                 });
             }
@@ -1704,6 +1709,7 @@ function initMarketingForm() {
                             business_type: data.business_type,
                             clinic_size: data.clinic_size,
                             interests: interests.join(', '),
+                            preferred_time: data.preferred_time || '',
                             source_page: mktSourcePage
                         })
                     });
