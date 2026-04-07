@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사전심사 | 메디플라톤 - 상품별 가능여부 즉시 확인</title>
+    <meta name="description" content="고객 정보를 입력하면 접수 가능한 금융상품을 즉시 확인할 수 있습니다. 1차 사전심사로 빠른 상담을 지원합니다.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Fonts -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" as="style">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231428A0'/%3E%3Cstop offset='100%25' stop-color='%232962FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M16 8v16M8 16h16' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#1428A0">
+
+    <style>
+    /* ===== SCREENING PAGE STYLES ===== */
+
+    .scr-hero {
+        position: relative;
+        padding: 120px 0 48px;
+        background: #FFFFFF;
+        overflow: hidden;
+    }
+    .scr-hero::before {
+        content: '';
+        position: absolute;
+        top: -20%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(20,40,160,0.04) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .scr-hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .scr-hero-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 600;
+        background: #FEF3C7;
+        border: 1px solid #FCD34D;
+        color: #92400E;
+        margin-bottom: 24px;
+    }
+    .scr-hero-chip .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #F59E0B;
+        animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+        0%,100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+    .scr-hero-title {
+        font-size: clamp(26px, 4vw, 42px);
+        font-weight: 900;
+        line-height: 1.3;
+        letter-spacing: -0.03em;
+        color: var(--gray-900);
+        margin-bottom: 16px;
+    }
+    .scr-hero-title .accent { color: #1428A0; }
+    .scr-hero-desc {
+        font-size: clamp(14px, 1.8vw, 17px);
+        color: var(--gray-500);
+        line-height: 1.7;
+    }
+    .scr-hero-desc strong { color: var(--gray-700); }
+
+    /* ===== MAIN LAYOUT ===== */
+    .scr-section {
+        padding: 0 0 80px;
+        background: linear-gradient(180deg, #FFFFFF 0%, #F0F2FF 30%, #FFFFFF 100%);
+    }
+    .scr-layout {
+        display: grid;
+        grid-template-columns: 480px 1fr;
+        gap: 28px;
+        max-width: 1140px;
+        margin: 0 auto;
+    }
+
+    /* ===== INPUT PANEL ===== */
+    .scr-input-panel {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 32px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 90px;
+        align-self: start;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+    }
+    .scr-input-panel::-webkit-scrollbar { width: 4px; }
+    .scr-input-panel::-webkit-scrollbar-track { background: transparent; }
+    .scr-input-panel::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+
+    .scr-panel-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid var(--gray-100);
+    }
+    .scr-panel-title svg { color: var(--accent); flex-shrink: 0; }
+
+    .scr-group {
+        margin-bottom: 16px;
+    }
+    .scr-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 6px;
+    }
+    .scr-label .req { color: #EF4444; margin-left: 2px; }
+    .scr-label .hint {
+        font-weight: 400;
+        color: var(--gray-400);
+        font-size: 11px;
+        margin-left: 4px;
+    }
+
+    .scr-select, .scr-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--gray-800);
+        background: var(--white);
+        font-family: inherit;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+    }
+    .scr-select:focus, .scr-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: #F8F9FF;
+    }
+    .scr-input::placeholder { color: var(--gray-300); }
+
+    .scr-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .scr-toggle-group {
+        display: flex;
+        gap: 6px;
+    }
+    .scr-toggle-btn {
+        flex: 1;
+        padding: 10px 12px;
+        text-align: center;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-500);
+        background: var(--white);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .scr-toggle-btn:hover { border-color: #C7D2FE; }
+    .scr-toggle-btn.active {
+        border-color: var(--accent);
+        background: #EEF2FF;
+        color: var(--primary-dark);
+    }
+
+    .scr-divider {
+        height: 1px;
+        background: var(--gray-100);
+        margin: 20px 0;
+    }
+    .scr-divider-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gray-400);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .scr-divider-label::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--gray-100);
+    }
+
+    .scr-check-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    .scr-check-row input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--accent);
+        cursor: pointer;
+    }
+    .scr-check-row label {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--gray-600);
+        cursor: pointer;
+    }
+
+    .scr-btn-calc {
+        width: 100%;
+        padding: 14px 24px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, #1428A0, #2962FF);
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .scr-btn-calc:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(20,40,160,0.25);
+    }
+    .scr-btn-reset {
+        width: 100%;
+        padding: 10px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-500);
+        background: var(--white);
+        cursor: pointer;
+        margin-top: 8px;
+        transition: all 0.2s;
+    }
+    .scr-btn-reset:hover { border-color: var(--gray-300); color: var(--gray-700); }
+
+    /* ===== RESULT PANEL ===== */
+    .scr-result-panel {
+        min-height: 400px;
+    }
+
+    .scr-result-empty {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 80px 40px;
+        border: 2px dashed var(--border);
+        text-align: center;
+    }
+    .scr-result-empty svg { color: var(--gray-300); margin-bottom: 20px; }
+    .scr-result-empty h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--gray-400);
+        margin-bottom: 8px;
+    }
+    .scr-result-empty p {
+        font-size: 14px;
+        color: var(--gray-400);
+        line-height: 1.6;
+    }
+
+    /* Result summary */
+    .scr-summary {
+        background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
+        border-radius: var(--radius-xl);
+        padding: 28px 32px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .scr-summary::before {
+        content: '';
+        position: absolute;
+        top: -40%;
+        right: -15%;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.06);
+    }
+    .scr-summary-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+    .scr-summary-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+    }
+    .scr-summary-count {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #82B1FF;
+    }
+    .scr-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    .scr-summary-stat {
+        text-align: center;
+        padding: 12px 8px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 12px;
+    }
+    .scr-summary-stat .num {
+        font-size: 28px;
+        font-weight: 900;
+        color: #fff;
+        line-height: 1.2;
+    }
+    .scr-summary-stat .num.green { color: #4ADE80; }
+    .scr-summary-stat .num.yellow { color: #FBBF24; }
+    .scr-summary-stat .num.red { color: #F87171; }
+    .scr-summary-stat .lbl {
+        font-size: 12px;
+        color: rgba(255,255,255,0.6);
+        margin-top: 4px;
+    }
+
+    /* Product result cards */
+    .scr-product-card {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        border: 1.5px solid var(--border);
+        margin-bottom: 12px;
+        transition: all 0.2s;
+    }
+    .scr-product-card:hover {
+        box-shadow: var(--shadow-md);
+    }
+    .scr-product-card.pass {
+        border-color: #86EFAC;
+        background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%);
+    }
+    .scr-product-card.warn {
+        border-color: #FCD34D;
+        background: linear-gradient(135deg, #FFFBEB 0%, #FFFFFF 100%);
+    }
+    .scr-product-card.fail {
+        border-color: #FCA5A5;
+        background: linear-gradient(135deg, #FEF2F2 0%, #FFFFFF 100%);
+        opacity: 0.75;
+    }
+
+    .scr-product-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    .scr-product-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .scr-product-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        color: #fff;
+        background: var(--gray-400);
+        flex-shrink: 0;
+    }
+    .scr-product-card.pass .scr-product-num { background: #16A34A; }
+    .scr-product-card.warn .scr-product-num { background: #D97706; }
+    .scr-product-card.fail .scr-product-num { background: #DC2626; }
+
+    .scr-product-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--gray-800);
+    }
+
+    .scr-product-badge {
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .scr-product-badge.pass { background: #DCFCE7; color: #166534; }
+    .scr-product-badge.warn { background: #FEF3C7; color: #92400E; }
+    .scr-product-badge.fail { background: #FEE2E2; color: #991B1B; }
+
+    .scr-product-details {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .scr-detail-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    .scr-detail-icon {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 11px;
+    }
+    .scr-detail-icon.ok { background: #DCFCE7; color: #16A34A; }
+    .scr-detail-icon.ng { background: #FEE2E2; color: #DC2626; }
+    .scr-detail-icon.caution { background: #FEF3C7; color: #D97706; }
+    .scr-detail-text { color: var(--gray-600); }
+    .scr-detail-text strong { color: var(--gray-800); }
+
+    .scr-product-footer {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-light);
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .scr-product-meta {
+        font-size: 12px;
+        color: var(--gray-400);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .scr-product-meta strong { color: var(--gray-600); }
+
+    /* Disqualifier alert */
+    .scr-alert {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .scr-alert.danger {
+        background: #FEF2F2;
+        border: 1px solid #FECACA;
+    }
+    .scr-alert.info {
+        background: #EEF2FF;
+        border: 1px solid #C7D2FE;
+    }
+    .scr-alert-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 16px;
+    }
+    .scr-alert.danger .scr-alert-icon { background: #FEE2E2; }
+    .scr-alert.info .scr-alert-icon { background: #DBEAFE; }
+    .scr-alert-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-800);
+        line-height: 1.5;
+    }
+    .scr-alert-text span { font-weight: 400; color: var(--gray-500); font-size: 13px; display: block; margin-top: 2px; }
+
+    /* Required docs section */
+    .scr-docs-section {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        border: 1px solid var(--border);
+        margin-top: 20px;
+    }
+    .scr-docs-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .scr-docs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .scr-doc-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: var(--gray-50);
+        border-radius: 8px;
+        font-size: 13px;
+        color: var(--gray-600);
+    }
+    .scr-doc-item svg { color: var(--accent); flex-shrink: 0; }
+
+    /* Estimated funding */
+    .scr-estimate-box {
+        background: linear-gradient(135deg, #0D1B6F, #1428A0);
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin-top: 16px;
+    }
+    .scr-estimate-label {
+        font-size: 13px;
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 4px;
+    }
+    .scr-estimate-amount {
+        font-size: 28px;
+        font-weight: 900;
+        color: #82B1FF;
+        letter-spacing: -0.02em;
+    }
+    .scr-estimate-note {
+        font-size: 11px;
+        color: rgba(255,255,255,0.4);
+        margin-top: 4px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 960px) {
+        .scr-layout {
+            grid-template-columns: 1fr;
+        }
+        .scr-input-panel {
+            position: static;
+            max-height: none;
+        }
+        .scr-summary-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    @media (max-width: 600px) {
+        .scr-row { grid-template-columns: 1fr; }
+        .scr-docs-grid { grid-template-columns: 1fr; }
+        .scr-hero { padding: 100px 0 32px; }
+        .scr-input-panel { padding: 20px; }
+    }
+    </style>
+</head>
+<body data-page="screening">
+    <!-- Skip to Content -->
+    <a href="#main-content" class="skip-to-content">본문으로 바로가기</a>
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-left">
+                <span>
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    상담전화: <a href="tel:0507-1375-2717">0507-1375-2717</a>
+                </span>
+                <span class="divider">|</span>
+                <span>
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    평일 09:00 ~ 18:00
+                </span>
+            </div>
+            <div class="top-bar-right">
+                <a href="news.html">공지사항</a>
+                <a href="company.html#contact">오시는 길</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo" aria-label="메디플라톤 홈">
+                    <img src="images/logo/logo-horizontal.png" alt="MEDI-PLATON 메디플라톤" class="logo-img" height="40">
+                </a>
+                <nav class="main-nav" id="mainNav" aria-label="메인 메뉴">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html#about" class="nav-link">회사소개</a>
+                            <div class="nav-dropdown">
+                                <a href="index.html#about">메디플라톤 소개</a>
+                                <a href="company.html#partners">제휴기관</a>
+                                <a href="company.html#contact">오시는 길</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="products.html" class="nav-link">금융상품</a>
+                            <div class="nav-dropdown">
+                                <a href="products.html#product-loan">카드매출 담보대출</a>
+                                <a href="products.html#product-credit">신협 데일리론</a>
+                                <a href="products.html#product-kb">KB국민카드 특별한도</a>
+                                <a href="products.html#product-rental">의료장비 렌탈</a>
+                                <a href="products.html#product-deposit">임차보증금 담보</a>
+                                <a href="products.html#product-purchase">구매자금 대출</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="guide.html" class="nav-link">이용안내</a>
+                            <div class="nav-dropdown">
+                                <a href="guide.html#process">신청 절차</a>
+                                <a href="guide.html#qualification">자격 조건</a>
+                                <a href="guide.html#documents">필요 서류</a>
+                                <a href="guide.html#faq">자주 묻는 질문</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="cases.html" class="nav-link">성공사례</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="news.html" class="nav-link">소식</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="tax-savings.html" class="nav-link nav-link--tax">절세 계산기</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="screening.html" class="nav-link nav-link--tax" style="color: #D97706;">사전심사</a>
+                        </li>
+                        <li class="nav-separator" aria-hidden="true"></li>
+                        <li class="nav-item highlight">
+                            <a href="partner.html" class="nav-link partner-link">파트너 모집</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="index.html#consultation" class="header-cta">무료 상담신청</a>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="메뉴 열기">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="scr-hero">
+        <div class="container">
+            <div class="scr-hero-content">
+                <div class="scr-hero-chip">
+                    <span class="dot"></span>
+                    내부 전용 - 1차 사전심사 도구
+                </div>
+                <h1 class="scr-hero-title">
+                    고객 정보 입력으로<br>
+                    <span class="accent">접수 가능 상품</span> 즉시 확인
+                </h1>
+                <p class="scr-hero-desc">
+                    모두빌리지 접수 전, <strong>1차 사전 스크리닝</strong>으로 가능한 상품을 빠르게 파악하세요.<br>
+                    카톡 대화 기반 실제 심사 기준이 반영되어 있습니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="scr-section" id="main-content">
+        <div class="container">
+            <div class="scr-layout">
+                <!-- INPUT PANEL -->
+                <div class="scr-input-panel">
+                    <div class="scr-panel-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        고객 정보 입력
+                    </div>
+
+                    <!-- 기본 정보 -->
+                    <div class="scr-divider-label">기본 정보</div>
+
+                    <div class="scr-group">
+                        <label class="scr-label">업종 <span class="req">*</span></label>
+                        <select class="scr-select" id="industry">
+                            <option value="">선택하세요</option>
+                            <option value="hospital">병의원 (치과, 한의원, 성형외과 등)</option>
+                            <option value="pharmacy">약국</option>
+                            <option value="restaurant">음식점/카페</option>
+                            <option value="franchise">프랜차이즈 (편의점, 베스킨라빈스 등)</option>
+                            <option value="gasstation">주유소</option>
+                            <option value="retail">도소매/마트</option>
+                            <option value="service">서비스업 (미용, 마사지 등)</option>
+                            <option value="education">교육서비스업</option>
+                            <option value="hotel">숙박업 (호텔, 펜션)</option>
+                            <option value="screen">스크린골프/체육시설</option>
+                            <option value="factory">제조업/공장</option>
+                            <option value="other">기타</option>
+                        </select>
+                    </div>
+
+                    <div class="scr-row">
+                        <div class="scr-group">
+                            <label class="scr-label">사업자 유형</label>
+                            <div class="scr-toggle-group">
+                                <button class="scr-toggle-btn active" data-field="bizType" data-value="individual">개인</button>
+                                <button class="scr-toggle-btn" data-field="bizType" data-value="corporate">법인</button>
+                            </div>
+                        </div>
+                        <div class="scr-group">
+                            <label class="scr-label">국적</label>
+                            <div class="scr-toggle-group">
+                                <button class="scr-toggle-btn active" data-field="nationality" data-value="korean">내국인</button>
+                                <button class="scr-toggle-btn" data-field="nationality" data-value="foreign">외국인</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scr-row">
+                        <div class="scr-group">
+                            <label class="scr-label">지역 <span class="req">*</span></label>
+                            <select class="scr-select" id="region">
+                                <option value="">선택하세요</option>
+                                <option value="seoul">서울</option>
+                                <option value="gyeonggi">경기</option>
+                                <option value="incheon">인천</option>
+                                <option value="busan">부산 (광역시)</option>
+                                <option value="daegu">대구 (광역시)</option>
+                                <option value="daejeon">대전 (광역시)</option>
+                                <option value="gwangju">광주 (광역시)</option>
+                                <option value="ulsan">울산 (광역시)</option>
+                                <option value="sejong">세종</option>
+                                <option value="gangwon">강원</option>
+                                <option value="chungbuk">충북</option>
+                                <option value="chungnam">충남</option>
+                                <option value="jeonbuk">전북</option>
+                                <option value="jeonnam">전남</option>
+                                <option value="gyeongbuk">경북</option>
+                                <option value="gyeongnam">경남</option>
+                                <option value="jeju">제주</option>
+                            </select>
+                        </div>
+                        <div class="scr-group">
+                            <label class="scr-label">대표자 나이</label>
+                            <select class="scr-select" id="age">
+                                <option value="">선택하세요</option>
+                                <option value="under50">50세 미만</option>
+                                <option value="50to64">50~64세</option>
+                                <option value="65to69">65~69세</option>
+                                <option value="70plus">70세 이상</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="scr-row">
+                        <div class="scr-group">
+                            <label class="scr-label">사업 기간</label>
+                            <select class="scr-select" id="bizDuration">
+                                <option value="">선택하세요</option>
+                                <option value="under6m">6개월 미만</option>
+                                <option value="6mto1y">6개월~1년</option>
+                                <option value="1yto3y">1~3년</option>
+                                <option value="3yplus">3년 이상</option>
+                            </select>
+                        </div>
+                        <div class="scr-group">
+                            <label class="scr-label">KCB 신용점수 <span class="req">*</span></label>
+                            <select class="scr-select" id="creditScore">
+                                <option value="">선택하세요</option>
+                                <option value="900plus">900점 이상</option>
+                                <option value="800to899">800~899점</option>
+                                <option value="770to799">770~799점</option>
+                                <option value="750to769">750~769점</option>
+                                <option value="700to749">700~749점</option>
+                                <option value="under700">700점 미만</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 매출 정보 -->
+                    <div class="scr-divider-label">매출 / 재무 정보</div>
+
+                    <div class="scr-row">
+                        <div class="scr-group">
+                            <label class="scr-label">월 카드매출 <span class="req">*</span></label>
+                            <select class="scr-select" id="monthlySales">
+                                <option value="">선택하세요</option>
+                                <option value="under1000">1,000만원 미만</option>
+                                <option value="1000to2000">1,000~2,000만원</option>
+                                <option value="2000to3000">2,000~3,000만원</option>
+                                <option value="3000to5000">3,000~5,000만원</option>
+                                <option value="5000to8000">5,000~8,000만원</option>
+                                <option value="8000to1억">8,000만~1억원</option>
+                                <option value="over1억">1억원 이상</option>
+                            </select>
+                        </div>
+                        <div class="scr-group">
+                            <label class="scr-label">필요 자금 규모</label>
+                            <select class="scr-select" id="fundingNeeded">
+                                <option value="">선택하세요</option>
+                                <option value="under1000">1,000만원 이하</option>
+                                <option value="1000to3000">1,000~3,000만원</option>
+                                <option value="3000to5000">3,000~5,000만원</option>
+                                <option value="5000to1억">5,000만~1억원</option>
+                                <option value="1억to2억">1~2억원</option>
+                                <option value="over2억">2억원 이상</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="scr-group">
+                        <label class="scr-label">재무 상태 <span class="hint">(재무제표 기준)</span></label>
+                        <div class="scr-toggle-group">
+                            <button class="scr-toggle-btn active" data-field="financial" data-value="good">양호</button>
+                            <button class="scr-toggle-btn" data-field="financial" data-value="normal">보통</button>
+                            <button class="scr-toggle-btn" data-field="financial" data-value="loss">결손/적자</button>
+                        </div>
+                    </div>
+
+                    <!-- 담보 / 자산 정보 -->
+                    <div class="scr-divider-label">담보 / 자산 정보</div>
+
+                    <div class="scr-row">
+                        <div class="scr-group">
+                            <label class="scr-label">임차보증금</label>
+                            <select class="scr-select" id="deposit">
+                                <option value="">선택하세요</option>
+                                <option value="none">없음</option>
+                                <option value="under3000">3,000만원 미만</option>
+                                <option value="3000to5000">3,000~5,000만원</option>
+                                <option value="5000to1억">5,000만~1억원</option>
+                                <option value="1억to2억">1~2억원</option>
+                                <option value="over2억">2억원 이상</option>
+                            </select>
+                        </div>
+                        <div class="scr-group">
+                            <label class="scr-label">임대인 동의 가능</label>
+                            <div class="scr-toggle-group">
+                                <button class="scr-toggle-btn" data-field="landlordConsent" data-value="yes">가능</button>
+                                <button class="scr-toggle-btn" data-field="landlordConsent" data-value="no">불가/미확인</button>
+                                <button class="scr-toggle-btn active" data-field="landlordConsent" data-value="unknown">모름</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scr-check-row">
+                        <input type="checkbox" id="hasNewEquipment">
+                        <label for="hasNewEquipment">신규 구매 예정 물품 있음 (장비, 가구, 에어컨 등)</label>
+                    </div>
+                    <div class="scr-check-row">
+                        <input type="checkbox" id="hasOldEquipment">
+                        <label for="hasOldEquipment">기존 보유 장비 있음 (10년 미만, 금융 미설정)</label>
+                    </div>
+                    <div class="scr-check-row">
+                        <input type="checkbox" id="canChangePOS">
+                        <label for="canChangePOS">카드단말기(POS) 교체 또는 추가 설치 가능</label>
+                    </div>
+                    <div class="scr-check-row">
+                        <input type="checkbox" id="hasKBCard">
+                        <label for="hasKBCard">KB국민카드 보유</label>
+                    </div>
+                    <div class="scr-check-row">
+                        <input type="checkbox" id="usingPrivateLoan">
+                        <label for="usingPrivateLoan">대부업/사금융 이용중 (해당시 체크)</label>
+                    </div>
+
+                    <!-- Buttons -->
+                    <button class="scr-btn-calc" id="btnScreen" onclick="runScreening()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        사전심사 실행
+                    </button>
+                    <button class="scr-btn-reset" onclick="resetForm()">초기화</button>
+                </div>
+
+                <!-- RESULT PANEL -->
+                <div class="scr-result-panel" id="resultPanel">
+                    <div class="scr-result-empty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <h3>고객 정보를 입력해주세요</h3>
+                        <p>왼쪽 패널에 고객 정보를 입력하고<br>"사전심사 실행" 버튼을 누르면<br>접수 가능한 상품이 표시됩니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+    // ===== SCREENING LOGIC =====
+
+    // Toggle button handler
+    document.querySelectorAll('.scr-toggle-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var siblings = this.parentElement.querySelectorAll('.scr-toggle-btn');
+            siblings.forEach(function(s) { s.classList.remove('active'); });
+            this.classList.add('active');
+        });
+    });
+
+    function getToggleValue(field) {
+        var active = document.querySelector('.scr-toggle-btn.active[data-field="' + field + '"]');
+        return active ? active.dataset.value : '';
+    }
+
+    function getVal(id) { return document.getElementById(id).value; }
+    function isChecked(id) { return document.getElementById(id).checked; }
+
+    // Monthly sales to number (만원)
+    function salesToNumber(val) {
+        var map = {
+            'under1000': 500, '1000to2000': 1500, '2000to3000': 2500,
+            '3000to5000': 4000, '5000to8000': 6500, '8000to1억': 9000, 'over1억': 12000
+        };
+        return map[val] || 0;
+    }
+
+    // Deposit to number (만원)
+    function depositToNumber(val) {
+        var map = {
+            'none': 0, 'under3000': 1500, '3000to5000': 4000,
+            '5000to1억': 7500, '1억to2억': 15000, 'over2억': 25000
+        };
+        return map[val] || 0;
+    }
+
+    // Credit score to number
+    function creditToNumber(val) {
+        var map = {
+            '900plus': 950, '800to899': 850, '770to799': 785,
+            '750to769': 760, '700to749': 725, 'under700': 650
+        };
+        return map[val] || 0;
+    }
+
+    // Region checks
+    function isCapitalRegion(region) {
+        return ['seoul','gyeonggi','incheon'].indexOf(region) >= 0;
+    }
+    function isMetroCity(region) {
+        return ['busan','daegu','daejeon','gwangju','ulsan'].indexOf(region) >= 0;
+    }
+    function isJeolla(region) {
+        return ['jeonbuk','jeonnam','gwangju'].indexOf(region) >= 0;
+    }
+
+    function runScreening() {
+        var industry = getVal('industry');
+        var region = getVal('region');
+        var creditScore = getVal('creditScore');
+        var monthlySales = getVal('monthlySales');
+
+        // Validation
+        if (!industry || !region || !creditScore || !monthlySales) {
+            alert('업종, 지역, 신용점수, 월 카드매출은 필수 입력입니다.');
+            return;
+        }
+
+        var bizType = getToggleValue('bizType');
+        var nationality = getToggleValue('nationality');
+        var financial = getToggleValue('financial');
+        var landlordConsent = getToggleValue('landlordConsent');
+        var age = getVal('age');
+        var bizDuration = getVal('bizDuration');
+        var deposit = getVal('deposit');
+        var fundingNeeded = getVal('fundingNeeded');
+
+        var hasNewEquipment = isChecked('hasNewEquipment');
+        var hasOldEquipment = isChecked('hasOldEquipment');
+        var canChangePOS = isChecked('canChangePOS');
+        var hasKBCard = isChecked('hasKBCard');
+        var usingPrivateLoan = isChecked('usingPrivateLoan');
+
+        var salesNum = salesToNumber(monthlySales);
+        var depositNum = depositToNumber(deposit);
+        var creditNum = creditToNumber(creditScore);
+        var isHospital = (industry === 'hospital' || industry === 'pharmacy');
+        var isForeign = (nationality === 'foreign');
+        var isOver70 = (age === '70plus');
+        var isLoss = (financial === 'loss');
+
+        var results = [];
+        var alerts = [];
+
+        // ===== GLOBAL DISQUALIFIERS =====
+        if (isForeign) {
+            alerts.push({
+                type: 'danger',
+                icon: '!!',
+                title: '외국인 - 대부분 상품 불가',
+                desc: '렌탈, 신협, 수협 등 금융상품 진행 불가. 보증보험 발급 가능시 카드매출 지원금만 가능 (단말기 전체 교체 필수).'
+            });
+        }
+        if (isOver70) {
+            alerts.push({
+                type: 'danger',
+                icon: '70+',
+                title: '만 70세 이상 - 접수 거부 가능성 높음',
+                desc: 'KCB 780점 이상 필요. 대부분 상품에서 나이 제한으로 부결 가능성 매우 높습니다.'
+            });
+        }
+        if (usingPrivateLoan) {
+            alerts.push({
+                type: 'danger',
+                icon: '!!',
+                title: '대부업/사금융 이용중',
+                desc: '심사시 매우 불리. 대부분 상품에서 부결 가능성 높습니다.'
+            });
+        }
+        if (isLoss) {
+            alerts.push({
+                type: 'info',
+                icon: 'i',
+                title: '재무제표 결손/적자 상태',
+                desc: '보증보험 발급 어려움. 신협/수협도 심사 시 불리합니다. 2개년 연속 결손시 부결.'
+            });
+        }
+        if (creditNum < 700) {
+            alerts.push({
+                type: 'danger',
+                icon: '!!',
+                title: 'KCB 700점 미만 - 대부분 상품 불가',
+                desc: '가용한도 산출이 안되거나 접수 자체가 거부됩니다. KB특별한도 조회 또는 신용점수 회복 후 재접수를 권장합니다.'
+            });
+        }
+
+        // ===== 1. 신협 데일리론 =====
+        (function() {
+            var status = 'fail';
+            var reasons = [];
+            var badge = '';
+            var estimate = '';
+
+            // Industry check
+            if (isHospital) {
+                reasons.push({ok: true, text: '업종: 병의원/약국 - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: '업종: ' + getVal('industry') + ' - <strong>병의원/약국만 가능</strong>'});
+            }
+
+            // Region check
+            if (isCapitalRegion(region)) {
+                reasons.push({ok: true, text: '지역: 수도권 - <strong>적합</strong>'});
+            } else if (isMetroCity(region)) {
+                reasons.push({ok: true, text: '지역: 광역시 - <strong>가능 (3건 모아 심사)</strong>'});
+            } else {
+                reasons.push({ok: false, text: '지역: 지방 - <strong>현재 불가</strong> (수도권/광역시만)'});
+            }
+
+            // Nationality
+            if (isForeign) {
+                reasons.push({ok: false, text: '국적: 외국인 - <strong>불가</strong>'});
+            }
+
+            // Financial
+            if (isLoss) {
+                reasons.push({caution: true, text: '재무: 결손/적자 - <strong>심사 불리</strong>'});
+            }
+
+            if (isHospital && !isForeign && (isCapitalRegion(region) || isMetroCity(region))) {
+                if (isLoss) {
+                    status = 'warn';
+                    badge = '조건부 가능';
+                } else {
+                    status = 'pass';
+                    badge = '접수 가능';
+                }
+                // Estimate
+                if (salesNum >= 5000) estimate = '1~2억 예상';
+                else if (salesNum >= 3000) estimate = '5,000만~1억 예상';
+                else if (salesNum >= 1000) estimate = '3,000~7,000만 예상';
+                else estimate = '소액 가능';
+            } else {
+                badge = '접수 불가';
+            }
+
+            reasons.push({info: true, text: '금리: 연 8~9% / PG 단말기 설치 필수 / DSR 미반영'});
+
+            results.push({
+                num: '5-1',
+                name: '신협 데일리론',
+                status: status,
+                badge: badge,
+                reasons: reasons,
+                commission: '5%',
+                estimate: estimate,
+                period: '약 2주'
+            });
+        })();
+
+        // ===== 2. 수협 대출 =====
+        (function() {
+            var status = 'fail';
+            var reasons = [];
+            var badge = '';
+            var estimate = '';
+
+            // Industry
+            if (industry === 'hospital' || industry === 'pharmacy') {
+                reasons.push({ok: true, text: '업종: 병의원/약국 - <strong>적합</strong>'});
+            } else if (industry === 'gasstation') {
+                reasons.push({ok: true, text: '업종: 주유소 - <strong>적합</strong>'});
+            } else if (salesNum >= 5000 && creditNum >= 770) {
+                reasons.push({caution: true, text: '업종: 기타 - <strong>월카드매출 5천만+ & 우수신용시 별도심사 가능</strong>'});
+            } else {
+                reasons.push({ok: false, text: '업종: 기타 - <strong>병원/주유소 외 불가</strong> (5천만+매출 & 우수신용 예외)'});
+            }
+
+            // Region
+            if (isCapitalRegion(region)) {
+                reasons.push({ok: true, text: '지역: 수도권 - <strong>적합</strong>'});
+            } else if (isJeolla(region)) {
+                reasons.push({ok: true, text: '지역: 전라도 - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: '지역: ' + region + ' - <strong>수도권/전라도만 가능</strong>'});
+            }
+
+            // Duration
+            if (bizDuration === '3yplus') {
+                reasons.push({ok: true, text: '업력: 3년 이상 - <strong>적합</strong>'});
+            } else if (bizDuration === '1yto3y') {
+                reasons.push({caution: true, text: '업력: 1~3년 - <strong>양천구/서대문구/광명시만 가능</strong>'});
+            } else if (bizDuration) {
+                reasons.push({ok: false, text: '업력: 1년 미만 - <strong>불가</strong> (최소 3년 필요)'});
+            }
+
+            if (isForeign) {
+                reasons.push({ok: false, text: '국적: 외국인 - <strong>불가</strong>'});
+            }
+
+            var industryOk = (industry === 'hospital' || industry === 'pharmacy' || industry === 'gasstation' || (salesNum >= 5000 && creditNum >= 770));
+            var regionOk = isCapitalRegion(region) || isJeolla(region);
+            var durationOk = bizDuration === '3yplus' || (bizDuration === '1yto3y');
+
+            if (industryOk && regionOk && durationOk && !isForeign) {
+                if (isLoss || bizDuration === '1yto3y') {
+                    status = 'warn';
+                    badge = '조건부 가능';
+                } else {
+                    status = 'pass';
+                    badge = '접수 가능';
+                }
+                estimate = '최대 2.5억 (신용/업력에 따라 차등)';
+            } else {
+                badge = '접수 불가';
+            }
+
+            reasons.push({info: true, text: '금리: 연 5~6% / PG 단말기 설치 필수'});
+
+            results.push({
+                num: '5-2',
+                name: '수협 신용대출',
+                status: status,
+                badge: badge,
+                reasons: reasons,
+                commission: '5%',
+                estimate: estimate,
+                period: '약 1~2주'
+            });
+        })();
+
+        // ===== 3. 카드매출 약정지원금 =====
+        (function() {
+            var status = 'fail';
+            var reasons = [];
+            var badge = '';
+            var estimate = '';
+
+            // Sales check
+            if (salesNum >= 5000) {
+                reasons.push({ok: true, text: '월 카드매출: 5,000만원 이상 - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: '월 카드매출: 5,000만원 미만 - <strong>불가</strong> (최소 5천만원 필요)'});
+            }
+
+            // POS
+            if (canChangePOS) {
+                reasons.push({ok: true, text: 'PG 단말기: 교체/추가설치 가능 - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: 'PG 단말기: 교체 불가 - <strong>단말기 설치 필수</strong>'});
+            }
+
+            // Credit for 보증보험
+            if (creditNum >= 770) {
+                reasons.push({ok: true, text: '신용점수: 보증보험 발급 가능 예상'});
+            } else if (creditNum >= 700) {
+                reasons.push({caution: true, text: '신용점수: 보증보험 발급 불확실 - 심사 필요'});
+            } else {
+                reasons.push({ok: false, text: '신용점수: 보증보험 접수 불가 예상'});
+            }
+
+            // Service-after-payment exclusion
+            if (industry === 'screen') {
+                reasons.push({caution: true, text: '업종: 결제 후 서비스 제공 업종 - <strong>심사 불리</strong> (헬스장/회원권 불가)'});
+            }
+
+            if (salesNum >= 5000 && creditNum >= 700) {
+                if (canChangePOS) {
+                    status = creditNum >= 770 ? 'pass' : 'warn';
+                    badge = creditNum >= 770 ? '접수 가능' : '조건부 가능';
+                } else {
+                    status = 'warn';
+                    badge = '단말기 확인 필요';
+                }
+                estimate = '월 카드매출 수준 (약 ' + Math.round(salesNum * 0.8 / 100) * 100 + '만~' + salesNum + '만원)';
+            } else {
+                badge = '접수 불가';
+            }
+
+            // Corporate OK
+            if (bizType === 'corporate') {
+                reasons.push({ok: true, text: '법인사업자도 진행 가능 (월 5천만+ 접수)'});
+            }
+
+            reasons.push({info: true, text: '비금융상품 (대출 아님) / DSR 미반영 / 전산 미등재'});
+
+            results.push({
+                num: '4',
+                name: '카드매출 약정지원금',
+                status: status,
+                badge: badge,
+                reasons: reasons,
+                commission: '3%',
+                estimate: estimate,
+                period: '약 2주'
+            });
+        })();
+
+        // ===== 4. 임차보증금 담보 =====
+        (function() {
+            var status = 'fail';
+            var reasons = [];
+            var badge = '';
+            var estimate = '';
+
+            // Deposit amount
+            if (depositNum >= 3000) {
+                reasons.push({ok: true, text: '임차보증금: 3,000만원 이상 - <strong>적합</strong>'});
+            } else if (deposit === 'under3000') {
+                reasons.push({ok: false, text: '임차보증금: 3,000만원 미만 - <strong>불가</strong>'});
+            } else {
+                reasons.push({caution: true, text: '임차보증금: 정보 없음'});
+            }
+
+            // Landlord consent
+            if (landlordConsent === 'yes') {
+                reasons.push({ok: true, text: '임대인 동의: 가능 - <strong>적합</strong>'});
+            } else if (landlordConsent === 'no') {
+                reasons.push({ok: false, text: '임대인 동의: 불가 - <strong>필수 조건</strong>'});
+            } else {
+                reasons.push({caution: true, text: '임대인 동의: 미확인 - <strong>확인 필요</strong>'});
+            }
+
+            // Credit for 보증보험
+            if (creditNum >= 770) {
+                reasons.push({ok: true, text: '신용점수: 보증보험 발급 가능 예상'});
+            } else if (creditNum >= 700) {
+                reasons.push({caution: true, text: '신용점수: 보증보험 발급 불확실'});
+            } else {
+                reasons.push({ok: false, text: '신용점수: 보증보험 접수 불가 예상'});
+            }
+
+            if (isForeign) {
+                reasons.push({ok: false, text: '국적: 외국인 - <strong>불가</strong>'});
+            }
+
+            var depositOk = depositNum >= 3000;
+            var consentOk = landlordConsent !== 'no';
+            var creditOk = creditNum >= 700;
+
+            if (depositOk && consentOk && creditOk && !isForeign) {
+                if (landlordConsent === 'unknown' || creditNum < 770 || isLoss) {
+                    status = 'warn';
+                    badge = '조건부 가능';
+                } else {
+                    status = 'pass';
+                    badge = '접수 가능';
+                }
+                // Estimate: ~84.5% of deposit
+                var estimated = Math.round(depositNum * 0.845 / 100) * 100;
+                estimate = '약 ' + estimated.toLocaleString() + '만원 (보증보험 승인시)';
+            } else {
+                badge = '접수 불가';
+            }
+
+            reasons.push({info: true, text: '금리: 연 7~8% (부가세 환급시) / 전산 미등재 / 신용하락 없음 / 약 2주 소요'});
+
+            results.push({
+                num: '임보',
+                name: '임차보증금 담보',
+                status: status,
+                badge: badge,
+                reasons: reasons,
+                commission: '6%',
+                estimate: estimate,
+                period: '약 2주'
+            });
+        })();
+
+        // ===== 5. 신규 렌탈 (신규물품 구매) =====
+        (function() {
+            var status = 'fail';
+            var reasons = [];
+            var badge = '';
+
+            if (hasNewEquipment) {
+                reasons.push({ok: true, text: '신규 구매 물품: 있음 - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: '신규 구매 물품: 없음 - <strong>구매할 물품 필수</strong>'});
+            }
+
+            // Age
+            if (age === '70plus') {
+                reasons.push({ok: false, text: '나이: 70세 이상 - <strong>불가</strong>'});
+            } else if (age === '65to69') {
+                reasons.push({ok: false, text: '나이: 65세 이상 - <strong>만 65세 이하만 가능</strong>'});
+            } else if (age) {
+                reasons.push({ok: true, text: '나이: 만 65세 이하 - <strong>적합</strong>'});
+            }
+
+            // Credit
+            if (creditNum >= 770) {
+                reasons.push({ok: true, text: '신용점수: KCB 770점 이상 - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: '신용점수: KCB 770점 미만 - <strong>770점 이상 필요</strong>'});
+            }
+
+            if (isForeign) {
+                reasons.push({ok: false, text: '국적: 외국인 - <strong>불가</strong>'});
+            }
+
+            var ageOk = age !== '70plus' && age !== '65to69';
+            if (hasNewEquipment && ageOk && creditNum >= 770 && !isForeign) {
+                status = 'pass';
+                badge = '접수 가능';
+            } else if (hasNewEquipment && creditNum >= 750 && ageOk && !isForeign) {
+                status = 'warn';
+                badge = '조건부 가능';
+            } else {
+                badge = '접수 불가';
+            }
+
+            reasons.push({info: true, text: '전국 가능 / 개인·법인 모두 가능 / 견적서 필요'});
+
+            results.push({
+                num: '1',
+                name: '신규 렌탈 (물품 구매)',
+                status: status,
+                badge: badge,
+                reasons: reasons,
+                commission: '6%',
+                estimate: '물품가 기준',
+                period: '약 1~2주'
+            });
+        })();
+
+        // ===== 6. 중고매입 재렌탈 =====
+        (function() {
+            var status = 'fail';
+            var reasons = [];
+            var badge = '';
+
+            if (hasOldEquipment) {
+                reasons.push({ok: true, text: '보유 장비: 있음 (10년 미만, 금융 미설정) - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: '보유 장비: 없거나 10년 이상/금융 설정 - <strong>불가</strong>'});
+            }
+
+            if (isForeign) {
+                reasons.push({ok: false, text: '국적: 외국인 - <strong>불가</strong>'});
+            }
+
+            if (creditNum >= 770) {
+                reasons.push({ok: true, text: '신용점수: 적합'});
+            } else if (creditNum >= 700) {
+                reasons.push({caution: true, text: '신용점수: 심사 필요'});
+            } else {
+                reasons.push({ok: false, text: '신용점수: 부족'});
+            }
+
+            if (hasOldEquipment && !isForeign && creditNum >= 700) {
+                if (creditNum >= 770) {
+                    status = 'pass';
+                    badge = '접수 가능';
+                } else {
+                    status = 'warn';
+                    badge = '조건부 가능';
+                }
+            } else {
+                badge = '접수 불가';
+            }
+
+            var commRate = isHospital ? '6%' : '3%';
+            reasons.push({info: true, text: '병원: 수수료 6% / 소상공인: 수수료 3% / 전국 가능'});
+
+            results.push({
+                num: '2',
+                name: '중고매입 재렌탈',
+                status: status,
+                badge: badge,
+                reasons: reasons,
+                commission: commRate,
+                estimate: '장비 감정가 기준',
+                period: '약 1~2주'
+            });
+        })();
+
+        // ===== 7. KB국민카드 특별한도 =====
+        (function() {
+            var status = 'fail';
+            var reasons = [];
+            var badge = '';
+
+            if (hasKBCard) {
+                reasons.push({ok: true, text: 'KB국민카드: 보유 - <strong>적합</strong>'});
+            } else {
+                reasons.push({ok: false, text: 'KB국민카드: 미보유 - <strong>KB카드 필수</strong>'});
+            }
+
+            if (creditNum >= 770) {
+                reasons.push({ok: true, text: '신용점수: 한도 산출 유리'});
+            } else if (creditNum >= 700) {
+                reasons.push({caution: true, text: '신용점수: 한도 제한 가능'});
+            }
+
+            if (hasKBCard) {
+                if (creditNum >= 770) {
+                    status = 'pass';
+                    badge = '한도 조회 가능';
+                } else {
+                    status = 'warn';
+                    badge = '한도 조회 필요';
+                }
+            } else {
+                badge = 'KB카드 없음';
+            }
+
+            reasons.push({info: true, text: '전화: 1599-0036 (1번→4번→카드번호) / "의료기기 구매" 목적 필수 / 최대 2억'});
+
+            results.push({
+                num: '6',
+                name: 'KB국민카드 특별한도',
+                status: status,
+                badge: badge,
+                reasons: reasons,
+                commission: '3%',
+                estimate: '최대 2억 (한도조회 필요)',
+                period: '당일~1주'
+            });
+        })();
+
+        // ===== RENDER RESULTS =====
+        renderResults(results, alerts);
+    }
+
+    function renderResults(results, alerts) {
+        var panel = document.getElementById('resultPanel');
+        var html = '';
+
+        // Count
+        var passCount = results.filter(function(r) { return r.status === 'pass'; }).length;
+        var warnCount = results.filter(function(r) { return r.status === 'warn'; }).length;
+        var failCount = results.filter(function(r) { return r.status === 'fail'; }).length;
+
+        // Summary
+        html += '<div class="scr-summary">';
+        html += '<div class="scr-summary-top">';
+        html += '<span class="scr-summary-label">사전심사 결과</span>';
+        html += '<span class="scr-summary-count">' + results.length + '개 상품 분석 완료</span>';
+        html += '</div>';
+        html += '<div class="scr-summary-grid">';
+        html += '<div class="scr-summary-stat"><div class="num green">' + passCount + '</div><div class="lbl">접수 가능</div></div>';
+        html += '<div class="scr-summary-stat"><div class="num yellow">' + warnCount + '</div><div class="lbl">조건부 가능</div></div>';
+        html += '<div class="scr-summary-stat"><div class="num red">' + failCount + '</div><div class="lbl">접수 불가</div></div>';
+        html += '</div>';
+        html += '</div>';
+
+        // Alerts
+        alerts.forEach(function(a) {
+            html += '<div class="scr-alert ' + a.type + '">';
+            html += '<div class="scr-alert-icon">' + a.icon + '</div>';
+            html += '<div class="scr-alert-text">' + a.title + '<span>' + a.desc + '</span></div>';
+            html += '</div>';
+        });
+
+        // Sort: pass > warn > fail
+        var sorted = results.slice().sort(function(a, b) {
+            var order = {pass: 0, warn: 1, fail: 2};
+            return order[a.status] - order[b.status];
+        });
+
+        // Product cards
+        sorted.forEach(function(r) {
+            html += '<div class="scr-product-card ' + r.status + '">';
+            html += '<div class="scr-product-header">';
+            html += '<div class="scr-product-name">';
+            html += '<div class="scr-product-num">' + r.num + '</div>';
+            html += '<div class="scr-product-title">' + r.name + '</div>';
+            html += '</div>';
+            html += '<span class="scr-product-badge ' + r.status + '">' + r.badge + '</span>';
+            html += '</div>';
+
+            html += '<div class="scr-product-details">';
+            r.reasons.forEach(function(reason) {
+                var iconClass = 'ok';
+                var iconText = '\u2713';
+                if (reason.ok === false) { iconClass = 'ng'; iconText = '\u2717'; }
+                else if (reason.caution) { iconClass = 'caution'; iconText = '!'; }
+                else if (reason.info) { iconClass = 'caution'; iconText = 'i'; }
+                html += '<div class="scr-detail-row">';
+                html += '<div class="scr-detail-icon ' + iconClass + '">' + iconText + '</div>';
+                html += '<div class="scr-detail-text">' + reason.text + '</div>';
+                html += '</div>';
+            });
+            html += '</div>';
+
+            if (r.estimate || r.commission || r.period) {
+                html += '<div class="scr-product-footer">';
+                if (r.estimate && r.status !== 'fail') html += '<div class="scr-product-meta">예상한도: <strong>' + r.estimate + '</strong></div>';
+                if (r.commission) html += '<div class="scr-product-meta">수수료: <strong>' + r.commission + '</strong></div>';
+                if (r.period) html += '<div class="scr-product-meta">소요기간: <strong>' + r.period + '</strong></div>';
+                html += '</div>';
+            }
+
+            html += '</div>';
+        });
+
+        // Required docs section
+        var docs = collectDocs(sorted);
+        if (docs.length > 0 && passCount + warnCount > 0) {
+            html += '<div class="scr-docs-section">';
+            html += '<div class="scr-docs-title">';
+            html += '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+            html += '접수시 필요 서류 (가능 상품 기준)';
+            html += '</div>';
+            html += '<div class="scr-docs-grid">';
+            docs.forEach(function(doc) {
+                html += '<div class="scr-doc-item">';
+                html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>';
+                html += doc;
+                html += '</div>';
+            });
+            html += '</div>';
+            html += '</div>';
+        }
+
+        // Total estimated funding
+        if (passCount + warnCount > 0) {
+            var totalEstimate = calcTotalEstimate(sorted);
+            if (totalEstimate) {
+                html += '<div class="scr-estimate-box">';
+                html += '<div class="scr-estimate-label">가능 상품 조합시 예상 최대 자금</div>';
+                html += '<div class="scr-estimate-amount">' + totalEstimate + '</div>';
+                html += '<div class="scr-estimate-note">* 실제 금액은 심사 결과에 따라 달라질 수 있습니다</div>';
+                html += '</div>';
+            }
+        }
+
+        panel.innerHTML = html;
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function collectDocs(results) {
+        var docSet = {};
+        var passOrWarn = results.filter(function(r) { return r.status !== 'fail'; });
+
+        // Always needed
+        if (passOrWarn.length > 0) {
+            docSet['사업자등록증'] = true;
+            docSet['대표자 신분증 (앞면)'] = true;
+        }
+
+        passOrWarn.forEach(function(r) {
+            if (r.name.indexOf('신협') >= 0 || r.name.indexOf('수협') >= 0) {
+                docSet['카드매출 자료 (홈택스)'] = true;
+                docSet['소득금액증명원'] = true;
+            }
+            if (r.name.indexOf('임차보증금') >= 0) {
+                docSet['임대차계약서'] = true;
+                docSet['임대인 동의서'] = true;
+            }
+            if (r.name.indexOf('중고') >= 0) {
+                docSet['보유 장비 사진/정보'] = true;
+            }
+            if (r.name.indexOf('신규') >= 0 || r.name.indexOf('KB') >= 0) {
+                docSet['구매 견적서'] = true;
+            }
+            if (r.name.indexOf('카드매출') >= 0) {
+                docSet['카드매출 자료 (홈택스)'] = true;
+            }
+        });
+
+        // Corporate
+        var bizType = getToggleValue('bizType');
+        if (bizType === 'corporate' && passOrWarn.length > 0) {
+            docSet['재무제표 (최근 3개년)'] = true;
+            docSet['법인등기부등본'] = true;
+        }
+
+        return Object.keys(docSet);
+    }
+
+    function calcTotalEstimate(results) {
+        var salesNum = salesToNumber(getVal('monthlySales'));
+        var depositNum = depositToNumber(getVal('deposit'));
+        var total = 0;
+        var items = [];
+
+        results.forEach(function(r) {
+            if (r.status === 'fail') return;
+
+            if (r.name.indexOf('신협') >= 0) {
+                var v = 0;
+                if (salesNum >= 5000) v = 15000;
+                else if (salesNum >= 3000) v = 7000;
+                else if (salesNum >= 1000) v = 3000;
+                total += v;
+                if (v) items.push('신협 ' + (v/10000).toFixed(1) + '억');
+            }
+            if (r.name.indexOf('수협') >= 0) {
+                total += 15000; // 최대 2.5억이지만 보수적 추정
+                items.push('수협 최대 1.5억');
+            }
+            if (r.name.indexOf('카드매출') >= 0) {
+                var v2 = Math.round(salesNum * 0.9);
+                total += v2;
+                items.push('지원금 ' + v2.toLocaleString() + '만');
+            }
+            if (r.name.indexOf('임차보증금') >= 0) {
+                var v3 = Math.round(depositNum * 0.845);
+                total += v3;
+                items.push('보증금 ' + v3.toLocaleString() + '만');
+            }
+        });
+
+        if (total === 0) return '';
+
+        if (total >= 10000) {
+            return '약 ' + (total / 10000).toFixed(1) + '억원';
+        } else {
+            return '약 ' + total.toLocaleString() + '만원';
+        }
+    }
+
+    function resetForm() {
+        document.querySelectorAll('.scr-select').forEach(function(s) { s.value = ''; });
+        document.querySelectorAll('.scr-input').forEach(function(i) { i.value = ''; });
+        document.querySelectorAll('input[type="checkbox"]').forEach(function(c) { c.checked = false; });
+
+        // Reset toggles to defaults
+        var defaults = {bizType: 'individual', nationality: 'korean', financial: 'good', landlordConsent: 'unknown'};
+        Object.keys(defaults).forEach(function(field) {
+            var btns = document.querySelectorAll('.scr-toggle-btn[data-field="' + field + '"]');
+            btns.forEach(function(b) {
+                b.classList.toggle('active', b.dataset.value === defaults[field]);
+            });
+        });
+
+        // Reset result
+        document.getElementById('resultPanel').innerHTML = '<div class="scr-result-empty"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><h3>고객 정보를 입력해주세요</h3><p>왼쪽 패널에 고객 정보를 입력하고<br>"사전심사 실행" 버튼을 누르면<br>접수 가능한 상품이 표시됩니다.</p></div>';
+    }
+    </script>
+</body>
+</html>
