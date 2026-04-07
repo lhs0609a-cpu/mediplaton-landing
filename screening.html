@@ -578,6 +578,46 @@
         margin-top: 4px;
     }
 
+    /* ===== FORM SEND BUTTON ===== */
+    .scr-form-send-box {
+        background: linear-gradient(135deg, #FFF8E1 0%, #FFF3C4 100%);
+        border: 1px dashed #F5C518;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .scr-btn-form-send {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background: #FEE500;
+        color: #191919;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: 'Pretendard Variable', sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(254,229,0,0.3);
+    }
+    .scr-btn-form-send:hover {
+        background: #F5DD00;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(254,229,0,0.4);
+    }
+    .scr-btn-form-send:active { transform: translateY(0); }
+    .scr-btn-form-send svg { stroke: #191919; }
+    .scr-form-send-hint {
+        display: block;
+        margin-top: 8px;
+        font-size: 11px;
+        color: #A68B00;
+        transition: color 0.3s;
+    }
+
     /* ===== KAKAO COPY BUTTON ===== */
     .scr-kakao-section {
         text-align: center;
@@ -766,6 +806,15 @@
                     <div class="scr-panel-title">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         고객 정보 입력
+                    </div>
+
+                    <!-- 상담 접수 양식 카톡 발송 -->
+                    <div class="scr-form-send-box">
+                        <button class="scr-btn-form-send" onclick="copyFormTemplate()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            상담 접수 양식 복사 (고객 발송용)
+                        </button>
+                        <span class="scr-form-send-hint" id="formSendHint">고객에게 먼저 빈 양식을 카톡으로 보내세요</span>
                     </div>
 
                     <!-- 고객 정보 -->
@@ -1759,12 +1808,67 @@
         }
     }
 
-    // Last screening results (saved for kakao copy)
-    var lastScreeningResults = null;
+    function copyFormTemplate() {
+        var msg = '';
+        msg += '━━━━━━━━━━━━━━━━━━\n';
+        msg += '📋 메디플라톤 자금상담 접수양식\n';
+        msg += '━━━━━━━━━━━━━━━━━━\n\n';
+        msg += '안녕하세요, 메디플라톤입니다.\n';
+        msg += '아래 항목을 작성하여 회신해 주시면\n';
+        msg += '빠르고 정확한 상담이 가능합니다.\n\n';
 
-    // Store results after screening
-    var origRunScreening = runScreening;
-    // We'll save results inside renderResults instead
+        msg += '▶ 성함: \n';
+        msg += '▶ 업체명: \n';
+        msg += '▶ 업종 (병의원/약국/음식점 등): \n';
+        msg += '▶ 사업자유형 (개인/법인): \n';
+        msg += '▶ 지역: \n';
+        msg += '▶ 대표자 나이: \n';
+        msg += '▶ 사업기간: \n';
+        msg += '▶ KCB 신용점수 (대략): \n';
+        msg += '▶ 월 카드매출 (대략): \n';
+        msg += '▶ 필요 자금 규모: \n';
+        msg += '▶ 재무상태 (양호/보통/결손): \n';
+        msg += '▶ 임차보증금: \n';
+        msg += '▶ 보유 장비 (있으면 종류/연식): \n';
+        msg += '▶ 신규 구매 예정 물품: \n';
+        msg += '▶ 상담 가능 시간: \n';
+
+        msg += '\n━━━━━━━━━━━━━━━━━━\n';
+        msg += '📞 메디플라톤\n';
+        msg += '* 기입하신 내용을 토대로\n';
+        msg += '  맞춤 자금 상담을 도와드립니다.\n';
+        msg += '━━━━━━━━━━━━━━━━━━';
+
+        navigator.clipboard.writeText(msg).then(function() {
+            var hint = document.getElementById('formSendHint');
+            if (hint) {
+                hint.textContent = '✓ 복사 완료! 고객에게 카카오톡으로 보내세요';
+                hint.style.color = '#16a34a';
+                setTimeout(function() {
+                    hint.textContent = '고객에게 먼저 빈 양식을 카톡으로 보내세요';
+                    hint.style.color = '';
+                }, 3000);
+            }
+        }).catch(function() {
+            var ta = document.createElement('textarea');
+            ta.value = msg;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            var hint = document.getElementById('formSendHint');
+            if (hint) {
+                hint.textContent = '✓ 복사 완료! 고객에게 카카오톡으로 보내세요';
+                hint.style.color = '#16a34a';
+                setTimeout(function() {
+                    hint.textContent = '고객에게 먼저 빈 양식을 카톡으로 보내세요';
+                    hint.style.color = '';
+                }, 3000);
+            }
+        });
+    }
 
     function copyToKakao() {
         var customerName = document.getElementById('customerName').value || '미입력';
