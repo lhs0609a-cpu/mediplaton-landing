@@ -578,6 +578,46 @@
         margin-top: 4px;
     }
 
+    /* ===== KAKAO COPY BUTTON ===== */
+    .scr-kakao-section {
+        text-align: center;
+        padding: 24px 0 8px;
+    }
+    .scr-btn-kakao {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        border: none;
+        border-radius: 12px;
+        background: #FEE500;
+        color: #191919;
+        font-size: 15px;
+        font-weight: 700;
+        font-family: 'Pretendard Variable', sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(254,229,0,0.3);
+    }
+    .scr-btn-kakao:hover {
+        background: #F5DD00;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(254,229,0,0.4);
+    }
+    .scr-btn-kakao:active {
+        transform: translateY(0);
+    }
+    .scr-btn-kakao svg {
+        stroke: #191919;
+    }
+    .scr-kakao-hint {
+        display: block;
+        margin-top: 8px;
+        font-size: 12px;
+        color: rgba(255,255,255,0.45);
+        transition: color 0.3s;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 960px) {
         .scr-layout {
@@ -726,6 +766,20 @@
                     <div class="scr-panel-title">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         고객 정보 입력
+                    </div>
+
+                    <!-- 고객 정보 -->
+                    <div class="scr-divider-label">고객 정보</div>
+
+                    <div class="scr-row">
+                        <div class="scr-group">
+                            <label class="scr-label">고객명</label>
+                            <input type="text" class="scr-input" id="customerName" placeholder="홍길동">
+                        </div>
+                        <div class="scr-group">
+                            <label class="scr-label">업체명</label>
+                            <input type="text" class="scr-input" id="bizName" placeholder="OO병원">
+                        </div>
                     </div>
 
                     <!-- 기본 정보 -->
@@ -1609,6 +1663,15 @@
             }
         }
 
+        // KakaoTalk copy button
+        html += '<div class="scr-kakao-section">';
+        html += '<button class="scr-btn-kakao" onclick="copyToKakao()">';
+        html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 17H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/><polyline points="14 15 9 20 9 15"/></svg>';
+        html += '카톡 상담폼 복사';
+        html += '</button>';
+        html += '<span class="scr-kakao-hint" id="kakaoHint">클립보드에 복사 후 카카오톡에 붙여넣기 하세요</span>';
+        html += '</div>';
+
         panel.innerHTML = html;
         panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -1627,6 +1690,7 @@
             if (r.name.indexOf('신협') >= 0 || r.name.indexOf('수협') >= 0) {
                 docSet['카드매출 자료 (홈택스)'] = true;
                 docSet['소득금액증명원'] = true;
+                docSet['지방세세목별과세증명 (23,24,25년)'] = true;
             }
             if (r.name.indexOf('임차보증금') >= 0) {
                 docSet['임대차계약서'] = true;
@@ -1693,6 +1757,149 @@
         } else {
             return '약 ' + total.toLocaleString() + '만원';
         }
+    }
+
+    // Last screening results (saved for kakao copy)
+    var lastScreeningResults = null;
+
+    // Store results after screening
+    var origRunScreening = runScreening;
+    // We'll save results inside renderResults instead
+
+    function copyToKakao() {
+        var customerName = document.getElementById('customerName').value || '미입력';
+        var bizName = document.getElementById('bizName').value || '미입력';
+
+        // Get display text from select options
+        function getSelectedText(id) {
+            var el = document.getElementById(id);
+            if (!el || !el.value) return '미입력';
+            return el.options[el.selectedIndex].text;
+        }
+
+        var industry = getSelectedText('industry');
+        var bizType = getToggleValue('bizType') === 'corporate' ? '법인' : '개인';
+        var nationality = getToggleValue('nationality') === 'foreign' ? '외국인' : '내국인';
+        var region = getSelectedText('region');
+        var age = getSelectedText('age');
+        var bizDuration = getSelectedText('bizDuration');
+        var creditScore = getSelectedText('creditScore');
+        var monthlySales = getSelectedText('monthlySales');
+        var fundingNeeded = getSelectedText('fundingNeeded');
+        var financial = getToggleValue('financial');
+        var financialText = financial === 'loss' ? '결손/적자' : (financial === 'normal' ? '보통' : '양호');
+        var deposit = getSelectedText('deposit');
+
+        // Build message
+        var msg = '';
+        msg += '━━━━━━━━━━━━━━━━━━\n';
+        msg += '📋 메디플라톤 사전상담 안내\n';
+        msg += '━━━━━━━━━━━━━━━━━━\n\n';
+
+        msg += '▶ 고객명: ' + customerName + '\n';
+        msg += '▶ 업체명: ' + bizName + '\n';
+        msg += '▶ 업종: ' + industry + '\n';
+        msg += '▶ 사업자유형: ' + bizType + '\n';
+        msg += '▶ 국적: ' + nationality + '\n';
+        msg += '▶ 지역: ' + region + '\n';
+        msg += '▶ 나이: ' + age + '\n';
+        msg += '▶ 사업기간: ' + bizDuration + '\n';
+        msg += '▶ KCB 신용점수: ' + creditScore + '\n';
+        msg += '▶ 월 카드매출: ' + monthlySales + '\n';
+        msg += '▶ 필요자금: ' + fundingNeeded + '\n';
+        msg += '▶ 재무상태: ' + financialText + '\n';
+        msg += '▶ 임차보증금: ' + deposit + '\n';
+
+        msg += '\n━━━━━━━━━━━━━━━━━━\n';
+        msg += '✅ 사전심사 결과\n';
+        msg += '━━━━━━━━━━━━━━━━━━\n\n';
+
+        // Get results from DOM
+        var cards = document.querySelectorAll('.scr-product-card');
+        var passProducts = [];
+        var warnProducts = [];
+        var failProducts = [];
+
+        cards.forEach(function(card) {
+            var name = card.querySelector('.scr-product-title').textContent.trim();
+            var badge = card.querySelector('.scr-product-badge').textContent.trim();
+            if (card.classList.contains('pass')) {
+                passProducts.push('  ✅ ' + name + ' (' + badge + ')');
+            } else if (card.classList.contains('warn')) {
+                warnProducts.push('  ⚠️ ' + name + ' (' + badge + ')');
+            } else {
+                failProducts.push('  ❌ ' + name + ' (' + badge + ')');
+            }
+        });
+
+        if (passProducts.length > 0) {
+            msg += '【접수 가능】\n';
+            msg += passProducts.join('\n') + '\n\n';
+        }
+        if (warnProducts.length > 0) {
+            msg += '【조건부 가능】\n';
+            msg += warnProducts.join('\n') + '\n\n';
+        }
+        if (failProducts.length > 0) {
+            msg += '【접수 불가】\n';
+            msg += failProducts.join('\n') + '\n\n';
+        }
+
+        // Estimated total
+        var estimateEl = document.querySelector('.scr-estimate-amount');
+        if (estimateEl) {
+            msg += '💰 예상 최대 자금: ' + estimateEl.textContent.trim() + '\n\n';
+        }
+
+        // Required docs
+        var docItems = document.querySelectorAll('.scr-doc-item');
+        if (docItems.length > 0) {
+            msg += '━━━━━━━━━━━━━━━━━━\n';
+            msg += '📎 필요 서류\n';
+            msg += '━━━━━━━━━━━━━━━━━━\n\n';
+            docItems.forEach(function(item) {
+                msg += '  ☑️ ' + item.textContent.trim() + '\n';
+            });
+            msg += '\n';
+        }
+
+        msg += '━━━━━━━━━━━━━━━━━━\n';
+        msg += '📞 메디플라톤\n';
+        msg += '* 상기 내용은 사전심사 결과이며,\n';
+        msg += '  실제 승인은 서류 접수 후 확정됩니다.\n';
+        msg += '━━━━━━━━━━━━━━━━━━';
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(msg).then(function() {
+            var hint = document.getElementById('kakaoHint');
+            if (hint) {
+                hint.textContent = '✓ 복사 완료! 카카오톡에 붙여넣기 하세요';
+                hint.style.color = '#16a34a';
+                setTimeout(function() {
+                    hint.textContent = '클립보드에 복사 후 카카오톡에 붙여넣기 하세요';
+                    hint.style.color = '';
+                }, 3000);
+            }
+        }).catch(function() {
+            // Fallback
+            var ta = document.createElement('textarea');
+            ta.value = msg;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            var hint = document.getElementById('kakaoHint');
+            if (hint) {
+                hint.textContent = '✓ 복사 완료! 카카오톡에 붙여넣기 하세요';
+                hint.style.color = '#16a34a';
+                setTimeout(function() {
+                    hint.textContent = '클립보드에 복사 후 카카오톡에 붙여넣기 하세요';
+                    hint.style.color = '';
+                }, 3000);
+            }
+        });
     }
 
     function resetForm() {
