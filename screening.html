@@ -826,6 +826,12 @@
                             <input type="text" class="scr-input" id="customerName" placeholder="홍길동">
                         </div>
                         <div class="scr-group">
+                            <label class="scr-label">연락처</label>
+                            <input type="tel" class="scr-input" id="customerPhone" placeholder="010-0000-0000">
+                        </div>
+                    </div>
+                    <div class="scr-row">
+                        <div class="scr-group" style="flex:1">
                             <label class="scr-label">업체명</label>
                             <input type="text" class="scr-input" id="bizName" placeholder="OO병원">
                         </div>
@@ -1872,6 +1878,7 @@
 
     function copyToKakao() {
         var customerName = document.getElementById('customerName').value || '미입력';
+        var customerPhone = document.getElementById('customerPhone').value || '미입력';
         var bizName = document.getElementById('bizName').value || '미입력';
 
         // Get display text from select options
@@ -1901,6 +1908,7 @@
         msg += '━━━━━━━━━━━━━━━━━━\n\n';
 
         msg += '▶ 고객명: ' + customerName + '\n';
+        msg += '▶ 연락처: ' + customerPhone + '\n';
         msg += '▶ 업체명: ' + bizName + '\n';
         msg += '▶ 업종: ' + industry + '\n';
         msg += '▶ 사업자유형: ' + bizType + '\n';
@@ -1969,6 +1977,7 @@
 
         msg += '━━━━━━━━━━━━━━━━━━\n';
         msg += '📞 메디플라톤\n';
+        msg += '🌐 mediplaton1.shop\n\n';
         msg += '* 상기 내용은 사전심사 결과이며,\n';
         msg += '  실제 승인은 서류 접수 후 확정됩니다.\n';
         msg += '━━━━━━━━━━━━━━━━━━';
