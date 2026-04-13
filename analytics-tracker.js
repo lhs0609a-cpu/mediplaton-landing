@@ -6,13 +6,23 @@
     'use strict';
 
     if (typeof SUPABASE_CONFIG === 'undefined' || !isSupabaseConfigured()) return;
+    if (typeof window.supabase === 'undefined') return;
 
     var sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
     var sessionId = null;
-    var pageviewId = null;
+    var pageviewTs = null; // 페이지뷰 식별용 타임스탬프
     var maxScroll = 0;
     var heartbeatTimer = null;
     var pageStart = Date.now();
+
+    // ─── UUID 생성 (클라이언트 사이드) ───
+    function genUUID() {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0;
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    }
 
     // ─── 방문자 ID (localStorage 기반, 재방문 추적) ───
     function getVisitorId() {
@@ -62,19 +72,19 @@
         var existingId = sessionStorage.getItem('_mp_sid');
         if (existingId) {
             sessionId = existingId;
-            // 페이지 카운트 증가, 바운스 해제
-            sb.from('analytics_sessions')
-                .update({ page_count: undefined, last_active_at: new Date().toISOString(), is_bounce: false })
-                .eq('id', sessionId);
-            // RPC 대신 직접 읽어서 page_count+1 업데이트
-            var { data: sess } = await sb.from('analytics_sessions').select('page_count').eq('id', sessionId).single();
-            if (sess) {
-                sb.from('analytics_sessions').update({ page_count: sess.page_count + 1, is_bounce: false, last_active_at: new Date().toISOString() }).eq('id', sessionId);
-            }
+            var cnt = parseInt(sessionStorage.getItem('_mp_pc') || '1', 10) + 1;
+            sessionStorage.setItem('_mp_pc', String(cnt));
+            await sb.from('analytics_sessions').update({
+                page_count: cnt,
+                is_bounce: false,
+                last_active_at: new Date().toISOString()
+            }).eq('id', sessionId);
         } else {
+            sessionId = genUUID();
             var utm = getUtm();
             var dev = getDevice();
-            var { data, error } = await sb.from('analytics_sessions').insert({
+            var { error } = await sb.from('analytics_sessions').insert({
+                id: sessionId,
                 visitor_id: getVisitorId(),
                 page_count: 1,
                 referrer: document.referrer || null,
@@ -86,10 +96,12 @@
                 os: dev.os,
                 landing_page: pagePath(),
                 is_bounce: true
-            }).select('id').single();
-            if (data) {
-                sessionId = data.id;
+            });
+            if (!error) {
                 sessionStorage.setItem('_mp_sid', sessionId);
+                sessionStorage.setItem('_mp_pc', '1');
+            } else {
+                sessionId = null;
             }
         }
     }
@@ -97,12 +109,13 @@
     // ─── 페이지뷰 기록 ───
     async function trackPageview() {
         if (!sessionId) return;
-        var { data } = await sb.from('analytics_pageviews').insert({
+        pageviewTs = new Date().toISOString();
+        await sb.from('analytics_pageviews').insert({
             session_id: sessionId,
             page_url: pagePath(),
-            page_title: document.title
-        }).select('id').single();
-        if (data) pageviewId = data.id;
+            page_title: document.title,
+            entered_at: pageviewTs
+        });
     }
 
     // ─── 클릭 추적 ───
@@ -146,12 +159,11 @@
     // ─── Heartbeat (30초마다) ───
     function startHeartbeat() {
         heartbeatTimer = setInterval(function() {
-            if (!sessionId) return;
+            if (!sessionId || !pageviewTs) return;
             var elapsed = Math.round((Date.now() - pageStart) / 1000);
             sb.from('analytics_sessions').update({ last_active_at: new Date().toISOString() }).eq('id', sessionId);
-            if (pageviewId) {
-                sb.from('analytics_pageviews').update({ time_on_page: elapsed, scroll_depth: maxScroll }).eq('id', pageviewId);
-            }
+            sb.from('analytics_pageviews').update({ time_on_page: elapsed, scroll_depth: maxScroll })
+                .eq('session_id', sessionId).eq('entered_at', pageviewTs);
         }, 30000);
     }
 
@@ -161,14 +173,13 @@
             if (document.hidden) {
                 clearInterval(heartbeatTimer);
                 heartbeatTimer = null;
-                // 마지막 업데이트
-                if (sessionId && pageviewId) {
+                if (sessionId && pageviewTs) {
                     var elapsed = Math.round((Date.now() - pageStart) / 1000);
-                    sb.from('analytics_pageviews').update({ time_on_page: elapsed, scroll_depth: maxScroll }).eq('id', pageviewId);
+                    sb.from('analytics_pageviews').update({ time_on_page: elapsed, scroll_depth: maxScroll })
+                        .eq('session_id', sessionId).eq('entered_at', pageviewTs);
                     sb.from('analytics_sessions').update({ last_active_at: new Date().toISOString() }).eq('id', sessionId);
                 }
             } else {
-                pageStart = Date.now() - ((pageviewId ? 0 : 0)); // 복귀시 재시작
                 if (!heartbeatTimer) startHeartbeat();
             }
         });
@@ -177,27 +188,30 @@
     // ─── 페이지 이탈 시 마지막 데이터 저장 ───
     function initUnload() {
         window.addEventListener('beforeunload', function() {
-            if (!sessionId || !pageviewId) return;
+            if (!sessionId || !pageviewTs) return;
             var elapsed = Math.round((Date.now() - pageStart) / 1000);
-            // sendBeacon으로 확실한 전송
-            var url = SUPABASE_CONFIG.url + '/rest/v1/analytics_pageviews?id=eq.' + pageviewId;
-            var body = JSON.stringify({ time_on_page: elapsed, scroll_depth: maxScroll });
-            navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));
+            // REST API로 직접 PATCH (sendBeacon)
+            var headers = { 'apikey': SUPABASE_CONFIG.anonKey, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
+            var pvUrl = SUPABASE_CONFIG.url + '/rest/v1/analytics_pageviews?session_id=eq.' + sessionId + '&entered_at=eq.' + encodeURIComponent(pageviewTs);
+            navigator.sendBeacon(pvUrl, new Blob([JSON.stringify({ time_on_page: elapsed, scroll_depth: maxScroll })], { type: 'application/json' }));
         });
     }
 
     // ─── 초기화 ───
     async function init() {
-        await initSession();
-        await trackPageview();
-        initClickTracking();
-        initScrollTracking();
-        startHeartbeat();
-        initVisibility();
-        initUnload();
+        try {
+            await initSession();
+            await trackPageview();
+            initClickTracking();
+            initScrollTracking();
+            startHeartbeat();
+            initVisibility();
+            initUnload();
+        } catch(e) {
+            // 추적 실패 시 사이트 동작에 영향 없도록
+        }
     }
 
-    // DOM 로드 후 실행
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
