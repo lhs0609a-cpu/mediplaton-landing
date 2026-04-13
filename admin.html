@@ -157,7 +157,7 @@
         .tabs {
             display: flex; gap: 8px; margin-bottom: 24px; background: var(--white);
             padding: 8px; border-radius: var(--radius); box-shadow: var(--shadow);
-            flex-wrap: wrap;
+            overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;
         }
         .tab-btn {
             padding: 12px 24px; border: none; background: transparent; border-radius: 6px;
@@ -609,6 +609,9 @@
                 </button>
                 <button class="tab-btn" data-tab="new-clinics">
                     신규 개원
+                </button>
+                <button class="tab-btn" data-tab="analytics">
+                    📊 분석
                 </button>
             </div>
 
@@ -1063,6 +1066,141 @@ X 신협 데일리론 → 개인사업자만 가능
                 </table>
                 <div class="empty-state" id="ncEmpty" style="display:none;">
                     <h3>등록된 신규 개원 의료기관이 없습니다</h3>
+                </div>
+            </div>
+
+            <!-- Analytics Dashboard -->
+            <div class="data-section" id="analyticsSection" style="display: none;">
+                <!-- 실시간 현황 카드 -->
+                <div style="margin-bottom:24px;">
+                    <h2 style="font-size:18px;font-weight:700;margin-bottom:16px;">📊 실시간 현황</h2>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+                        <div style="background:var(--primary-light);padding:20px;border-radius:var(--radius);text-align:center;">
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">🟢 현재 접속자</div>
+                            <div style="font-size:28px;font-weight:800;color:var(--primary);" id="anLiveCount">0</div>
+                            <div style="font-size:12px;color:var(--gray-500);">명</div>
+                        </div>
+                        <div style="background:var(--white);padding:20px;border-radius:var(--radius);text-align:center;border:1px solid var(--gray-200);">
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">오늘 방문</div>
+                            <div style="font-size:28px;font-weight:800;color:var(--gray-900);" id="anTodayVisitors">0</div>
+                            <div style="font-size:12px;color:var(--gray-500);">명</div>
+                        </div>
+                        <div style="background:var(--white);padding:20px;border-radius:var(--radius);text-align:center;border:1px solid var(--gray-200);">
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">페이지뷰</div>
+                            <div style="font-size:28px;font-weight:800;color:var(--gray-900);" id="anTodayPageviews">0</div>
+                            <div style="font-size:12px;color:var(--gray-500);">회</div>
+                        </div>
+                        <div style="background:var(--white);padding:20px;border-radius:var(--radius);text-align:center;border:1px solid var(--gray-200);">
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">평균 체류</div>
+                            <div style="font-size:28px;font-weight:800;color:var(--gray-900);" id="anAvgTime">0:00</div>
+                        </div>
+                        <div style="background:var(--white);padding:20px;border-radius:var(--radius);text-align:center;border:1px solid var(--gray-200);">
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">이탈률</div>
+                            <div style="font-size:28px;font-weight:800;color:var(--warning);" id="anBounceRate">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 기간 선택 -->
+                <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;">
+                    <button class="btn btn-sm an-period-btn active" data-period="today" onclick="changeAnalyticsPeriod('today')">오늘</button>
+                    <button class="btn btn-sm an-period-btn" data-period="7d" onclick="changeAnalyticsPeriod('7d')">7일</button>
+                    <button class="btn btn-sm an-period-btn" data-period="30d" onclick="changeAnalyticsPeriod('30d')">30일</button>
+                    <button class="btn btn-sm an-period-btn" data-period="all" onclick="changeAnalyticsPeriod('all')">전체</button>
+                </div>
+
+                <!-- 방문자 추이 차트 -->
+                <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);margin-bottom:24px;">
+                    <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">📈 방문자 추이</h3>
+                    <div style="position:relative;height:300px;">
+                        <canvas id="anVisitorChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 인기 페이지 + 클릭 분석 -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+                    <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);">
+                        <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">📊 인기 페이지 TOP 10</h3>
+                        <div style="position:relative;height:300px;">
+                            <canvas id="anPagesChart"></canvas>
+                        </div>
+                    </div>
+                    <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);">
+                        <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">🖱️ 클릭 분석 TOP 10</h3>
+                        <div style="overflow-y:auto;max-height:340px;">
+                            <table class="data-table" style="font-size:13px;">
+                                <thead><tr><th>요소</th><th>유형</th><th>클릭수</th></tr></thead>
+                                <tbody id="anClicksBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 시간대별 + 디바이스 -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+                    <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);">
+                        <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">🕐 시간대별 트래픽</h3>
+                        <div style="position:relative;height:300px;">
+                            <canvas id="anHourlyChart"></canvas>
+                        </div>
+                    </div>
+                    <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);">
+                        <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">📱 디바이스 비율</h3>
+                        <div style="position:relative;height:300px;">
+                            <canvas id="anDeviceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 유입 경로 + UTM 캠페인 -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+                    <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);">
+                        <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">🔗 유입 경로</h3>
+                        <div style="position:relative;height:300px;">
+                            <canvas id="anReferrerChart"></canvas>
+                        </div>
+                    </div>
+                    <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);">
+                        <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">🌐 UTM 캠페인 성과</h3>
+                        <div style="overflow-y:auto;max-height:340px;">
+                            <table class="data-table" style="font-size:13px;">
+                                <thead><tr><th>캠페인</th><th>소스</th><th>매체</th><th>세션수</th></tr></thead>
+                                <tbody id="anUtmBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 전환 퍼널 -->
+                <div style="background:var(--white);padding:20px;border-radius:var(--radius);border:1px solid var(--gray-200);margin-bottom:24px;">
+                    <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">🔄 전환 퍼널</h3>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+                        <div style="text-align:center;">
+                            <div style="font-size:12px;color:var(--gray-500);">방문</div>
+                            <div style="font-size:24px;font-weight:800;" id="anFunnelVisit">0</div>
+                        </div>
+                        <div style="font-size:20px;color:var(--gray-300);">→</div>
+                        <div style="text-align:center;">
+                            <div style="font-size:12px;color:var(--gray-500);">CTA 클릭</div>
+                            <div style="font-size:24px;font-weight:800;" id="anFunnelCta">0</div>
+                        </div>
+                        <div style="font-size:20px;color:var(--gray-300);">→</div>
+                        <div style="text-align:center;">
+                            <div style="font-size:12px;color:var(--gray-500);">폼 오픈</div>
+                            <div style="font-size:24px;font-weight:800;" id="anFunnelForm">0</div>
+                        </div>
+                        <div style="font-size:20px;color:var(--gray-300);">→</div>
+                        <div style="text-align:center;">
+                            <div style="font-size:12px;color:var(--gray-500);">폼 제출</div>
+                            <div style="font-size:24px;font-weight:800;" id="anFunnelSubmit">0</div>
+                        </div>
+                    </div>
+                    <div style="background:var(--gray-100);border-radius:20px;height:24px;overflow:hidden;position:relative;">
+                        <div id="anFunnelBar" style="background:linear-gradient(90deg,var(--primary),var(--success));height:100%;border-radius:20px;transition:width 0.5s;width:0%;"></div>
+                    </div>
+                    <div style="text-align:right;font-size:13px;color:var(--gray-500);margin-top:8px;">
+                        전환율: <strong id="anConversionRate">0%</strong>
+                    </div>
                 </div>
             </div>
 
@@ -1525,6 +1663,16 @@ X 신협 데일리론 → 개인사업자만 가능
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
+    <style>
+        .an-period-btn { background: var(--white); border: 1px solid var(--gray-300); color: var(--gray-700); }
+        .an-period-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+        @media (max-width: 768px) {
+            #analyticsSection [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+        }
+    </style>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>

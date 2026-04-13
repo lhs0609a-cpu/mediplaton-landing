@@ -422,6 +422,7 @@ function switchTab(tab) {
     document.getElementById('partnerQnaSection').style.display = tab === 'partner-qna' ? 'block' : 'none';
     document.getElementById('boardManageSection').style.display = tab === 'board-manage' ? 'block' : 'none';
     document.getElementById('newClinicsSection').style.display = tab === 'new-clinics' ? 'block' : 'none';
+    document.getElementById('analyticsSection').style.display = tab === 'analytics' ? 'block' : 'none';
 
     if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'consultations') loadConsultations();
@@ -437,6 +438,7 @@ function switchTab(tab) {
     }
     if (tab === 'board-manage') loadAdminBoardPosts();
     if (tab === 'new-clinics') loadAdminNewClinics();
+    if (tab === 'analytics') loadAnalytics();
 }
 
 // ─── Consultations ───
@@ -3403,4 +3405,302 @@ async function exportClinicsCSV() {
     } catch (error) {
         showToast('CSV 내보내기 실패: ' + error.message, 'error');
     }
+}
+
+// ─── Analytics Dashboard ───
+
+let analyticsCharts = {};
+let analyticsPeriod = 'today';
+let analyticsSubscription = null;
+
+function changeAnalyticsPeriod(period) {
+    analyticsPeriod = period;
+    document.querySelectorAll('.an-period-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.period === period);
+    });
+    loadAnalytics();
+}
+
+function getAnalyticsDateRange() {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    if (analyticsPeriod === 'today') return todayStart;
+    if (analyticsPeriod === '7d') {
+        const d = new Date(now); d.setDate(d.getDate() - 7);
+        return d.toISOString();
+    }
+    if (analyticsPeriod === '30d') {
+        const d = new Date(now); d.setDate(d.getDate() - 30);
+        return d.toISOString();
+    }
+    return '2020-01-01T00:00:00Z'; // 전체
+}
+
+async function loadAnalytics() {
+    try {
+        const since = getAnalyticsDateRange();
+        const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+
+        // 병렬로 모든 데이터 조회
+        const [sessionsRes, pageviewsRes, eventsRes, liveRes] = await Promise.all([
+            sb.from('analytics_sessions').select('*').gte('started_at', since).order('started_at', { ascending: false }),
+            sb.from('analytics_pageviews').select('*').gte('entered_at', since).order('entered_at', { ascending: false }),
+            sb.from('analytics_events').select('*').gte('created_at', since).order('created_at', { ascending: false }),
+            sb.from('analytics_sessions').select('id', { count: 'exact', head: true }).gte('last_active_at', fiveMinAgo)
+        ]);
+
+        const sessions = sessionsRes.data || [];
+        const pageviews = pageviewsRes.data || [];
+        const events = eventsRes.data || [];
+        const liveCount = liveRes.count || 0;
+
+        // 실시간 현황 카드
+        document.getElementById('anLiveCount').textContent = liveCount;
+        document.getElementById('anTodayVisitors').textContent = sessions.length;
+        document.getElementById('anTodayPageviews').textContent = pageviews.length;
+
+        // 평균 체류시간
+        const pvWithTime = pageviews.filter(p => p.time_on_page > 0);
+        const avgSec = pvWithTime.length > 0 ? Math.round(pvWithTime.reduce((s, p) => s + p.time_on_page, 0) / pvWithTime.length) : 0;
+        const min = Math.floor(avgSec / 60);
+        const sec = avgSec % 60;
+        document.getElementById('anAvgTime').textContent = min + ':' + String(sec).padStart(2, '0');
+
+        // 이탈률
+        const bounced = sessions.filter(s => s.is_bounce).length;
+        const bounceRate = sessions.length > 0 ? Math.round((bounced / sessions.length) * 100) : 0;
+        document.getElementById('anBounceRate').textContent = bounceRate + '%';
+
+        // 차트 렌더링
+        renderVisitorChart(sessions, pageviews);
+        renderPagesChart(pageviews);
+        renderClicksTable(events);
+        renderHourlyChart(pageviews);
+        renderDeviceChart(sessions);
+        renderReferrerChart(sessions);
+        renderUtmTable(sessions);
+        renderFunnel(sessions, events);
+
+        // 실시간 구독
+        setupRealtimeSubscription();
+    } catch (error) {
+        console.error('Analytics load error:', error);
+        showToast('분석 데이터 로딩 실패', 'error');
+    }
+}
+
+function destroyChart(key) {
+    if (analyticsCharts[key]) { analyticsCharts[key].destroy(); analyticsCharts[key] = null; }
+}
+
+function renderVisitorChart(sessions, pageviews) {
+    destroyChart('visitor');
+    const ctx = document.getElementById('anVisitorChart');
+    if (!ctx) return;
+
+    // 일별 집계
+    const dayMap = {};
+    const pvDayMap = {};
+    sessions.forEach(s => {
+        const d = s.started_at.substring(0, 10);
+        dayMap[d] = (dayMap[d] || 0) + 1;
+    });
+    pageviews.forEach(p => {
+        const d = p.entered_at.substring(0, 10);
+        pvDayMap[d] = (pvDayMap[d] || 0) + 1;
+    });
+
+    const allDays = [...new Set([...Object.keys(dayMap), ...Object.keys(pvDayMap)])].sort();
+    const labels = allDays.map(d => d.substring(5)); // MM-DD
+    const visitData = allDays.map(d => dayMap[d] || 0);
+    const pvData = allDays.map(d => pvDayMap[d] || 0);
+
+    analyticsCharts['visitor'] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label: '방문자', data: visitData, borderColor: '#1428A0', backgroundColor: 'rgba(20,40,160,0.1)', fill: true, tension: 0.3 },
+                { label: '페이지뷰', data: pvData, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.3 }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+}
+
+function renderPagesChart(pageviews) {
+    destroyChart('pages');
+    const ctx = document.getElementById('anPagesChart');
+    if (!ctx) return;
+
+    const counts = {};
+    pageviews.forEach(p => { counts[p.page_url] = (counts[p.page_url] || 0) + 1; });
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+    analyticsCharts['pages'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(s => s[0]),
+            datasets: [{ label: '페이지뷰', data: sorted.map(s => s[1]), backgroundColor: '#1428A0' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+}
+
+function renderClicksTable(events) {
+    const tbody = document.getElementById('anClicksBody');
+    if (!tbody) return;
+
+    const clickEvents = events.filter(e => ['click', 'cta_click', 'form_submit', 'form_open'].includes(e.event_type));
+    const counts = {};
+    clickEvents.forEach(e => {
+        const key = (e.element_text || e.element_id || e.element_tag || 'unknown').substring(0, 40);
+        if (!counts[key]) counts[key] = { count: 0, type: e.event_type };
+        counts[key].count++;
+    });
+
+    const sorted = Object.entries(counts).sort((a, b) => b[1].count - a[1].count).slice(0, 10);
+    const typeLabels = { click: '클릭', cta_click: 'CTA', form_submit: '폼제출', form_open: '폼오픈' };
+
+    tbody.innerHTML = sorted.length === 0 ? '<tr><td colspan="3" style="text-align:center;color:var(--gray-500);">데이터 없음</td></tr>' :
+        sorted.map(([text, info]) =>
+            `<tr><td title="${text}">${text.length > 20 ? text.substring(0, 20) + '…' : text}</td><td><span class="status-badge" style="background:var(--primary-light);color:var(--primary);">${typeLabels[info.type] || info.type}</span></td><td style="font-weight:700;">${info.count}</td></tr>`
+        ).join('');
+}
+
+function renderHourlyChart(pageviews) {
+    destroyChart('hourly');
+    const ctx = document.getElementById('anHourlyChart');
+    if (!ctx) return;
+
+    const hours = new Array(24).fill(0);
+    pageviews.forEach(p => {
+        const h = new Date(p.entered_at).getHours();
+        hours[h]++;
+    });
+
+    analyticsCharts['hourly'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: hours.map((_, i) => i + '시'),
+            datasets: [{ label: '페이지뷰', data: hours, backgroundColor: '#6366F1' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+}
+
+function renderDeviceChart(sessions) {
+    destroyChart('device');
+    const ctx = document.getElementById('anDeviceChart');
+    if (!ctx) return;
+
+    const counts = { mobile: 0, desktop: 0, tablet: 0 };
+    sessions.forEach(s => { if (counts.hasOwnProperty(s.device_type)) counts[s.device_type]++; else counts['desktop']++; });
+
+    analyticsCharts['device'] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['모바일', '데스크톱', '태블릿'],
+            datasets: [{ data: [counts.mobile, counts.desktop, counts.tablet], backgroundColor: ['#3B82F6', '#1428A0', '#10B981'] }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: { callbacks: { label: function(ctx) { const total = ctx.dataset.data.reduce((a, b) => a + b, 0); return ctx.label + ': ' + ctx.raw + ' (' + (total > 0 ? Math.round(ctx.raw / total * 100) : 0) + '%)'; } } }
+            }
+        }
+    });
+}
+
+function renderReferrerChart(sessions) {
+    destroyChart('referrer');
+    const ctx = document.getElementById('anReferrerChart');
+    if (!ctx) return;
+
+    const counts = {};
+    sessions.forEach(s => {
+        let ref = '직접 방문';
+        if (s.referrer) {
+            try {
+                const host = new URL(s.referrer).hostname.replace('www.', '');
+                if (host.includes('naver')) ref = '네이버';
+                else if (host.includes('google')) ref = '구글';
+                else if (host.includes('kakao') || host.includes('daum')) ref = '카카오/다음';
+                else if (host.includes('instagram')) ref = '인스타그램';
+                else if (host.includes('facebook') || host.includes('fb')) ref = '페이스북';
+                else ref = host;
+            } catch(e) { ref = '기타'; }
+        }
+        counts[ref] = (counts[ref] || 0) + 1;
+    });
+
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    const colors = ['#1428A0', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#6B7280'];
+
+    analyticsCharts['referrer'] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: sorted.map(s => s[0]),
+            datasets: [{ data: sorted.map(s => s[1]), backgroundColor: colors.slice(0, sorted.length) }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: { callbacks: { label: function(ctx) { const total = ctx.dataset.data.reduce((a, b) => a + b, 0); return ctx.label + ': ' + ctx.raw + ' (' + (total > 0 ? Math.round(ctx.raw / total * 100) : 0) + '%)'; } } }
+            }
+        }
+    });
+}
+
+function renderUtmTable(sessions) {
+    const tbody = document.getElementById('anUtmBody');
+    if (!tbody) return;
+
+    const utmSessions = sessions.filter(s => s.utm_campaign || s.utm_source);
+    const counts = {};
+    utmSessions.forEach(s => {
+        const key = (s.utm_campaign || '-') + '|' + (s.utm_source || '-') + '|' + (s.utm_medium || '-');
+        counts[key] = (counts[key] || 0) + 1;
+    });
+
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+    tbody.innerHTML = sorted.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--gray-500);">UTM 데이터 없음</td></tr>' :
+        sorted.map(([key, count]) => {
+            const [campaign, source, medium] = key.split('|');
+            return `<tr><td>${campaign}</td><td>${source}</td><td>${medium}</td><td style="font-weight:700;">${count}</td></tr>`;
+        }).join('');
+}
+
+function renderFunnel(sessions, events) {
+    const totalVisits = sessions.length;
+    const ctaClicks = events.filter(e => e.event_type === 'cta_click').length;
+    const formOpens = events.filter(e => e.event_type === 'form_open').length;
+    const formSubmits = events.filter(e => e.event_type === 'form_submit').length;
+
+    document.getElementById('anFunnelVisit').textContent = totalVisits;
+    document.getElementById('anFunnelCta').textContent = ctaClicks;
+    document.getElementById('anFunnelForm').textContent = formOpens;
+    document.getElementById('anFunnelSubmit').textContent = formSubmits;
+
+    const convRate = totalVisits > 0 ? ((formSubmits / totalVisits) * 100).toFixed(1) : '0';
+    document.getElementById('anConversionRate').textContent = convRate + '%';
+    document.getElementById('anFunnelBar').style.width = Math.min(parseFloat(convRate), 100) + '%';
+}
+
+function setupRealtimeSubscription() {
+    if (analyticsSubscription) return; // 이미 구독 중
+    analyticsSubscription = sb.channel('analytics-realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'analytics_sessions' }, () => {
+            // 실시간 접속자 카운트만 갱신
+            const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+            sb.from('analytics_sessions').select('id', { count: 'exact', head: true }).gte('last_active_at', fiveMinAgo)
+                .then(({ count }) => {
+                    const el = document.getElementById('anLiveCount');
+                    if (el) el.textContent = count || 0;
+                });
+        })
+        .subscribe();
 }
