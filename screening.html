@@ -527,6 +527,26 @@
         padding: 24px;
         border: 1px solid var(--border);
         margin-top: 20px;
+        position: relative;
+    }
+    .scr-docs-pre {
+        border: 2px solid var(--accent);
+        background: linear-gradient(180deg, #f0f9ff 0%, var(--white) 60%);
+    }
+    .scr-docs-step {
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: var(--accent);
+        color: var(--white);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        padding: 3px 10px;
+        border-radius: 10px;
+    }
+    .scr-docs-full .scr-docs-step {
+        background: var(--gray-500);
     }
     .scr-docs-title {
         font-size: 15px;
@@ -536,6 +556,12 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
+    }
+    .scr-docs-hint {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--gray-500);
     }
     .scr-docs-grid {
         display: grid;
@@ -553,6 +579,12 @@
         color: var(--gray-600);
     }
     .scr-doc-item svg { color: var(--accent); flex-shrink: 0; }
+    .scr-doc-pre {
+        background: var(--white);
+        border: 1px solid #bae6fd;
+        color: var(--gray-800);
+        font-weight: 600;
+    }
 
     /* Estimated funding */
     .scr-estimate-box {
@@ -1689,23 +1721,44 @@
             html += '</div>';
         });
 
-        // Required docs section
+        // Required docs section - 2단계 (가심사 → 본심사)
         var docs = collectDocs(sorted);
-        if (docs.length > 0 && passCount + warnCount > 0) {
-            html += '<div class="scr-docs-section">';
+        if (passCount + warnCount > 0 && docs.pre.length > 0) {
+            // 1단계: 가심사 제출서류
+            html += '<div class="scr-docs-section scr-docs-pre">';
+            html += '<div class="scr-docs-step">STEP 1</div>';
             html += '<div class="scr-docs-title">';
             html += '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
-            html += '접수시 필요 서류 (가능 상품 기준)';
+            html += '가심사 제출서류 <span class="scr-docs-hint">먼저 아래 3가지만 보내주세요</span>';
             html += '</div>';
             html += '<div class="scr-docs-grid">';
-            docs.forEach(function(doc) {
-                html += '<div class="scr-doc-item">';
+            docs.pre.forEach(function(doc) {
+                html += '<div class="scr-doc-item scr-doc-pre">';
                 html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>';
                 html += doc;
                 html += '</div>';
             });
             html += '</div>';
             html += '</div>';
+
+            // 2단계: 가심사 통과 후 본심사 서류
+            if (docs.full.length > 0) {
+                html += '<div class="scr-docs-section scr-docs-full">';
+                html += '<div class="scr-docs-step">STEP 2</div>';
+                html += '<div class="scr-docs-title">';
+                html += '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+                html += '가심사 통과 후 본심사 서류 <span class="scr-docs-hint">가심사 통과 시 추가로 요청드립니다</span>';
+                html += '</div>';
+                html += '<div class="scr-docs-grid">';
+                docs.full.forEach(function(doc) {
+                    html += '<div class="scr-doc-item">';
+                    html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>';
+                    html += doc;
+                    html += '</div>';
+                });
+                html += '</div>';
+                html += '</div>';
+            }
         }
 
         // Total estimated funding
@@ -1734,15 +1787,46 @@
     }
 
     function collectDocs(results) {
-        var docSet = {};
         var passOrWarn = results.filter(function(r) { return r.status !== 'fail'; });
 
-        // Always needed
+        // 가심사 제출서류 (1단계) - 통과 상품이 있으면 항상 동일한 3가지
+        var preDocs = [];
         if (passOrWarn.length > 0) {
-            docSet['사업자등록증'] = true;
-            docSet['대표자 신분증 (앞면)'] = true;
+            preDocs = ['대표자 신분증 (앞면)', '사업자등록증', '연락처 (휴대폰)'];
         }
 
+        // 헬스장(체육시설) + 렌탈 상품 시 전용 서류셋 적용
+        var industry = getVal('industry');
+        var hasRental = passOrWarn.some(function(r) {
+            return r.name.indexOf('렌탈') >= 0 || r.name.indexOf('중고') >= 0;
+        });
+        if (industry === 'screen' && hasRental) {
+            return {
+                pre: preDocs,
+                full: [
+                    '[사업자] 사업자등록증명',
+                    '[사업자] 통장사본 (렌탈료 납부용)',
+                    '[사업자] 이메일 주소',
+                    '[사업자] 임대차계약서',
+                    '[사업자] 표준재무제표증명 (25년도 가결산자료 必)',
+                    '[사업자] 부가가치세면세표준증명 (23,24,25년 당월분까지)',
+                    '[대표자] 휴대폰번호 + 통신사',
+                    '[대표자] 신분증',
+                    '[대표자] 주민등록등본',
+                    '[대표자] 소득금액증명 (22,23,24년)',
+                    '[대표자] 지방세납세증명',
+                    '[대표자] 지방세세목별과세증명 (23,24,25년, 주민등록주소 기준)',
+                    '[대표자] 국세완납증명서',
+                    '[신규제품] 원견적서 (제조사/모델명/제품이미지)',
+                    '[기존제품] 견적서 (제품사진+제품명판, 제조일자 5년 이내)',
+                    '[기존제품] 구매확인서 (세금계산서/이체확인증)',
+                    '[보증] 서울보증보험 동의 + 재무제표 업로드'
+                ]
+            };
+        }
+
+        // 기존 상품별 본심사 서류 로직
+        var docSet = {};
         passOrWarn.forEach(function(r) {
             if (r.name.indexOf('신협') >= 0 || r.name.indexOf('수협') >= 0) {
                 docSet['카드매출 자료 (홈택스)'] = true;
@@ -1771,7 +1855,10 @@
             docSet['법인등기부등본'] = true;
         }
 
-        return Object.keys(docSet);
+        return {
+            pre: preDocs,
+            full: Object.keys(docSet)
+        };
     }
 
     function calcTotalEstimate(results) {
@@ -1966,13 +2053,27 @@
             msg += '💰 예상 최대 자금: ' + estimateEl.textContent.trim() + '\n\n';
         }
 
-        // Required docs
-        var docItems = document.querySelectorAll('.scr-doc-item');
-        if (docItems.length > 0) {
+        // Required docs - 2단계 (가심사 → 본심사)
+        var preDocItems = document.querySelectorAll('.scr-docs-pre .scr-doc-item');
+        var fullDocItems = document.querySelectorAll('.scr-docs-full .scr-doc-item');
+
+        if (preDocItems.length > 0) {
             msg += '━━━━━━━━━━━━━━━━━━\n';
-            msg += '📎 필요 서류\n';
-            msg += '━━━━━━━━━━━━━━━━━━\n\n';
-            docItems.forEach(function(item) {
+            msg += '📎 [1단계] 가심사 제출서류\n';
+            msg += '━━━━━━━━━━━━━━━━━━\n';
+            msg += '먼저 아래 3가지만 보내주세요.\n\n';
+            preDocItems.forEach(function(item) {
+                msg += '  ☑️ ' + item.textContent.trim() + '\n';
+            });
+            msg += '\n';
+        }
+
+        if (fullDocItems.length > 0) {
+            msg += '━━━━━━━━━━━━━━━━━━\n';
+            msg += '📎 [2단계] 가심사 통과 후 본심사 서류\n';
+            msg += '━━━━━━━━━━━━━━━━━━\n';
+            msg += '가심사 통과 시 추가로 요청드립니다.\n\n';
+            fullDocItems.forEach(function(item) {
                 msg += '  ☑️ ' + item.textContent.trim() + '\n';
             });
             msg += '\n';
