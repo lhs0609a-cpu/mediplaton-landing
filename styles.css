@@ -9223,15 +9223,15 @@ button.proof-gallery-item {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
+    height: 72px;
 }
 
 .trust-logo-item img {
-    height: 32px;
+    height: 56px;
     width: auto;
-    max-width: 110px;
+    max-width: 180px;
     object-fit: contain;
-    filter: grayscale(40%) opacity(0.7);
+    filter: grayscale(10%) opacity(0.95);
     transition: filter 0.3s, transform 0.3s;
 }
 
@@ -9248,7 +9248,8 @@ button.proof-gallery-item {
 @media (max-width: 768px) {
     .trust-logo-strip { padding: 20px 0 14px; }
     .trust-strip-slide { gap: 28px; }
-    .trust-logo-item img { height: 26px; max-width: 90px; }
+    .trust-logo-item { height: 52px; }
+    .trust-logo-item img { height: 42px; max-width: 140px; }
     .trust-strip-badge { font-size: 12px; }
 }
 
@@ -9537,7 +9538,8 @@ button.proof-gallery-item {
 
     /* 태블릿 반응형 보강 */
     .trust-strip-slide { gap: 30px; }
-    .trust-logo-item img { height: 28px; }
+    .trust-logo-item { height: 60px; }
+    .trust-logo-item img { height: 48px; max-width: 160px; }
 
     .about-image-grid { gap: 10px; }
 
@@ -13231,10 +13233,10 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 48px;
+    height: 72px;
     padding: 4px 12px;
-    opacity: 0.6;
-    filter: grayscale(100%);
+    opacity: 0.85;
+    filter: grayscale(30%);
     transition: var(--transition);
 }
 
@@ -13244,9 +13246,9 @@ html {
 }
 
 .hospital-logo-item img {
-    height: 40px;
+    height: 60px;
     width: auto;
-    max-width: 120px;
+    max-width: 180px;
     object-fit: contain;
 }
 
@@ -13499,7 +13501,8 @@ html {
         gap: 12px;
     }
 
-    .hospital-logo-item img { height: 28px; }
+    .hospital-logo-item { height: 52px; }
+    .hospital-logo-item img { height: 44px; max-width: 140px; }
     .hospital-marquee-slide { gap: 32px; }
 
     .hero-video { opacity: 0.1; }
