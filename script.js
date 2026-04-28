@@ -683,15 +683,9 @@ function initSavingsCalculator() {
     const savingsEl = document.getElementById('calcSavings');
     const comparisonEl = document.getElementById('calcComparison');
 
-    // 비교 문구 목록 (절감액에 따른 비유)
+    // 절감액 안내 문구 (사실 위주)
     const comparisons = [
-        { threshold: 500, text: '= 고급 의료장비 구매 가능!' },
-        { threshold: 1000, text: '= 직원 보너스 지급 가능!' },
-        { threshold: 1500, text: '= 인테리어 리모델링 비용!' },
-        { threshold: 2000, text: '= 간호사 연봉 절반!' },
-        { threshold: 3000, text: '= 신규 장비 도입 가능!' },
-        { threshold: 5000, text: '= 분원 보증금 수준!' },
-        { threshold: Infinity, text: '= 엄청난 절감 효과!' }
+        { threshold: Infinity, text: '동일 조건 대비 이자 절감액' }
     ];
 
     function formatNumber(num) {
@@ -707,8 +701,8 @@ function initSavingsCalculator() {
         const amount = parseInt(amountSelect.value);
         const period = parseInt(periodSelect.value);
 
-        // 대부업 금리 15%, 메디플라톤 최저 금리 5.3%
-        const badRate = 0.15;
+        // 시중 평균 8% 시뮬레이션 기준값, 메디플라톤 최저 금리 5.3%
+        const badRate = 0.08;
         const goodRate = 0.053;
 
         // 단리 계산 (간단한 비교용)
@@ -719,7 +713,7 @@ function initSavingsCalculator() {
         // UI 업데이트
         badInterestEl.textContent = formatNumber(badInterest);
         goodInterestEl.textContent = formatNumber(goodInterest);
-        savingsEl.textContent = formatNumber(savings) + ' 절약';
+        savingsEl.textContent = formatNumber(savings) + ' 차이';
 
         // 절감액에 따른 비교 문구
         const savingsInMan = savings / 10000;

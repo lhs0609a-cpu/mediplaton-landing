@@ -13956,3 +13956,262 @@ section.hero .hero-trust svg {
         animation: none !important;
     }
 }
+
+/* ============================================================
+   대기업 톤 리디자인 — 카피·시각요소 정리
+   ============================================================ */
+/* ============================================================
+   styles.preview.css — 대기업 톤 미리보기
+   styles.css 다음에 로드되어 핵심 영역만 오버라이드
+   ============================================================ */
+
+/* ===== 1. 무한 펄스 애니메이션 제거 ===== */
+.btn-pulse {
+    animation: none !important;
+}
+@keyframes pulse { 0%,100%{} 50%{} } /* 비활성화 */
+
+/* ===== 2. badge-gold 정리 (light blue) ===== */
+.badge-gold {
+    background: #FFFFFF !important;
+    color: var(--primary) !important;
+    border: 1px solid var(--primary-100, #C5CAE9) !important;
+    font-weight: 600;
+}
+.badge-light {
+    background: rgba(255,255,255,0.85) !important;
+    color: var(--gray-800) !important;
+    border: 1px solid rgba(255,255,255,0.6) !important;
+}
+
+/* ===== 3. Hero — 단순화된 통계 카드 ===== */
+.hero-visual .hero-photo {
+    display: block !important;
+    width: 100%;
+    max-width: 540px;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: 0 24px 60px rgba(20, 40, 160, 0.16);
+}
+.hero-card.simplified.main-card {
+    padding: 24px 32px !important;
+    overflow: visible !important;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(20, 40, 160, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(20, 40, 160, 0.14);
+    backdrop-filter: blur(8px);
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 90%;
+    z-index: 5;
+}
+.hero-card.simplified .hero-stat-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 110px;
+}
+.hero-card.simplified .hero-stat-label {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.hero-card.simplified .hero-stat-number {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+.hero-card.simplified .hero-stat-number span {
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 2px;
+    color: var(--primary);
+}
+.hero-card.simplified .hero-stat-desc {
+    font-size: 12px;
+    color: var(--gray-600);
+    margin-top: 4px;
+}
+.hero-card.simplified .hero-stat-divider {
+    width: 1px;
+    height: 56px;
+    background: var(--border);
+}
+
+/* hero 우측 메인 카드 위치는 기존 hero-card 스타일이 처리. 서브 카드들 제거되어 비주얼 정돈 */
+
+/* ===== 4. Hero feature 아이콘 — 그라디언트 → 모노톤 ===== */
+.hero-feature .feature-icon.mono {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--primary-50, #E8EAF6);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ===== 5. 비교표 2열 스타일 ===== */
+.comparison-table.comparison-2col th,
+.comparison-table.comparison-2col td {
+    width: auto;
+}
+.comparison-table.comparison-2col .col-neutral {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+.comparison-table.comparison-2col .col-good {
+    background: var(--primary);
+    color: #fff;
+}
+.comparison-table.comparison-2col tbody td.good {
+    color: var(--primary);
+    font-weight: 700;
+}
+.comparison-note {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--gray-500);
+    text-align: center;
+}
+
+/* ===== 6. Comp-banner 통계 단위 분리 표기 ===== */
+.comp-stat strong .unit {
+    font-size: 0.55em;
+    font-weight: 700;
+    margin-left: 2px;
+    opacity: 0.85;
+}
+.comp-cta {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ===== 7. 마퀴 → 정적 그리드 ===== */
+.hospital-marquee-track,
+.trust-strip-track {
+    overflow: visible !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+}
+.hospital-marquee-slide,
+.trust-strip-slide {
+    display: grid !important;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 16px;
+    animation: none !important;
+    width: 100% !important;
+    padding: 0 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+@media (max-width: 768px) {
+    .hospital-marquee-slide,
+    .trust-strip-slide {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+/* 마퀴 무한 스크롤용 복제본 숨김 — 그리드의 후반부는 중복이므로 */
+.hospital-marquee-slide > .hospital-logo-item:nth-child(n+25),
+.trust-strip-slide > .trust-logo-item:nth-child(n+20) {
+    display: none;
+}
+.hospital-logo-item,
+.trust-logo-item {
+    aspect-ratio: 3/2;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 12px 16px;
+    transition: border-color 0.2s ease;
+}
+.hospital-logo-item:hover,
+.trust-logo-item:hover {
+    border-color: var(--primary-100, #C5CAE9);
+}
+.hospital-logo-item img,
+.trust-logo-item img {
+    max-width: 100%;
+    max-height: 32px;
+    object-fit: contain;
+    filter: grayscale(0.4);
+    opacity: 0.85;
+    transition: filter 0.2s ease, opacity 0.2s ease;
+}
+.hospital-logo-item:hover img,
+.trust-logo-item:hover img {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+/* ===== 8. 푸터 회사정보 강화 ===== */
+.footer-info .footer-disclaimer {
+    display: block;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 12px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.55);
+}
+
+/* ===== 9. Hero title — 도발적 강조 톤 다운 ===== */
+section.hero .hero-title .highlight strong.text-danger::after {
+    display: none; /* 빨간 형광펜 효과 제거 */
+}
+.hero-title {
+    font-weight: 700; /* 800 → 700 */
+}
+.hero-title .highlight {
+    color: var(--primary);
+}
+
+/* ===== 10. CTA 버튼 — 정적 그림자, 호버에서만 변화 ===== */
+.btn.btn-primary {
+    box-shadow: 0 2px 8px rgba(20, 40, 160, 0.18);
+    transition: all 0.2s ease;
+}
+.btn.btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(20, 40, 160, 0.28);
+    transform: translateY(-1px);
+}
+
+/* ===== 11. Stats title 강조 톤 다운 ===== */
+.stats-title {
+    font-weight: 700 !important;
+}
+.stats-badge {
+    font-weight: 500 !important;
+    letter-spacing: 0.02em;
+}
+
+/* ===== 12. 모바일 반응형 — 단순화 카드 ===== */
+@media (max-width: 768px) {
+    .hero-card.simplified {
+        flex-direction: row;
+        gap: 16px;
+        padding: 16px 20px;
+    }
+    .hero-card.simplified .hero-stat-number {
+        font-size: 24px;
+    }
+    .hero-card.simplified .hero-stat-divider {
+        height: 40px;
+    }
+}
