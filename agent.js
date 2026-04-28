@@ -193,14 +193,23 @@
                 if (signUpErr) throw signUpErr;
                 if (!signUpData.user) throw new Error('회원가입에 실패했습니다.');
 
-                const { error: profileErr } = await sb.from('agents').insert({
-                    id: signUpData.user.id,
-                    name, phone, email,
-                    rrn_masked: rrn || null,
-                    bank_name: bank || null,
-                    account_holder: holder || null,
-                    account_number: account || null,
-                    status: 'pending'
+                if (!signUpData.session) {
+                    const { error: signInErr } = await sb.auth.signInWithPassword({ email, password });
+                    if (signInErr) {
+                        showAlert('authSuccess', '회원가입 신청 접수. 이메일 확인 후 다시 로그인하면 프로필이 자동 등록됩니다.', 'success');
+                        $('registerForm').reset();
+                        return;
+                    }
+                }
+
+                const { error: profileErr } = await sb.rpc('register_agent_profile', {
+                    p_name: name,
+                    p_phone: phone,
+                    p_email: email,
+                    p_rrn_masked: rrn || null,
+                    p_bank_name: bank || null,
+                    p_account_holder: holder || null,
+                    p_account_number: account || null
                 });
                 if (profileErr) throw profileErr;
 
@@ -326,29 +335,20 @@
             if (!user) throw new Error('세션이 만료되었습니다. 다시 로그인하세요.');
 
             const signatureImage = canvas.toDataURL('image/png');
-            const signedAt = new Date().toISOString();
             const userAgent = navigator.userAgent;
             const ip = await getClientIP();
+            const bodyHash = await sha256Hex(CONTRACT_VERSION + '|' + CONTRACT_BODY + '|' + signatureImage);
 
-            const bodyHash = await sha256Hex(CONTRACT_BODY + signatureImage + signedAt);
-
-            const { data: contract, error: contractErr } = await sb.from('agent_contracts').insert({
-                agent_id: user.id,
-                contract_version: CONTRACT_VERSION,
-                contract_body: CONTRACT_BODY,
-                signature_image: signatureImage,
-                signed_ip: ip,
-                signed_user_agent: userAgent,
-                signed_at: signedAt,
-                body_hash: bodyHash
-            }).select().single();
-            if (contractErr) throw contractErr;
-
-            const { error: updErr } = await sb.from('agents').update({
-                status: 'active',
-                contract_id: contract.id
-            }).eq('id', user.id);
-            if (updErr) throw updErr;
+            const { data: contractId, error: rpcErr } = await sb.rpc('agent_sign_contract', {
+                p_contract_body: CONTRACT_BODY,
+                p_signature_image: signatureImage,
+                p_body_hash: bodyHash,
+                p_signed_ip: ip,
+                p_signed_user_agent: userAgent,
+                p_contract_version: CONTRACT_VERSION
+            });
+            if (rpcErr) throw rpcErr;
+            if (!contractId) throw new Error('계약서 서명에 실패했습니다.');
 
             window.location.href = 'agent-dashboard.html';
         } catch (err) {

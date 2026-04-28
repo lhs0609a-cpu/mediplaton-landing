@@ -369,10 +369,12 @@
                 if (!selectedLeadIds.size) { showToast('할당할 DB를 선택하세요.', 'error'); return; }
                 if (!confirm(`${selectedLeadIds.size}건을 선택한 영업자에게 할당하시겠습니까?`)) return;
 
+                const { data: { user } } = await sb.auth.getUser();
+                const adminId = user?.id || null;
                 const rows = [...selectedLeadIds].map(lid => ({
                     lead_id: lid,
                     agent_id: agentId,
-                    assigned_by: (await sb.auth.getUser()).data.user?.id
+                    assigned_by: adminId
                 }));
 
                 const { error } = await sb.from('lead_assignments').upsert(rows, {

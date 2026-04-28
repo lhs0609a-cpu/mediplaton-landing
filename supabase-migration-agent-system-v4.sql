@@ -196,13 +196,13 @@ BEGIN
 
     UPDATE commission_records
     SET settlement_status = 'penalty',
-        note = coalesce(note, '') || E'\n위약벌 #' || p_penalty_id || ' 차감 처리'
+        note = coalesce(note, '') || E'\n위약벌 #' || p_penalty_id::TEXT || ' 차감 처리'
     WHERE id = p_commission_id;
 
     UPDATE penalty_records
     SET status = 'collected',
         resolved_at = now(),
-        resolution_note = coalesce(resolution_note, '') || E'\n수익 #' || p_commission_id || ' 차감으로 회수'
+        resolution_note = coalesce(resolution_note, '') || E'\n수익 #' || p_commission_id::TEXT || ' 차감으로 회수'
     WHERE id = p_penalty_id;
 END;
 $$;
