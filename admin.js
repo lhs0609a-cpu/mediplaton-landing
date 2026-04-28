@@ -423,6 +423,10 @@ function switchTab(tab) {
     document.getElementById('boardManageSection').style.display = tab === 'board-manage' ? 'block' : 'none';
     document.getElementById('newClinicsSection').style.display = tab === 'new-clinics' ? 'block' : 'none';
     document.getElementById('analyticsSection').style.display = tab === 'analytics' ? 'block' : 'none';
+    const leadSec = document.getElementById('leadManageSection');
+    if (leadSec) leadSec.style.display = tab === 'lead-manage' ? 'block' : 'none';
+    const agentSec = document.getElementById('agentManageSection');
+    if (agentSec) agentSec.style.display = tab === 'agent-manage' ? 'block' : 'none';
 
     if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'consultations') loadConsultations();
@@ -439,6 +443,8 @@ function switchTab(tab) {
     if (tab === 'board-manage') loadAdminBoardPosts();
     if (tab === 'new-clinics') loadAdminNewClinics();
     if (tab === 'analytics') loadAnalytics();
+    if (tab === 'lead-manage' && typeof loadLeadManagement === 'function') loadLeadManagement();
+    if (tab === 'agent-manage' && typeof loadAgentManagement === 'function') loadAgentManagement();
 }
 
 // ─── Consultations ───

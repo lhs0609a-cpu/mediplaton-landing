@@ -613,6 +613,14 @@
                 <button class="tab-btn" data-tab="analytics">
                     📊 분석
                 </button>
+                <button class="tab-btn" data-tab="lead-manage">
+                    영업 DB
+                    <span class="tab-badge" id="leadBadge">0</span>
+                </button>
+                <button class="tab-btn" data-tab="agent-manage">
+                    영업자 관리
+                    <span class="tab-badge" id="agentBadge">0</span>
+                </button>
             </div>
 
             <!-- All Inquiries (통합 문의) -->
@@ -1204,6 +1212,123 @@ X 신협 데일리론 → 개인사업자만 가능
                 </div>
             </div>
 
+            <!-- 영업 DB 관리 -->
+            <div class="data-section" id="leadManageSection" style="display: none;">
+                <div class="data-header">
+                    <h2>영업 DB 관리</h2>
+                    <div class="data-filters">
+                        <input type="text" class="search-input" id="leadSearch" placeholder="이름/전화 검색...">
+                        <select class="filter-select" id="leadStatusFilter">
+                            <option value="all">전체 상태</option>
+                            <option value="unassigned">미할당</option>
+                            <option value="assigned">할당됨</option>
+                            <option value="contracted">계약완료</option>
+                            <option value="discarded">폐기</option>
+                        </select>
+                        <button class="btn btn-outline btn-sm" id="leadShowUploadBtn">+ 엑셀 업로드</button>
+                    </div>
+                </div>
+
+                <div id="leadUploadArea" style="display:none;background:var(--gray-50);border:2px dashed var(--gray-300);border-radius:var(--radius);padding:24px;margin-bottom:24px;">
+                    <h3 style="font-size:15px;margin-bottom:12px;">엑셀/CSV 업로드</h3>
+                    <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px;">
+                        필수 열: <strong>이름</strong>, <strong>전화번호</strong> · 선택: 업종, 매출구간, 지역, 비고<br>
+                        지원 형식: .xlsx, .xls, .csv · 첫 행은 헤더로 처리됩니다
+                    </p>
+                    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+                        <input type="file" id="leadFileInput" accept=".xlsx,.xls,.csv">
+                        <input type="text" id="leadSourceLabel" placeholder="출처 라벨 (예: 불발DB_2026-04)" style="flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:14px;">
+                    </div>
+                    <div id="leadPreviewArea" style="display:none;">
+                        <h4 style="font-size:14px;margin-bottom:8px;">미리보기 (최대 10건)</h4>
+                        <div style="overflow-x:auto;max-height:280px;overflow-y:auto;border:1px solid var(--gray-200);border-radius:var(--radius);">
+                            <table class="data-table" id="leadPreviewTable" style="margin:0;">
+                                <thead><tr id="leadPreviewHead"></tr></thead>
+                                <tbody id="leadPreviewBody"></tbody>
+                            </table>
+                        </div>
+                        <p id="leadPreviewSummary" style="margin-top:8px;font-size:13px;color:var(--gray-500);"></p>
+                        <div style="display:flex;gap:8px;margin-top:12px;">
+                            <button class="btn btn-primary btn-sm" id="leadConfirmUploadBtn">DB에 적재</button>
+                            <button class="btn btn-outline btn-sm" id="leadCancelUploadBtn">취소</button>
+                        </div>
+                    </div>
+                    <div id="leadUploadResult" style="display:none;margin-top:16px;padding:12px;background:#D1FAE5;border-radius:var(--radius);font-size:14px;"></div>
+                </div>
+
+                <div id="leadBatchHistory" style="margin-bottom:24px;"></div>
+
+                <div class="loading" id="leadLoading"><div class="spinner"></div></div>
+                <table class="data-table" id="leadTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="leadSelectAll"></th>
+                            <th>등록일</th>
+                            <th>이름</th>
+                            <th>연락처</th>
+                            <th>업종</th>
+                            <th>지역</th>
+                            <th>출처</th>
+                            <th>할당 영업자</th>
+                            <th>상태</th>
+                            <th>액션</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="leadEmpty" style="display: none;">
+                    <h3>적재된 DB가 없습니다</h3>
+                    <p>엑셀 업로드 버튼을 눌러 영업 DB를 추가하세요.</p>
+                </div>
+
+                <div id="leadBulkAssignBar" style="display:none;position:sticky;bottom:0;background:var(--white);border-top:2px solid var(--primary);padding:12px 16px;margin-top:12px;display:none;align-items:center;gap:12px;">
+                    <span id="leadSelectedCount" style="font-weight:600;">0건 선택됨</span>
+                    <select class="filter-select" id="leadBulkAgentSelect" style="flex:1;max-width:300px;">
+                        <option value="">영업자 선택...</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" id="leadBulkAssignBtn">선택 일괄 할당</button>
+                </div>
+            </div>
+
+            <!-- 영업자 관리 -->
+            <div class="data-section" id="agentManageSection" style="display: none;">
+                <div class="data-header">
+                    <h2>영업자 관리</h2>
+                    <div class="data-filters">
+                        <select class="filter-select" id="agentStatusFilter">
+                            <option value="all">전체</option>
+                            <option value="pending">승인 대기</option>
+                            <option value="contract_sent">계약서 발송</option>
+                            <option value="active">활성</option>
+                            <option value="suspended">정지</option>
+                            <option value="terminated">해지</option>
+                        </select>
+                        <input type="text" class="search-input" id="agentSearch" placeholder="이름/전화 검색...">
+                    </div>
+                </div>
+                <div class="loading" id="agentLoading"><div class="spinner"></div></div>
+                <table class="data-table" id="agentTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>가입일</th>
+                            <th>이름</th>
+                            <th>연락처</th>
+                            <th>이메일</th>
+                            <th>계좌</th>
+                            <th>상태</th>
+                            <th>할당 DB</th>
+                            <th>계약서</th>
+                            <th>액션</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agentTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="agentEmpty" style="display: none;">
+                    <h3>등록된 영업자가 없습니다</h3>
+                    <p>영업자가 회원가입 후 여기서 승인할 수 있습니다.</p>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -1673,9 +1798,12 @@ X 신협 데일리론 → 개인사업자만 가능
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <!-- SheetJS for Excel parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="admin.js"></script>
+    <script src="admin-leads.js"></script>
 </body>
 </html>
