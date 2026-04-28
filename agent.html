@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영업자 포털 | 메디플라톤</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+    <style>
+        :root {
+            --primary: #1428A0;
+            --primary-light: #E8EDFF;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-500: #6B7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --white: #fff;
+            --radius: 8px;
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Pretendard Variable', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #e9eef5);
+            min-height: 100vh;
+            color: var(--gray-900);
+        }
+        .wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+        .card { background: var(--white); border-radius: 16px; box-shadow: var(--shadow); width: 100%; max-width: 520px; padding: 40px 36px; }
+        .card.wide { max-width: 760px; }
+        .brand { text-align: center; margin-bottom: 28px; }
+        .brand h1 { font-size: 22px; color: var(--primary); margin-bottom: 6px; }
+        .brand p { color: var(--gray-500); font-size: 13px; }
+        .tabs { display: flex; border-bottom: 2px solid var(--gray-200); margin-bottom: 24px; }
+        .tab { flex: 1; padding: 12px; text-align: center; font-weight: 600; color: var(--gray-500); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: 0.2s; }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px 14px; border: 1px solid var(--gray-300); border-radius: var(--radius);
+            font-size: 14px; font-family: inherit; transition: 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 24px; border-radius: var(--radius); font-size: 15px; font-weight: 600;
+            cursor: pointer; border: none; transition: 0.2s; font-family: inherit; }
+        .btn-primary { background: var(--primary); color: var(--white); width: 100%; }
+        .btn-primary:hover { background: #0f1f7a; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline { background: var(--white); border: 1px solid var(--gray-300); color: var(--gray-700); }
+        .alert { padding: 12px; border-radius: var(--radius); font-size: 13px; margin-bottom: 16px; display: none; }
+        .alert.error { background: #FEE2E2; color: var(--danger); }
+        .alert.success { background: #D1FAE5; color: #065F46; }
+        .alert.info { background: var(--primary-light); color: var(--primary); }
+        .small { font-size: 12px; color: var(--gray-500); }
+        .view { display: none; }
+        .view.active { display: block; }
+        .form-section-title { font-size: 12px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; padding-top: 16px; margin-bottom: 12px; border-top: 1px solid var(--gray-200); }
+        .form-section-title:first-child { border-top: none; padding-top: 0; }
+
+        /* Contract */
+        .contract-body { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 20px; max-height: 360px; overflow-y: auto; font-size: 13px; line-height: 1.8; color: var(--gray-700); margin-bottom: 16px; }
+        .contract-body h3 { font-size: 14px; margin: 16px 0 8px 0; color: var(--gray-900); }
+        .contract-body h3:first-child { margin-top: 0; }
+        .contract-body p { margin-bottom: 8px; }
+        .contract-body strong { color: var(--gray-900); }
+        .check-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .check-list label { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--gray-700); cursor: pointer; }
+        .check-list input[type=checkbox] { margin-top: 2px; flex-shrink: 0; }
+        .signature-area { background: var(--white); border: 2px dashed var(--gray-300); border-radius: var(--radius); padding: 16px; }
+        .signature-area canvas { background: #fff; border: 1px solid var(--gray-200); border-radius: 4px; width: 100%; height: 180px; cursor: crosshair; touch-action: none; display: block; }
+        .signature-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; color: var(--gray-500); }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+        .badge.warning { background: #FEF3C7; color: #92400E; }
+        .badge.danger { background: #FEE2E2; color: #991B1B; }
+        .badge.success { background: #D1FAE5; color: #065F46; }
+        .empty-state { text-align: center; padding: 40px 16px; }
+        .empty-state h2 { font-size: 18px; color: var(--gray-700); margin-bottom: 8px; }
+        .empty-state p { color: var(--gray-500); font-size: 14px; line-height: 1.6; }
+        .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <!-- 로그인 / 가입 -->
+    <div class="card view active" id="authView">
+        <div class="brand">
+            <h1>메디플라톤 영업자 포털</h1>
+            <p>영업자 회원가입 후 관리자 승인을 받아주세요</p>
+        </div>
+        <div class="tabs">
+            <button class="tab active" data-tab="login">로그인</button>
+            <button class="tab" data-tab="register">회원가입</button>
+        </div>
+        <div class="alert error" id="authError"></div>
+        <div class="alert success" id="authSuccess"></div>
+
+        <form id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label>이메일</label>
+                <input type="email" id="loginEmail" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>비밀번호</label>
+                <input type="password" id="loginPassword" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary" id="loginBtn">로그인</button>
+        </form>
+
+        <form id="registerForm" class="auth-form" style="display:none;">
+            <div class="form-section-title">계정 정보</div>
+            <div class="form-group">
+                <label>이메일 *</label>
+                <input type="email" id="regEmail" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>비밀번호 *</label>
+                    <input type="password" id="regPassword" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label>비밀번호 확인 *</label>
+                    <input type="password" id="regPassword2" required>
+                </div>
+            </div>
+
+            <div class="form-section-title">기본 정보</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>성함 *</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label>연락처 *</label>
+                    <input type="tel" id="regPhone" placeholder="010-0000-0000" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>주민번호 (앞6자리-뒷1자리, 본인확인용)</label>
+                <input type="text" id="regRrn" placeholder="900101-1" maxlength="8">
+                <p class="small">주민등록번호 앞 6자리와 뒷 1자리만 저장됩니다.</p>
+            </div>
+
+            <div class="form-section-title">정산 계좌</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>은행</label>
+                    <select id="regBank">
+                        <option value="">선택</option>
+                        <option>국민은행</option><option>신한은행</option><option>우리은행</option>
+                        <option>하나은행</option><option>농협은행</option><option>기업은행</option>
+                        <option>SC제일은행</option><option>씨티은행</option><option>카카오뱅크</option>
+                        <option>토스뱅크</option><option>케이뱅크</option><option>새마을금고</option>
+                        <option>신협</option><option>우체국</option><option>기타</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>예금주</label>
+                    <input type="text" id="regHolder">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>계좌번호</label>
+                <input type="text" id="regAccount" placeholder="숫자만 입력">
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="registerBtn" style="margin-top:12px;">회원가입 신청</button>
+            <p class="small" style="margin-top:12px;text-align:center;">
+                가입 후 관리자 승인을 받아야 활성화됩니다.<br>
+                승인 후 영업위탁계약서에 서명하시면 DB 접근이 가능합니다.
+            </p>
+        </form>
+    </div>
+
+    <!-- 승인 대기 -->
+    <div class="card view" id="pendingView">
+        <div class="empty-state">
+            <div class="icon">⏳</div>
+            <h2>관리자 승인 대기 중</h2>
+            <p>회원가입 신청이 접수되었습니다.<br>관리자가 정보를 검토한 뒤 승인 처리합니다.<br>승인 완료 시 영업위탁계약서가 표시됩니다.</p>
+            <p style="margin-top:24px;font-size:13px;color:var(--gray-500);">
+                문의: <a href="tel:0507-1434-3226" style="color:var(--primary);">0507-1434-3226</a>
+            </p>
+            <button class="btn btn-outline" style="margin-top:24px;" id="pendingLogoutBtn">로그아웃</button>
+        </div>
+    </div>
+
+    <!-- 정지/해지 -->
+    <div class="card view" id="terminatedView">
+        <div class="empty-state">
+            <div class="icon">🚫</div>
+            <h2 id="terminatedTitle">계정이 정지되었습니다</h2>
+            <p id="terminatedReason">관리자에게 문의해 주세요.</p>
+            <button class="btn btn-outline" style="margin-top:24px;" id="termLogoutBtn">로그아웃</button>
+        </div>
+    </div>
+
+    <!-- 계약서 서명 -->
+    <div class="card wide view" id="contractView">
+        <div class="brand">
+            <h1>영업위탁계약서 서명</h1>
+            <p>아래 본문을 끝까지 읽으신 후 서명해 주세요</p>
+        </div>
+        <div class="alert error" id="contractError"></div>
+
+        <div class="contract-body" id="contractBody"></div>
+
+        <div class="check-list">
+            <label><input type="checkbox" class="agree-check" id="agreeAll"> <span>위 계약서 내용을 모두 읽고 이해하였습니다.</span></label>
+            <label><input type="checkbox" class="agree-check" id="agreeNda"> <span>제3조(기밀유지) 및 제4조(DB 영구귀속)에 동의합니다.</span></label>
+            <label><input type="checkbox" class="agree-check" id="agreeRevenue"> <span>제5조(수익 5:5 분배) 및 제8조(위약벌 건당 500만원) 조항에 동의합니다.</span></label>
+            <label><input type="checkbox" class="agree-check" id="agreeIdentity"> <span>본인이 직접 서명함을 확인하며, 본 서명은 본인의 자필 서명과 동일한 효력을 가집니다.</span></label>
+        </div>
+
+        <div class="signature-area">
+            <p style="font-size:13px;font-weight:600;margin-bottom:8px;">서명란 (마우스 또는 터치로 서명)</p>
+            <canvas id="signatureCanvas" width="700" height="180"></canvas>
+            <div class="signature-controls">
+                <span id="signatureStatus">서명 전</span>
+                <button type="button" class="btn btn-outline" style="padding:6px 12px;font-size:12px;" id="clearSignBtn">지우기</button>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" id="submitSignBtn" style="margin-top:20px;" disabled>계약서 서명 완료</button>
+        <p class="small" style="margin-top:12px;text-align:center;">서명 시 IP, 디바이스 정보, 타임스탬프가 함께 기록됩니다.</p>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="agent.js"></script>
+</body>
+</html>
