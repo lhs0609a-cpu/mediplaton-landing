@@ -466,7 +466,7 @@
 
             let query = sb.from('agents').select(`
                 *,
-                agent_contracts ( id, contract_version, signed_at, revoked_at )
+                agent_contracts!agent_id ( id, contract_version, signed_at, revoked_at )
             `).order('created_at', { ascending: false });
 
             if (statusFilter !== 'all') query = query.eq('status', statusFilter);
