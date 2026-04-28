@@ -445,6 +445,10 @@ function switchTab(tab) {
     if (tab === 'analytics') loadAnalytics();
     if (tab === 'lead-manage' && typeof loadLeadManagement === 'function') loadLeadManagement();
     if (tab === 'agent-manage' && typeof loadAgentManagement === 'function') loadAgentManagement();
+    if (tab === 'match-events' && typeof loadMatchEvents === 'function') loadMatchEvents();
+
+    const matchSec = document.getElementById('matchEventsSection');
+    if (matchSec) matchSec.style.display = tab === 'match-events' ? 'block' : 'none';
 }
 
 // ─── Consultations ───

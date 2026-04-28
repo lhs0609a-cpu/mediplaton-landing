@@ -621,6 +621,10 @@
                     영업자 관리
                     <span class="tab-badge" id="agentBadge">0</span>
                 </button>
+                <button class="tab-btn" data-tab="match-events">
+                    매칭/정산
+                    <span class="tab-badge" id="matchBadge">0</span>
+                </button>
             </div>
 
             <!-- All Inquiries (통합 문의) -->
@@ -1287,6 +1291,42 @@ X 신협 데일리론 → 개인사업자만 가능
                         <option value="">영업자 선택...</option>
                     </select>
                     <button class="btn btn-primary btn-sm" id="leadBulkAssignBtn">선택 일괄 할당</button>
+                </div>
+            </div>
+
+            <!-- 매칭/정산 -->
+            <div class="data-section" id="matchEventsSection" style="display: none;">
+                <div class="data-header">
+                    <h2>매칭 이벤트 / 정산 관리</h2>
+                    <div class="data-filters">
+                        <select class="filter-select" id="matchFilter">
+                            <option value="pending">실행 대기</option>
+                            <option value="executed">실행 완료</option>
+                            <option value="all">전체</option>
+                        </select>
+                    </div>
+                </div>
+                <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
+                    영업자에게 할당된 DB가 신규 inquiry로 매칭되면 자동 생성됩니다. 실행 완료 시 수익 5:5 분배가 자동 처리됩니다.
+                </p>
+                <div class="loading" id="matchLoading"><div class="spinner"></div></div>
+                <table class="data-table" id="matchTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>매칭일</th>
+                            <th>고객명</th>
+                            <th>연락처</th>
+                            <th>유입 출처</th>
+                            <th>매칭 영업자</th>
+                            <th>상태</th>
+                            <th>액션</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matchTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="matchEmpty" style="display: none;">
+                    <h3>매칭 이벤트가 없습니다</h3>
+                    <p>영업자 할당 DB와 일치하는 신규 inquiry가 들어오면 자동 생성됩니다.</p>
                 </div>
             </div>
 

@@ -612,6 +612,109 @@
         init();
     }
 
+    async function loadMatchEvents() {
+        const loading = $('matchLoading');
+        const table = $('matchTable');
+        const empty = $('matchEmpty');
+
+        loading.style.display = 'flex';
+        table.style.display = 'none';
+        empty.style.display = 'none';
+
+        try {
+            const filter = $('matchFilter')?.value || 'pending';
+
+            let query = sb.from('lead_match_events').select(`
+                id, matched_at, matched_inquiry_table, matched_inquiry_id, executed,
+                executed_amount, executed_product, executed_at,
+                leads ( name, phone, business_type, region, source ),
+                agents ( name )
+            `).order('matched_at', { ascending: false });
+
+            if (filter === 'pending') query = query.eq('executed', false);
+            if (filter === 'executed') query = query.eq('executed', true);
+
+            const { data, error } = await query;
+            if (error) throw error;
+
+            const pendingCount = (data || []).filter(d => !d.executed).length;
+            $('matchBadge').textContent = pendingCount;
+
+            loading.style.display = 'none';
+
+            if (!data || !data.length) {
+                empty.style.display = 'block';
+                return;
+            }
+
+            table.style.display = 'table';
+            $('matchTableBody').innerHTML = data.map(m => {
+                const lead = m.leads || {};
+                const agent = m.agents || {};
+                const statusBadge = m.executed
+                    ? `<span class="badge" style="background:#D1FAE5;color:#065F46;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600;">실행완료 (${m.executed_amount?.toLocaleString() || 0}원)</span>`
+                    : `<span class="badge" style="background:#FEF3C7;color:#92400E;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600;">대기</span>`;
+
+                const action = m.executed
+                    ? `<button class="btn btn-outline btn-sm match-view-btn" data-id="${m.id}">상세</button>`
+                    : `<button class="btn btn-success btn-sm match-execute-btn" data-id="${m.id}">실행 마킹</button>`;
+
+                return `<tr>
+                    <td>${formatDate(m.matched_at)}</td>
+                    <td><strong>${escapeHtml(lead.name || '-')}</strong></td>
+                    <td>${escapeHtml(lead.phone || '-')}</td>
+                    <td><small>${escapeHtml(m.matched_inquiry_table)} #${m.matched_inquiry_id}</small></td>
+                    <td>${escapeHtml(agent.name || '<span style="color:var(--gray-400);">미할당</span>')}</td>
+                    <td>${statusBadge}</td>
+                    <td>${action}</td>
+                </tr>`;
+            }).join('');
+
+            document.querySelectorAll('.match-execute-btn').forEach(btn => {
+                btn.onclick = () => openExecuteDialog(parseInt(btn.dataset.id));
+            });
+        } catch (err) {
+            console.error(err);
+            loading.style.display = 'none';
+            showToast('매칭 이벤트 로드 실패: ' + err.message, 'error');
+        }
+    }
+
+    async function openExecuteDialog(matchId) {
+        const product = prompt('실행 상품명 (예: 카드매출 담보대출):');
+        if (!product) return;
+
+        const amountStr = prompt('실행 금액 (원, 숫자만):');
+        if (!amountStr) return;
+        const amount = parseInt(amountStr.replace(/[^0-9]/g, ''));
+        if (!amount) { showToast('금액이 올바르지 않습니다.', 'error'); return; }
+
+        const revenueStr = prompt('회사가 수령할 수수료 등 총 수익 (원):\n(이 금액의 50%가 영업자에게 자동 분배됩니다)');
+        if (!revenueStr) return;
+        const revenue = parseInt(revenueStr.replace(/[^0-9]/g, ''));
+        if (!revenue) { showToast('수익이 올바르지 않습니다.', 'error'); return; }
+
+        if (!confirm(`실행 마킹: ${product}\n실행 금액: ${amount.toLocaleString()}원\n총 수익: ${revenue.toLocaleString()}원\n영업자 분배: ${Math.round(revenue * 0.5).toLocaleString()}원\n\n진행하시겠습니까?`)) return;
+
+        try {
+            const { data, error } = await sb.rpc('admin_mark_executed', {
+                p_match_id: matchId,
+                p_amount: amount,
+                p_product: product,
+                p_total_revenue: revenue
+            });
+            if (error) throw error;
+            showToast(`실행 처리 완료. 수수료 분배 #${data}`, 'success');
+            await loadMatchEvents();
+        } catch (err) {
+            showToast('실행 처리 실패: ' + err.message, 'error');
+        }
+    }
+
+    const matchFilter = $('matchFilter');
+    if (matchFilter) matchFilter.onchange = loadMatchEvents;
+
     window.loadLeadManagement = loadLeadManagement;
     window.loadAgentManagement = loadAgentManagement;
+    window.loadMatchEvents = loadMatchEvents;
 })();
