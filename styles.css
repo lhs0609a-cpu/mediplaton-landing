@@ -14215,3 +14215,138 @@ section.hero .hero-title .highlight strong.text-danger::after {
         height: 40px;
     }
 }
+
+/* ============================================================
+   디자인 임팩트 강화 v2
+   ============================================================ */
+
+/* Hero — 타이포 강화 */
+.hero-title {
+    font-weight: 800 !important;
+    letter-spacing: -0.025em !important;
+    font-size: clamp(36px, 5.5vw, 56px) !important;
+    line-height: 1.15 !important;
+}
+.hero-title .highlight {
+    background: linear-gradient(180deg, transparent 65%, rgba(20, 40, 160, 0.12) 65%);
+    padding: 0 4px;
+}
+.hero-subtitle {
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+    color: var(--gray-700) !important;
+    max-width: 540px;
+}
+
+/* Stats — 숫자 강조 */
+.stats-title {
+    font-size: clamp(28px, 4vw, 40px) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.25 !important;
+}
+.stat-number {
+    font-size: 52px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.03em !important;
+}
+.stat-unit {
+    font-size: 22px !important;
+}
+
+/* comp-banner — 임팩트 강화 */
+.comprehensive-banner h2 {
+    font-size: clamp(28px, 4vw, 42px) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.2 !important;
+}
+.comp-stat strong {
+    font-size: 36px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.02em !important;
+}
+.comp-stat strong .unit {
+    font-size: 0.5em !important;
+}
+.comp-banner-text p {
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 520px;
+}
+
+/* Section title 공통 강화 */
+.section-title {
+    font-weight: 800 !important;
+    letter-spacing: -0.022em !important;
+}
+
+/* 섹션 패딩 — 호흡 늘림 */
+.stats-section,
+.about-section,
+.services-overview,
+.comprehensive-banner {
+    padding-top: 110px;
+    padding-bottom: 110px;
+}
+
+/* badge — 더 정돈된 룩 */
+.section-badge,
+.stats-badge,
+.comp-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background: var(--primary-50, #E8EAF6);
+    color: var(--primary);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    border: 1px solid rgba(20, 40, 160, 0.1);
+}
+.stats-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 비교표 — 카드 느낌 강화 */
+.comparison-table.comparison-2col {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(20, 40, 160, 0.06);
+}
+.comparison-table.comparison-2col th {
+    padding: 18px 20px;
+    font-size: 15px;
+    font-weight: 700;
+}
+.comparison-table.comparison-2col td {
+    padding: 16px 20px;
+    font-size: 15px;
+}
+.comparison-table.comparison-2col tbody tr:not(:last-child) td {
+    border-bottom: 1px solid var(--border-light);
+}
+.comparison-table.comparison-2col tbody td:first-child {
+    background: var(--gray-50);
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+/* 모바일 보정 */
+@media (max-width: 768px) {
+    .stat-number { font-size: 36px !important; }
+    .comp-stat strong { font-size: 28px !important; }
+    .stats-section,
+    .about-section,
+    .services-overview,
+    .comprehensive-banner {
+        padding-top: 64px;
+        padding-bottom: 64px;
+    }
+}
