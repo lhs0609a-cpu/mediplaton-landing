@@ -714,7 +714,332 @@
     const matchFilter = $('matchFilter');
     if (matchFilter) matchFilter.onchange = loadMatchEvents;
 
+    let selectedCommissionIds = new Set();
+
+    async function loadCommissions() {
+        const filter = $('commFilter')?.value || 'pending';
+        let query = sb.from('commission_records').select(`
+            *,
+            agents ( name ),
+            lead_match_events ( executed_amount, executed_product, executed_at )
+        `).order('created_at', { ascending: false }).limit(500);
+
+        if (filter === 'pending') query = query.eq('settlement_status', 'pending');
+        if (filter === 'paid') query = query.eq('settlement_status', 'paid');
+
+        const { data, error } = await query;
+        if (error) { showToast('정산 로드 실패: ' + error.message, 'error'); return; }
+
+        const tbody = $('commTableBody');
+        const empty = $('commEmpty');
+        const table = $('commTable');
+
+        if (!data || !data.length) {
+            empty.style.display = 'block';
+            table.style.display = 'none';
+            return;
+        }
+
+        empty.style.display = 'none';
+        table.style.display = 'table';
+
+        tbody.innerHTML = data.map(c => {
+            const evt = c.lead_match_events || {};
+            const statusMap = {
+                'pending': '<span class="badge" style="background:#FEF3C7;color:#92400E;padding:3px 8px;border-radius:10px;font-size:11px;">대기</span>',
+                'paid': '<span class="badge" style="background:#D1FAE5;color:#065F46;padding:3px 8px;border-radius:10px;font-size:11px;">지급완료</span>',
+                'disputed': '<span class="badge" style="background:#FEE2E2;color:#991B1B;padding:3px 8px;border-radius:10px;font-size:11px;">이의</span>',
+                'penalty': '<span class="badge" style="background:#FEE2E2;color:#991B1B;padding:3px 8px;border-radius:10px;font-size:11px;">위약벌차감</span>'
+            };
+            return `<tr>
+                <td><input type="checkbox" class="comm-check" value="${c.id}" ${c.settlement_status !== 'pending' ? 'disabled' : ''}></td>
+                <td>${formatDate(c.created_at)}</td>
+                <td><strong>${escapeHtml(c.agents?.name || '-')}</strong></td>
+                <td>${escapeHtml(evt.executed_product || '-')}</td>
+                <td>${(evt.executed_amount || 0).toLocaleString()}원</td>
+                <td>${(c.total_revenue || 0).toLocaleString()}원</td>
+                <td>${(c.company_share || 0).toLocaleString()}원</td>
+                <td><strong style="color:var(--primary);">${(c.agent_share || 0).toLocaleString()}원</strong></td>
+                <td>${statusMap[c.settlement_status] || c.settlement_status}</td>
+                <td>${c.paid_at ? formatDate(c.paid_at) : '-'}</td>
+            </tr>`;
+        }).join('');
+
+        document.querySelectorAll('.comm-check').forEach(cb => {
+            cb.onchange = () => {
+                if (cb.checked) selectedCommissionIds.add(parseInt(cb.value));
+                else selectedCommissionIds.delete(parseInt(cb.value));
+            };
+        });
+
+        const sa = $('commSelectAll');
+        if (sa) sa.onchange = () => {
+            document.querySelectorAll('.comm-check:not(:disabled)').forEach(cb => {
+                cb.checked = sa.checked;
+                cb.dispatchEvent(new Event('change'));
+            });
+        };
+    }
+
+    async function bulkPayCommissions() {
+        if (!selectedCommissionIds.size) { showToast('선택된 정산이 없습니다.', 'error'); return; }
+        if (!confirm(`${selectedCommissionIds.size}건을 지급완료 처리하시겠습니까?`)) return;
+
+        try {
+            const { data, error } = await sb.rpc('admin_bulk_pay_commissions', {
+                p_commission_ids: [...selectedCommissionIds]
+            });
+            if (error) throw error;
+            showToast(`${data}건 지급 처리 완료`, 'success');
+            selectedCommissionIds.clear();
+            await loadCommissions();
+            await loadMonthlyMatrix();
+        } catch (err) {
+            showToast('지급 실패: ' + err.message, 'error');
+        }
+    }
+
+    async function loadMonthlyMatrix() {
+        const { data, error } = await sb.from('v_agent_monthly_summary')
+            .select('*').order('month', { ascending: false }).limit(60);
+
+        if (error || !data) return;
+        const tbody = $('monthlyTableBody');
+        if (!tbody) return;
+
+        if (!data.length) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--gray-500);padding:24px;">데이터 없음</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = data.map(r => `<tr>
+            <td>${r.month ? r.month.slice(0, 7) : '-'}</td>
+            <td><strong>${escapeHtml(r.agent_name || '-')}</strong></td>
+            <td>${r.deal_count}건</td>
+            <td>${(r.total_revenue || 0).toLocaleString()}원</td>
+            <td><strong style="color:var(--primary);">${(r.agent_share_total || 0).toLocaleString()}원</strong></td>
+            <td style="color:var(--success);">${(r.paid_amount || 0).toLocaleString()}원</td>
+            <td style="color:var(--warning);">${(r.pending_amount || 0).toLocaleString()}원</td>
+            <td style="color:var(--danger);">${(r.penalty_offset_amount || 0).toLocaleString()}원</td>
+        </tr>`).join('');
+    }
+
+    async function loadAuditPenalty() {
+        await Promise.all([
+            loadAnomalies(),
+            loadPenalties(),
+            loadPenaltySummary(),
+            loadAccessLogs()
+        ]);
+    }
+
+    async function loadAnomalies() {
+        const { data, error } = await sb.from('v_access_anomalies').select('*').limit(100);
+        const tbody = $('anomalyTableBody');
+        const empty = $('anomalyEmpty');
+        const table = $('anomalyTable');
+        if (error || !data || !data.length) {
+            tbody.innerHTML = '';
+            empty.style.display = 'block';
+            table.style.display = 'none';
+            const badge = $('auditBadge'); if (badge) badge.textContent = 0;
+            return;
+        }
+        empty.style.display = 'none';
+        table.style.display = 'table';
+
+        const badge = $('auditBadge');
+        if (badge) badge.textContent = data.length;
+
+        tbody.innerHTML = data.map(a => `<tr style="background:#FEF3C7;">
+            <td>${formatDate(a.detected_at)}</td>
+            <td><strong>${escapeHtml(a.agent_name || '-')}</strong></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B;padding:3px 8px;border-radius:10px;font-size:11px;">${a.rule}</span></td>
+            <td><strong>${a.cnt}건</strong></td>
+            <td>${escapeHtml(a.description)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="window._issuePenaltyForAgent && window._issuePenaltyForAgent('${a.agent_id}')">위약벌 발행</button>
+            </td>
+        </tr>`).join('');
+    }
+
+    async function loadPenalties() {
+        const { data, error } = await sb.from('penalty_records').select(`
+            *, agents ( name ), leads ( name, phone )
+        `).order('issued_at', { ascending: false }).limit(200);
+
+        const tbody = $('penaltyTableBody');
+        const empty = $('penaltyEmpty');
+        const table = $('penaltyTable');
+
+        if (error || !data || !data.length) {
+            empty.style.display = 'block';
+            table.style.display = 'none';
+            return;
+        }
+        empty.style.display = 'none';
+        table.style.display = 'table';
+
+        const typeMap = {
+            'nda_breach': 'NDA 위반',
+            'undisclosed_execution': '묵인실행',
+            'other': '기타'
+        };
+        const statusMap = {
+            'issued': '<span class="badge" style="background:#FEE2E2;color:#991B1B;padding:3px 8px;border-radius:10px;font-size:11px;">미수</span>',
+            'collected': '<span class="badge" style="background:#D1FAE5;color:#065F46;padding:3px 8px;border-radius:10px;font-size:11px;">회수</span>',
+            'litigation': '<span class="badge" style="background:#E0E7FF;color:#3730A3;padding:3px 8px;border-radius:10px;font-size:11px;">소송</span>',
+            'waived': '<span class="badge" style="background:var(--gray-200);color:var(--gray-700);padding:3px 8px;border-radius:10px;font-size:11px;">면제</span>'
+        };
+
+        tbody.innerHTML = data.map(p => {
+            const lead = p.leads ? `${escapeHtml(p.leads.name)} (${escapeHtml(p.leads.phone)})` : '-';
+            return `<tr>
+                <td>${formatDate(p.issued_at)}</td>
+                <td><strong>${escapeHtml(p.agents?.name || '-')}</strong></td>
+                <td>${typeMap[p.penalty_type] || p.penalty_type}</td>
+                <td><strong style="color:var(--danger);">${(p.penalty_amount || 0).toLocaleString()}원</strong></td>
+                <td><small>${lead}</small></td>
+                <td>${statusMap[p.status] || p.status}</td>
+                <td>
+                    ${p.status === 'issued' ? `
+                        <button class="btn btn-success btn-sm" onclick="window._resolvePenalty && window._resolvePenalty(${p.id}, 'collected')">회수완료</button>
+                        <button class="btn btn-outline btn-sm" onclick="window._resolvePenalty && window._resolvePenalty(${p.id}, 'waived')">면제</button>
+                    ` : ''}
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    async function loadPenaltySummary() {
+        const { data } = await sb.from('v_agent_penalty_summary').select('*');
+        const tbody = $('penaltySummaryTableBody');
+        if (!tbody) return;
+
+        if (!data || !data.length) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:24px;">데이터 없음</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = data.map(s => `<tr>
+            <td><strong>${escapeHtml(s.agent_name || '-')}</strong></td>
+            <td>${s.penalty_count}건</td>
+            <td>${(s.total_amount || 0).toLocaleString()}원</td>
+            <td style="color:var(--danger);">${(s.outstanding_amount || 0).toLocaleString()}원</td>
+            <td style="color:var(--success);">${(s.collected_amount || 0).toLocaleString()}원</td>
+            <td style="color:var(--gray-500);">${(s.waived_amount || 0).toLocaleString()}원</td>
+            <td>${formatDate(s.last_issued_at)}</td>
+        </tr>`).join('');
+    }
+
+    async function loadAccessLogs() {
+        const { data } = await sb.from('lead_access_logs').select(`
+            *, agents ( name ), leads ( name )
+        `).order('accessed_at', { ascending: false }).limit(200);
+
+        const tbody = $('accessLogTableBody');
+        if (!tbody) return;
+
+        if (!data || !data.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray-500);padding:24px;">로그 없음</td></tr>';
+            return;
+        }
+
+        const actionMap = { 'view_list': '목록', 'view_detail': '상세', 'search': '검색', 'export_attempt': '내보내기 시도' };
+        tbody.innerHTML = data.map(l => `<tr>
+            <td>${formatDate(l.accessed_at)}</td>
+            <td>${escapeHtml(l.agents?.name || '-')}</td>
+            <td>${actionMap[l.action] || l.action}</td>
+            <td>${escapeHtml(l.leads?.name || '-')}</td>
+            <td><small>${escapeHtml(l.ip || '-')}</small></td>
+        </tr>`).join('');
+    }
+
+    async function issuePenaltyDialog(agentIdHint) {
+        const { data: agents } = await sb.from('agents').select('id, name').order('name');
+        if (!agents || !agents.length) { showToast('영업자가 없습니다.', 'error'); return; }
+
+        const agentList = agents.map((a, i) => `${i + 1}. ${a.name}`).join('\n');
+        let agentIdx;
+        if (agentIdHint) {
+            agentIdx = agents.findIndex(a => a.id === agentIdHint);
+        }
+        if (agentIdx == null || agentIdx < 0) {
+            const choice = prompt(`영업자 번호 선택:\n${agentList}`);
+            if (!choice) return;
+            agentIdx = parseInt(choice) - 1;
+            if (isNaN(agentIdx) || !agents[agentIdx]) { showToast('잘못된 선택', 'error'); return; }
+        }
+
+        const typeChoice = prompt('위약벌 유형 입력:\n1. NDA 위반 (DB 외부 반출/캡처)\n2. 묵인실행 (외부 채널 실행 미신고)\n3. 기타');
+        const typeMap = { '1': 'nda_breach', '2': 'undisclosed_execution', '3': 'other' };
+        const penaltyType = typeMap[typeChoice];
+        if (!penaltyType) { showToast('잘못된 선택', 'error'); return; }
+
+        const amountStr = prompt('위약벌 금액 (원, 기본 5,000,000):', '5000000');
+        if (!amountStr) return;
+        const amount = parseInt(amountStr.replace(/[^0-9]/g, ''));
+        if (!amount) { showToast('금액이 올바르지 않습니다.', 'error'); return; }
+
+        const evidence = prompt('근거/사유 (간략 메모):') || '';
+
+        if (!confirm(`${agents[agentIdx].name} 영업자에게 ${amount.toLocaleString()}원 위약벌을 발행합니다. 진행?`)) return;
+
+        try {
+            const { error } = await sb.rpc('admin_issue_penalty', {
+                p_agent_id: agents[agentIdx].id,
+                p_type: penaltyType,
+                p_amount: amount,
+                p_lead_id: null,
+                p_evidence: { note: evidence, issued_via: 'admin_ui' }
+            });
+            if (error) throw error;
+            showToast('위약벌 발행됨', 'success');
+            await loadPenalties();
+            await loadPenaltySummary();
+        } catch (err) {
+            showToast('발행 실패: ' + err.message, 'error');
+        }
+    }
+
+    async function resolvePenalty(penaltyId, newStatus) {
+        const note = prompt(`${newStatus === 'collected' ? '회수' : newStatus === 'waived' ? '면제' : '처리'} 사유:`) || '';
+        if (newStatus !== 'collected' && newStatus !== 'waived') return;
+
+        try {
+            const { error } = await sb.rpc('admin_resolve_penalty', {
+                p_penalty_id: penaltyId,
+                p_status: newStatus,
+                p_note: note
+            });
+            if (error) throw error;
+            showToast('처리 완료', 'success');
+            await loadPenalties();
+            await loadPenaltySummary();
+        } catch (err) {
+            showToast('처리 실패: ' + err.message, 'error');
+        }
+    }
+
+    const commFilter = $('commFilter');
+    if (commFilter) commFilter.onchange = loadCommissions;
+    const commPayBtn = $('commBulkPayBtn');
+    if (commPayBtn) commPayBtn.onclick = bulkPayCommissions;
+    const issuePBtn = $('issuePenaltyBtn');
+    if (issuePBtn) issuePBtn.onclick = () => issuePenaltyDialog();
+
+    const origLoadMatchEvents = loadMatchEvents;
+    loadMatchEvents = async function () {
+        await origLoadMatchEvents();
+        await loadCommissions();
+        await loadMonthlyMatrix();
+    };
+
+    window._issuePenaltyForAgent = issuePenaltyDialog;
+    window._resolvePenalty = resolvePenalty;
+
     window.loadLeadManagement = loadLeadManagement;
     window.loadAgentManagement = loadAgentManagement;
     window.loadMatchEvents = loadMatchEvents;
+    window.loadAuditPenalty = loadAuditPenalty;
 })();

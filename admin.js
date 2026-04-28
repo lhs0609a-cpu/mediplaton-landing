@@ -446,9 +446,12 @@ function switchTab(tab) {
     if (tab === 'lead-manage' && typeof loadLeadManagement === 'function') loadLeadManagement();
     if (tab === 'agent-manage' && typeof loadAgentManagement === 'function') loadAgentManagement();
     if (tab === 'match-events' && typeof loadMatchEvents === 'function') loadMatchEvents();
+    if (tab === 'audit-penalty' && typeof loadAuditPenalty === 'function') loadAuditPenalty();
 
     const matchSec = document.getElementById('matchEventsSection');
     if (matchSec) matchSec.style.display = tab === 'match-events' ? 'block' : 'none';
+    const auditSec = document.getElementById('auditPenaltySection');
+    if (auditSec) auditSec.style.display = tab === 'audit-penalty' ? 'block' : 'none';
 }
 
 // ─── Consultations ───

@@ -625,6 +625,10 @@
                     매칭/정산
                     <span class="tab-badge" id="matchBadge">0</span>
                 </button>
+                <button class="tab-btn" data-tab="audit-penalty">
+                    감사·위약벌
+                    <span class="tab-badge" id="auditBadge">0</span>
+                </button>
             </div>
 
             <!-- All Inquiries (통합 문의) -->
@@ -1327,6 +1331,146 @@ X 신협 데일리론 → 개인사업자만 가능
                 <div class="empty-state" id="matchEmpty" style="display: none;">
                     <h3>매칭 이벤트가 없습니다</h3>
                     <p>영업자 할당 DB와 일치하는 신규 inquiry가 들어오면 자동 생성됩니다.</p>
+                </div>
+
+                <hr style="margin:32px 0;border:none;border-top:1px solid var(--gray-200);">
+
+                <div class="data-header">
+                    <h2 style="font-size:16px;">정산 처리 (Commission)</h2>
+                    <div class="data-filters">
+                        <select class="filter-select" id="commFilter">
+                            <option value="pending">대기</option>
+                            <option value="paid">완료</option>
+                            <option value="all">전체</option>
+                        </select>
+                        <button class="btn btn-success btn-sm" id="commBulkPayBtn">선택 일괄 지급</button>
+                    </div>
+                </div>
+                <table class="data-table" id="commTable">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="commSelectAll"></th>
+                            <th>발생일</th>
+                            <th>영업자</th>
+                            <th>상품</th>
+                            <th>실행금액</th>
+                            <th>총수익</th>
+                            <th>회사몫</th>
+                            <th>영업자몫</th>
+                            <th>상태</th>
+                            <th>지급일</th>
+                        </tr>
+                    </thead>
+                    <tbody id="commTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="commEmpty" style="display: none;">
+                    <h3>정산 내역 없음</h3>
+                </div>
+
+                <hr style="margin:32px 0;border:none;border-top:1px solid var(--gray-200);">
+
+                <h2 style="font-size:16px;margin-bottom:16px;">월별 영업자 정산 요약</h2>
+                <table class="data-table" id="monthlyTable">
+                    <thead>
+                        <tr>
+                            <th>월</th>
+                            <th>영업자</th>
+                            <th>건수</th>
+                            <th>총수익</th>
+                            <th>영업자몫</th>
+                            <th>지급완료</th>
+                            <th>대기</th>
+                            <th>위약벌차감</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthlyTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- 감사·위약벌 -->
+            <div class="data-section" id="auditPenaltySection" style="display: none;">
+                <div class="data-header">
+                    <h2>이상 패턴 탐지</h2>
+                </div>
+                <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
+                    영업자별 비정상 열람 패턴을 자동 탐지합니다 (시간당 50건 / 일일 200건 초과)
+                </p>
+                <table class="data-table" id="anomalyTable">
+                    <thead>
+                        <tr>
+                            <th>탐지 시각</th>
+                            <th>영업자</th>
+                            <th>규칙</th>
+                            <th>건수</th>
+                            <th>설명</th>
+                            <th>액션</th>
+                        </tr>
+                    </thead>
+                    <tbody id="anomalyTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="anomalyEmpty" style="display: none;">
+                    <h3>이상 패턴 없음</h3>
+                    <p>모든 영업자의 열람 패턴이 정상 범위입니다.</p>
+                </div>
+
+                <hr style="margin:32px 0;border:none;border-top:1px solid var(--gray-200);">
+
+                <div class="data-header">
+                    <h2 style="font-size:16px;">위약벌 (Penalty)</h2>
+                    <button class="btn btn-danger btn-sm" id="issuePenaltyBtn">+ 위약벌 발행</button>
+                </div>
+                <table class="data-table" id="penaltyTable">
+                    <thead>
+                        <tr>
+                            <th>발행일</th>
+                            <th>영업자</th>
+                            <th>유형</th>
+                            <th>금액</th>
+                            <th>관련 Lead</th>
+                            <th>상태</th>
+                            <th>액션</th>
+                        </tr>
+                    </thead>
+                    <tbody id="penaltyTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="penaltyEmpty" style="display: none;">
+                    <h3>발행된 위약벌 없음</h3>
+                </div>
+
+                <hr style="margin:32px 0;border:none;border-top:1px solid var(--gray-200);">
+
+                <h2 style="font-size:16px;margin-bottom:16px;">영업자별 누적 위약벌</h2>
+                <table class="data-table" id="penaltySummaryTable">
+                    <thead>
+                        <tr>
+                            <th>영업자</th>
+                            <th>건수</th>
+                            <th>총액</th>
+                            <th>미수금</th>
+                            <th>회수</th>
+                            <th>면제</th>
+                            <th>최근발행</th>
+                        </tr>
+                    </thead>
+                    <tbody id="penaltySummaryTableBody"></tbody>
+                </table>
+
+                <hr style="margin:32px 0;border:none;border-top:1px solid var(--gray-200);">
+
+                <h2 style="font-size:16px;margin-bottom:16px;">최근 열람 로그 (최근 200건)</h2>
+                <div style="max-height:400px;overflow-y:auto;border:1px solid var(--gray-200);border-radius:var(--radius);">
+                    <table class="data-table" id="accessLogTable" style="margin:0;">
+                        <thead>
+                            <tr>
+                                <th>시각</th>
+                                <th>영업자</th>
+                                <th>액션</th>
+                                <th>Lead</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accessLogTableBody"></tbody>
+                    </table>
                 </div>
             </div>
 
