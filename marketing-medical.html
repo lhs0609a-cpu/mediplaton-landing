@@ -1335,8 +1335,8 @@
                     </div>
 
                     <div class="mkt-form-group">
-                        <label for="mktPreferredTime">상담 가능 시간</label>
-                        <select id="mktPreferredTime" name="preferred_time">
+                        <label for="mktPreferredTime">상담 가능 시간 <span class="required">*</span></label>
+                        <select id="mktPreferredTime" name="preferred_time" required>
                             <option value="">선택해주세요</option>
                             <option value="09-10">오전 9시~10시</option>
                             <option value="10-12">오전 10시~12시</option>
@@ -1345,6 +1345,20 @@
                             <option value="16-18">오후 4시~6시</option>
                             <option value="anytime">언제든 가능</option>
                         </select>
+                        <span class="mkt-form-error" id="mktPreferredTime-error"></span>
+                    </div>
+
+                    <div class="mkt-form-group">
+                        <label for="mktInflowChannel">유입 경로 <span class="required">*</span></label>
+                        <select id="mktInflowChannel" name="inflow_channel" required>
+                            <option value="">선택해주세요</option>
+                            <option value="blog">블로그</option>
+                            <option value="search">검색</option>
+                            <option value="email">이메일</option>
+                            <option value="youtube">유튜브</option>
+                            <option value="other">기타</option>
+                        </select>
+                        <span class="mkt-form-error" id="mktInflowChannel-error"></span>
                     </div>
                 </div>
 

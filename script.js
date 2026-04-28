@@ -300,7 +300,9 @@ function initForm() {
             { name: 'phone', label: '연락처' },
             { name: 'business', label: '업종' },
             { name: 'revenue', label: '월 카드매출' },
-            { name: 'region', label: '지역' }
+            { name: 'region', label: '지역' },
+            { name: 'preferred_time', label: '상담 가능 시간' },
+            { name: 'inflow_channel', label: '유입 경로' }
         ];
         let isValid = true;
         let firstErrorField = null;
@@ -365,6 +367,7 @@ function initForm() {
                         product: data.product || '',
                         message: data.message || '',
                         preferred_time: data.preferred_time || '',
+                        inflow_channel: data.inflow_channel || '',
                         source_page: sourcePage
                     });
                     console.log('✅ Supabase에 상담 신청 데이터 저장 완료');
@@ -396,6 +399,7 @@ function initForm() {
                             product: data.product || '',
                             message: data.message || '',
                             preferred_time: data.preferred_time || '',
+                            inflow_channel: data.inflow_channel || '',
                             source_page: sourcePage
                         })
                     });
@@ -1605,7 +1609,9 @@ function initMarketingForm() {
             { id: 'mktName', name: 'name', label: '성함' },
             { id: 'mktPhone', name: 'phone', label: '연락처' },
             { id: 'mktBusiness', name: 'business_type', label: '업종' },
-            { id: 'mktSize', name: 'clinic_size', label: '사업장 평수' }
+            { id: 'mktSize', name: 'clinic_size', label: '사업장 평수' },
+            { id: 'mktPreferredTime', name: 'preferred_time', label: '상담 가능 시간' },
+            { id: 'mktInflowChannel', name: 'inflow_channel', label: '유입 경로' }
         ];
 
         let isValid = true;
@@ -1663,6 +1669,7 @@ function initMarketingForm() {
                         clinic_size: data.clinic_size,
                         interests: interests,
                         preferred_time: data.preferred_time || '',
+                        inflow_channel: data.inflow_channel || '',
                         source_page: mktSourcePage
                     });
                     console.log('✅ Supabase에 마케팅 신청 데이터 저장 완료');
@@ -1675,6 +1682,7 @@ function initMarketingForm() {
                         clinic_size: data.clinic_size,
                         interests: interests,
                         preferred_time: data.preferred_time || '',
+                        inflow_channel: data.inflow_channel || '',
                         source_page: mktSourcePage
                     });
                 }
@@ -1688,6 +1696,7 @@ function initMarketingForm() {
                     clinic_size: data.clinic_size,
                     interests: interests,
                     preferred_time: data.preferred_time || '',
+                    inflow_channel: data.inflow_channel || '',
                     source_page: mktSourcePage
                 });
             }
@@ -1710,6 +1719,7 @@ function initMarketingForm() {
                             clinic_size: data.clinic_size,
                             interests: interests.join(', '),
                             preferred_time: data.preferred_time || '',
+                            inflow_channel: data.inflow_channel || '',
                             source_page: mktSourcePage
                         })
                     });

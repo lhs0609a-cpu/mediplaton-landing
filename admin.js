@@ -934,6 +934,14 @@ async function viewConsultation(id) {
             <span class="detail-value">${getProductLabel(data.product)}</span>
         </div>
         <div class="detail-row">
+            <span class="detail-label">상담 가능 시간</span>
+            <span class="detail-value">${getPreferredTimeLabel(data.preferred_time)}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">유입 경로</span>
+            <span class="detail-value">${getInflowChannelLabel(data.inflow_channel)}</span>
+        </div>
+        <div class="detail-row">
             <span class="detail-label">문의사항</span>
             <span class="detail-value">${escapeHtml(data.message) || '-'}</span>
         </div>
@@ -1584,10 +1592,10 @@ async function exportAllInquiriesCSV() {
         return;
     }
 
-    let csv = '일시,출처,성함,연락처,업종/직업,상태,비고\n';
+    let csv = '일시,출처,성함,연락처,업종/직업,상담가능시간,유입경로,상태,비고\n';
     csv += data.map(row => {
         const sourceInfo = getSourceLabel(normalizeSource(row));
-        return `"${formatDate(row.created_at)}","${sourceInfo.text}","${row.name}","${row.phone}","${(row._business || '').replace(/"/g, '""')}","${getStatusLabel(row.status || 'new')}","${(row._notes || '').replace(/"/g, '""')}"`;
+        return `"${formatDate(row.created_at)}","${sourceInfo.text}","${row.name}","${row.phone}","${(row._business || '').replace(/"/g, '""')}","${getPreferredTimeLabel(row.preferred_time)}","${getInflowChannelLabel(row.inflow_channel)}","${getStatusLabel(row.status || 'new')}","${(row._notes || '').replace(/"/g, '""')}"`;
     }).join('\n');
 
     const bom = '\uFEFF';
@@ -1610,9 +1618,9 @@ async function exportToCSV(type) {
             if (result.error) throw result.error;
             data = result.data;
             if (!data?.length) { showToast('내보낼 데이터가 없습니다.', 'error'); return; }
-            csv = '신청일시,성함,연락처,업종,월매출,지역,관심상품,문의사항,상태\n';
+            csv = '신청일시,성함,연락처,업종,월매출,지역,관심상품,상담가능시간,유입경로,문의사항,상태\n';
             csv += data.map(row =>
-                `"${formatDate(row.created_at)}","${row.name}","${row.phone}","${getBusinessLabel(row.business)}","${getRevenueLabel(row.revenue)}","${getRegionLabel(row.region)}","${getProductLabel(row.product)}","${(row.message || '').replace(/"/g, '""')}","${getStatusLabel(row.status)}"`
+                `"${formatDate(row.created_at)}","${row.name}","${row.phone}","${getBusinessLabel(row.business)}","${getRevenueLabel(row.revenue)}","${getRegionLabel(row.region)}","${getProductLabel(row.product)}","${getPreferredTimeLabel(row.preferred_time)}","${getInflowChannelLabel(row.inflow_channel)}","${(row.message || '').replace(/"/g, '""')}","${getStatusLabel(row.status)}"`
             ).join('\n');
         } else if (type === 'partners') {
             const result = await sb.from('partners').select('*').order('created_at', { ascending: false });
@@ -1685,6 +1693,16 @@ function getRegionLabel(value) {
 
 function getProductLabel(value) {
     const labels = { 'loan': '카드매출 담보대출', 'credit': '신협 데일리론', 'kb': 'KB국민카드 특별한도', 'rental': '의료장비 렌탈', 'deposit': '임차보증금 담보', 'purchase': '구매자금', 'consult': '모름 (상담 필요)' };
+    return labels[value] || value || '-';
+}
+
+function getPreferredTimeLabel(value) {
+    const labels = { '09-10': '오전 9시~10시', '10-12': '오전 10시~12시', '12-14': '오후 12시~2시', '14-16': '오후 2시~4시', '16-18': '오후 4시~6시', 'anytime': '언제든 가능' };
+    return labels[value] || value || '-';
+}
+
+function getInflowChannelLabel(value) {
+    const labels = { 'blog': '블로그', 'search': '검색', 'email': '이메일', 'youtube': '유튜브', 'other': '기타' };
     return labels[value] || value || '-';
 }
 

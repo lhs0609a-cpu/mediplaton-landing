@@ -1336,8 +1336,8 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="preferred_time">상담 가능 시간</label>
-                                <select id="preferred_time" name="preferred_time">
+                                <label for="preferred_time">상담 가능 시간 <span class="required">*</span></label>
+                                <select id="preferred_time" name="preferred_time" required aria-invalid="false" aria-describedby="preferred_time-error">
                                     <option value="">선택해주세요</option>
                                     <option value="09-10">오전 9시~10시</option>
                                     <option value="10-12">오전 10시~12시</option>
@@ -1346,6 +1346,19 @@
                                     <option value="16-18">오후 4시~6시</option>
                                     <option value="anytime">언제든 가능</option>
                                 </select>
+                                <span class="field-error" id="preferred_time-error" role="alert"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="inflow_channel">유입 경로 <span class="required">*</span></label>
+                                <select id="inflow_channel" name="inflow_channel" required aria-invalid="false" aria-describedby="inflow_channel-error">
+                                    <option value="">선택해주세요</option>
+                                    <option value="blog">블로그</option>
+                                    <option value="search">검색</option>
+                                    <option value="email">이메일</option>
+                                    <option value="youtube">유튜브</option>
+                                    <option value="other">기타</option>
+                                </select>
+                                <span class="field-error" id="inflow_channel-error" role="alert"></span>
                             </div>
                         </div>
                         <div class="form-group full">
