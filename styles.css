@@ -15047,3 +15047,496 @@ section.hero .hero-trust span {
         justify-content: center;
     }
 }
+
+/* ============================================================
+   Trust 강화 — Hero 인증 배지 + 인증 그리드 + 협력 병원 로고월
+   ============================================================ */
+
+/* Hero — 정식 제휴 마이크로 배지 */
+.hero-credentials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+    margin-top: 4px;
+}
+
+.hero-credential-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(20, 40, 160, 0.06);
+    border: 1px solid rgba(20, 40, 160, 0.14);
+    color: #1A3A8F;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    line-height: 1;
+}
+
+.hero-credential-item svg {
+    color: #2962FF;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .hero-credentials {
+        justify-content: center;
+        gap: 6px;
+    }
+    .hero-credential-item {
+        padding: 5px 10px;
+        font-size: 11.5px;
+    }
+}
+
+/* Trust 섹션 공통 — 하위 섹션 헤더 */
+.trust-section-head {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.trust-section-head .trust-partners-label {
+    margin-bottom: 12px;
+}
+
+.trust-section-title {
+    font-size: clamp(20px, 2.6vw, 28px);
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+/* 1) 공식 인증 배지 그리드 */
+.trust-credentials {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 960px;
+    margin: 36px auto 0;
+}
+
+.trust-credential {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.trust-credential:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(130, 177, 255, 0.3);
+}
+
+.trust-credential-icon {
+    color: #82B1FF;
+    flex-shrink: 0;
+}
+
+.trust-credential div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.trust-credential strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.trust-credential span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+    .trust-credentials {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-top: 28px;
+    }
+    .trust-credential {
+        padding: 14px 14px;
+        gap: 10px;
+    }
+    .trust-credential strong {
+        font-size: 13px;
+    }
+    .trust-credential span {
+        font-size: 11.5px;
+    }
+}
+
+/* 3) 협력 병의원 로고월 — 무한 마퀴 */
+.trust-clinics {
+    text-align: center;
+}
+
+.trust-clinic-marquee {
+    overflow: hidden;
+    position: relative;
+    margin-top: 18px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+.trust-clinic-track {
+    display: flex;
+    gap: 14px;
+    width: max-content;
+    animation: trust-clinic-scroll 60s linear infinite;
+}
+
+.trust-clinic-marquee--reverse .trust-clinic-track {
+    animation-direction: reverse;
+    animation-duration: 75s;
+}
+
+.trust-clinic-marquee:hover .trust-clinic-track {
+    animation-play-state: paused;
+}
+
+.trust-clinic-logo {
+    flex: 0 0 auto;
+    width: 168px;
+    height: 92px;
+    background: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 22px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trust-clinic-logo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(20, 40, 160, 0.18);
+}
+
+.trust-clinic-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.75;
+    transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.trust-clinic-logo:hover img {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+@keyframes trust-clinic-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+.trust-clinic-caption {
+    margin-top: 28px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.005em;
+}
+
+@media (max-width: 768px) {
+    .trust-clinic-logo {
+        width: 124px;
+        height: 70px;
+        padding: 12px 16px;
+    }
+    .trust-clinic-track {
+        gap: 10px;
+    }
+}
+
+/* 4) 제휴 금융사 — 티어 분리 */
+.trust-partners-tier + .trust-partners-tier {
+    margin-top: 36px;
+}
+
+.trust-tier-label {
+    display: block;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(130, 177, 255, 0.8);
+    margin-bottom: 16px;
+}
+
+.trust-partners-grid--cards {
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.trust-partners-grid--pg {
+    grid-template-columns: repeat(8, 1fr);
+}
+
+@media (max-width: 1024px) {
+    .trust-partners-grid--cards,
+    .trust-partners-grid--pg {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .trust-partners-grid--cards,
+    .trust-partners-grid--pg {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 모션 줄임 옵션 — 마퀴 정지 */
+@media (prefers-reduced-motion: reduce) {
+    .trust-clinic-track {
+        animation: none;
+    }
+    .trust-clinic-marquee {
+        overflow-x: auto;
+    }
+}
+
+/* ============================================================
+   Testimonials — 원장님 후기 카드
+   ============================================================ */
+.testimonials-section {
+    padding: 120px 0;
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+    position: relative;
+}
+
+.testimonials-section .section-header {
+    margin-bottom: 56px;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.testimonial-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(20, 40, 160, 0.08);
+    border-radius: 18px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 2px 8px rgba(20, 40, 160, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 36px rgba(20, 40, 160, 0.1);
+    border-color: rgba(20, 40, 160, 0.16);
+}
+
+.testimonial-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.testimonial-quote {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: #1A1F36;
+    letter-spacing: -0.01em;
+    quotes: none;
+    flex: 1;
+}
+
+.testimonial-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(20, 40, 160, 0.08);
+}
+
+.testimonial-result {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.testimonial-result > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.testimonial-result-label {
+    font-size: 11px;
+    color: #6B7280;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.testimonial-result strong {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1428A0;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.testimonial-author-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.testimonial-author > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.testimonial-author strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1A1F36;
+    line-height: 1.2;
+}
+
+.testimonial-author span {
+    font-size: 12px;
+    color: #6B7280;
+    line-height: 1.3;
+}
+
+.testimonial-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+    flex-wrap: wrap;
+    padding: 32px 40px;
+    background: #FFFFFF;
+    border: 1px solid rgba(20, 40, 160, 0.08);
+    border-radius: 18px;
+}
+
+.testimonial-summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.testimonial-summary-item strong {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1428A0;
+    letter-spacing: -0.025em;
+    line-height: 1;
+}
+
+.testimonial-summary-item strong span {
+    font-size: 0.5em;
+    color: #6B7280;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+.testimonial-summary-item > span {
+    font-size: 13px;
+    color: #6B7280;
+    font-weight: 500;
+}
+
+.testimonial-more-link {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1428A0;
+    text-decoration: none;
+    letter-spacing: -0.005em;
+    transition: color 0.2s ease;
+}
+
+.testimonial-more-link:hover {
+    color: #2962FF;
+}
+
+@media (max-width: 1024px) {
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+        max-width: 540px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonials-section {
+        padding: 64px 0;
+    }
+    .testimonial-card {
+        padding: 24px 22px;
+    }
+    .testimonial-quote {
+        font-size: 14.5px;
+    }
+    .testimonial-summary {
+        gap: 28px;
+        padding: 24px 20px;
+        flex-direction: column;
+    }
+    .testimonial-summary-item strong {
+        font-size: 28px;
+    }
+    .testimonial-more-link {
+        margin-left: 0;
+    }
+}
+
+/* ============================================================
+   Footer — 인증 배지 (아이콘 포함)
+   ============================================================ */
+.footer-cert-badge {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-cert-badge svg {
+    color: #82B1FF;
+    flex-shrink: 0;
+}
+
