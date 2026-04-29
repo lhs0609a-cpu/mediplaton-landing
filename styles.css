@@ -15289,6 +15289,60 @@ section.hero .hero-trust span {
     grid-template-columns: repeat(8, 1fr);
 }
 
+/* 중앙회 앵커 — 더 크고 강조 */
+.trust-partners-grid--anchors {
+    grid-template-columns: repeat(2, minmax(0, 280px));
+    justify-content: center;
+    gap: 20px;
+    max-width: 720px;
+}
+
+.trust-partner--anchor {
+    aspect-ratio: 5/2;
+    background: #FFFFFF;
+    border-color: rgba(20, 40, 160, 0.15);
+    padding: 18px 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.trust-partner--anchor img {
+    filter: none !important;
+    opacity: 1 !important;
+    max-height: 56px;
+}
+
+.trust-partner--anchor:hover {
+    background: #FFFFFF;
+    border-color: rgba(20, 40, 160, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(20, 40, 160, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* 흰 로고 (수협) — 짙은 카드 배경 */
+.trust-partner--dark {
+    background: linear-gradient(135deg, #1A3A8F 0%, #2962FF 100%) !important;
+    border-color: transparent !important;
+}
+
+.trust-partner--dark img {
+    filter: brightness(0) invert(1) !important;
+    opacity: 0.98 !important;
+}
+
+@media (max-width: 768px) {
+    .trust-partners-grid--anchors {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .trust-partner--anchor {
+        padding: 14px 18px;
+    }
+    .trust-partner--anchor img {
+        max-height: 40px;
+    }
+}
+
 @media (max-width: 1024px) {
     .trust-partners-grid--cards,
     .trust-partners-grid--pg {
@@ -15538,5 +15592,244 @@ section.hero .hero-trust span {
 .footer-cert-badge svg {
     color: #82B1FF;
     flex-shrink: 0;
+}
+
+/* ============================================================
+   Hero — 정식 제휴 로고 스트립
+   ============================================================ */
+.hero-logo-strip {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(20, 40, 160, 0.08);
+}
+
+.hero-logo-strip-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6B7280;
+    margin-bottom: 14px;
+}
+
+.hero-logo-strip-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.hero-logo-card {
+    flex: 0 0 auto;
+    width: 88px;
+    height: 44px;
+    background: #FFFFFF;
+    border: 1px solid rgba(20, 40, 160, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    box-shadow: 0 2px 6px rgba(20, 40, 160, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-logo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(20, 40, 160, 0.1);
+    border-color: rgba(20, 40, 160, 0.2);
+}
+
+.hero-logo-card img {
+    max-width: 100%;
+    max-height: 22px;
+    object-fit: contain;
+    opacity: 0.88;
+}
+
+/* 흰 로고용 — 짙은 배경 */
+.hero-logo-card--dark {
+    background: linear-gradient(135deg, #1A3A8F 0%, #2962FF 100%);
+    border-color: transparent;
+}
+
+.hero-logo-card--dark img {
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+}
+
+.hero-logo-card--more {
+    background: rgba(20, 40, 160, 0.06);
+    border-style: dashed;
+    color: #1428A0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+@media (max-width: 768px) {
+    .hero-logo-strip {
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    .hero-logo-card {
+        width: 72px;
+        height: 38px;
+        padding: 6px 10px;
+    }
+    .hero-logo-card img {
+        max-height: 18px;
+    }
+    .hero-logo-mark { font-size: 12px; }
+    .hero-logo-name { font-size: 9px; }
+}
+
+/* ============================================================
+   Hero — 사진 콜라주 (메인 + 서브 2장 + 떠있는 배지)
+   ============================================================ */
+.hero-collage {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 14px;
+}
+
+.hero-collage-main {
+    grid-column: 1 / -1;
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 24px 56px rgba(20, 40, 160, 0.18),
+                0 0 0 1px rgba(20, 40, 160, 0.06);
+    aspect-ratio: 4/3;
+    background: #F1F5F9;
+}
+
+.hero-collage-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-collage-badge {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 14px 30px rgba(20, 40, 160, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hero-collage-badge-rating {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    line-height: 1;
+}
+
+.hero-collage-badge-rating strong {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1428A0;
+    letter-spacing: -0.02em;
+    margin-left: 4px;
+}
+
+.hero-collage-badge-rating span {
+    font-size: 13px;
+    color: #6B7280;
+    font-weight: 600;
+}
+
+.hero-collage-badge-label {
+    font-size: 11px;
+    color: #6B7280;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+}
+
+.hero-collage-sub {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 14px 30px rgba(20, 40, 160, 0.12),
+                0 0 0 1px rgba(20, 40, 160, 0.06);
+    aspect-ratio: 4/3;
+    background: #F1F5F9;
+}
+
+.hero-collage-sub img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-collage-pill {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #1428A0;
+    letter-spacing: -0.005em;
+    box-shadow: 0 6px 16px rgba(20, 40, 160, 0.14);
+    line-height: 1;
+}
+
+.hero-collage-pill svg {
+    color: #2962FF;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .hero-collage {
+        gap: 10px;
+    }
+    .hero-collage-main {
+        border-radius: 18px;
+    }
+    .hero-collage-sub {
+        border-radius: 14px;
+    }
+    .hero-collage-badge {
+        bottom: 12px;
+        left: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+    }
+    .hero-collage-badge-rating strong {
+        font-size: 20px;
+    }
+    .hero-collage-pill {
+        bottom: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        font-size: 10.5px;
+    }
+}
+
+/* 기존 .hero-photo 단일 이미지 스타일 — 콜라주로 교체되었으므로 무력화 */
+.hero-visual .hero-collage ~ .hero-photo,
+.hero-visual > .hero-photo:only-child {
+    display: none !important;
 }
 
