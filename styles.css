@@ -15921,3 +15921,55 @@ section.hero .hero-trust span {
     display: none !important;
 }
 
+/* ============================================================
+   Hero Title — 인용형 폭탄 카피
+   ============================================================ */
+.hero-title.hero-title--quote {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.hero-quote {
+    display: block;
+    font-size: clamp(36px, 5.6vw, 64px);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.028em;
+    color: #0A1B4D;
+}
+
+.hero-quote-num {
+    color: var(--primary, #1428A0);
+    background: linear-gradient(180deg, transparent 62%, rgba(20, 40, 160, 0.14) 62%);
+    padding: 0 4px;
+}
+
+.hero-tagline {
+    display: block;
+    font-size: clamp(16px, 1.4vw, 19px);
+    font-weight: 600;
+    line-height: 1.5;
+    color: #4B5563;
+    letter-spacing: -0.01em;
+}
+
+.hero-tagline strong {
+    color: #1428A0;
+    font-weight: 800;
+}
+
+@media (max-width: 768px) {
+    .hero-title.hero-title--quote {
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    .hero-quote {
+        font-size: clamp(28px, 8.5vw, 40px) !important;
+    }
+    .hero-tagline {
+        font-size: 14.5px !important;
+    }
+}
+
