@@ -209,7 +209,7 @@
             position: relative;
             z-index: 1;
             text-align: center;
-            max-width: 800px;
+            max-width: 1040px;
             margin: 0 auto;
         }
 
@@ -231,9 +231,21 @@
             margin-bottom: 16px;
         }
 
+        .hero-title .hero-title-line,
+        .hero-title .highlight {
+            display: block;
+            white-space: nowrap;
+        }
+
         .hero-title .highlight {
             color: var(--accent);
-            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .hero-title .hero-title-line,
+            .hero-title .highlight {
+                white-space: normal;
+            }
         }
 
         .hero-subtitle {
@@ -2403,7 +2415,7 @@
             <div class="hero-content">
                 <div class="hero-badge">이번 달 신규 파트너 47명 등록</div>
                 <h1 class="hero-title">
-                    "자금 필요한 원장님 한 분 연결했을 뿐인데"<br>
+                    <span class="hero-title-line">"자금 필요한 원장님 한 분 연결했을 뿐인데"</span>
                     <span class="highlight">통장에 300만원이 찍혔습니다</span>
                 </h1>
                 <p class="hero-subtitle">
