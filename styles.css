@@ -15330,6 +15330,27 @@ section.hero .hero-trust span {
     opacity: 1 !important;
 }
 
+/* 글자 카드 (수협처럼 이미지 로고 사용 어려운 경우) */
+.trust-partner--wordmark {
+    background: #FFFFFF !important;
+    border-color: rgba(20, 40, 160, 0.15) !important;
+}
+
+.trust-partner--wordmark span {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0A2E8C;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .trust-partner--wordmark span {
+        font-size: 22px;
+    }
+}
+
 /* 앵커 텍스트 카드 (로고 미보유 시) */
 .trust-partner--text {
     background: linear-gradient(135deg, #0A2E8C 0%, #2962FF 100%) !important;
@@ -15740,11 +15761,28 @@ section.hero .hero-trust span {
 .hero-logo-card--dark {
     background: linear-gradient(135deg, #0A2E8C 0%, #1A3A8F 100%);
     border-color: transparent;
+    padding: 4px 8px;
 }
 
 .hero-logo-card--dark img {
     filter: none;
     opacity: 1;
+    max-height: 32px !important;
+    max-width: 90% !important;
+}
+
+/* 글자 카드 (수협처럼 로고 사용 어려운 경우) */
+.hero-logo-card--wordmark {
+    background: #FFFFFF;
+}
+
+.hero-logo-card--wordmark span {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0A2E8C;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 .hero-logo-card--more {
