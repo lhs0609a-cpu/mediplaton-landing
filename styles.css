@@ -14873,3 +14873,177 @@ section.hero .hero-trust span {
         padding-bottom: 64px !important;
     }
 }
+
+/* ============================================================
+   Why 메디플라톤 섹션 — about + comp-banner 통합 (v6)
+   ============================================================ */
+
+.why-section {
+    padding: 120px 0;
+    background: #FFFFFF;
+}
+
+.why-header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 72px;
+}
+
+.why-header .section-badge {
+    margin-bottom: 20px;
+}
+
+.why-title {
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--gray-900);
+    margin: 0 0 20px;
+}
+
+.why-desc {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--gray-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.why-content {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+    align-items: center;
+}
+
+/* Pain-point 카드 */
+.why-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 36px;
+}
+
+.why-card {
+    padding: 28px;
+    background: var(--gray-50);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.why-card:hover {
+    border-color: var(--primary-100);
+    box-shadow: 0 4px 16px rgba(20, 40, 160, 0.05);
+}
+
+.why-card-quote {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+}
+
+.why-card p {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.why-card p strong {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* 핵심 포인트 리스트 */
+.why-points {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.why-points li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    color: var(--gray-700);
+}
+
+.why-points li svg {
+    flex-shrink: 0;
+}
+
+.why-points li strong {
+    color: var(--gray-900);
+    font-weight: 700;
+}
+
+/* CTA */
+.why-cta {
+    width: fit-content;
+}
+
+/* Visual — 단일 사진 */
+.why-visual {
+    position: relative;
+}
+
+.why-photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(20, 40, 160, 0.12);
+}
+
+/* 모바일 */
+@media (max-width: 1024px) {
+    .why-content {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+    .why-visual {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .why-photo {
+        aspect-ratio: 4/3;
+    }
+}
+
+@media (max-width: 768px) {
+    .why-section {
+        padding: 64px 0;
+    }
+    .why-header {
+        margin-bottom: 40px;
+    }
+    .why-title {
+        font-size: clamp(26px, 7vw, 36px);
+    }
+    .why-desc {
+        font-size: 15px;
+    }
+    .why-card {
+        padding: 20px;
+    }
+    .why-card-quote {
+        font-size: 15px;
+    }
+    .why-card p {
+        font-size: 14px;
+    }
+    .why-cta {
+        width: 100%;
+        justify-content: center;
+    }
+}
