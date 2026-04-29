@@ -14350,3 +14350,91 @@ section.hero .hero-title .highlight strong.text-danger::after {
         padding-bottom: 64px;
     }
 }
+
+/* ============================================================
+   Flat / Toss-style override (v3)
+   - 그라디언트 → 단색
+   - Hero 장식 모션 제거
+   ============================================================ */
+
+/* Primary CTA — 단색, 정적 그림자 */
+.btn-primary,
+.btn.btn-primary {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+    box-shadow: 0 1px 2px rgba(20, 40, 160, 0.12) !important;
+}
+.btn-primary:hover,
+.btn.btn-primary:hover {
+    background: var(--primary-dark) !important;
+    box-shadow: 0 4px 12px rgba(20, 40, 160, 0.22) !important;
+    transform: none !important;
+}
+
+/* Accent 버튼 — 단색 */
+.btn-accent {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    box-shadow: 0 1px 2px rgba(41, 98, 255, 0.12) !important;
+}
+.btn-accent:hover {
+    background: var(--primary) !important;
+    box-shadow: 0 4px 12px rgba(41, 98, 255, 0.22) !important;
+    transform: none !important;
+}
+
+/* Outline 버튼 — 호버 시 들썩임 제거 */
+.btn-outline:hover {
+    transform: none !important;
+}
+
+/* Hero 다크 테마 버튼도 단색으로 */
+.hero .btn-primary {
+    background: var(--accent) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(41, 98, 255, 0.35) !important;
+}
+.hero .btn-primary:hover {
+    background: #1E54E5 !important;
+    box-shadow: 0 6px 18px rgba(41, 98, 255, 0.45) !important;
+    transform: none !important;
+}
+.hero .btn-primary::after {
+    display: none !important;
+    animation: none !important;
+}
+
+/* Hero 카드 주변 앰비언트 글로우 제거 (카드 자체도 제거됨) */
+.hero .hero-card.main-card::before {
+    display: none !important;
+    animation: none !important;
+}
+
+/* Hero 타이틀 하이라이트 — 형광펜 그라디언트 제거, 단색 색상만 */
+.hero-title .highlight {
+    background: none !important;
+    padding: 0 !important;
+    color: var(--accent);
+}
+section.hero .hero-title .highlight,
+section.hero .hero-title .highlight strong {
+    color: #82B1FF;
+}
+
+/* 섹션 뱃지 — 단색 배경 (그라디언트 제거) */
+.section-badge {
+    background: var(--primary-50) !important;
+    border: 1px solid rgba(20, 40, 160, 0.08) !important;
+}
+
+/* Badge gold/light — 단색 (이미 평면이지만 명시적 적용) */
+.badge-gold {
+    background: var(--primary-50) !important;
+    color: var(--primary) !important;
+    border: 1px solid rgba(20, 40, 160, 0.12) !important;
+}
+
+/* 비디오 켄번스 줌 모션 정지 — 정적 배경 */
+.hero-video {
+    animation: none !important;
+}
