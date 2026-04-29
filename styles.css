@@ -15922,51 +15922,59 @@ section.hero .hero-trust span {
 }
 
 /* ============================================================
-   Hero Title — 인용형 폭탄 카피
+   Hero Title — 인용형 폭탄 카피 (다크 시네마틱 배경 대응)
    ============================================================ */
-.hero-title.hero-title--quote {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-bottom: 28px;
+.hero-title.hero-title--quote,
+section.hero .hero-title.hero-title--quote {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    margin-bottom: 28px !important;
+    /* 부모 .hero-title에 걸린 font-size·color !important를 자식에서 덮어쓰기 위해 부모 자체 사이즈 무력화 */
+    font-size: 0 !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
 }
 
 .hero-quote {
     display: block;
-    font-size: clamp(36px, 5.6vw, 64px);
+    font-size: clamp(40px, 6vw, 72px);
     font-weight: 800;
-    line-height: 1.18;
-    letter-spacing: -0.028em;
-    color: #0A1B4D;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: #FFFFFF;
 }
 
 .hero-quote-num {
-    color: var(--primary, #1428A0);
-    background: linear-gradient(180deg, transparent 62%, rgba(20, 40, 160, 0.14) 62%);
+    color: #82B1FF;
+    background: linear-gradient(180deg, transparent 60%, rgba(130, 177, 255, 0.22) 60%);
     padding: 0 4px;
+    font-weight: 900;
 }
 
 .hero-tagline {
     display: block;
-    font-size: clamp(16px, 1.4vw, 19px);
+    font-size: clamp(16px, 1.4vw, 20px);
     font-weight: 600;
     line-height: 1.5;
-    color: #4B5563;
+    color: rgba(255, 255, 255, 0.78);
     letter-spacing: -0.01em;
+    text-shadow: none;
 }
 
 .hero-tagline strong {
-    color: #1428A0;
+    color: #82B1FF;
     font-weight: 800;
 }
 
 @media (max-width: 768px) {
-    .hero-title.hero-title--quote {
-        gap: 14px;
-        margin-bottom: 20px;
+    .hero-title.hero-title--quote,
+    section.hero .hero-title.hero-title--quote {
+        gap: 12px !important;
+        margin-bottom: 18px !important;
     }
     .hero-quote {
-        font-size: clamp(28px, 8.5vw, 40px) !important;
+        font-size: clamp(30px, 9vw, 44px) !important;
     }
     .hero-tagline {
         font-size: 14.5px !important;
