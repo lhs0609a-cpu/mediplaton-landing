@@ -14437,4 +14437,439 @@ section.hero .hero-title .highlight strong {
 /* 비디오 켄번스 줌 모션 정지 — 정적 배경 */
 .hero-video {
     animation: none !important;
+    opacity: 0.28 !important;
+}
+
+/* ============================================================
+   Hero 임팩트 강화 v4 — 토스/대기업 톤
+   ============================================================ */
+
+/* 비디오 오버레이 더 짙게 — 텍스트 가독성·미니멀리즘 강화 */
+.hero-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(7, 11, 26, 0.88) 0%,
+        rgba(10, 17, 50, 0.82) 40%,
+        rgba(20, 40, 160, 0.55) 100%
+    ) !important;
+}
+
+/* Hero 섹션 — 살짝 더 큰 호흡 */
+.hero {
+    padding: 100px 0 120px !important;
+}
+
+/* Hero 그리드 — 텍스트에 더 큰 비중 (1.25:1) */
+.hero .container {
+    grid-template-columns: 1.25fr 1fr !important;
+    gap: 64px !important;
+    align-items: center !important;
+}
+
+.hero-content {
+    max-width: 640px !important;
+}
+
+/* 타이틀 — 대형 디스플레이 타이포 */
+.hero-title,
+section.hero .hero-title {
+    font-size: clamp(44px, 6.5vw, 76px) !important;
+    font-weight: 800 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.035em !important;
+    margin-bottom: 24px !important;
+    color: #FFFFFF !important;
+}
+
+/* 타이틀 하이라이트 — 좀 더 밝은 액센트 블루 */
+section.hero .hero-title .highlight,
+section.hero .hero-title .highlight strong {
+    color: #82B1FF !important;
+}
+
+/* 서브타이틀 — 다크 배경 가독성 + 사이즈 강화 (이전 버그 수정) */
+.hero-subtitle,
+section.hero .hero-subtitle {
+    font-size: clamp(18px, 1.5vw, 22px) !important;
+    font-weight: 400 !important;
+    line-height: 1.55 !important;
+    color: rgba(255, 255, 255, 0.82) !important;
+    max-width: 560px !important;
+    margin-bottom: 36px !important;
+}
+
+.hero-subtitle strong,
+section.hero .hero-subtitle strong {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+/* 신뢰 라인 — 살짝 키움 */
+section.hero .hero-trust span {
+    font-size: 15px !important;
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+/* CTA — 임팩트 강화 (Toss 메인 버튼 스타일) */
+.hero-actions {
+    gap: 12px !important;
+    margin-bottom: 40px !important;
+}
+
+.hero .btn-lg,
+.hero .btn.btn-lg {
+    padding: 20px 36px !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    border-radius: 14px !important;
+}
+
+/* Hero Proof — 인라인 사회적 증명 (박스 없는 타이포 only) */
+.hero-proof {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hero-proof-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hero-proof-item strong {
+    font-size: 28px;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.hero-proof-item strong span {
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 2px;
+    opacity: 0.85;
+}
+
+.hero-proof-item > span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+/* Hero photo — 살짝 더 크고 정돈된 프레임 */
+.hero-visual .hero-photo {
+    max-width: 560px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(130, 177, 255, 0.12) !important;
+}
+
+/* 태블릿 — 1열 스택 */
+@media (max-width: 1024px) {
+    .hero .container {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+    }
+    .hero-content {
+        max-width: 100% !important;
+    }
+    .hero-visual {
+        max-width: 560px;
+        margin: 0 auto;
+    }
+}
+
+/* 모바일 보정 */
+@media (max-width: 768px) {
+    .hero {
+        padding: 56px 0 64px !important;
+    }
+    .hero .container {
+        gap: 32px !important;
+    }
+    .hero-title,
+    section.hero .hero-title {
+        font-size: clamp(32px, 8vw, 44px) !important;
+        text-align: left !important;
+    }
+    .hero-subtitle,
+    section.hero .hero-subtitle {
+        font-size: 16px !important;
+        max-width: 100% !important;
+    }
+    .hero-actions {
+        flex-direction: column;
+        gap: 10px !important;
+    }
+    .hero-actions .btn {
+        width: 100%;
+    }
+    .hero-proof {
+        gap: 20px;
+        flex-wrap: wrap;
+        padding-top: 20px;
+    }
+    .hero-proof-item strong {
+        font-size: 22px;
+    }
+    .hero-proof-item strong span {
+        font-size: 14px;
+    }
+    .hero-proof-item > span {
+        font-size: 12px;
+    }
+    .hero .btn-lg,
+    .hero .btn.btn-lg {
+        padding: 16px 24px !important;
+        font-size: 15px !important;
+    }
+    .hero-visual .hero-photo {
+        max-width: 100% !important;
+        border-radius: 16px !important;
+    }
+}
+
+/* ============================================================
+   Trust Section — 통합 다크 섹션 (v5)
+   병원 마퀴 + 카드사 마퀴 + Stats → 1개 섹션
+   ============================================================ */
+
+.trust-section {
+    padding: 120px 0;
+    background: linear-gradient(180deg, #0A0F2E 0%, #0D1B6F 100%);
+    color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+}
+
+.trust-header {
+    text-align: center;
+    margin-bottom: 72px;
+}
+
+.trust-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(130, 177, 255, 0.85);
+    margin-bottom: 20px;
+}
+
+.trust-title {
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+/* 통계 — 박스 없는 타이포 only, 3 컬럼 */
+.trust-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 56px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trust-stat {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.trust-stat strong {
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    display: block;
+}
+
+.trust-stat-unit {
+    font-size: 0.42em;
+    font-weight: 700;
+    margin-left: 4px;
+    color: #82B1FF;
+    letter-spacing: 0;
+}
+
+.trust-stat-label {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 500;
+}
+
+.trust-footnote {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 24px;
+    letter-spacing: 0.01em;
+}
+
+/* 디바이더 — 섹션 내 하위 영역 분리 */
+.trust-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 80px auto 56px;
+    max-width: 960px;
+}
+
+/* 파트너 로고 — 정적 그리드, 모노톤 */
+.trust-partners {
+    text-align: center;
+}
+
+.trust-partners-label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 32px;
+}
+
+.trust-partners-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+.trust-partner {
+    aspect-ratio: 3/2;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 18px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.trust-partner:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(130, 177, 255, 0.25);
+}
+
+.trust-partner img {
+    max-width: 100%;
+    max-height: 28px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.65;
+    transition: opacity 0.2s ease;
+}
+
+.trust-partner:hover img {
+    opacity: 1;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    .trust-section {
+        padding: 64px 0;
+    }
+    .trust-header {
+        margin-bottom: 40px;
+    }
+    .trust-title {
+        font-size: clamp(26px, 7vw, 36px);
+    }
+    .trust-stats {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 40px 0;
+    }
+    .trust-stat strong {
+        font-size: clamp(40px, 12vw, 56px);
+    }
+    .trust-divider {
+        margin: 48px auto 32px;
+    }
+    .trust-partners-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    .trust-partner {
+        padding: 10px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .trust-partners-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================================
+   CTA 통일 — pill → 14px radius rect (Toss/Samsung 톤)
+   ============================================================ */
+
+.btn,
+.btn-primary,
+.btn-outline,
+.btn-accent,
+.btn-white,
+.header-cta .btn,
+.loan-cta-btn,
+.comp-cta {
+    border-radius: 14px !important;
+}
+
+/* 작은 사이즈 변형 — 12px */
+.header-cta .btn,
+.btn:not(.btn-lg) {
+    border-radius: 12px !important;
+}
+
+/* 큰 사이즈 — 14px (override) */
+.btn-lg {
+    border-radius: 14px !important;
+}
+
+/* badge / pill 형태는 유지 (radius-full) — 작은 정보 칩이라서 사각형이면 어색함 */
+
+/* ============================================================
+   섹션 패딩 일괄 통일 — 120px desktop / 64px mobile
+   ============================================================ */
+
+.loan-calc-section,
+.about-section,
+.services-overview,
+.comprehensive-banner,
+.consultation-section,
+.stats-section {
+    padding-top: 120px !important;
+    padding-bottom: 120px !important;
+}
+
+@media (max-width: 768px) {
+    .loan-calc-section,
+    .about-section,
+    .services-overview,
+    .comprehensive-banner,
+    .consultation-section,
+    .stats-section {
+        padding-top: 64px !important;
+        padding-bottom: 64px !important;
+    }
 }
