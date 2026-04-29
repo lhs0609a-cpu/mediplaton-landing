@@ -15319,15 +15319,15 @@ section.hero .hero-trust span {
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-/* 흰 로고 (수협) — 짙은 카드 배경 */
+/* 흰 로고 (수협) — 짙은 카드 배경 (필터 없이 그대로 노출) */
 .trust-partner--dark {
-    background: linear-gradient(135deg, #1A3A8F 0%, #2962FF 100%) !important;
+    background: linear-gradient(135deg, #0A2E8C 0%, #1A3A8F 100%) !important;
     border-color: transparent !important;
 }
 
 .trust-partner--dark img {
-    filter: brightness(0) invert(1) !important;
-    opacity: 0.98 !important;
+    filter: none !important;
+    opacity: 1 !important;
 }
 
 /* 앵커 텍스트 카드 (로고 미보유 시) */
@@ -15657,6 +15657,7 @@ section.hero .hero-trust span {
    ============================================================ */
 .hero-logo-strip {
     margin-top: 28px;
+    margin-bottom: 36px;
     padding-top: 24px;
     border-top: 1px solid rgba(20, 40, 160, 0.08);
 }
@@ -15735,15 +15736,15 @@ section.hero .hero-trust span {
     opacity: 0.9;
 }
 
-/* 흰 로고용 — 짙은 배경 */
+/* 흰 로고용 — 짙은 배경 (필터 없이 그대로 노출) */
 .hero-logo-card--dark {
-    background: linear-gradient(135deg, #1A3A8F 0%, #2962FF 100%);
+    background: linear-gradient(135deg, #0A2E8C 0%, #1A3A8F 100%);
     border-color: transparent;
 }
 
 .hero-logo-card--dark img {
-    filter: brightness(0) invert(1);
-    opacity: 0.95;
+    filter: none;
+    opacity: 1;
 }
 
 .hero-logo-card--more {
