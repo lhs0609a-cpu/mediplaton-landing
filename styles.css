@@ -15297,6 +15297,12 @@ section.hero .hero-trust span {
     max-width: 720px;
 }
 
+/* 3개 앵커 (신협·수협·KB) */
+.trust-partners-grid--anchors-3 {
+    grid-template-columns: repeat(3, minmax(0, 240px));
+    max-width: 820px;
+}
+
 .trust-partner--anchor {
     aspect-ratio: 5/2;
     background: #FFFFFF;
@@ -15414,11 +15420,21 @@ section.hero .hero-trust span {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
+    .trust-partners-grid--anchors-3 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
     .trust-partner--anchor {
         padding: 14px 18px;
     }
     .trust-partner--anchor img {
         max-height: 40px;
+    }
+    .trust-partners-grid--anchors-3 .trust-partner--anchor {
+        padding: 10px 12px;
+    }
+    .trust-partners-grid--anchors-3 .trust-partner--anchor img {
+        max-height: 32px;
     }
 }
 
@@ -16019,3 +16035,333 @@ section.hero .hero-title.hero-title--quote {
     }
 }
 
+/* ============================================================
+   모바일 종합 최적화 — 신규 컴포넌트 ≤480px 보정
+   ============================================================ */
+
+/* 작은 폰 (≤480px) */
+@media (max-width: 480px) {
+    /* Hero 인용 카피 — 더 빡빡하게 */
+    .hero-title.hero-title--quote,
+    section.hero .hero-title.hero-title--quote {
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+    .hero-quote {
+        font-size: clamp(26px, 8.5vw, 34px) !important;
+        line-height: 1.18 !important;
+    }
+    .hero-tagline {
+        font-size: 13.5px !important;
+        line-height: 1.45 !important;
+    }
+    .hero-quote-num {
+        padding: 0 2px;
+    }
+
+    /* Hero 신뢰 배지 (credentials) — 한 줄 콤팩트 */
+    .hero-credentials {
+        gap: 5px;
+    }
+    .hero-credential-item {
+        padding: 4px 9px;
+        font-size: 10.5px;
+    }
+
+    /* Hero 로고 스트립 — 카드 더 작게, 자연 wrap */
+    .hero-logo-strip {
+        margin-top: 20px;
+        margin-bottom: 28px;
+        padding-top: 16px;
+    }
+    .hero-logo-strip-label {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+    .hero-logo-strip-row {
+        gap: 6px;
+        justify-content: center;
+    }
+    .hero-logo-card {
+        width: 64px;
+        height: 36px;
+        padding: 5px 8px;
+        border-radius: 8px;
+    }
+    .hero-logo-card img {
+        max-height: 16px;
+    }
+    .hero-logo-card--dark {
+        padding: 3px 6px;
+    }
+    .hero-logo-card--dark img {
+        max-height: 26px !important;
+    }
+    .hero-logo-card--wordmark span {
+        font-size: 10.5px;
+    }
+    .hero-logo-card--more {
+        font-size: 11px;
+    }
+
+    /* Hero 콜라주 — 메인만 풀, 서브는 가로 2개 */
+    .hero-collage {
+        gap: 8px;
+        max-width: 100%;
+    }
+    .hero-collage-main {
+        border-radius: 14px;
+        aspect-ratio: 16/11;
+    }
+    .hero-collage-sub {
+        border-radius: 12px;
+        aspect-ratio: 4/3;
+    }
+    .hero-collage-badge {
+        bottom: 8px;
+        left: 8px;
+        padding: 7px 10px;
+        border-radius: 10px;
+    }
+    .hero-collage-badge-rating strong {
+        font-size: 17px;
+    }
+    .hero-collage-badge-label {
+        font-size: 10px;
+    }
+    .hero-collage-pill {
+        bottom: 7px;
+        left: 7px;
+        padding: 4px 8px;
+        font-size: 9.5px;
+        gap: 4px;
+    }
+    .hero-collage-pill svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    /* Hero proof — 줄바꿈 허용 */
+    .hero-proof {
+        gap: 14px !important;
+        padding-top: 16px !important;
+    }
+    .hero-proof-item strong {
+        font-size: 20px !important;
+    }
+    .hero-proof-item strong span {
+        font-size: 12px !important;
+    }
+    .hero-proof-item > span {
+        font-size: 11px !important;
+    }
+
+    /* Trust 섹션 헤더 */
+    .trust-section {
+        padding: 56px 0 !important;
+    }
+    .trust-header {
+        margin-bottom: 32px !important;
+    }
+    .trust-eyebrow {
+        font-size: 10.5px !important;
+        margin-bottom: 14px !important;
+    }
+    .trust-title {
+        font-size: clamp(22px, 6.6vw, 30px) !important;
+    }
+    .trust-section-title {
+        font-size: clamp(16px, 4.5vw, 22px);
+    }
+
+    /* Trust 인증 배지 — 1열 스택 (짧은 폰에서 2열은 너무 빡빡) */
+    .trust-credentials {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 20px;
+    }
+    .trust-credential {
+        padding: 12px 14px;
+    }
+    .trust-credential strong {
+        font-size: 13px;
+    }
+    .trust-credential span {
+        font-size: 11px;
+    }
+
+    /* Trust 통계 — 모바일 stack 이미 적용. 폰트만 조정 */
+    .trust-stats {
+        gap: 20px !important;
+        padding: 28px 0 !important;
+    }
+    .trust-stat strong {
+        font-size: clamp(34px, 11vw, 48px) !important;
+    }
+    .trust-stat-label {
+        font-size: 12.5px !important;
+    }
+    .trust-footnote {
+        font-size: 11px !important;
+        margin-top: 16px !important;
+    }
+    .trust-divider {
+        margin: 36px auto 24px !important;
+    }
+
+    /* 협력 병의원 마퀴 — 매우 작은 폰 */
+    .trust-clinic-logo {
+        width: 104px;
+        height: 60px;
+        padding: 9px 12px;
+        border-radius: 10px;
+    }
+    .trust-clinic-track {
+        gap: 8px !important;
+    }
+    .trust-clinic-caption {
+        margin-top: 18px;
+        font-size: 11px;
+    }
+
+    /* Trust 제휴사 그리드 — 2-3컬럼 균형 */
+    .trust-partners-grid--cards,
+    .trust-partners-grid--pg {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+    }
+    .trust-partners-grid--anchors {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+        max-width: 320px;
+    }
+    .trust-partner--anchor {
+        aspect-ratio: 5/2 !important;
+        padding: 12px 16px !important;
+    }
+    .trust-partner--anchor img {
+        max-height: 36px !important;
+    }
+    .trust-partner--wordmark span {
+        font-size: 20px !important;
+    }
+    .trust-partners-tier + .trust-partners-tier {
+        margin-top: 24px;
+    }
+    .trust-tier-label {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* Testimonial — 카드 padding·요약 stack */
+    .testimonials-section {
+        padding: 56px 0 !important;
+    }
+    .testimonials-section .section-header {
+        margin-bottom: 32px;
+    }
+    .testimonial-card {
+        padding: 20px 18px;
+        gap: 16px;
+        border-radius: 14px;
+    }
+    .testimonial-quote {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    .testimonial-result strong {
+        font-size: 15.5px;
+    }
+    .testimonial-result-label {
+        font-size: 10.5px;
+    }
+    .testimonial-author-initials {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    .testimonial-author strong {
+        font-size: 13px;
+    }
+    .testimonial-author span {
+        font-size: 11px;
+    }
+    .testimonial-summary {
+        gap: 18px;
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+    .testimonial-summary-item strong {
+        font-size: 24px;
+    }
+    .testimonial-summary-item > span {
+        font-size: 12px;
+    }
+    .testimonial-more-link {
+        font-size: 13px;
+    }
+
+    /* Footer 인증 배지 — wrap 보장 */
+    .footer-certifications {
+        gap: 6px;
+    }
+    .footer-cert-badge {
+        font-size: 11px;
+        padding: 6px 10px !important;
+    }
+}
+
+/* 매우 작은 폰 (≤360px) — 갤럭시 폴드 등 */
+@media (max-width: 360px) {
+    .hero-quote {
+        font-size: 24px !important;
+    }
+    .hero-tagline {
+        font-size: 12.5px !important;
+    }
+    .hero-logo-card {
+        width: 58px;
+        height: 32px;
+    }
+    .hero-logo-card img {
+        max-height: 14px;
+    }
+    .hero-logo-card--wordmark span {
+        font-size: 9.5px;
+    }
+    .trust-partners-grid--cards,
+    .trust-partners-grid--pg {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .testimonial-result {
+        gap: 8px;
+    }
+    .testimonial-result strong {
+        font-size: 14px;
+    }
+}
+
+/* 768px 추가 보정 — 신규 컴포넌트 누락분 */
+@media (max-width: 768px) {
+    /* Hero 콜라주 — sub 2장 가로 유지 (1열로 무너지지 않도록) */
+    .hero-collage {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    .hero-collage-main {
+        grid-column: 1 / -1;
+    }
+
+    /* Hero proof flex wrap 확실히 */
+    .hero-proof {
+        flex-wrap: wrap;
+    }
+    .hero-proof-item {
+        flex: 0 1 auto;
+        min-width: 90px;
+    }
+
+    /* Trust 통계 라벨 줄바꿈 허용 */
+    .trust-stat-label {
+        word-break: keep-all;
+    }
+}
