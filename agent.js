@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
     window.sb = sb;
 
     const CONTRACT_VERSION = 'v1.0';
