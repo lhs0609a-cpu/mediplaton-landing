@@ -190,15 +190,25 @@
 
             try {
                 const { data: signUpData, error: signUpErr } = await sb.auth.signUp({ email, password });
-                if (signUpErr) throw signUpErr;
-                if (!signUpData.user) throw new Error('회원가입에 실패했습니다.');
 
-                if (!signUpData.session) {
+                if (signUpErr) {
+                    const msg = (signUpErr.message || '').toLowerCase();
+                    const alreadyRegistered = msg.includes('already registered') || msg.includes('already been registered') || msg.includes('user already');
+                    if (!alreadyRegistered) throw signUpErr;
+
                     const { error: signInErr } = await sb.auth.signInWithPassword({ email, password });
                     if (signInErr) {
-                        showAlert('authSuccess', '회원가입 신청 접수. 이메일 확인 후 다시 로그인하면 프로필이 자동 등록됩니다.', 'success');
-                        $('registerForm').reset();
-                        return;
+                        throw new Error('이미 가입된 이메일입니다. 비밀번호가 맞다면 로그인 탭으로, 비밀번호를 잊으셨다면 관리자(0507-1434-3226)에게 문의해 주세요.');
+                    }
+                } else {
+                    if (!signUpData.user) throw new Error('회원가입에 실패했습니다.');
+                    if (!signUpData.session) {
+                        const { error: signInErr } = await sb.auth.signInWithPassword({ email, password });
+                        if (signInErr) {
+                            showAlert('authSuccess', '회원가입 신청 접수. 이메일 확인 후 다시 로그인하면 프로필이 자동 등록됩니다.', 'success');
+                            $('registerForm').reset();
+                            return;
+                        }
                     }
                 }
 
