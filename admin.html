@@ -306,6 +306,7 @@
         .source-marketing-medical { background: #DBEAFE; color: #1D4ED8; }
         .source-marketing-biz { background: #D1FAE5; color: #047857; }
         .source-partner { background: #EDE9FE; color: #6D28D9; }
+        .source-agency { background: #DBEAFE; color: #1D4ED8; font-weight: 700; }
         .source-promo { background: #FED7AA; color: #C2410C; }
 
         /* QNA Accordion */
@@ -595,6 +596,10 @@
                     파트너 관리
                     <span class="tab-badge" id="partnerBadge">0</span>
                 </button>
+                <button class="tab-btn" data-tab="agencies">
+                    가맹점 신청
+                    <span class="tab-badge" id="agencyBadge">0</span>
+                </button>
                 <button class="tab-btn" data-tab="customers">
                     고객 관리 (전체)
                 </button>
@@ -642,6 +647,7 @@
                             <option value="marketing-medical">병의원 마케팅</option>
                             <option value="marketing-biz">소상공인 마케팅</option>
                             <option value="partner">파트너 신청</option>
+                            <option value="agency">가맹점 신청</option>
                             <option value="promo">DSR 프로모</option>
                         </select>
                         <select class="filter-select" id="allStatusFilter">
@@ -752,6 +758,47 @@
                 <div class="empty-state" id="partnerEmpty" style="display: none;">
                     <h3>파트너 신청이 없습니다</h3>
                     <p>새로운 파트너 신청이 들어오면 여기에 표시됩니다.</p>
+                </div>
+            </div>
+
+            <!-- Agencies (가맹점 신청) Table -->
+            <div class="data-section" id="agenciesSection" style="display: none;">
+                <div class="data-header">
+                    <h2>가맹점 신청 목록</h2>
+                    <div class="data-filters">
+                        <select class="filter-select" id="agencyStatusFilter">
+                            <option value="all">전체 상태</option>
+                            <option value="new">신규</option>
+                            <option value="contacted">연락완료</option>
+                            <option value="in_review">실사중</option>
+                            <option value="contracted">계약체결</option>
+                            <option value="rejected">반려</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="대표자/상호/연락처 검색..." id="agencySearch">
+                        <button class="btn btn-outline btn-sm" id="exportAgencyBtn">CSV 다운로드</button>
+                    </div>
+                </div>
+                <div class="loading" id="agencyLoading"><div class="spinner"></div></div>
+                <table class="data-table" id="agencyTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>신청일시</th>
+                            <th>대표자</th>
+                            <th>연락처</th>
+                            <th>상호</th>
+                            <th>업종</th>
+                            <th>희망 권역</th>
+                            <th>조직</th>
+                            <th>월매칭</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agencyTableBody"></tbody>
+                </table>
+                <div class="empty-state" id="agencyEmpty" style="display: none;">
+                    <h3>가맹점 신청이 없습니다</h3>
+                    <p>새로운 가맹점 신청이 들어오면 여기에 표시됩니다.</p>
                 </div>
             </div>
 

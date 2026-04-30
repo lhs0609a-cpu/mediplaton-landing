@@ -374,13 +374,15 @@ async function loadStats() {
             { count: totalConsult },
             { count: activePartners },
             { count: pendingConsult },
-            { count: pendingPartner }
+            { count: pendingPartner },
+            { count: pendingAgency }
         ] = await Promise.all([
             sb.from('consultations').select('*', { count: 'exact', head: true }).gte('created_at', today),
             sb.from('consultations').select('*', { count: 'exact', head: true }),
             sb.from('partners').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
             sb.from('consultations').select('*', { count: 'exact', head: true }).eq('status', 'new'),
-            sb.from('partners').select('*', { count: 'exact', head: true }).in('status', ['new', 'pending'])
+            sb.from('partners').select('*', { count: 'exact', head: true }).in('status', ['new', 'pending']),
+            sb.from('agency_inquiries').select('*', { count: 'exact', head: true }).eq('status', 'new')
         ]);
 
         // Monthly transaction amount
@@ -401,6 +403,8 @@ async function loadStats() {
 
         document.getElementById('consultBadge').textContent = pendingConsult || 0;
         document.getElementById('partnerBadge').textContent = pendingPartner || 0;
+        const agencyBadgeEl = document.getElementById('agencyBadge');
+        if (agencyBadgeEl) agencyBadgeEl.textContent = pendingAgency || 0;
     } catch (error) {
         console.error('Stats error:', error);
     }
@@ -417,6 +421,8 @@ function switchTab(tab) {
     document.getElementById('allInquiriesSection').style.display = tab === 'all-inquiries' ? 'block' : 'none';
     document.getElementById('consultationsSection').style.display = tab === 'consultations' ? 'block' : 'none';
     document.getElementById('partnersSection').style.display = tab === 'partners' ? 'block' : 'none';
+    const agSec = document.getElementById('agenciesSection');
+    if (agSec) agSec.style.display = tab === 'agencies' ? 'block' : 'none';
     document.getElementById('customersSection').style.display = tab === 'customers' ? 'block' : 'none';
     document.getElementById('adminSettlementsSection').style.display = tab === 'admin-settlements' ? 'block' : 'none';
     document.getElementById('partnerQnaSection').style.display = tab === 'partner-qna' ? 'block' : 'none';
@@ -431,6 +437,7 @@ function switchTab(tab) {
     if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'consultations') loadConsultations();
     if (tab === 'partners') loadPartners();
+    if (tab === 'agencies') loadAgencies();
     if (tab === 'customers') loadCustomers();
     if (tab === 'admin-settlements') {
         loadAdminSettlements();
@@ -1470,6 +1477,7 @@ function getSourceLabel(source) {
 
     const s = source.toLowerCase();
     if (s === 'partner') return { text: '파트너 신청', cls: 'source-partner' };
+    if (s === 'agency') return { text: '가맹점 신청', cls: 'source-agency' };
     if (s === 'promo') return { text: 'DSR 프로모', cls: 'source-promo' };
     if (s.includes('marketing-medical') || s.includes('marketing_medical')) return { text: '병의원 마케팅', cls: 'source-marketing-medical' };
     if (s.includes('marketing-biz') || s.includes('marketing_biz')) return { text: '소상공인 마케팅', cls: 'source-marketing-biz' };
@@ -1483,6 +1491,7 @@ function getSourceBadge(source) {
 }
 
 function normalizeSource(row) {
+    if (row._table === 'agency_inquiries') return 'agency';
     if (row._table === 'partner_inquiries') return 'partner';
     if (row._table === 'promo_inquiries') return 'promo';
     const sp = (row.source_page || '').toLowerCase();
@@ -1507,11 +1516,12 @@ async function loadAllInquiries() {
     empty.style.display = 'none';
 
     try {
-        const [consultRes, mktRes, partnerRes, promoRes] = await Promise.all([
+        const [consultRes, mktRes, partnerRes, promoRes, agencyRes] = await Promise.all([
             sb.from('consultations').select('*').order('created_at', { ascending: false }),
             sb.from('marketing_inquiries').select('*').order('created_at', { ascending: false }),
             sb.from('partner_inquiries').select('*').order('created_at', { ascending: false }),
-            sb.from('promo_inquiries').select('*').order('created_at', { ascending: false })
+            sb.from('promo_inquiries').select('*').order('created_at', { ascending: false }),
+            sb.from('agency_inquiries').select('*').order('created_at', { ascending: false })
         ]);
 
         let allData = [];
@@ -1542,6 +1552,14 @@ async function loadAllInquiries() {
                 ...r, _table: 'promo_inquiries',
                 _business: r.business_type || '',
                 _notes: r.monthly_sales || ''
+            })));
+        }
+        if (agencyRes && agencyRes.data) {
+            allData = allData.concat(agencyRes.data.map(r => ({
+                ...r, _table: 'agency_inquiries',
+                _business: r.business_type || '가맹점',
+                _notes: [r.company_name, r.desired_region, r.team_size && (r.team_size + ' 조직')]
+                    .filter(Boolean).join(' / ')
             })));
         }
 
@@ -3735,3 +3753,142 @@ function setupRealtimeSubscription() {
         })
         .subscribe();
 }
+
+// ─── Agencies (가맹점 신청) ───
+
+const AGENCY_BIZ_LABELS = {
+    'loan-broker': '대출중개·금융영업',
+    'medical-device': '의료기기·소모품',
+    'hospital-consulting': '병원·약국 컨설팅',
+    'opening-consulting': '개원·EMR 컨설팅',
+    'marketing-agency': '병의원 마케팅',
+    'accounting': '회계·세무·노무',
+    'insurance': '보험·재무',
+    'new-startup': '신규 창업·투자',
+    'other': '기타'
+};
+
+const AGENCY_STATUS_LABELS = {
+    'new': '신규',
+    'contacted': '연락완료',
+    'in_review': '실사중',
+    'contracted': '계약체결',
+    'rejected': '반려'
+};
+
+function getAgencyBizLabel(v) { return AGENCY_BIZ_LABELS[v] || v || '-'; }
+function getAgencyStatusLabel(v) { return AGENCY_STATUS_LABELS[v] || v || '신규'; }
+
+async function loadAgencies() {
+    const loading = document.getElementById('agencyLoading');
+    const table = document.getElementById('agencyTable');
+    const empty = document.getElementById('agencyEmpty');
+    const tbody = document.getElementById('agencyTableBody');
+    if (!loading || !table || !empty || !tbody) return;
+
+    loading.style.display = 'flex';
+    table.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        let query = sb.from('agency_inquiries').select('*').order('created_at', { ascending: false });
+        const { data, error } = await query;
+        if (error) throw error;
+
+        const statusFilter = document.getElementById('agencyStatusFilter').value;
+        const search = (document.getElementById('agencySearch').value || '').trim().toLowerCase();
+
+        let rows = data || [];
+        if (statusFilter !== 'all') rows = rows.filter(r => (r.status || 'new') === statusFilter);
+        if (search) {
+            rows = rows.filter(r =>
+                (r.name || '').toLowerCase().includes(search) ||
+                (r.phone || '').toLowerCase().includes(search) ||
+                (r.company_name || '').toLowerCase().includes(search) ||
+                (r.desired_region || '').toLowerCase().includes(search)
+            );
+        }
+
+        loading.style.display = 'none';
+        if (rows.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        tbody.innerHTML = rows.map(r => `
+            <tr>
+                <td>${formatDate(r.created_at)}</td>
+                <td><strong>${escapeHtml(r.name || '')}</strong></td>
+                <td>${escapeHtml(r.phone || '')}</td>
+                <td>${escapeHtml(r.company_name || '-')}</td>
+                <td>${escapeHtml(getAgencyBizLabel(r.business_type))}</td>
+                <td>${escapeHtml(r.desired_region || '-')}</td>
+                <td>${escapeHtml(r.team_size || '-')}</td>
+                <td>${escapeHtml(r.monthly_capacity || '-')}</td>
+                <td><span class="status-badge status-${r.status || 'new'}">${getAgencyStatusLabel(r.status || 'new')}</span></td>
+                <td>
+                    <select class="filter-select" data-agency-id="${r.id}" onchange="updateAgencyStatus(this)" style="font-size:12px;padding:4px 8px;">
+                        ${Object.entries(AGENCY_STATUS_LABELS).map(([v, l]) =>
+                            `<option value="${v}"${(r.status || 'new') === v ? ' selected' : ''}>${l}</option>`
+                        ).join('')}
+                    </select>
+                </td>
+            </tr>
+        `).join('');
+
+        window._agenciesData = rows;
+    } catch (error) {
+        console.error('Load agencies error:', error);
+        loading.style.display = 'none';
+        empty.style.display = 'block';
+        showToast('가맹점 신청 데이터를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+async function updateAgencyStatus(selectEl) {
+    const id = selectEl.dataset.agencyId;
+    const newStatus = selectEl.value;
+    if (!id) return;
+
+    try {
+        const { error } = await sb.from('agency_inquiries').update({ status: newStatus }).eq('id', id);
+        if (error) throw error;
+        showToast('가맹점 상태가 업데이트되었습니다.', 'success');
+        loadStats();
+    } catch (error) {
+        console.error('Update agency status error:', error);
+        showToast('상태 업데이트에 실패했습니다.', 'error');
+    }
+}
+
+async function exportAgencyCSV() {
+    const data = window._agenciesData;
+    if (!data || data.length === 0) {
+        showToast('내보낼 데이터가 없습니다.', 'error');
+        return;
+    }
+    let csv = '신청일시,대표자,연락처,이메일,상호,사업자번호,업종,사업경력,희망권역,조직규모,월매칭,영업경력,상담시간,유입경로,상태,추가문의\n';
+    csv += data.map(r =>
+        `"${formatDate(r.created_at)}","${r.name || ''}","${r.phone || ''}","${r.email || ''}","${(r.company_name || '').replace(/"/g, '""')}","${r.business_number || ''}","${getAgencyBizLabel(r.business_type)}","${r.years_in_business || ''}","${(r.desired_region || '').replace(/"/g, '""')}","${r.team_size || ''}","${r.monthly_capacity || ''}","${r.sales_experience || ''}","${getPreferredTimeLabel(r.preferred_time)}","${getInflowChannelLabel(r.inflow_channel)}","${getAgencyStatusLabel(r.status || 'new')}","${(r.message || '').replace(/"/g, '""').replace(/\n/g, ' ')}"`
+    ).join('\n');
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `agency_inquiries_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    showToast('다운로드가 시작되었습니다.', 'success');
+}
+
+window.updateAgencyStatus = updateAgencyStatus;
+
+// 가맹점 필터·검색·CSV 이벤트 (DOM 준비 후 한 번)
+document.addEventListener('DOMContentLoaded', () => {
+    const sf = document.getElementById('agencyStatusFilter');
+    const sr = document.getElementById('agencySearch');
+    const ex = document.getElementById('exportAgencyBtn');
+    if (sf) sf.addEventListener('change', loadAgencies);
+    if (sr) sr.addEventListener('input', debounce(loadAgencies, 300));
+    if (ex) ex.addEventListener('click', exportAgencyCSV);
+});
