@@ -227,6 +227,8 @@
         try {
             await loadAgentCache();
             await renderBatchHistory();
+            await renderLeadStatusCards();
+            await renderAgentMatrix();
 
             const search = ($('leadSearch')?.value || '').trim();
             const statusFilter = $('leadStatusFilter')?.value || 'all';
@@ -285,6 +287,9 @@
         const assignment = lead.lead_assignments?.[0];
         const agentName = assignment?.agents?.name || '<span style="color:var(--gray-400);">미할당</span>';
         const status = assignment ? statusLabel(assignment.status) : '<span class="badge" style="background:var(--gray-100);color:var(--gray-700);">미할당</span>';
+        const detailBtn = assignment
+            ? `<button class="btn btn-outline btn-sm lead-detail-btn" data-assignment-id="${assignment.id}">상세</button>`
+            : '';
 
         return `<tr data-lead-id="${lead.id}">
             <td><input type="checkbox" class="lead-row-check" value="${lead.id}"></td>
@@ -298,8 +303,136 @@
             <td>${status}</td>
             <td>
                 <button class="btn btn-outline btn-sm lead-assign-btn" data-lead-id="${lead.id}">할당</button>
+                ${detailBtn}
             </td>
         </tr>`;
+    }
+
+    const STATUS_DEFS = [
+        { key: 'unassigned',    label: '미할당',     bg: '#F3F4F6', color: '#374151' },
+        { key: 'in_progress',   label: '진행중',     bg: '#DBEAFE', color: '#1E40AF' },
+        { key: 'contacting',    label: '연락중',     bg: '#FEF3C7', color: '#92400E' },
+        { key: 'no_answer',     label: '부재중',     bg: '#FEF3C7', color: '#92400E' },
+        { key: 'contracted',    label: '계약완료',   bg: '#D1FAE5', color: '#065F46' },
+        { key: 'other_product', label: '타상품',     bg: '#E0E7FF', color: '#3730A3' },
+        { key: 'rejected',      label: '거절',       bg: '#FEE2E2', color: '#991B1B' },
+        { key: 'discarded',     label: '폐기',       bg: '#E5E7EB', color: '#6B7280' }
+    ];
+
+    async function renderLeadStatusCards() {
+        const container = $('leadStatusCards');
+        if (!container) return;
+        const { data, error } = await sb.from('v_lead_status_counts').select('*');
+        if (error) {
+            container.innerHTML = `<div style="color:var(--danger);font-size:12px;">상태 집계 로드 실패: ${escapeHtml(error.message)}</div>`;
+            return;
+        }
+        const map = {};
+        let total = 0;
+        for (const r of (data || [])) { map[r.status] = r.count; total += r.count; }
+
+        const cards = STATUS_DEFS.map(def => {
+            const cnt = map[def.key] || 0;
+            return `<div style="background:var(--white);border:1px solid var(--gray-200);border-left:4px solid ${def.color};border-radius:var(--radius);padding:10px 12px;">
+                <div style="font-size:11px;color:var(--gray-500);">${def.label}</div>
+                <div style="font-size:20px;font-weight:700;color:${def.color};">${cnt.toLocaleString()}</div>
+            </div>`;
+        }).join('');
+
+        container.innerHTML = `<div style="background:var(--primary);color:white;border-radius:var(--radius);padding:10px 12px;">
+            <div style="font-size:11px;opacity:0.9;">전체 DB</div>
+            <div style="font-size:20px;font-weight:700;">${total.toLocaleString()}</div>
+        </div>` + cards;
+    }
+
+    async function renderAgentMatrix() {
+        const body = $('leadAgentMatrixBody');
+        if (!body) return;
+        const { data, error } = await sb.from('v_agent_lead_summary')
+            .select('*').order('total', { ascending: false });
+        if (error) {
+            body.innerHTML = `<div style="color:var(--danger);font-size:12px;">매트릭스 로드 실패: ${escapeHtml(error.message)}</div>`;
+            return;
+        }
+        if (!data || !data.length) {
+            body.innerHTML = `<div style="color:var(--gray-500);font-size:13px;">영업자 없음</div>`;
+            return;
+        }
+
+        const headers = ['영업자', '상태', '총', '진행중', '연락중', '부재중', '계약완료', '타상품', '거절', '폐기', '최근 활동', '다음 액션'];
+        const rows = data.map(r => `<tr>
+            <td><strong>${escapeHtml(r.agent_name || '-')}</strong></td>
+            <td>${agentStatusBadge(r.agent_status)}</td>
+            <td><strong>${r.total || 0}</strong></td>
+            <td>${r.in_progress || 0}</td>
+            <td>${r.contacting || 0}</td>
+            <td>${r.no_answer || 0}</td>
+            <td style="color:#065F46;font-weight:600;">${r.contracted || 0}</td>
+            <td>${r.other_product || 0}</td>
+            <td>${r.rejected || 0}</td>
+            <td style="color:var(--gray-500);">${r.discarded || 0}</td>
+            <td><small>${r.last_activity_at ? formatDate(r.last_activity_at) : '-'}</small></td>
+            <td><small>${r.next_action_at ? formatDate(r.next_action_at) : '-'}</small></td>
+        </tr>`).join('');
+
+        body.innerHTML = `<table class="data-table" style="margin:0;font-size:13px;">
+            <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+    }
+
+    async function openLeadDetailModal(assignmentId) {
+        const modal = $('adminLeadDetailModal');
+        const body = $('adminLeadDetailBody');
+        if (!modal || !body) return;
+
+        body.innerHTML = `<div style="text-align:center;padding:24px;color:var(--gray-500);">불러오는 중...</div>`;
+        modal.classList.add('active');
+
+        const { data, error } = await sb.from('v_lead_assignment_overview')
+            .select('*').eq('assignment_id', assignmentId).maybeSingle();
+        if (error || !data) {
+            body.innerHTML = `<div style="color:var(--danger);">조회 실패: ${escapeHtml(error?.message || 'not found')}</div>`;
+            return;
+        }
+
+        const { data: history } = await sb.from('lead_status_history')
+            .select('*').eq('assignment_id', assignmentId).order('changed_at', { ascending: false }).limit(20);
+
+        const histHtml = (history && history.length)
+            ? `<div style="margin-top:16px;">
+                <h4 style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--gray-700);">상태 변경 이력</h4>
+                <table class="data-table" style="margin:0;font-size:12px;">
+                    <thead><tr><th>일시</th><th>이전</th><th>이후</th><th>메모</th></tr></thead>
+                    <tbody>${history.map(h => `<tr>
+                        <td>${formatDate(h.changed_at)}</td>
+                        <td>${escapeHtml(h.previous_status || '-')}</td>
+                        <td>${escapeHtml(h.new_status || '-')}</td>
+                        <td><small>${escapeHtml(h.memo_snapshot || '-')}</small></td>
+                    </tr>`).join('')}</tbody>
+                </table>
+            </div>`
+            : `<div style="margin-top:16px;color:var(--gray-500);font-size:12px;">변경 이력 없음</div>`;
+
+        body.innerHTML = `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px;margin-bottom:16px;">
+                <div><span style="color:var(--gray-500);">고객명</span><br><strong>${escapeHtml(data.lead_name)}</strong></div>
+                <div><span style="color:var(--gray-500);">연락처</span><br><a href="tel:${escapeHtml(data.lead_phone)}" style="color:var(--primary);">${escapeHtml(data.lead_phone)}</a></div>
+                <div><span style="color:var(--gray-500);">업종</span><br>${escapeHtml(data.business_type || '-')}</div>
+                <div><span style="color:var(--gray-500);">지역</span><br>${escapeHtml(data.region || '-')}</div>
+                <div><span style="color:var(--gray-500);">출처</span><br><small>${escapeHtml(data.source || '-')}</small></div>
+                <div><span style="color:var(--gray-500);">담당 영업자</span><br><strong>${escapeHtml(data.agent_name)}</strong></div>
+                <div><span style="color:var(--gray-500);">현재 상태</span><br>${statusLabel(data.status)}</div>
+                <div><span style="color:var(--gray-500);">할당일</span><br>${formatDate(data.assigned_at)}</div>
+                <div><span style="color:var(--gray-500);">최근 활동</span><br>${formatDate(data.last_status_at)}</div>
+                <div><span style="color:var(--gray-500);">다음 액션</span><br>${data.next_action_at ? formatDate(data.next_action_at) : '<span style="color:var(--gray-400);">미설정</span>'}</div>
+            </div>
+            <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px;">
+                <div style="font-size:12px;color:var(--gray-500);margin-bottom:6px;">영업자 메모</div>
+                <div style="white-space:pre-wrap;font-size:13px;line-height:1.6;">${escapeHtml(data.memo || '-') || '<span style="color:var(--gray-400);">메모 없음</span>'}</div>
+            </div>
+            ${histHtml}
+        `;
     }
 
     function statusLabel(status) {
@@ -337,6 +470,10 @@
 
         document.querySelectorAll('.lead-assign-btn').forEach(btn => {
             btn.onclick = () => quickAssignLead(parseInt(btn.dataset.leadId));
+        });
+
+        document.querySelectorAll('.lead-detail-btn').forEach(btn => {
+            btn.onclick = () => openLeadDetailModal(parseInt(btn.dataset.assignmentId));
         });
     }
 

@@ -1314,6 +1314,13 @@ X 신협 데일리론 → 개인사업자만 가능
 
                 <div id="leadBatchHistory" style="margin-bottom:24px;"></div>
 
+                <div id="leadStatusCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:16px;"></div>
+
+                <details id="leadAgentMatrix" style="margin-bottom:16px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px 16px;" open>
+                    <summary style="cursor:pointer;font-weight:600;font-size:14px;">영업자별 진행 매트릭스</summary>
+                    <div id="leadAgentMatrixBody" style="margin-top:12px;overflow-x:auto;"></div>
+                </details>
+
                 <div class="loading" id="leadLoading"><div class="spinner"></div></div>
                 <table class="data-table" id="leadTable" style="display: none;">
                     <thead>
@@ -1562,6 +1569,17 @@ X 신협 데일리론 → 개인사업자만 가능
             </div>
 
         </main>
+    </div>
+
+    <!-- Admin Lead Detail Modal -->
+    <div class="modal-overlay" id="adminLeadDetailModal">
+        <div class="modal" style="max-width:640px;">
+            <div class="modal-header">
+                <h3>영업 DB 상세</h3>
+                <button class="modal-close" onclick="document.getElementById('adminLeadDetailModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body" id="adminLeadDetailBody"></div>
+        </div>
     </div>
 
     <!-- New Clinic Form Modal -->
