@@ -231,13 +231,14 @@
             const search = ($('leadSearch')?.value || '').trim();
             const statusFilter = $('leadStatusFilter')?.value || 'all';
 
+            const DISPLAY_LIMIT = 5000;
             let query = sb.from('leads').select(`
                 id, name, phone, business_type, region, source, created_at,
                 lead_assignments (
                     id, agent_id, status, assigned_at,
                     agents ( name )
                 )
-            `).order('created_at', { ascending: false }).limit(500);
+            `).order('created_at', { ascending: false }).limit(DISPLAY_LIMIT);
 
             if (search) {
                 query = query.or(`name.ilike.%${search}%,phone.ilike.%${search}%`);
@@ -257,7 +258,9 @@
                 filtered = filtered.filter(d => d.lead_assignments?.some(a => a.status === 'discarded'));
             }
 
-            $('leadBadge').textContent = filtered.length;
+            const { count: totalLeadCount } = await sb.from('leads')
+                .select('id', { count: 'exact', head: true });
+            $('leadBadge').textContent = totalLeadCount != null ? totalLeadCount : filtered.length;
 
             loading.style.display = 'none';
 
