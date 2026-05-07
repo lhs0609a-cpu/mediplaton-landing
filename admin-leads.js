@@ -393,6 +393,86 @@
         }
     }
 
+    async function bulkAssignAllUnassigned() {
+        await loadAgentCache();
+        if (!agentCache.length) {
+            showToast('활성 영업자가 없습니다.', 'error');
+            return;
+        }
+
+        const list = agentCache.map((a, i) => `${i + 1}. ${a.name}`).join('\n');
+        const choice = prompt(`전체 미할당 DB를 받을 영업자 번호 입력:\n${list}`);
+        if (!choice) return;
+        const idx = parseInt(choice) - 1;
+        if (isNaN(idx) || !agentCache[idx]) {
+            showToast('잘못된 선택', 'error');
+            return;
+        }
+        const targetAgent = agentCache[idx];
+
+        const btn = $('leadAssignAllUnassignedBtn');
+        if (btn) { btn.disabled = true; btn.textContent = '미할당 조회 중...'; }
+
+        try {
+            const allUnassignedIds = [];
+            const pageSize = 1000;
+            let page = 0;
+            while (true) {
+                const { data, error } = await sb.from('leads')
+                    .select('id, lead_assignments(id)')
+                    .range(page * pageSize, (page + 1) * pageSize - 1);
+                if (error) throw error;
+                if (!data || !data.length) break;
+                for (const lead of data) {
+                    if (!lead.lead_assignments || lead.lead_assignments.length === 0) {
+                        allUnassignedIds.push(lead.id);
+                    }
+                }
+                if (data.length < pageSize) break;
+                page++;
+            }
+
+            if (!allUnassignedIds.length) {
+                showToast('미할당 DB가 없습니다.', 'info');
+                return;
+            }
+
+            if (!confirm(`미할당 ${allUnassignedIds.length}건을 [${targetAgent.name}] 영업자에게 모두 할당하시겠습니까?`)) return;
+
+            if (btn) btn.textContent = `할당 중 (0/${allUnassignedIds.length})...`;
+
+            const { data: { user } } = await sb.auth.getUser();
+            const adminId = user?.id || null;
+
+            const rows = allUnassignedIds.map(lid => ({
+                lead_id: lid,
+                agent_id: targetAgent.id,
+                assigned_by: adminId
+            }));
+
+            const chunkSize = 500;
+            let inserted = 0;
+            for (let i = 0; i < rows.length; i += chunkSize) {
+                const chunk = rows.slice(i, i + chunkSize);
+                const { data, error } = await sb.from('lead_assignments').upsert(chunk, {
+                    onConflict: 'lead_id,agent_id',
+                    ignoreDuplicates: true
+                }).select('id');
+                if (error) throw error;
+                inserted += (data || []).length;
+                if (btn) btn.textContent = `할당 중 (${Math.min(i + chunkSize, rows.length)}/${rows.length})...`;
+            }
+
+            showToast(`${inserted}건 일괄 할당 완료 → ${targetAgent.name}`, 'success');
+            await loadLeadManagement();
+        } catch (err) {
+            console.error(err);
+            showToast('일괄 할당 실패: ' + err.message, 'error');
+        } finally {
+            if (btn) { btn.disabled = false; btn.textContent = '전체 미할당 일괄 할당'; }
+        }
+    }
+
     async function quickAssignLead(leadId) {
         if (!agentCache.length) {
             showToast('활성 영업자가 없습니다.', 'error');
@@ -593,6 +673,9 @@
         if (search) search.addEventListener('input', debounce(loadLeadManagement, 400));
         const sf = $('leadStatusFilter');
         if (sf) sf.onchange = loadLeadManagement;
+
+        const assignAllBtn = $('leadAssignAllUnassignedBtn');
+        if (assignAllBtn) assignAllBtn.onclick = bulkAssignAllUnassigned;
 
         const agentSearch = $('agentSearch');
         if (agentSearch) agentSearch.addEventListener('input', debounce(loadAgentManagement, 400));
