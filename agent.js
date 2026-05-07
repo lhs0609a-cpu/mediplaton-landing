@@ -189,47 +189,33 @@
             const btn = $('registerBtn'); btn.disabled = true; btn.textContent = '신청 중...';
 
             try {
-                const { data: signUpData, error: signUpErr } = await sb.auth.signUp({ email, password });
+                await sb.auth.signOut().catch(() => {});
 
-                const isObfuscatedExisting = !signUpErr
-                    && signUpData
-                    && signUpData.user
-                    && Array.isArray(signUpData.user.identities)
-                    && signUpData.user.identities.length === 0;
-
-                let activeSession = (signUpData && signUpData.session) || null;
-
+                const { error: signUpErr } = await sb.auth.signUp({ email, password });
                 if (signUpErr) {
                     const msg = (signUpErr.message || '').toLowerCase();
                     const alreadyRegistered = msg.includes('already registered') || msg.includes('already been registered') || msg.includes('user already');
                     if (!alreadyRegistered) throw signUpErr;
-
-                    const { data: signInData, error: signInErr } = await sb.auth.signInWithPassword({ email, password });
-                    if (signInErr || !signInData.session) {
-                        throw new Error('이미 가입된 이메일입니다. 비밀번호가 맞다면 로그인 탭으로, 비밀번호를 잊으셨다면 관리자(0507-1434-3226)에게 문의해 주세요.');
-                    }
-                    activeSession = signInData.session;
-                } else if (isObfuscatedExisting) {
-                    const { data: signInData, error: signInErr } = await sb.auth.signInWithPassword({ email, password });
-                    if (signInErr || !signInData.session) {
-                        throw new Error('이미 가입된 이메일입니다. 비밀번호가 맞다면 로그인 탭으로, 비밀번호를 잊으셨다면 관리자(0507-1434-3226)에게 문의해 주세요.');
-                    }
-                    activeSession = signInData.session;
-                } else {
-                    if (!signUpData.user) throw new Error('회원가입에 실패했습니다.');
-                    if (!signUpData.session) {
-                        const { data: signInData, error: signInErr } = await sb.auth.signInWithPassword({ email, password });
-                        if (signInErr || !signInData.session) {
-                            showAlert('authSuccess', '회원가입 신청 접수. 이메일 인증 메일을 확인하신 뒤 로그인 탭으로 다시 로그인하면 프로필 입력이 이어집니다.', 'success');
-                            $('registerForm').reset();
-                            return;
-                        }
-                        activeSession = signInData.session;
-                    }
                 }
 
+                const { data: signInData, error: signInErr } = await sb.auth.signInWithPassword({ email, password });
+
+                if (signInErr) {
+                    const lower = (signInErr.message || '').toLowerCase();
+                    if (lower.includes('email not confirmed')) {
+                        showAlert('authSuccess', '인증 메일이 발송되었습니다. 이메일에서 링크를 클릭한 뒤 로그인 탭에서 다시 시도해 주세요.', 'success');
+                        $('registerForm').reset();
+                        return;
+                    }
+                    if (lower.includes('invalid login') || lower.includes('invalid_credentials')) {
+                        throw new Error('이미 가입된 이메일이지만 비밀번호가 일치하지 않습니다. 로그인 탭에서 시도하시거나 관리자(0507-1434-3226)에게 비밀번호 재설정을 요청해 주세요.');
+                    }
+                    throw signInErr;
+                }
+
+                const activeSession = signInData && signInData.session;
                 if (!activeSession || !activeSession.access_token) {
-                    throw new Error('세션이 만들어지지 않았습니다. 이메일 인증을 완료한 뒤 로그인 탭에서 다시 시도해 주세요.');
+                    throw new Error('세션 발급 실패: signInData.session=' + JSON.stringify(signInData && signInData.session));
                 }
 
                 await sb.auth.setSession({
