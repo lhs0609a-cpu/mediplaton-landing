@@ -197,6 +197,8 @@
                     && Array.isArray(signUpData.user.identities)
                     && signUpData.user.identities.length === 0;
 
+                let activeSession = (signUpData && signUpData.session) || null;
+
                 if (signUpErr) {
                     const msg = (signUpErr.message || '').toLowerCase();
                     const alreadyRegistered = msg.includes('already registered') || msg.includes('already been registered') || msg.includes('user already');
@@ -206,11 +208,13 @@
                     if (signInErr || !signInData.session) {
                         throw new Error('이미 가입된 이메일입니다. 비밀번호가 맞다면 로그인 탭으로, 비밀번호를 잊으셨다면 관리자(0507-1434-3226)에게 문의해 주세요.');
                     }
+                    activeSession = signInData.session;
                 } else if (isObfuscatedExisting) {
                     const { data: signInData, error: signInErr } = await sb.auth.signInWithPassword({ email, password });
                     if (signInErr || !signInData.session) {
                         throw new Error('이미 가입된 이메일입니다. 비밀번호가 맞다면 로그인 탭으로, 비밀번호를 잊으셨다면 관리자(0507-1434-3226)에게 문의해 주세요.');
                     }
+                    activeSession = signInData.session;
                 } else {
                     if (!signUpData.user) throw new Error('회원가입에 실패했습니다.');
                     if (!signUpData.session) {
@@ -220,24 +224,46 @@
                             $('registerForm').reset();
                             return;
                         }
+                        activeSession = signInData.session;
                     }
                 }
 
-                const { data: { session: activeSession } } = await sb.auth.getSession();
-                if (!activeSession) {
+                if (!activeSession || !activeSession.access_token) {
                     throw new Error('세션이 만들어지지 않았습니다. 이메일 인증을 완료한 뒤 로그인 탭에서 다시 시도해 주세요.');
                 }
 
-                const { error: profileErr } = await sb.rpc('register_agent_profile', {
-                    p_name: name,
-                    p_phone: phone,
-                    p_email: email,
-                    p_rrn_masked: rrn || null,
-                    p_bank_name: bank || null,
-                    p_account_holder: holder || null,
-                    p_account_number: account || null
+                await sb.auth.setSession({
+                    access_token: activeSession.access_token,
+                    refresh_token: activeSession.refresh_token
                 });
-                if (profileErr) throw profileErr;
+
+                const rpcRes = await fetch(SUPABASE_CONFIG.url + '/rest/v1/rpc/register_agent_profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_CONFIG.anonKey,
+                        'Authorization': 'Bearer ' + activeSession.access_token
+                    },
+                    body: JSON.stringify({
+                        p_name: name,
+                        p_phone: phone,
+                        p_email: email,
+                        p_rrn_masked: rrn || null,
+                        p_bank_name: bank || null,
+                        p_account_holder: holder || null,
+                        p_account_number: account || null
+                    })
+                });
+                if (!rpcRes.ok) {
+                    let detail = '';
+                    try {
+                        const j = await rpcRes.json();
+                        detail = j.message || j.msg || j.error_description || JSON.stringify(j);
+                    } catch (_) {
+                        detail = await rpcRes.text();
+                    }
+                    throw new Error('프로필 등록 실패 (' + rpcRes.status + '): ' + detail);
+                }
 
                 showAlert('authSuccess', '회원가입 신청 완료. 관리자 승인 후 계약서 서명이 가능합니다.', 'success');
                 $('registerForm').reset();
