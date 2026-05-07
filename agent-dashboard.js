@@ -156,7 +156,7 @@
                 });
             }
 
-            await sb.rpc('log_lead_access', { p_lead_id: null, p_action: 'view_list' }).catch(() => {});
+            try { await sb.rpc('log_lead_access', { p_lead_id: null, p_action: 'view_list' }); } catch (_) {}
 
             loading.style.display = 'none';
 
@@ -208,7 +208,7 @@
             return;
         }
 
-        await sb.rpc('log_lead_access', { p_lead_id: leadId, p_action: 'view_detail' }).catch(() => {});
+        try { await sb.rpc('log_lead_access', { p_lead_id: leadId, p_action: 'view_detail' }); } catch (_) {}
 
         currentEditingAssignment = data;
         const lead = data.leads || {};
