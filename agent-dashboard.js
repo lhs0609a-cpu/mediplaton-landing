@@ -92,6 +92,9 @@
         $('leadModalClose').onclick = closeLeadModal;
         $('leadCancelBtn').onclick = closeLeadModal;
         $('leadSaveBtn').onclick = saveLeadStatus;
+
+        const exportBtn = $('leadExportBtn');
+        if (exportBtn) exportBtn.onclick = exportLeadsCsv;
     }
 
     function debounce(fn, ms) {
@@ -297,6 +300,122 @@
             alert('저장 실패: ' + err.message);
         } finally {
             btn.disabled = false; btn.textContent = '저장';
+        }
+    }
+
+    function statusKor(status) {
+        return ({
+            in_progress: '진행중', contacting: '연락중', contracted: '계약완료',
+            rejected: '거절', other_product: '타상품', no_answer: '부재중', discarded: '폐기'
+        })[status] || (status || '');
+    }
+
+    function csvEscape(v) {
+        if (v == null) return '';
+        const s = String(v);
+        if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+    }
+
+    function fmtDateTime(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    async function exportLeadsCsv() {
+        const btn = $('leadExportBtn');
+        const original = btn.textContent;
+        btn.disabled = true; btn.textContent = '준비 중...';
+
+        try {
+            const search = $('leadSearch').value.trim();
+            const statusFilter = $('leadStatusFilter').value;
+
+            let query = sb.from('lead_assignments').select(`
+                id, status, memo, next_action_at, assigned_at, last_status_at,
+                lead_id,
+                leads (
+                    id, name, phone, business_type, revenue_band, region, source, raw_data, created_at
+                )
+            `).eq('agent_id', currentAgent.id).order('assigned_at', { ascending: false });
+
+            if (statusFilter !== 'all') query = query.eq('status', statusFilter);
+
+            const { data, error } = await query;
+            if (error) throw error;
+
+            let rows = data || [];
+            if (search) {
+                const q = search.toLowerCase();
+                rows = rows.filter(r => {
+                    const name = (r.leads?.name || '').toLowerCase();
+                    const phone = (r.leads?.phone || '').toLowerCase();
+                    return name.includes(q) || phone.includes(q);
+                });
+            }
+
+            if (!rows.length) {
+                alert('내보낼 데이터가 없습니다.');
+                return;
+            }
+
+            const rawKeySet = new Set();
+            rows.forEach(r => {
+                const raw = r.leads?.raw_data;
+                if (raw && typeof raw === 'object') {
+                    Object.keys(raw).forEach(k => rawKeySet.add(k));
+                }
+            });
+            const rawKeys = Array.from(rawKeySet);
+
+            const headers = [
+                '이름', '연락처', '업종', '매출구간', '지역', '출처',
+                '할당일', '상태', '메모', '다음 액션', '마지막 상태변경', '등록일',
+                ...rawKeys
+            ];
+
+            const lines = [headers.map(csvEscape).join(',')];
+
+            rows.forEach(r => {
+                const lead = r.leads || {};
+                const raw = lead.raw_data || {};
+                const base = [
+                    lead.name, lead.phone, lead.business_type, lead.revenue_band,
+                    lead.region, lead.source,
+                    fmtDate(r.assigned_at), statusKor(r.status), r.memo,
+                    fmtDateTime(r.next_action_at), fmtDateTime(r.last_status_at),
+                    fmtDate(lead.created_at)
+                ];
+                const rawVals = rawKeys.map(k => {
+                    const v = raw[k];
+                    if (v == null) return '';
+                    if (typeof v === 'object') return JSON.stringify(v);
+                    return v;
+                });
+                lines.push([...base, ...rawVals].map(csvEscape).join(','));
+            });
+
+            try { await sb.rpc('log_lead_access', { p_lead_id: null, p_action: 'export_csv' }); } catch (_) {}
+
+            const csv = '\uFEFF' + lines.join('\r\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const today = new Date();
+            const stamp = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+            a.href = url;
+            a.download = `영업DB_${currentAgent.name}_${stamp}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } catch (err) {
+            console.error(err);
+            alert('내보내기 실패: ' + err.message);
+        } finally {
+            btn.disabled = false; btn.textContent = original;
         }
     }
 
