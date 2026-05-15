@@ -16365,3 +16365,642 @@ section.hero .hero-title.hero-title--quote {
         word-break: keep-all;
     }
 }
+
+/* ============================================================
+   Product card v2 — ribbon overlap fix, text wrapping,
+   SVG check glyphs (replaces inline ✓ and → text glyphs)
+   ============================================================ */
+.product-card {
+    overflow: visible;
+}
+.product-card:has(.product-ribbon) .product-header {
+    padding-top: 56px;
+}
+.product-header {
+    flex-wrap: nowrap;
+}
+.product-title-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.product-title-wrap h3 {
+    word-break: keep-all;
+    line-height: 1.3;
+}
+.product-tag {
+    word-break: keep-all;
+    display: inline-block;
+}
+.spec-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.spec-value {
+    word-break: keep-all;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+.product-ribbon {
+    white-space: nowrap;
+    max-width: calc(100% - 32px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.product-desc {
+    word-break: keep-all;
+}
+
+/* SVG check glyph for product-benefits — replaces "✓ " text prefix */
+.product-benefits span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    word-break: keep-all;
+}
+.product-benefits span::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232962FF' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* SVG check for urgency-item — replaces "✓" inside .urgency-check */
+.urgency-check {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 185, 129, 0.12);
+    border-radius: 50%;
+    font-size: 0;
+    color: transparent;
+    flex-shrink: 0;
+    position: relative;
+}
+.urgency-check::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310B981' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* form-note ✓ glyphs — let text-only checks render as small SVG */
+.form-note {
+    line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+    .product-card:has(.product-ribbon) .product-header {
+        padding-top: 44px;
+    }
+    .product-ribbon {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+    .product-benefits span::before {
+        width: 12px;
+        height: 12px;
+    }
+    .urgency-check {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* ============================================================
+   Global text overflow safety v2 — site-wide truncation fixes
+   ============================================================ */
+
+/* Flex/grid children should never block text wrapping */
+.products-grid > *,
+.products-filter > *,
+.product-header > *,
+.product-title-wrap > *,
+.product-specs > *,
+.product-benefits > *,
+.consult-wrapper > *,
+.consult-info > *,
+.urgency-content > *,
+.urgency-item > *,
+.consult-contact > *,
+.contact-box > *,
+.footer-main > *,
+.footer-links > *,
+.footer-col > *,
+.consult-benefits > *,
+.benefit-item > *,
+.form-row > *,
+.form-group > *,
+.consult-header > *,
+.section-header > *,
+.hero-content > *,
+.hero-stats > *,
+.stat-card > *,
+.case-card > *,
+.success-info-card > *,
+.modal-content > *,
+.mobile-menu-inner > *,
+.mobile-menu-footer > * {
+    min-width: 0;
+}
+
+/* Korean text safety on common typographic elements */
+.section-title,
+.hero-title,
+.section-desc,
+.hero-desc,
+.product-desc,
+.case-quote,
+.faq-question,
+.faq-answer,
+.footer-info p,
+.footer-disclaimer,
+.footer-legal p,
+.urgency-item span,
+.benefit-item div,
+.benefit-item strong,
+.contact-box strong,
+.contact-box span,
+.form-group label,
+.checkbox-label,
+.agreement-text,
+.form-note,
+.consult-header p,
+.consult-header h2,
+.stat-label,
+.case-title,
+.case-summary,
+.blog-card h3,
+.blog-card p,
+.news-item h3,
+.news-item p {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+/* Long URLs / English mixed strings break gracefully */
+.footer-info p,
+.footer-disclaimer,
+.footer-legal p,
+.modal-body p,
+.modal-body li {
+    overflow-wrap: anywhere;
+}
+
+/* Navigation should stay on a single line */
+.nav-link,
+.mobile-nav-title,
+.top-bar-left span,
+.top-bar-right a,
+.footer-col h4,
+.footer-phone,
+.footer-time {
+    white-space: nowrap;
+}
+.mobile-nav-title.single {
+    white-space: normal;
+}
+
+/* Badges, chips and ribbons keep their phrase intact */
+.section-badge,
+.product-tag,
+.product-ribbon,
+.product-benefits span,
+.trust-badge,
+.spec-label,
+.spec-value,
+.benefit-tag,
+.tag,
+.chip,
+.urgency-badge,
+[class*="-badge"]:not(.section-badge):not(.product-ribbon):not(.urgency-badge),
+[class*="-chip"],
+[class*="-tag"]:not(.product-tag) {
+    word-break: keep-all;
+}
+
+/* Buttons (default) — break only between Korean words */
+.btn,
+.submit-btn,
+.modal-btn,
+.footer-cta,
+.header-cta,
+.mobile-cta,
+.float-btn,
+.product-cta,
+a.product-cta,
+.filter-btn {
+    word-break: keep-all;
+}
+
+/* Table cells (commission tables, pricing tables, comparison tables) */
+table th,
+table td,
+.comparison-table th,
+.comparison-table td,
+.commission-table th,
+.commission-table td,
+.pricing-table th,
+.pricing-table td {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+/* Phone/email/business-id should not break mid-string */
+.footer-phone a,
+.contact-box a[href^="tel:"],
+.contact-box a[href^="mailto:"],
+.top-bar-left a[href^="tel:"] {
+    white-space: nowrap;
+}
+
+/* Modal / popup content should fit viewport */
+.modal-content {
+    max-width: min(720px, calc(100vw - 32px));
+    word-break: keep-all;
+}
+
+/* Form fields should not overflow horizontally */
+.consult-form input,
+.consult-form select,
+.consult-form textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Card titles — allow two-line wrap, prevent truncation */
+.case-card h3,
+.case-card .case-title,
+.blog-card h3,
+.news-item h3,
+.feature-card h3,
+.pricing-card h3,
+.partner-card h3,
+.team-card h3,
+.stat-title {
+    word-break: keep-all;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+/* Pricing/stat numeric values stay together */
+.stat-value,
+.price-value,
+.percent-value,
+.amount-value {
+    white-space: nowrap;
+}
+
+/* Mobile-specific safety */
+@media (max-width: 768px) {
+    /* Hide overflow on common containers, allow scroll on tables */
+    .container {
+        overflow-x: visible;
+    }
+    .comparison-wrapper,
+    .table-wrapper,
+    [class*="table-scroll"] {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Smaller titles can wrap more aggressively */
+    .section-title,
+    .hero-title {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+    }
+
+    /* Spec items become full-width on very narrow screens */
+    .product-specs {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-specs {
+        grid-template-columns: 1fr;
+    }
+    .spec-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+    .spec-label {
+        margin-bottom: 0;
+    }
+    .spec-value {
+        text-align: right;
+    }
+}
+
+/* ============================================================
+   Site-wide audit fixes — modal / table / flow-arrow / badge
+   ============================================================ */
+
+/* 1. Modal viewport safety (privacy, success modal, etc.) */
+.modal-content {
+    max-width: min(720px, calc(100vw - 32px));
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.modal-body {
+    overflow-y: visible;
+}
+
+/* 2. Any table wrapper: horizontal scroll on mobile */
+.commission-table-wrap,
+.comparison-table-wrap,
+.mkt-comp-table-wrap,
+.partner-table-wrap,
+.agency-table-wrap,
+.table-wrap,
+.tax-bracket-wrap,
+[class*="table-wrap"] {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+}
+
+/* Plain tables that are not wrapped — add safety scroll */
+@media (max-width: 768px) {
+    .commission-table,
+    .comparison-table,
+    .mkt-comp-table,
+    .tax-bracket-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: normal;
+    }
+}
+
+/* 3. Flow-diagram arrows: hide on narrow viewports to prevent overlap */
+@media (max-width: 768px) {
+    .process-step:not(:last-child)::after,
+    .flow-step:not(:last-child)::after,
+    .step-card:not(:last-child)::after,
+    [class*="-step"]:not(:last-child)::after {
+        display: none !important;
+    }
+}
+
+/* 4. Hero title nowrap relaxation for narrow viewports */
+@media (max-width: 768px) {
+    .hero-title .hero-title-line,
+    .hero-title .highlight,
+    .hero-partners-label,
+    .hero-subtitle,
+    .hero-desc {
+        white-space: normal;
+        word-break: keep-all;
+    }
+}
+
+/* 5. Case-result / stat-grid responsive collapse */
+@media (max-width: 600px) {
+    .case-result,
+    .result-grid,
+    .stat-grid-3 {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px;
+    }
+    .result-item,
+    .stat-card {
+        min-width: 0;
+        word-break: keep-all;
+    }
+}
+
+@media (max-width: 400px) {
+    .case-result,
+    .result-grid,
+    .stat-grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* 6. Floating badges (case-badge, example-label, mkt-benefit-unlock) */
+.case-card,
+.example-card,
+[class*="example-card"] {
+    padding-top: 28px;
+}
+@media (max-width: 600px) {
+    .case-badge,
+    .example-label,
+    .corner-badge {
+        font-size: 10px;
+        padding: 4px 8px;
+        white-space: nowrap;
+        max-width: calc(100% - 32px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* 7. Marquee / scrolling banners — soft-wrap on small screens */
+@media (max-width: 480px) {
+    .marquee-text,
+    .marquee-content,
+    [class*="marquee"] {
+        white-space: normal;
+        animation: none !important;
+    }
+}
+
+/* 8. Marketing benefit values & unlock label */
+.mkt-benefit-val {
+    white-space: normal;
+    word-break: keep-all;
+}
+.mkt-benefit-item {
+    position: relative;
+}
+@media (max-width: 480px) {
+    .mkt-benefit-unlock {
+        position: static !important;
+        margin-top: 8px;
+        display: inline-block;
+    }
+}
+
+/* 9. Tax-bracket table headers */
+.tax-bracket-table th {
+    white-space: normal;
+    word-break: keep-all;
+    min-width: 70px;
+}
+.tax-direct-input .unit {
+    white-space: nowrap;
+}
+
+/* 10. Screening grid fixed-width fix */
+@media (max-width: 1024px) {
+    .scr-layout,
+    .scr-grid,
+    [class*="scr-grid"] {
+        grid-template-columns: 1fr !important;
+    }
+    .scr-input-panel,
+    [class*="scr-input"] {
+        position: static !important;
+    }
+}
+
+/* 11. Screening product badge wrap */
+.scr-product-badge,
+[class*="scr-product-badge"] {
+    white-space: normal;
+    word-break: keep-all;
+}
+
+/* 12. Marketing comparison table — protect first column */
+.mkt-comp-table th:first-child,
+.mkt-comp-table td:first-child {
+    min-width: 120px;
+}
+
+/* 13. News / blog card title clamp safety */
+.news-card h3,
+.blog-card h3,
+.news-item h3 {
+    word-break: keep-all;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 14. Contact value / phone wrap on mobile */
+@media (max-width: 480px) {
+    .contact-value {
+        white-space: normal;
+        word-break: keep-all;
+    }
+}
+
+/* 15. Main-partner-info strong wrap */
+.main-partner-info strong,
+.partner-name,
+.org-name {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+/* 16. Footer-legal compactness on mobile */
+@media (max-width: 768px) {
+    .footer-legal {
+        font-size: 11px;
+        line-height: 1.7;
+    }
+    .footer-legal p {
+        word-break: keep-all;
+        overflow-wrap: anywhere;
+    }
+    .footer-info p {
+        word-break: keep-all;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* 17. Verified badge in case-card heading - flex-wrap */
+.case-info h4,
+.case-card h4,
+.team-card h4,
+.profile-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    word-break: keep-all;
+}
+.verified-badge,
+.cert-badge {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* 18. Process step minimum width and content wrapping */
+.process-step,
+.flow-step,
+.step-card {
+    min-width: 0;
+}
+.process-step h3,
+.flow-step h3,
+.step-card h3 {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+/* 19. Hero-section .hero-stats grid responsive */
+@media (max-width: 600px) {
+    .hero-stats,
+    [class*="hero-stat-grid"] {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+}
+
+/* 20. Qual-list and doc-card text wrapping */
+.qual-list li,
+.doc-card li,
+.feature-list li {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+/* 21. Biz hero card overlay text safety */
+.biz-hero-card strong,
+.hero-card-title,
+[class*="hero-card"] strong {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    display: inline-block;
+}
+
+/* 22. Form input fits viewport */
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+select,
+textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* 23. Stat number does not break mid-digit */
+.stat-num,
+.scr-summary-stat .num,
+.percent-display,
+.price-display {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* 24. Contact cert badge / floating image overlays */
+.contact-cert-badge,
+[class*="cert-badge"]:not(.verified-badge) {
+    white-space: nowrap;
+    max-width: calc(100% - 16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
