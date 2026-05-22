@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18162012600"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18162012600');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>병·의원 대출 사전 체크리스트 | 메디플라톤</title>
+    <meta name="description" content="병·의원 대출 1차 검토를 위한 6문항 체크리스트입니다. 작성 후 회신 즉시 가능 상품을 안내드립니다.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" as="style">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231428A0'/%3E%3Cstop offset='100%25' stop-color='%232962FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M16 8v16M8 16h16' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#1428A0">
+
+    <style>
+        :root {
+            --primary: #1428A0;
+            --primary-dark: #0F1F80;
+            --accent: #2962FF;
+            --bg: #F4F6FF;
+            --white: #FFFFFF;
+            --text: #111827;
+            --text-soft: #4B5563;
+            --muted: #9CA3AF;
+            --border: #E5E7EB;
+            --danger: #DC2626;
+            --success: #16A34A;
+            --warn-bg: #FEF3C7;
+            --warn-border: #FCD34D;
+            --warn-text: #92400E;
+        }
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.55;
+        }
+        a { color: inherit; }
+
+        .wrap {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 24px 18px 60px;
+        }
+
+        /* Header */
+        .topbar {
+            background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
+            color: #fff;
+            padding: 22px 18px;
+            text-align: center;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 24px rgba(20,40,160,0.15);
+        }
+        .topbar-logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+        .topbar h1 {
+            margin: 0 0 6px;
+            font-size: clamp(20px, 4vw, 24px);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .topbar p {
+            margin: 0;
+            font-size: 13.5px;
+            opacity: 0.92;
+        }
+
+        /* Intro */
+        .intro {
+            background: var(--warn-bg);
+            border: 1px solid var(--warn-border);
+            color: var(--warn-text);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 13.5px;
+            margin-bottom: 22px;
+            line-height: 1.7;
+        }
+        .intro strong { color: var(--warn-text); }
+
+        /* Card */
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+        .q-head {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .q-num {
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff;
+            background: var(--primary);
+            padding: 2px 9px;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+        .q-title {
+            font-size: 15.5px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+        .q-required {
+            color: var(--danger);
+            font-size: 13px;
+            margin-left: 2px;
+        }
+        .q-desc {
+            font-size: 13px;
+            color: var(--text-soft);
+            margin: 0 0 12px;
+            line-height: 1.6;
+        }
+
+        /* Inputs */
+        .field {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .field-label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-soft);
+            margin-bottom: 5px;
+        }
+        .input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #F8F9FF;
+        }
+        textarea.input {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        /* Radio cards */
+        .radio-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .radio-card {
+            position: relative;
+            display: block;
+            cursor: pointer;
+            user-select: none;
+        }
+        .radio-card input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .radio-card span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 14px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-soft);
+            background: #fff;
+            transition: all 0.15s;
+            min-height: 48px;
+        }
+        .radio-card input:checked + span {
+            border-color: var(--primary);
+            background: #EEF2FF;
+            color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(20,40,160,0.08);
+        }
+        .radio-card.danger input:checked + span {
+            border-color: var(--danger);
+            background: #FEF2F2;
+            color: var(--danger);
+            box-shadow: 0 0 0 2px rgba(220,38,38,0.08);
+        }
+
+        /* Privacy */
+        .privacy {
+            background: #F8FAFF;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 12.5px;
+            color: var(--text-soft);
+            line-height: 1.7;
+            margin-top: 18px;
+        }
+        .privacy label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .privacy input[type="checkbox"] {
+            margin-top: 3px;
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+        .privacy .privacy-detail {
+            margin-top: 8px;
+            padding-left: 24px;
+            font-size: 12px;
+        }
+
+        /* Submit */
+        .submit-bar {
+            margin-top: 22px;
+            display: grid;
+            gap: 10px;
+        }
+        .btn {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(20,40,160,0.22);
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-ghost {
+            background: #fff;
+            color: var(--text-soft);
+            border: 1.5px solid var(--border);
+            font-weight: 700;
+        }
+
+        /* Footer contact */
+        .contact-card {
+            margin-top: 20px;
+            padding: 16px 18px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-soft);
+        }
+        .contact-card strong { color: var(--text); }
+        .contact-card a {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Thank you */
+        .thanks {
+            text-align: center;
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 22px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+        .thanks-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: #DCFCE7;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .thanks h2 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .thanks p {
+            margin: 0 0 18px;
+            font-size: 14px;
+            color: var(--text-soft);
+            line-height: 1.7;
+        }
+        .thanks-summary {
+            text-align: left;
+            background: #F4F6FF;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 18px;
+            border: 1px solid #DBEAFE;
+        }
+        .thanks-summary strong { color: var(--primary); }
+
+        .err-msg {
+            color: var(--danger);
+            font-size: 12.5px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 6px;
+            vertical-align: -2px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 480px) {
+            .wrap { padding: 16px 14px 50px; }
+            .topbar { padding: 18px 16px; }
+            .card { padding: 18px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap" id="wrap">
+        <div class="topbar">
+            <div class="topbar-logo">MEDI-PLATON 메디플라톤</div>
+            <h1>병·의원 대출 사전 체크리스트</h1>
+            <p>아래 6문항을 작성해주시면 1차 검토 후 가능 상품을 안내드립니다.</p>
+        </div>
+
+        <div class="intro">
+            <strong>약 1분 소요</strong> · 작성하신 정보는 대출 검토 목적 외에는 사용되지 않습니다.
+        </div>
+
+        <form id="checklistForm" novalidate>
+            <!-- Q1. 기본 정보 -->
+            <div class="card">
+                <div class="q-head">
+                    <span class="q-num">1</span>
+                    <span class="q-title">기본 정보<span class="q-required">*</span></span>
+                </div>
+                <p class="q-desc">병의원 명, 원장님 성함, 연락처, 지역명을 입력해주세요.</p>
+
+                <div class="field">
+                    <label class="field-label" for="hospitalName">병의원 명</label>
+                    <input class="input" type="text" id="hospitalName" name="hospitalName" placeholder="예) OO내과의원" required>
+                </div>
+                <div class="field">
+                    <label class="field-label" for="doctorName">원장님 성함</label>
+                    <input class="input" type="text" id="doctorName" name="doctorName" placeholder="예) 홍길동" required>
+                </div>
+                <div class="field">
+                    <label class="field-label" for="phone">연락처</label>
+                    <input class="input" type="tel" id="phone" name="phone" placeholder="010-0000-0000" inputmode="tel" required>
+                </div>
+                <div class="field">
+                    <label class="field-label" for="region">지역 (시/군/구)</label>
+                    <input class="input" type="text" id="region" name="region" placeholder="예) 서울 강남구" required>
+                </div>
+            </div>
+
+            <!-- Q2. 매출 -->
+            <div class="card">
+                <div class="q-head">
+                    <span class="q-num">2</span>
+                    <span class="q-title">월 평균 매출<span class="q-required">*</span></span>
+                </div>
+                <p class="q-desc">공단급여 매출과 카드매출을 각각 적어주세요. (예: 공단급여 10억 / 카드매출 5억)</p>
+
+                <div class="field">
+                    <label class="field-label" for="revenueInsurance">공단급여 매출 (연/월 기준 자유)</label>
+                    <input class="input" type="text" id="revenueInsurance" name="revenueInsurance" placeholder="예) 월 8,000만원 또는 연 10억" required>
+                </div>
+                <div class="field">
+                    <label class="field-label" for="revenueCard">카드매출 (연/월 기준 자유)</label>
+                    <input class="input" type="text" id="revenueCard" name="revenueCard" placeholder="예) 월 4,000만원 또는 연 5억" required>
+                </div>
+            </div>
+
+            <!-- Q3. 세금 체납 -->
+            <div class="card">
+                <div class="q-head">
+                    <span class="q-num">3</span>
+                    <span class="q-title">세금 체납 여부<span class="q-required">*</span></span>
+                </div>
+                <p class="q-desc">국세 · 지방세 체납 여부를 알려주세요.</p>
+                <div class="radio-row">
+                    <label class="radio-card">
+                        <input type="radio" name="tax" value="없음" required>
+                        <span>정상 / 체납 없음</span>
+                    </label>
+                    <label class="radio-card danger">
+                        <input type="radio" name="tax" value="있음">
+                        <span>체납 있음</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q4. 4대보험 -->
+            <div class="card">
+                <div class="q-head">
+                    <span class="q-num">4</span>
+                    <span class="q-title">4대보험 체납 여부<span class="q-required">*</span></span>
+                </div>
+                <p class="q-desc">국민연금 · 건강보험 · 고용보험 · 산재보험 체납 여부.</p>
+                <div class="radio-row">
+                    <label class="radio-card">
+                        <input type="radio" name="insurance" value="없음" required>
+                        <span>정상 / 체납 없음</span>
+                    </label>
+                    <label class="radio-card danger">
+                        <input type="radio" name="insurance" value="있음">
+                        <span>체납 있음</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q5. 보증기관 사고 -->
+            <div class="card">
+                <div class="q-head">
+                    <span class="q-num">5</span>
+                    <span class="q-title">보증기관 사고 이력<span class="q-required">*</span></span>
+                </div>
+                <p class="q-desc">신용보증기금 · 기술보증기금 · 신용보증재단 사고 이력.</p>
+                <div class="radio-row">
+                    <label class="radio-card">
+                        <input type="radio" name="guarantee" value="없음" required>
+                        <span>사고 없음</span>
+                    </label>
+                    <label class="radio-card danger">
+                        <input type="radio" name="guarantee" value="있음">
+                        <span>사고 있음</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q6. 금융권 연체 -->
+            <div class="card">
+                <div class="q-head">
+                    <span class="q-num">6</span>
+                    <span class="q-title">금융권 연체 여부<span class="q-required">*</span></span>
+                </div>
+                <p class="q-desc">은행 · 캐피탈 · 카드 · 렌탈 · 리스 연체 여부.</p>
+                <div class="radio-row">
+                    <label class="radio-card">
+                        <input type="radio" name="loan" value="없음" required>
+                        <span>연체 없음</span>
+                    </label>
+                    <label class="radio-card danger">
+                        <input type="radio" name="loan" value="있음">
+                        <span>연체 있음</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 추가 메모 (선택) -->
+            <div class="card">
+                <div class="q-head">
+                    <span class="q-num">＋</span>
+                    <span class="q-title">추가 요청 / 메모 <span style="font-size:12px;color:var(--muted);font-weight:600;">(선택)</span></span>
+                </div>
+                <p class="q-desc">희망 한도, 자금 용도, 기타 전달사항이 있으면 적어주세요.</p>
+                <textarea class="input" id="memo" name="memo" placeholder="예) 3억 운영자금 희망, 의료기기 교체 예정 등"></textarea>
+            </div>
+
+            <!-- Privacy -->
+            <div class="privacy">
+                <label>
+                    <input type="checkbox" id="agree" required>
+                    <span>개인정보 수집 및 이용에 동의합니다. (필수)</span>
+                </label>
+                <div class="privacy-detail">
+                    수집 항목: 병의원 명, 성함, 연락처, 지역, 매출 정보, 체납·연체·사고 이력 / 이용 목적: 대출 사전 검토 및 상담 / 보유 기간: 검토 완료 후 3년 (관련 법령 준수).
+                </div>
+            </div>
+
+            <div id="errBox"></div>
+
+            <div class="submit-bar">
+                <button type="submit" class="btn btn-primary" id="submitBtn">사전 검토 신청하기</button>
+            </div>
+        </form>
+
+        <div class="contact-card">
+            <strong>문의가 있으신가요?</strong><br>
+            메디플라톤 오재연 본부장
+            <a href="tel:010-4772-2717">010-4772-2717</a>
+        </div>
+    </div>
+
+    <!-- Thank You (hidden by default) -->
+    <div class="wrap" id="thanksWrap" style="display:none;">
+        <div class="thanks">
+            <div class="thanks-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h2>접수가 완료되었습니다</h2>
+            <p>작성해주신 내용을 토대로<br>담당자가 가능한 상품과 한도를 검토 후 빠르게 연락드리겠습니다.</p>
+
+            <div class="thanks-summary" id="thanksSummary"></div>
+
+            <div class="contact-card" style="margin-top:0;">
+                <strong>긴급 문의</strong><br>
+                메디플라톤 오재연 본부장
+                <a href="tel:010-4772-2717">010-4772-2717</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script>
+    (function() {
+        var form = document.getElementById('checklistForm');
+        var submitBtn = document.getElementById('submitBtn');
+        var errBox = document.getElementById('errBox');
+
+        function showError(msg) {
+            errBox.innerHTML = '<div class="err-msg" style="background:#FEF2F2;border:1px solid #FCA5A5;padding:12px 14px;border-radius:10px;margin-top:14px;">' + msg + '</div>';
+            errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        function clearError() { errBox.innerHTML = ''; }
+
+        function val(id) {
+            var el = document.getElementById(id);
+            return el ? el.value.trim() : '';
+        }
+        function radioVal(name) {
+            var el = document.querySelector('input[name="' + name + '"]:checked');
+            return el ? el.value : '';
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearError();
+
+            var hospitalName = val('hospitalName');
+            var doctorName = val('doctorName');
+            var phone = val('phone');
+            var region = val('region');
+            var revenueInsurance = val('revenueInsurance');
+            var revenueCard = val('revenueCard');
+            var tax = radioVal('tax');
+            var insurance = radioVal('insurance');
+            var guarantee = radioVal('guarantee');
+            var loan = radioVal('loan');
+            var memo = val('memo');
+            var agree = document.getElementById('agree').checked;
+
+            if (!hospitalName || !doctorName || !phone || !region) {
+                showError('① 기본 정보의 모든 항목을 입력해주세요.');
+                return;
+            }
+            var phoneClean = phone.replace(/[^0-9]/g, '');
+            if (phoneClean.length < 9 || phoneClean.length > 11) {
+                showError('연락처를 올바르게 입력해주세요. (숫자 9~11자리)');
+                return;
+            }
+            if (!revenueInsurance || !revenueCard) {
+                showError('② 월 평균 매출 항목을 모두 입력해주세요.');
+                return;
+            }
+            if (!tax || !insurance || !guarantee || !loan) {
+                showError('③~⑥ 체크 항목을 모두 선택해주세요.');
+                return;
+            }
+            if (!agree) {
+                showError('개인정보 수집 및 이용에 동의해주세요.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>접수 중...';
+
+            // Build summary message for sales team (stored in `message` column)
+            var risks = [];
+            if (tax === '있음') risks.push('세금 체납');
+            if (insurance === '있음') risks.push('4대보험 체납');
+            if (guarantee === '있음') risks.push('보증기관 사고');
+            if (loan === '있음') risks.push('금융권 연체');
+
+            var summary =
+                '[병·의원 사전 체크리스트]\n' +
+                '① 병의원: ' + hospitalName + ' / 원장: ' + doctorName + ' / 지역: ' + region + '\n' +
+                '② 매출 - 공단급여: ' + revenueInsurance + ' / 카드: ' + revenueCard + '\n' +
+                '③ 세금 체납: ' + tax + '\n' +
+                '④ 4대보험 체납: ' + insurance + '\n' +
+                '⑤ 보증기관 사고: ' + guarantee + '\n' +
+                '⑥ 금융권 연체: ' + loan + '\n' +
+                '※ 위험요인: ' + (risks.length ? risks.join(', ') : '없음') +
+                (memo ? ('\n메모: ' + memo) : '');
+
+            var payload = {
+                name: doctorName,
+                phone: phone,
+                business: hospitalName,
+                revenue: '공단 ' + revenueInsurance + ' / 카드 ' + revenueCard,
+                region: region,
+                product: '병·의원 대출 (B2B 체크리스트)',
+                message: summary,
+                preferred_time: '',
+                inflow_channel: 'b2b-checklist',
+                source_page: 'checklist-medical.html'
+            };
+
+            try {
+                if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
+                    var sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                    var res = await sb.from('consultations').insert(payload);
+                    if (res && res.error) throw res.error;
+                } else {
+                    try { localStorage.setItem('checklist_backup_' + Date.now(), JSON.stringify(payload)); } catch (_) {}
+                }
+
+                if (typeof gtag === 'function') {
+                    gtag('event', 'conversion', { send_to: 'AW-18162012600/checklist_submit' });
+                }
+
+                // Show thank-you
+                var summaryHtml =
+                    '<strong>제출 요약</strong><br>' +
+                    '병의원: ' + hospitalName + ' / 원장: ' + doctorName + '<br>' +
+                    '연락처: ' + phone + ' / 지역: ' + region + '<br>' +
+                    '매출: 공단 ' + revenueInsurance + ' / 카드 ' + revenueCard + '<br>' +
+                    '위험요인: ' + (risks.length ? risks.join(', ') : '없음');
+                document.getElementById('thanksSummary').innerHTML = summaryHtml;
+                document.getElementById('wrap').style.display = 'none';
+                document.getElementById('thanksWrap').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (err) {
+                console.error(err);
+                showError('전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요. (오류: ' + (err.message || '알 수 없음') + ')');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '사전 검토 신청하기';
+            }
+        });
+
+        // Auto-format phone number
+        document.getElementById('phone').addEventListener('input', function(e) {
+            var v = e.target.value.replace(/[^0-9]/g, '');
+            if (v.length > 11) v = v.slice(0, 11);
+            if (v.length >= 7) {
+                e.target.value = v.slice(0, 3) + '-' + v.slice(3, 7) + '-' + v.slice(7);
+            } else if (v.length >= 4) {
+                e.target.value = v.slice(0, 3) + '-' + v.slice(3);
+            } else {
+                e.target.value = v;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
