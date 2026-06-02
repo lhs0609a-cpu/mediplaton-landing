@@ -3898,7 +3898,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ═══════════════════════════════════════════════════════════
-// 다단계 조직도 + 수수료 정책 + 분배 정산 (관리자 전용)
+// 파트너 라인 + 수수료 정책 + 분배 정산 (관리자 전용)
 // ═══════════════════════════════════════════════════════════
 
 // 트리 전역 상태
@@ -4037,7 +4037,7 @@ async function loadPartnerTree() {
     } catch (e) {
         console.error('loadPartnerTree error:', e);
         empty.style.display = 'block';
-        empty.querySelector('h3').textContent = '조직도를 불러오지 못했습니다';
+        empty.querySelector('h3').textContent = '라인을 불러오지 못했습니다';
     } finally {
         loading.style.display = 'none';
     }
@@ -4069,7 +4069,7 @@ function renderListView() {
         .join('');
 }
 
-// ─── 가로 분기 조직도 차트 ───
+// ─── 가로 분기 라인 차트 ───
 
 function renderOrgChart() {
     const chart = document.getElementById('treeChart');
@@ -4772,7 +4772,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tps) tps.addEventListener('change', renderTopPartners);
 });
 
-// ─── 다단계 정산 내역 ───
+// ─── 라인 정산 내역 ───
 
 async function loadMultiLevelSettlements() {
     const tbody = document.getElementById('multiSettleBody');

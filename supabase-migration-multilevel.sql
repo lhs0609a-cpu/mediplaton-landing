@@ -1,12 +1,12 @@
 -- =====================================================================
--- 다단계(MLM) 파트너 구조 마이그레이션
+-- 라인(MLM) 파트너 구조 마이그레이션
 -- =====================================================================
 -- 목적:
 --   1. partners 트리 구조 (parent_partner_id + materialized path)
 --   2. 셀프 초대를 위한 referral_code
 --   3. 상품/레벨별 수수료 정책 (commission_policies)
 --   4. settlements 확장: originator/level/공급가/VAT/실지급
---   5. 계약 확정 시 다단계 자동 분배 트리거
+--   5. 계약 확정 시 라인 자동 분배 트리거
 --   6. RLS: 본인 + 본인 하위만 노출, 상위 정보·상위 수수료 차단
 -- =====================================================================
 -- 실행: Supabase Dashboard → SQL Editor → New Query → 전체 붙여넣기 → Run
@@ -139,7 +139,7 @@ ON CONFLICT (product_category, level) DO NOTHING;
 
 
 -- ─────────────────────────────────────────────────────────────────────
--- 4. settlements 확장 (다단계 / 세금계산서)
+-- 4. settlements 확장 (라인 / 세금계산서)
 -- ─────────────────────────────────────────────────────────────────────
 
 ALTER TABLE settlements ADD COLUMN IF NOT EXISTS originator_partner_id BIGINT REFERENCES partners(id);
@@ -163,7 +163,7 @@ ALTER TABLE consultations ADD COLUMN IF NOT EXISTS product_category VARCHAR(50);
 
 
 -- ─────────────────────────────────────────────────────────────────────
--- 6. 다단계 자동 분배 트리거
+-- 6. 라인 자동 분배 트리거
 -- ─────────────────────────────────────────────────────────────────────
 -- 발동 조건: consultations.pipeline_status 가 'contracted' (계약/성사) 로 바뀔 때
 -- 동작:

@@ -427,7 +427,7 @@
         .lg-l3 { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
         .lg-pending { background: #FBBF24; }
 
-        /* ─ 조직도 차트 (위→아래 분기) ─ */
+        /* ─ 라인 차트 (위→아래 분기) ─ */
         .view-toggle { display: inline-flex; border: 1px solid var(--gray-300); border-radius: 6px; overflow: hidden; }
         .vt-btn {
             padding: 6px 14px; background: var(--white); border: none;
@@ -619,7 +619,7 @@
         .org-col-wrap { display: flex; flex-direction: column; align-items: center; }
         .org-children { margin-top: 56px; }
 
-        /* 다단계 트리 */
+        /* 라인 트리 */
         .tree-node-admin {
             display: flex; align-items: center; gap: 12px;
             padding: 10px 14px; background: var(--white);
@@ -1035,7 +1035,7 @@
                     <span class="tab-badge" id="partnerBadge">0</span>
                 </button>
                 <button class="tab-btn" data-tab="partner-tree">
-                    조직도 / 정책
+                    파트너 라인
                 </button>
                 <button class="tab-btn" data-tab="agencies">
                     가맹점 신청
@@ -1202,14 +1202,14 @@
                 </div>
             </div>
 
-            <!-- ═══ 조직도 + 다단계 정책 (고도화) ═══ -->
+            <!-- ═══ 파트너 라인 운영 (고도화) ═══ -->
             <div class="data-section" id="partnerTreeSection" style="display: none;padding:0;background:transparent;box-shadow:none;">
 
                 <!-- KPI 헤더 (그라데이션) -->
                 <div class="mlm-hero">
                     <div class="mlm-hero-title">
-                        <h2>다단계 운영 현황</h2>
-                        <p>전체 파트너 조직 · 수수료 흐름 · 정책 관리</p>
+                        <h2>파트너 라인 운영 현황</h2>
+                        <p>전체 파트너 라인 · 수수료 흐름 · 정책 관리</p>
                     </div>
                     <div class="mlm-kpi-row">
                         <div class="mlm-kpi">
@@ -1218,7 +1218,7 @@
                             <div class="mlm-kpi-s"><span id="kpiActive">0</span>명 활성</div>
                         </div>
                         <div class="mlm-kpi">
-                            <div class="mlm-kpi-l">조직 구조</div>
+                            <div class="mlm-kpi-l">라인 구조</div>
                             <div class="mlm-kpi-v"><span id="kpiRoots">0</span><span class="mlm-kpi-unit">루트</span></div>
                             <div class="mlm-kpi-s">최대 깊이 <span id="kpiDepth">L0</span></div>
                         </div>
@@ -1294,14 +1294,14 @@
                     </div>
                 </div>
 
-                <!-- 조직도 본체 -->
+                <!-- 라인 본체 -->
                 <div class="mlm-panel" style="margin-top:16px;">
                     <div class="mlm-panel-head">
-                        <h3>파트너 조직도</h3>
+                        <h3>파트너 라인</h3>
                         <div style="display:flex;gap:8px;align-items:center;">
                             <input type="text" class="search-input" placeholder="이름/이메일 검색..." id="treeSearch">
                             <div class="view-toggle">
-                                <button class="vt-btn active" data-view="chart" onclick="setTreeView('chart')">조직도</button>
+                                <button class="vt-btn active" data-view="chart" onclick="setTreeView('chart')">라인뷰</button>
                                 <button class="vt-btn" data-view="list" onclick="setTreeView('list')">리스트</button>
                             </div>
                             <button class="btn btn-outline btn-sm" onclick="loadPartnerTree()">↻</button>
@@ -1381,7 +1381,7 @@
                 <!-- 분배 내역 -->
                 <div class="mlm-panel" style="margin-top:16px;">
                     <div class="mlm-panel-head">
-                        <h3>다단계 정산 내역</h3>
+                        <h3>라인 정산 내역</h3>
                         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                             <select class="filter-select" id="multiSettleMonthFilter"></select>
                             <select class="filter-select" id="multiSettleLevelFilter">
