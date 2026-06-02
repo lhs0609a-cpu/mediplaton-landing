@@ -276,6 +276,12 @@
                     <input type="text" id="regHospital" placeholder="예: OO대부중개, OO보험">
                 </div>
 
+                <div class="form-group">
+                    <label>추천인 코드 <span style="color:var(--gray-500);font-weight:400;">(선택)</span></label>
+                    <input type="text" id="regReferralCode" placeholder="추천 파트너 코드 8자리" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;">
+                    <div class="pw-hint" id="referralHint">추천인이 있는 경우 입력하세요. URL 로 접속하셨다면 자동 입력됩니다.</div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>업종</label>
@@ -353,6 +359,18 @@
     <script>
         const sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
+        // URL ?ref=CODE 자동 채움
+        (function autofillReferral() {
+            const params = new URLSearchParams(window.location.search);
+            const ref = params.get('ref') || params.get('referral');
+            if (ref) {
+                const input = document.getElementById('regReferralCode');
+                input.value = ref.trim().toUpperCase();
+                document.getElementById('referralHint').textContent = '추천인 코드가 자동 입력되었습니다.';
+                document.getElementById('referralHint').style.color = 'var(--success, #10B981)';
+            }
+        })();
+
         document.getElementById('partnerRegForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -369,6 +387,7 @@
             const business = document.getElementById('regBusiness').value || null;
             const region = document.getElementById('regRegion').value || null;
             const message = document.getElementById('regMessage').value.trim() || null;
+            const referralCode = document.getElementById('regReferralCode').value.trim().toUpperCase() || null;
 
             // Validation
             if (password !== passwordConfirm) {
@@ -415,31 +434,30 @@
                     throw new Error('이미 등록된 이메일입니다. 로그인 페이지에서 로그인해주세요.');
                 }
 
-                // 2. partners 테이블에 INSERT
-                const { error: insertError } = await sb
-                    .from('partners')
-                    .insert([{
-                        name,
-                        phone,
-                        email,
-                        hospital_name,
-                        business,
-                        region,
-                        message,
-                        status: 'pending',
-                        user_id: userId,
-                        commission_rate: 0.015
-                    }]);
+                // 2. RPC 로 partner 생성 (추천코드 → 부모 자동 매핑)
+                const { error: rpcError } = await sb.rpc('register_partner_with_referral', {
+                    p_name: name,
+                    p_phone: phone,
+                    p_email: email,
+                    p_hospital_name: hospital_name,
+                    p_business: business,
+                    p_region: region,
+                    p_message: message,
+                    p_referral_code: referralCode
+                });
 
-                if (insertError) {
-                    console.error('Partner insert error:', insertError);
-                    if (insertError.code === '23505') {
+                if (rpcError) {
+                    console.error('Partner insert error:', rpcError);
+                    if (rpcError.message && rpcError.message.includes('Invalid referral code')) {
+                        throw new Error('유효하지 않은 추천인 코드입니다. 코드를 확인해주세요.');
+                    }
+                    if (rpcError.code === '23505') {
                         throw new Error('이미 등록된 계정입니다. 로그인 페이지에서 로그인해주세요.');
                     }
-                    if (insertError.code === '42501') {
+                    if (rpcError.code === '42501') {
                         throw new Error('가입 권한 오류입니다. 관리자에게 문의하세요.');
                     }
-                    throw new Error('파트너 정보 저장 중 오류: ' + insertError.message);
+                    throw new Error('파트너 정보 저장 중 오류: ' + rpcError.message);
                 }
 
                 // 3. 즉시 로그아웃 (승인 전이므로)

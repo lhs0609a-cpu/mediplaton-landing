@@ -581,6 +581,8 @@ function switchTab(tab) {
 
     document.getElementById('registerSection').style.display = tab === 'register' ? 'block' : 'none';
     document.getElementById('clientsSection').style.display = tab === 'clients' ? 'block' : 'none';
+    const mylineEl = document.getElementById('mylineSection');
+    if (mylineEl) mylineEl.style.display = tab === 'myline' ? 'block' : 'none';
     document.getElementById('overviewSection').style.display = tab === 'overview' ? 'block' : 'none';
     document.getElementById('settlementsSection').style.display = tab === 'settlements' ? 'block' : 'none';
     document.getElementById('noticesSection').style.display = tab === 'notices' ? 'block' : 'none';
@@ -591,6 +593,7 @@ function switchTab(tab) {
     document.getElementById('notificationsSection').style.display = tab === 'notifications' ? 'block' : 'none';
 
     if (tab === 'clients') loadClients();
+    if (tab === 'myline') loadMyLine();
     if (tab === 'overview') { loadOverview(); loadLeaderboard(); }
     if (tab === 'settlements') loadSettlements();
     if (tab === 'notices') loadPartnerNotices();
@@ -2049,4 +2052,203 @@ async function saveClinicNote(id) {
     } catch (error) {
         showToast('메모 저장 실패: ' + error.message, 'error');
     }
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// 내 라인 (다단계 하위 라인) — RLS가 본인 + 본인 하위만 자동 노출
+// ═══════════════════════════════════════════════════════════
+
+async function loadMyLine() {
+    if (!currentPartner) return;
+
+    // 1) 추천 코드 / 초대 링크 표시
+    const code = currentPartner.referral_code || '';
+    const codeBox = document.getElementById('myReferralCode');
+    if (codeBox) codeBox.textContent = code || '코드 발급 대기';
+    const link = `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, '')}partner-register.html?ref=${encodeURIComponent(code)}`;
+    const linkBox = document.getElementById('referralLinkBox');
+    if (linkBox) linkBox.textContent = code ? link : '';
+    window._myReferralLink = link;
+
+    document.getElementById('lineLoading').style.display = 'block';
+    document.getElementById('lineTreeWrap').style.display = 'none';
+    document.getElementById('lineEmpty').style.display = 'none';
+
+    try {
+        // 2) 본인 + 하위 라인 전체 (RLS가 차단해주므로 그냥 select)
+        const { data: line, error } = await sb
+            .from('partners')
+            .select('id, name, status, parent_partner_id, depth, created_at, hospital_name, business')
+            .order('depth', { ascending: true })
+            .order('created_at', { ascending: true });
+        if (error) throw error;
+
+        // 본인 제외한 하위 카운트
+        const me = (line || []).find(p => p.id === currentPartner.id);
+        const myDepth = me ? me.depth : 0;
+        const descendants = (line || []).filter(p => p.id !== currentPartner.id);
+        const directChildren = descendants.filter(p => p.parent_partner_id === currentPartner.id);
+
+        document.getElementById('lineDirectCount').textContent = directChildren.length;
+        document.getElementById('lineTotalCount').textContent = descendants.length;
+
+        // 3) 라인 누적 계약액 (consultations 도 RLS 로 자동 필터)
+        const { data: deals } = await sb
+            .from('consultations')
+            .select('id, name, partner_id, product, pipeline_status, transaction_amount, created_at')
+            .order('created_at', { ascending: false });
+
+        const lineDeals = (deals || []).filter(d => d.partner_id !== currentPartner.id);
+        const lineVolume = lineDeals
+            .filter(d => d.pipeline_status === 'contracted')
+            .reduce((s, d) => s + Number(d.transaction_amount || 0), 0);
+        document.getElementById('lineVolume').textContent = formatCurrency(lineVolume);
+
+        // 4) 내가 받는 수수료 (settlements 는 본인 row 만 보임)
+        const { data: settles } = await sb
+            .from('settlements')
+            .select('total_payout, commission_amount, level, status')
+            .neq('status', 'cancelled');
+        const myLineCommission = (settles || [])
+            .filter(s => Number(s.level) >= 2)  // level 1 은 본인 직접건, 2+ 가 라인에서 떨어진 것
+            .reduce((s, r) => s + Number(r.total_payout || r.commission_amount || 0), 0);
+        document.getElementById('lineMyCommission').textContent = formatCurrency(myLineCommission);
+
+        // 5) 트리 렌더 (본인 노드 + 하위)
+        renderLineTree(line || [], deals || []);
+
+        // 6) 라인 진행 건 테이블
+        renderLineDeals(lineDeals, line || []);
+
+    } catch (e) {
+        console.error('loadMyLine error:', e);
+        document.getElementById('lineEmpty').style.display = 'block';
+        document.getElementById('lineEmpty').querySelector('h3').textContent = '라인 정보를 불러오지 못했습니다';
+    } finally {
+        document.getElementById('lineLoading').style.display = 'none';
+    }
+}
+
+function renderLineTree(partners, deals) {
+    const wrap = document.getElementById('lineTreeWrap');
+    const root = document.getElementById('lineTree');
+    if (!root) return;
+
+    // partners[] 에서 트리 빌드
+    const byId = {};
+    partners.forEach(p => { byId[p.id] = Object.assign({}, p, { children: [] }); });
+    partners.forEach(p => {
+        if (p.parent_partner_id && byId[p.parent_partner_id]) {
+            byId[p.parent_partner_id].children.push(byId[p.id]);
+        }
+    });
+
+    const dealStats = {};
+    deals.forEach(d => {
+        if (!dealStats[d.partner_id]) dealStats[d.partner_id] = { count: 0, contracted: 0, volume: 0 };
+        dealStats[d.partner_id].count++;
+        if (d.pipeline_status === 'contracted') {
+            dealStats[d.partner_id].contracted++;
+            dealStats[d.partner_id].volume += Number(d.transaction_amount || 0);
+        }
+    });
+
+    const meNode = byId[currentPartner.id];
+    if (!meNode) {
+        wrap.style.display = 'none';
+        document.getElementById('lineEmpty').style.display = 'block';
+        return;
+    }
+
+    if (!meNode.children.length) {
+        wrap.style.display = 'none';
+        document.getElementById('lineEmpty').style.display = 'block';
+        return;
+    }
+
+    wrap.style.display = 'block';
+    root.innerHTML = renderNodeHtml(meNode, dealStats, 0, true);
+}
+
+function renderNodeHtml(node, dealStats, displayDepth, isRoot) {
+    const stat = dealStats[node.id] || { count: 0, contracted: 0, volume: 0 };
+    const initials = (node.name || '?').substring(0, 1);
+    const meLabel = isRoot ? ' (나)' : '';
+    const statusBadge = node.status === 'approved' ? '' : `<span class="tree-depth-pill">${node.status || 'pending'}</span>`;
+    const depthPill = !isRoot ? `<span class="tree-depth-pill">L${displayDepth}</span>` : '';
+
+    let html = `
+        <div class="tree-node">
+            <div class="node-avatar">${escapeHtml(initials)}</div>
+            <div class="node-meta">
+                <div class="node-name">${escapeHtml(node.name || '이름 없음')}${meLabel}${depthPill}${statusBadge}</div>
+                <div class="node-sub">${escapeHtml(node.hospital_name || node.business || '')} · 가입 ${(node.created_at || '').substring(0,10)}</div>
+            </div>
+            <div class="node-stats">
+                <div class="node-stat"><div class="v">${stat.count}</div><div class="l">등록</div></div>
+                <div class="node-stat"><div class="v">${stat.contracted}</div><div class="l">계약</div></div>
+                <div class="node-stat"><div class="v">${formatCurrency(stat.volume)}</div><div class="l">거래액</div></div>
+            </div>
+        </div>
+    `;
+    if (node.children && node.children.length) {
+        html += '<div class="tree-children">';
+        node.children.forEach(c => {
+            html += renderNodeHtml(c, dealStats, displayDepth + 1, false);
+        });
+        html += '</div>';
+    }
+    return html;
+}
+
+function renderLineDeals(lineDeals, partners) {
+    const tbody = document.getElementById('lineDealsBody');
+    const table = document.getElementById('lineDealsTable');
+    const empty = document.getElementById('lineDealsEmpty');
+    if (!tbody) return;
+
+    if (!lineDeals.length) {
+        table.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+    }
+
+    const nameById = {};
+    partners.forEach(p => { nameById[p.id] = p.name; });
+
+    const statusLabel = {
+        received: '접수',
+        reviewing: '심사 중',
+        approved: '승인',
+        installed: '설치 완료',
+        contracted: '계약 완료',
+        rejected: '반려'
+    };
+
+    tbody.innerHTML = lineDeals.slice(0, 100).map(d => `
+        <tr>
+            <td>${(d.created_at || '').substring(0,10)}</td>
+            <td>${escapeHtml(nameById[d.partner_id] || '하위 파트너')}</td>
+            <td>${escapeHtml(d.name || '-')}</td>
+            <td>${escapeHtml(d.product || '-')}</td>
+            <td>${escapeHtml(statusLabel[d.pipeline_status] || d.pipeline_status || '-')}</td>
+            <td>${d.transaction_amount ? formatCurrency(d.transaction_amount) + '원' : '-'}</td>
+        </tr>
+    `).join('');
+
+    table.style.display = '';
+    empty.style.display = 'none';
+}
+
+function copyReferralCode() {
+    const code = currentPartner && currentPartner.referral_code;
+    if (!code) { showToast('추천 코드가 아직 발급되지 않았습니다.', 'error'); return; }
+    navigator.clipboard.writeText(code).then(() => showToast('추천 코드를 복사했습니다.', 'success'));
+}
+
+function copyReferralLink() {
+    const link = window._myReferralLink;
+    if (!link) { showToast('초대 링크를 만들 수 없습니다.', 'error'); return; }
+    navigator.clipboard.writeText(link).then(() => showToast('초대 링크를 복사했습니다.', 'success'));
 }

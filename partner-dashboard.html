@@ -345,6 +345,42 @@
         }
         .sign-agreement input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
 
+        /* ===== 다단계 라인 트리 ===== */
+        .tree-node {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; background: var(--white);
+            border: 1px solid var(--gray-200); border-radius: var(--radius);
+            margin-bottom: 8px; transition: background 0.15s;
+        }
+        .tree-node:hover { background: var(--gray-50); }
+        .tree-node .node-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--primary-light); color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px; flex-shrink: 0;
+        }
+        .tree-node .node-meta { flex: 1; min-width: 0; }
+        .tree-node .node-name { font-weight: 600; color: var(--gray-900); font-size: 15px; }
+        .tree-node .node-sub { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+        .tree-node .node-stats {
+            display: flex; gap: 16px; flex-shrink: 0;
+        }
+        .tree-node .node-stat { text-align: right; }
+        .tree-node .node-stat .v { font-weight: 700; color: var(--gray-900); font-size: 14px; }
+        .tree-node .node-stat .l { font-size: 11px; color: var(--gray-500); }
+        .tree-children { margin-left: 24px; padding-left: 18px; border-left: 2px solid var(--gray-200); margin-top: 4px; margin-bottom: 12px; }
+        .tree-toggle { background: none; border: none; cursor: pointer; color: var(--gray-500); font-size: 14px; padding: 2px 6px; }
+        .tree-toggle:hover { color: var(--primary); }
+        .tree-depth-pill {
+            display: inline-block; padding: 2px 8px; border-radius: 10px;
+            background: var(--gray-100); color: var(--gray-700); font-size: 11px; margin-left: 6px;
+        }
+        @media (max-width: 640px) {
+            .tree-node { flex-wrap: wrap; }
+            .tree-node .node-stats { width: 100%; justify-content: space-between; margin-top: 8px; }
+            .tree-children { margin-left: 12px; padding-left: 10px; }
+        }
+
         /* ===== 계약 게이트 화면 ===== */
         .contract-gate { display: none; min-height: 100vh; background: var(--gray-100); }
         .contract-gate-header { background: var(--white); padding: 16px 24px; box-shadow: var(--shadow); }
@@ -499,6 +535,7 @@
             <div class="tabs">
                 <button class="tab-btn active" data-tab="register">고객 등록</button>
                 <button class="tab-btn" data-tab="clients">내 건 현황</button>
+                <button class="tab-btn" data-tab="myline">내 라인</button>
                 <button class="tab-btn" data-tab="overview">전체 현황</button>
                 <button class="tab-btn" data-tab="settlements">정산</button>
                 <button class="tab-btn" data-tab="notices">공지사항</button>
@@ -648,6 +685,90 @@
                     <div class="empty-state" id="clientEmpty" style="display: none;">
                         <h3>등록된 고객이 없습니다</h3>
                         <p>고객 등록 탭에서 신규 고객을 등록해보세요.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: My Line (다단계 하위 라인) -->
+            <div class="tab-content" id="mylineSection" style="display: none;">
+                <!-- 초대 코드 카드 -->
+                <div class="data-section" style="margin-bottom: 20px;">
+                    <div class="data-header"><h2>내 추천 코드</h2></div>
+                    <div style="padding:20px;">
+                        <p style="color:var(--gray-500);font-size:14px;margin-bottom:12px;">
+                            아래 코드 또는 링크를 공유하면, 가입한 분이 자동으로 내 하위 라인이 됩니다.
+                        </p>
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+                            <div style="background:var(--primary-light);color:var(--primary);padding:14px 22px;border-radius:var(--radius);font-size:24px;font-weight:700;letter-spacing:3px;font-family:monospace;" id="myReferralCode">--------</div>
+                            <button class="btn btn-outline btn-sm" onclick="copyReferralCode()">코드 복사</button>
+                            <button class="btn btn-primary btn-sm" onclick="copyReferralLink()">초대 링크 복사</button>
+                        </div>
+                        <div id="referralLinkBox" style="margin-top:12px;font-size:13px;color:var(--gray-500);word-break:break-all;"></div>
+                    </div>
+                </div>
+
+                <!-- 라인 요약 카드 -->
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 20px;">
+                    <div class="stat-card">
+                        <h3>내 직속</h3>
+                        <div class="stat-value" id="lineDirectCount">0</div>
+                        <div class="stat-sub">명</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>라인 전체</h3>
+                        <div class="stat-value" id="lineTotalCount">0</div>
+                        <div class="stat-sub">명</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>라인 누적 계약액</h3>
+                        <div class="stat-value" id="lineVolume">0</div>
+                        <div class="stat-sub">원</div>
+                    </div>
+                    <div class="stat-card highlight">
+                        <h3>내 라인 수수료 합계</h3>
+                        <div class="stat-value" id="lineMyCommission">0</div>
+                        <div class="stat-sub">원 (세금계산서 포함)</div>
+                    </div>
+                </div>
+
+                <!-- 라인 트리 -->
+                <div class="data-section">
+                    <div class="data-header">
+                        <h2>내 하위 라인</h2>
+                        <span style="font-size:13px;color:var(--gray-500);">상위 정보는 노출되지 않습니다</span>
+                    </div>
+                    <div class="loading" id="lineLoading"><div class="spinner"></div></div>
+                    <div id="lineTreeWrap" style="padding:8px 0; display:none;">
+                        <div id="lineTree"></div>
+                    </div>
+                    <div class="empty-state" id="lineEmpty" style="display: none;">
+                        <h3>하위 라인이 없습니다</h3>
+                        <p>위의 추천 코드를 다른 파트너에게 공유해 라인을 만들어보세요.</p>
+                    </div>
+                </div>
+
+                <!-- 라인 진행 현황 -->
+                <div class="data-section" style="margin-top:20px;">
+                    <div class="data-header">
+                        <h2>내 라인 진행 건</h2>
+                        <span style="font-size:13px;color:var(--gray-500);">하위가 등록·진행 중인 건 (수수료액 비공개)</span>
+                    </div>
+                    <div class="loading" id="lineDealsLoading" style="display:none;"><div class="spinner"></div></div>
+                    <table class="data-table" id="lineDealsTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>등록일</th>
+                                <th>등록 파트너</th>
+                                <th>고객명</th>
+                                <th>상품</th>
+                                <th>진행 상태</th>
+                                <th>거래액</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lineDealsBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="lineDealsEmpty" style="display: none;">
+                        <h3>라인 진행 건이 없습니다</h3>
                     </div>
                 </div>
             </div>

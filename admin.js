@@ -421,6 +421,8 @@ function switchTab(tab) {
     document.getElementById('allInquiriesSection').style.display = tab === 'all-inquiries' ? 'block' : 'none';
     document.getElementById('consultationsSection').style.display = tab === 'consultations' ? 'block' : 'none';
     document.getElementById('partnersSection').style.display = tab === 'partners' ? 'block' : 'none';
+    const treeSec = document.getElementById('partnerTreeSection');
+    if (treeSec) treeSec.style.display = tab === 'partner-tree' ? 'block' : 'none';
     const agSec = document.getElementById('agenciesSection');
     if (agSec) agSec.style.display = tab === 'agencies' ? 'block' : 'none';
     document.getElementById('customersSection').style.display = tab === 'customers' ? 'block' : 'none';
@@ -437,6 +439,7 @@ function switchTab(tab) {
     if (tab === 'all-inquiries') loadAllInquiries();
     if (tab === 'consultations') loadConsultations();
     if (tab === 'partners') loadPartners();
+    if (tab === 'partner-tree') { loadPartnerTree(); loadCommissionPolicies(); loadMultiLevelSettlements(); }
     if (tab === 'agencies') loadAgencies();
     if (tab === 'customers') loadCustomers();
     if (tab === 'admin-settlements') {
@@ -3892,3 +3895,289 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sr) sr.addEventListener('input', debounce(loadAgencies, 300));
     if (ex) ex.addEventListener('click', exportAgencyCSV);
 });
+
+
+// ═══════════════════════════════════════════════════════════
+// 다단계 조직도 + 수수료 정책 + 분배 정산 (관리자 전용)
+// ═══════════════════════════════════════════════════════════
+
+async function loadPartnerTree() {
+    const loading = document.getElementById('treeLoading');
+    const wrap = document.getElementById('treeWrap');
+    const empty = document.getElementById('treeEmpty');
+    if (!loading) return;
+    loading.style.display = 'block';
+    wrap.style.display = 'none';
+    empty.style.display = 'none';
+
+    try {
+        const { data: partners, error } = await sb
+            .from('partners')
+            .select('id, name, email, phone, status, parent_partner_id, depth, path, referral_code, business_type, hospital_name, created_at, commission_rate')
+            .order('depth', { ascending: true })
+            .order('created_at', { ascending: true });
+        if (error) throw error;
+
+        // 계약 카운트 (각 파트너별)
+        const { data: deals } = await sb
+            .from('consultations')
+            .select('partner_id, pipeline_status, transaction_amount');
+
+        const dealStats = {};
+        (deals || []).forEach(d => {
+            if (!dealStats[d.partner_id]) dealStats[d.partner_id] = { total: 0, contracted: 0, volume: 0 };
+            dealStats[d.partner_id].total++;
+            if (d.pipeline_status === 'contracted') {
+                dealStats[d.partner_id].contracted++;
+                dealStats[d.partner_id].volume += Number(d.transaction_amount || 0);
+            }
+        });
+
+        // 트리 빌드
+        const byId = {};
+        (partners || []).forEach(p => { byId[p.id] = Object.assign({}, p, { children: [] }); });
+        const roots = [];
+        (partners || []).forEach(p => {
+            if (p.parent_partner_id && byId[p.parent_partner_id]) {
+                byId[p.parent_partner_id].children.push(byId[p.id]);
+            } else {
+                roots.push(byId[p.id]);
+            }
+        });
+
+        if (!roots.length) {
+            empty.style.display = 'block';
+            loading.style.display = 'none';
+            return;
+        }
+
+        const searchTerm = (document.getElementById('treeSearch')?.value || '').toLowerCase();
+        const root = document.getElementById('adminTree');
+        root.innerHTML = roots.map(r => renderAdminNode(r, dealStats, searchTerm)).join('');
+        wrap.style.display = 'block';
+    } catch (e) {
+        console.error('loadPartnerTree error:', e);
+        empty.style.display = 'block';
+        empty.querySelector('h3').textContent = '조직도를 불러오지 못했습니다';
+    } finally {
+        loading.style.display = 'none';
+    }
+}
+
+function renderAdminNode(node, dealStats, search) {
+    const stat = dealStats[node.id] || { total: 0, contracted: 0, volume: 0 };
+    const initials = (node.name || '?').substring(0, 1);
+    const hideForSearch = search && !(`${node.name||''} ${node.email||''}`.toLowerCase().includes(search));
+    const rate = node.commission_rate ? (Number(node.commission_rate) * 100).toFixed(2) + '%' : '-';
+    const bizType = node.business_type === 'corporate' ? '사업자' : '개인';
+    const statusBadge = node.status === 'approved'
+        ? '<span class="status-badge status-approved">승인</span>'
+        : `<span class="status-badge status-${node.status||'pending'}">${node.status||'pending'}</span>`;
+
+    let html = hideForSearch ? '' : `
+        <div class="tree-node-admin">
+            <div class="avatar">${escapeHtml(initials)}</div>
+            <div class="info">
+                <div class="name">
+                    ${escapeHtml(node.name || '이름없음')}
+                    <span class="level-pill">L${node.depth ?? 0}</span>
+                    <span class="ref-code">${escapeHtml(node.referral_code || '-')}</span>
+                    ${statusBadge}
+                </div>
+                <div class="sub">${escapeHtml(node.email || '')} · ${escapeHtml(node.phone || '')} · ${bizType} · 기본 ${rate}</div>
+            </div>
+            <div class="stats">
+                <span><strong>${stat.total}</strong> 등록</span>
+                <span><strong>${stat.contracted}</strong> 계약</span>
+                <span><strong>${formatCurrency(stat.volume)}</strong>원</span>
+            </div>
+        </div>
+    `;
+    if (node.children && node.children.length) {
+        html += '<div class="tree-children-admin">';
+        node.children.forEach(c => { html += renderAdminNode(c, dealStats, search); });
+        html += '</div>';
+    }
+    return html;
+}
+
+// ─── 수수료 정책 CRUD ───
+
+async function loadCommissionPolicies() {
+    const tbody = document.getElementById('policyTableBody');
+    if (!tbody) return;
+    try {
+        const { data, error } = await sb
+            .from('commission_policies')
+            .select('*')
+            .order('product_category', { ascending: true })
+            .order('level', { ascending: true });
+        if (error) throw error;
+
+        if (!data || !data.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:24px;">정책이 없습니다. + 정책 추가 버튼으로 생성하세요.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = data.map(p => `
+            <tr>
+                <td><code>${escapeHtml(p.product_category)}</code></td>
+                <td>L${p.level}</td>
+                <td><strong>${(Number(p.rate)*100).toFixed(2)}%</strong></td>
+                <td>${escapeHtml(p.label || '')}</td>
+                <td>${p.active ? '<span class="status-badge status-approved">활성</span>' : '<span class="status-badge status-cancelled">비활성</span>'}</td>
+                <td>
+                    <button class="btn btn-outline btn-sm" onclick="editPolicy(${p.id})">수정</button>
+                    <button class="btn btn-outline btn-sm" onclick="deletePolicy(${p.id})" style="color:var(--danger);">삭제</button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        console.error('loadCommissionPolicies error:', e);
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--danger);padding:24px;">정책 로드 실패: ' + escapeHtml(e.message) + '</td></tr>';
+    }
+}
+
+function openPolicyModal() {
+    document.getElementById('policyId').value = '';
+    document.getElementById('policyProduct').value = '*';
+    document.getElementById('policyLevel').value = 1;
+    document.getElementById('policyRate').value = 0.015;
+    document.getElementById('policyLabel').value = '';
+    document.getElementById('policyActive').checked = true;
+    document.getElementById('policyModalTitle').textContent = '정책 추가';
+    document.getElementById('policyModal').classList.add('active');
+}
+
+async function editPolicy(id) {
+    const { data, error } = await sb.from('commission_policies').select('*').eq('id', id).single();
+    if (error || !data) { showToast('정책 조회 실패', 'error'); return; }
+    document.getElementById('policyId').value = data.id;
+    document.getElementById('policyProduct').value = data.product_category;
+    document.getElementById('policyLevel').value = data.level;
+    document.getElementById('policyRate').value = data.rate;
+    document.getElementById('policyLabel').value = data.label || '';
+    document.getElementById('policyActive').checked = data.active;
+    document.getElementById('policyModalTitle').textContent = '정책 수정';
+    document.getElementById('policyModal').classList.add('active');
+}
+
+async function deletePolicy(id) {
+    if (!confirm('이 정책을 삭제하시겠습니까?')) return;
+    const { error } = await sb.from('commission_policies').delete().eq('id', id);
+    if (error) { showToast('삭제 실패: ' + error.message, 'error'); return; }
+    showToast('삭제되었습니다.', 'success');
+    loadCommissionPolicies();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('policyForm');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('policyId').value;
+            const payload = {
+                product_category: document.getElementById('policyProduct').value,
+                level: parseInt(document.getElementById('policyLevel').value, 10),
+                rate: parseFloat(document.getElementById('policyRate').value),
+                label: document.getElementById('policyLabel').value || null,
+                active: document.getElementById('policyActive').checked
+            };
+            try {
+                if (id) {
+                    const { error } = await sb.from('commission_policies').update(payload).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await sb.from('commission_policies').insert([payload]);
+                    if (error) throw error;
+                }
+                document.getElementById('policyModal').classList.remove('active');
+                showToast('저장되었습니다.', 'success');
+                loadCommissionPolicies();
+            } catch (e) {
+                showToast('저장 실패: ' + e.message, 'error');
+            }
+        });
+    }
+
+    const ts = document.getElementById('treeSearch');
+    if (ts) ts.addEventListener('input', debounce(loadPartnerTree, 250));
+
+    const msm = document.getElementById('multiSettleMonthFilter');
+    const msl = document.getElementById('multiSettleLevelFilter');
+    if (msm) msm.addEventListener('change', loadMultiLevelSettlements);
+    if (msl) msl.addEventListener('change', loadMultiLevelSettlements);
+});
+
+// ─── 다단계 정산 내역 ───
+
+async function loadMultiLevelSettlements() {
+    const tbody = document.getElementById('multiSettleBody');
+    if (!tbody) return;
+
+    // 월 선택 초기화 (최근 12개월)
+    const monthSel = document.getElementById('multiSettleMonthFilter');
+    if (monthSel && !monthSel.options.length) {
+        const now = new Date();
+        let html = '<option value="">전체 월</option>';
+        for (let i = 0; i < 12; i++) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const ym = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+            html += `<option value="${ym}">${ym}</option>`;
+        }
+        monthSel.innerHTML = html;
+    }
+
+    const monthVal = monthSel?.value || '';
+    const levelVal = document.getElementById('multiSettleLevelFilter')?.value || '';
+
+    try {
+        let q = sb.from('settlements')
+            .select('id, month, partner_id, level, client_name, originator_partner_id, transaction_amount, commission_rate, supply_amount, vat_amount, total_payout, tax_invoice_required, tax_invoice_issued, status')
+            .order('created_at', { ascending: false })
+            .limit(500);
+        if (monthVal) q = q.eq('month', monthVal);
+        if (levelVal) {
+            if (levelVal === '4') q = q.gte('level', 4);
+            else q = q.eq('level', parseInt(levelVal, 10));
+        }
+        const { data, error } = await q;
+        if (error) throw error;
+
+        if (!data || !data.length) {
+            tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;color:var(--gray-500);padding:24px;">정산 내역이 없습니다.</td></tr>';
+            return;
+        }
+
+        // 파트너 이름 매핑
+        const pIds = Array.from(new Set([...data.map(r => r.partner_id), ...data.map(r => r.originator_partner_id)].filter(Boolean)));
+        const { data: ps } = await sb.from('partners').select('id, name').in('id', pIds);
+        const nameMap = {};
+        (ps || []).forEach(p => { nameMap[p.id] = p.name; });
+
+        tbody.innerHTML = data.map(r => `
+            <tr>
+                <td>${escapeHtml(r.month || '-')}</td>
+                <td>${escapeHtml(nameMap[r.partner_id] || '#' + r.partner_id)}</td>
+                <td><span class="level-pill">L${r.level || 1}</span></td>
+                <td>${escapeHtml(r.client_name || '-')}</td>
+                <td>${escapeHtml(nameMap[r.originator_partner_id] || '-')}</td>
+                <td>${formatCurrency(r.transaction_amount || 0)}</td>
+                <td>${r.commission_rate ? (Number(r.commission_rate)*100).toFixed(2)+'%' : '-'}</td>
+                <td>${formatCurrency(r.supply_amount || r.commission_amount || 0)}</td>
+                <td>${formatCurrency(r.vat_amount || 0)}</td>
+                <td><strong>${formatCurrency(r.total_payout || 0)}</strong></td>
+                <td>${r.tax_invoice_required ? (r.tax_invoice_issued ? '발행' : '필요') : '-'}</td>
+                <td><span class="status-badge status-${r.status || 'pending'}">${r.status || 'pending'}</span></td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        console.error('loadMultiLevelSettlements error:', e);
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;color:var(--danger);padding:24px;">조회 실패: ' + escapeHtml(e.message) + '</td></tr>';
+    }
+}
+
+window.openPolicyModal = openPolicyModal;
+window.editPolicy = editPolicy;
+window.deletePolicy = deletePolicy;
+window.loadPartnerTree = loadPartnerTree;
