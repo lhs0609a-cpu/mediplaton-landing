@@ -3958,21 +3958,74 @@ async function loadPartnerTree() {
             }
         });
 
+        // 라인(자기+하위) 거래액 사전 계산
+        const lineVolumes = {};
+        (partners || []).forEach(p => {
+            lineVolumes[p.id] = 0;
+            (partners || []).forEach(d => {
+                if (d.id === p.id || (d.path && p.path && d.path.startsWith(p.path + '/'))) {
+                    const ds = dealStats[d.id];
+                    if (ds) lineVolumes[p.id] += ds.volume;
+                }
+            });
+        });
+
+        // 이번 달 수수료 (settlements 에서)
+        const now = new Date();
+        const ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+        const monthCommission = {};
+        let monthCommissionTotal = 0;
+        let pendingTotal = 0;
+        try {
+            const { data: settles } = await sb
+                .from('settlements')
+                .select('partner_id, total_payout, commission_amount, status, month')
+                .neq('status', 'cancelled');
+            (settles || []).forEach(s => {
+                const amt = Number(s.total_payout || s.commission_amount || 0);
+                if (s.month === ym) {
+                    monthCommission[s.partner_id] = (monthCommission[s.partner_id] || 0) + amt;
+                    monthCommissionTotal += amt;
+                }
+                if (s.status === 'pending') pendingTotal += amt;
+            });
+        } catch (_) {}
+
+        // 이번 달 계약
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const monthDeals = (deals || []).filter(d => d.created_at >= monthStart);
+        const monthDealCount = monthDeals.filter(d => d.pipeline_status === 'contracted').length;
+        const monthVol = monthDeals
+            .filter(d => d.pipeline_status === 'contracted')
+            .reduce((s, d) => s + Number(d.transaction_amount || 0), 0);
+
         // 상태 저장
         window._treeState.roots = roots;
         window._treeState.byId = byId;
         window._treeState.dealStats = dealStats;
+        window._treeState.lineVolumes = lineVolumes;
+        window._treeState.monthCommission = monthCommission;
+        window._treeState.allPartners = partners || [];
 
-        // 상단 통계
+        // KPI 헤더
         const total = (partners || []).length;
+        const active = (partners || []).filter(p => p.status === 'approved').length;
         const maxDepth = Math.max(0, ...(partners || []).map(p => p.depth || 0));
-        const totalVolume = (deals || [])
-            .filter(d => d.pipeline_status === 'contracted')
-            .reduce((s, d) => s + Number(d.transaction_amount || 0), 0);
-        document.getElementById('tsTotal').textContent = total;
-        document.getElementById('tsRoots').textContent = roots.length;
-        document.getElementById('tsMaxDepth').textContent = 'L' + maxDepth;
-        document.getElementById('tsVolume').textContent = formatCurrency(totalVolume);
+        const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        setText('kpiTotal', total);
+        setText('kpiActive', active);
+        setText('kpiRoots', roots.length);
+        setText('kpiDepth', 'L' + maxDepth);
+        setText('kpiMonthDeals', monthDealCount + '건');
+        setText('kpiMonthVol', formatCurrency(monthVol) + '원');
+        setText('kpiMonthCommission', formatCurrency(monthCommissionTotal) + '원');
+        setText('kpiPending', formatCurrency(pendingTotal) + '원');
+
+        // Top 파트너
+        renderTopPartners();
+
+        // 시뮬레이터 초기 실행
+        runCommissionSim();
 
         if (!total) {
             empty.style.display = 'block';
@@ -4057,39 +4110,66 @@ function renderOrgChart() {
 
 function renderOrgSubtree(node, matchedIds, search) {
     const stats = window._treeState.dealStats[node.id] || { total: 0, contracted: 0, volume: 0 };
+    const lineVol = window._treeState.lineVolumes ? (window._treeState.lineVolumes[node.id] || 0) : 0;
+    const monthCom = window._treeState.monthCommission ? (window._treeState.monthCommission[node.id] || 0) : 0;
     const initials = (node.name || '?').substring(0, 1);
     const isRoot = !node.parent_partner_id;
     const isCollapsed = window._treeState.collapsed.has(node.id);
     const hasChildren = node.children && node.children.length;
+
+    const depth = node.depth || 0;
+    const levelClass = isRoot ? 'lv-root'
+                     : depth === 1 ? 'lv-1'
+                     : depth === 2 ? 'lv-2'
+                     : depth === 3 ? 'lv-3'
+                     : 'lv-4';
     const statusClass = node.status === 'pending' ? 'pending'
                       : node.status === 'rejected' ? 'rejected'
                       : '';
-    const rootClass = isRoot ? 'root' : '';
     const collapsedClass = isCollapsed ? 'collapsed' : '';
     const dimClass = (search && !matchedIds.has(node.id)) ? 'dim' : '';
     const matchClass = (search && matchedIds.has(node.id) && (node.name || '').toLowerCase().includes(search.toLowerCase())) ? 'match' : '';
 
     const rate = node.commission_rate ? (Number(node.commission_rate) * 100).toFixed(2) + '%' : '1.50%';
     const bizType = node.business_type === 'corporate' ? '사업자' : '개인';
+    const bizClass = node.business_type === 'corporate' ? 'corp' : '';
+    const levelLabel = isRoot ? 'L0' : 'L' + depth;
 
     const card = `
-        <div class="org-card ${rootClass} ${statusClass} ${collapsedClass} ${dimClass} ${matchClass}"
+        <div class="org-card ${levelClass} ${statusClass} ${collapsedClass} ${dimClass} ${matchClass}"
              data-node-id="${node.id}"
              onclick="openPartnerDetailFromTree(${node.id}, event)">
             ${hasChildren ? `<div class="oc-children-count">${node.children.length}</div>` : ''}
-            <div class="oc-head">
-                <div class="oc-avatar">${escapeHtml(initials)}</div>
-                <div class="oc-name" title="${escapeHtml(node.name || '')}">${escapeHtml(node.name || '이름없음')}</div>
-            </div>
-            <div class="oc-meta">
-                <span class="oc-code">${escapeHtml(node.referral_code || '------')}</span>
-                · ${bizType} · ${rate}<br>
-                <span style="color:var(--gray-400);">${escapeHtml(node.email || node.phone || '')}</span>
-            </div>
-            <div class="oc-stats">
-                <div class="oc-stat"><div class="v">${stats.total}</div><div class="l">등록</div></div>
-                <div class="oc-stat"><div class="v">${stats.contracted}</div><div class="l">계약</div></div>
-                <div class="oc-stat"><div class="v">${formatCurrencyShort(stats.volume)}</div><div class="l">거래액</div></div>
+            <div class="org-card-body">
+                <div class="oc-head">
+                    <div class="oc-avatar">${escapeHtml(initials)}</div>
+                    <div class="oc-name-wrap">
+                        <div class="oc-name" title="${escapeHtml(node.name || '')}">
+                            <span class="oc-lvl">${levelLabel}</span>${escapeHtml(node.name || '이름없음')}
+                        </div>
+                        <div style="margin-top:3px;">
+                            <span class="oc-code">${escapeHtml(node.referral_code || '------')}</span>
+                            <span class="oc-biz ${bizClass}">${bizType}</span>
+                            <span class="oc-rate-pill">${rate}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="oc-meta">${escapeHtml(node.email || node.phone || node.hospital_name || '')}</div>
+                <div class="oc-stats">
+                    <div class="oc-stat"><div class="v">${stats.total}</div><div class="l">등록</div></div>
+                    <div class="oc-stat"><div class="v">${stats.contracted}</div><div class="l">계약</div></div>
+                    <div class="oc-stat"><div class="v">${formatCurrencyShort(stats.volume)}</div><div class="l">본인 매출</div></div>
+                </div>
+                ${hasChildren ? `
+                <div class="oc-line-vol">
+                    <span class="lbl">라인 누적</span>
+                    <span class="val">${formatCurrencyShort(lineVol)}원</span>
+                </div>` : ''}
+                ${monthCom > 0 ? `
+                <div class="oc-month-com">
+                    <span class="lbl">이번 달 수수료</span>
+                    <span class="val">${formatCurrencyShort(monthCom)}원</span>
+                </div>` : ''}
             </div>
             ${hasChildren ? `<button class="oc-collapse" onclick="toggleNodeCollapse(${node.id}, event)" title="펼치기/접기">${isCollapsed ? '+' : '−'}</button>` : ''}
         </div>
@@ -4321,112 +4401,375 @@ function renderAdminNode(node, dealStats, search) {
     return html;
 }
 
-// ─── 수수료 정책 CRUD ───
+// ─── Top 파트너 랭킹 ───
+
+function renderTopPartners() {
+    const scope = document.getElementById('topPartnerScope')?.value || 'all';
+    const tbody = document.getElementById('topPartnerBody');
+    if (!tbody) return;
+
+    const ps = window._treeState.allPartners || [];
+    const ds = window._treeState.dealStats || {};
+    const lv = window._treeState.lineVolumes || {};
+
+    const rows = ps.map(p => {
+        const own = (ds[p.id]?.volume) || 0;
+        const line = (lv[p.id] || 0) - own;
+        return { p, own, line, total: own + line };
+    }).sort((a, b) => b.total - a.total).slice(0, 10);
+
+    if (!rows.length || rows.every(r => r.total === 0)) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray-500);padding:24px;">계약 거래액이 있는 파트너가 없습니다</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = rows.map((r, i) => {
+        const initials = (r.p.name || '?').substring(0, 1);
+        return `
+            <tr>
+                <td class="rk">${i + 1}</td>
+                <td>
+                    <div class="name-cell">
+                        <div class="av">${escapeHtml(initials)}</div>
+                        <div>
+                            <div style="font-weight:700;">${escapeHtml(r.p.name || '-')}</div>
+                            <div style="font-size:11px;color:var(--gray-500);">L${r.p.depth ?? 0} · ${escapeHtml(r.p.referral_code || '')}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="font-weight:600;color:var(--gray-700);">${formatCurrencyShort(r.own)}</td>
+                <td style="font-weight:600;color:var(--primary);">${formatCurrencyShort(r.line)}</td>
+                <td style="font-weight:800;color:var(--gray-900);">${formatCurrencyShort(r.total)}원</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+
+// ─── 수수료 시뮬레이터 ───
+
+async function runCommissionSim() {
+    const resBox = document.getElementById('simResult');
+    if (!resBox) return;
+
+    const amt = Number(document.getElementById('simAmount')?.value || 0);
+    const product = document.getElementById('simProduct')?.value || '*';
+    const biz = document.getElementById('simBiz')?.value || 'individual';
+
+    if (amt <= 0) {
+        resBox.innerHTML = '<div class="sim-placeholder">거래액을 입력하세요</div>';
+        return;
+    }
+
+    try {
+        const { data: policies } = await sb
+            .from('commission_policies')
+            .select('*')
+            .eq('active', true)
+            .in('product_category', [product, '*'])
+            .order('level', { ascending: true });
+
+        if (!policies || !policies.length) {
+            resBox.innerHTML = '<div class="sim-placeholder">활성 정책이 없습니다. 매트릭스에서 요율을 설정하세요.</div>';
+            return;
+        }
+
+        const byLevel = {};
+        policies.forEach(p => {
+            if (!byLevel[p.level]) byLevel[p.level] = p;
+            else if (p.product_category === product) byLevel[p.level] = p;
+        });
+
+        const levels = Object.keys(byLevel).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+        let totalSupply = 0, totalVat = 0, totalPay = 0;
+        let rowsHtml = '';
+
+        levels.forEach(lv => {
+            const pol = byLevel[lv];
+            const supply = Math.round(amt * Number(pol.rate));
+            const vat = biz === 'corporate' ? Math.round(supply * 0.1) : 0;
+            const pay = supply + vat;
+            totalSupply += supply; totalVat += vat; totalPay += pay;
+            const lvClass = lv === 1 ? '' : 'l' + Math.min(lv, 3);
+            const lvLabel = lv === 1 ? '본인' : lv === 2 ? '직속 상위' : 'L' + lv;
+            rowsHtml += `
+                <div class="sim-row">
+                    <div class="sim-lv ${lvClass}">L${lv}</div>
+                    <div>${lvLabel} <span style="color:var(--gray-400);font-size:11px;margin-left:4px;">${pol.product_category === '*' ? '(기본)' : pol.product_category}</span></div>
+                    <div class="sim-rate">${(Number(pol.rate)*100).toFixed(2)}%</div>
+                    <div class="sim-amt">${formatCurrency(pay)}원</div>
+                </div>
+            `;
+        });
+
+        const vatNote = biz === 'corporate' ? `<div style="font-size:11px;color:var(--gray-500);margin-top:6px;">공급가 ${formatCurrency(totalSupply)}원 + VAT ${formatCurrency(totalVat)}원</div>` : '';
+
+        resBox.innerHTML = rowsHtml + `
+            <div class="sim-total">
+                <div>총 지급액${biz === 'corporate' ? ' (세금계산서 포함)' : ''}</div>
+                <div class="sim-tv">${formatCurrency(totalPay)}원</div>
+            </div>
+            ${vatNote}
+        `;
+    } catch (e) {
+        resBox.innerHTML = '<div class="sim-placeholder" style="color:var(--danger);">조회 실패</div>';
+    }
+}
+
+
+// ─── 수수료 정책 매트릭스 (인라인 편집) ───
+
+const PRODUCT_LABELS = {
+    '*': '기본 (폴백)',
+    'loan': '카드매출담보',
+    'credit': '신협 데일리론',
+    'kb': 'KB 특별한도',
+    'rental': '렌탈',
+    'deposit': '임차보증금',
+    'purchase': '구매자금',
+    'consult': '상담'
+};
 
 async function loadCommissionPolicies() {
-    const tbody = document.getElementById('policyTableBody');
+    const tbody = document.getElementById('policyMatrixBody');
     if (!tbody) return;
     try {
         const { data, error } = await sb
             .from('commission_policies')
             .select('*')
-            .order('product_category', { ascending: true })
             .order('level', { ascending: true });
         if (error) throw error;
 
-        if (!data || !data.length) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:24px;">정책이 없습니다. + 정책 추가 버튼으로 생성하세요.</td></tr>';
+        // 그리드 빌드: { product: { level: row } }
+        const grid = {};
+        (data || []).forEach(p => {
+            if (!grid[p.product_category]) grid[p.product_category] = {};
+            grid[p.product_category][p.level] = p;
+        });
+
+        // '*' 가 항상 첫 행
+        const products = ['*', ...Object.keys(grid).filter(p => p !== '*').sort()];
+
+        if (!products.length || (products.length === 1 && !grid['*'])) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:24px;">정책이 없습니다. 기본 프리셋을 적용하세요.</td></tr>';
             return;
         }
 
-        tbody.innerHTML = data.map(p => `
-            <tr>
-                <td><code>${escapeHtml(p.product_category)}</code></td>
-                <td>L${p.level}</td>
-                <td><strong>${(Number(p.rate)*100).toFixed(2)}%</strong></td>
-                <td>${escapeHtml(p.label || '')}</td>
-                <td>${p.active ? '<span class="status-badge status-approved">활성</span>' : '<span class="status-badge status-cancelled">비활성</span>'}</td>
-                <td>
-                    <button class="btn btn-outline btn-sm" onclick="editPolicy(${p.id})">수정</button>
-                    <button class="btn btn-outline btn-sm" onclick="deletePolicy(${p.id})" style="color:var(--danger);">삭제</button>
-                </td>
-            </tr>
-        `).join('');
+        tbody.innerHTML = products.map(prod => {
+            const cells = [];
+            for (let lv = 1; lv <= 5; lv++) {
+                const row = grid[prod]?.[lv];
+                if (row) {
+                    cells.push(`
+                        <td>
+                            <div class="policy-cell" data-product="${escapeHtml(prod)}" data-level="${lv}" data-id="${row.id}" data-original="${(Number(row.rate)*100).toFixed(2)}">
+                                <input type="number" step="0.01" min="0" max="100" value="${(Number(row.rate)*100).toFixed(2)}" onchange="markPolicyDirty(this)" onkeyup="markPolicyDirty(this)">
+                                <span class="pct">%</span>
+                            </div>
+                        </td>
+                    `);
+                } else {
+                    cells.push(`
+                        <td>
+                            <div class="policy-cell empty" data-product="${escapeHtml(prod)}" data-level="${lv}" data-id="" data-original="">
+                                <input type="number" step="0.01" min="0" max="100" placeholder="-" onchange="markPolicyDirty(this)" onkeyup="markPolicyDirty(this)">
+                                <span class="pct">%</span>
+                            </div>
+                        </td>
+                    `);
+                }
+            }
+            const isDefault = prod === '*';
+            const rowCls = isDefault ? 'row-default' : '';
+            return `
+                <tr class="${rowCls}">
+                    <td class="cat-cell sticky-col">
+                        <span class="cat-tag">${escapeHtml(PRODUCT_LABELS[prod] || prod)}</span>
+                        ${!isDefault ? `<button class="btn btn-outline btn-sm" style="margin-left:8px;padding:2px 8px;font-size:11px;color:var(--danger);" onclick="deletePolicyRow('${escapeHtml(prod)}')">행 삭제</button>` : ''}
+                    </td>
+                    ${cells.join('')}
+                    <td>
+                        <button class="btn btn-primary btn-sm" style="padding:4px 10px;font-size:11px;" onclick="savePolicyRow('${escapeHtml(prod)}')">저장</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     } catch (e) {
         console.error('loadCommissionPolicies error:', e);
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--danger);padding:24px;">정책 로드 실패: ' + escapeHtml(e.message) + '</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--danger);padding:24px;">정책 로드 실패: ' + escapeHtml(e.message) + '</td></tr>';
     }
 }
 
-function openPolicyModal() {
-    document.getElementById('policyId').value = '';
-    document.getElementById('policyProduct').value = '*';
-    document.getElementById('policyLevel').value = 1;
-    document.getElementById('policyRate').value = 0.015;
-    document.getElementById('policyLabel').value = '';
-    document.getElementById('policyActive').checked = true;
-    document.getElementById('policyModalTitle').textContent = '정책 추가';
-    document.getElementById('policyModal').classList.add('active');
+function markPolicyDirty(input) {
+    const cell = input.closest('.policy-cell');
+    if (!cell) return;
+    const original = cell.dataset.original;
+    const current = input.value;
+    if (current !== original) {
+        cell.classList.add('dirty');
+        cell.classList.remove('empty', 'saved');
+    } else {
+        cell.classList.remove('dirty');
+    }
 }
 
-async function editPolicy(id) {
-    const { data, error } = await sb.from('commission_policies').select('*').eq('id', id).single();
-    if (error || !data) { showToast('정책 조회 실패', 'error'); return; }
-    document.getElementById('policyId').value = data.id;
-    document.getElementById('policyProduct').value = data.product_category;
-    document.getElementById('policyLevel').value = data.level;
-    document.getElementById('policyRate').value = data.rate;
-    document.getElementById('policyLabel').value = data.label || '';
-    document.getElementById('policyActive').checked = data.active;
-    document.getElementById('policyModalTitle').textContent = '정책 수정';
-    document.getElementById('policyModal').classList.add('active');
-}
+async function savePolicyRow(product) {
+    const cells = document.querySelectorAll(`.policy-cell[data-product="${product}"]`);
+    let saved = 0, errors = 0;
+    for (const cell of cells) {
+        const input = cell.querySelector('input');
+        const rawVal = input.value;
+        if (rawVal === '' || rawVal == null) {
+            // 빈 셀: 기존 정책 있으면 삭제
+            if (cell.dataset.id) {
+                try {
+                    const { error } = await sb.from('commission_policies').delete().eq('id', cell.dataset.id);
+                    if (error) throw error;
+                    saved++;
+                } catch (_) { errors++; }
+            }
+            continue;
+        }
+        const rate = parseFloat(rawVal) / 100;
+        if (isNaN(rate) || rate < 0 || rate > 1) { errors++; continue; }
 
-async function deletePolicy(id) {
-    if (!confirm('이 정책을 삭제하시겠습니까?')) return;
-    const { error } = await sb.from('commission_policies').delete().eq('id', id);
-    if (error) { showToast('삭제 실패: ' + error.message, 'error'); return; }
-    showToast('삭제되었습니다.', 'success');
-    loadCommissionPolicies();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('policyForm');
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('policyId').value;
-            const payload = {
-                product_category: document.getElementById('policyProduct').value,
-                level: parseInt(document.getElementById('policyLevel').value, 10),
-                rate: parseFloat(document.getElementById('policyRate').value),
-                label: document.getElementById('policyLabel').value || null,
-                active: document.getElementById('policyActive').checked
-            };
-            try {
-                if (id) {
-                    const { error } = await sb.from('commission_policies').update(payload).eq('id', id);
+        const level = parseInt(cell.dataset.level, 10);
+        const payload = {
+            product_category: product,
+            level: level,
+            rate: rate,
+            label: `${PRODUCT_LABELS[product] || product} - L${level}`,
+            active: true
+        };
+        try {
+            if (cell.dataset.id) {
+                const { error } = await sb.from('commission_policies').update(payload).eq('id', cell.dataset.id);
+                if (error) throw error;
+            } else {
+                // 동일 product/level 이미 있으면 update, 없으면 insert
+                const { data: existing } = await sb.from('commission_policies').select('id').eq('product_category', product).eq('level', level).maybeSingle();
+                if (existing) {
+                    const { error } = await sb.from('commission_policies').update(payload).eq('id', existing.id);
                     if (error) throw error;
                 } else {
                     const { error } = await sb.from('commission_policies').insert([payload]);
                     if (error) throw error;
                 }
-                document.getElementById('policyModal').classList.remove('active');
-                showToast('저장되었습니다.', 'success');
-                loadCommissionPolicies();
-            } catch (e) {
-                showToast('저장 실패: ' + e.message, 'error');
             }
-        });
+            cell.classList.remove('dirty', 'empty');
+            cell.classList.add('saved');
+            cell.dataset.original = (rate * 100).toFixed(2);
+            setTimeout(() => cell.classList.remove('saved'), 1500);
+            saved++;
+        } catch (e) {
+            console.error('savePolicy', e);
+            errors++;
+        }
     }
+    if (errors) showToast(`저장: ${saved}건 / 실패: ${errors}건`, 'error');
+    else showToast(`${saved}건 저장되었습니다.`, 'success');
+    runCommissionSim();
+}
 
+async function deletePolicyRow(product) {
+    if (product === '*') { showToast('기본 정책은 삭제할 수 없습니다.', 'error'); return; }
+    if (!confirm(`'${PRODUCT_LABELS[product] || product}' 상품 정책 전체를 삭제하시겠습니까?`)) return;
+    try {
+        const { error } = await sb.from('commission_policies').delete().eq('product_category', product);
+        if (error) throw error;
+        showToast('삭제되었습니다.', 'success');
+        loadCommissionPolicies();
+        runCommissionSim();
+    } catch (e) {
+        showToast('삭제 실패: ' + e.message, 'error');
+    }
+}
+
+function addPolicyRow() {
+    const products = Object.keys(PRODUCT_LABELS).filter(k => k !== '*');
+    const list = products.map(k => `${k} (${PRODUCT_LABELS[k]})`).join('\n');
+    const prod = prompt(`추가할 상품 카테고리 키를 입력하세요.\n\n사용 가능:\n${list}\n\n예: rental`);
+    if (!prod) return;
+    const trimmed = prod.trim().toLowerCase();
+    if (!trimmed) return;
+    // 일단 L1 에 1% 인서트해서 행 생성
+    sb.from('commission_policies').insert([{
+        product_category: trimmed,
+        level: 1,
+        rate: 0.01,
+        label: `${PRODUCT_LABELS[trimmed] || trimmed} - L1`,
+        active: true
+    }]).then(({ error }) => {
+        if (error) { showToast('추가 실패: ' + error.message, 'error'); return; }
+        showToast('상품 행이 추가되었습니다. 요율을 수정하세요.', 'success');
+        loadCommissionPolicies();
+    });
+}
+
+async function applyPolicyPreset(preset) {
+    const presets = {
+        standard: [
+            { product_category: '*',       level: 1, rate: 0.0150, label: '기본 - 본인' },
+            { product_category: '*',       level: 2, rate: 0.0030, label: '기본 - 직속 상위' },
+            { product_category: '*',       level: 3, rate: 0.0010, label: '기본 - 차상위' },
+            { product_category: 'loan',    level: 1, rate: 0.0200, label: '카드매출담보 - 본인' },
+            { product_category: 'loan',    level: 2, rate: 0.0050, label: '카드매출담보 - L2' },
+            { product_category: 'rental',  level: 1, rate: 0.0300, label: '렌탈 - 본인' },
+            { product_category: 'rental',  level: 2, rate: 0.0050, label: '렌탈 - L2' },
+            { product_category: 'credit',  level: 1, rate: 0.0300, label: '신협 - 본인' },
+            { product_category: 'credit',  level: 2, rate: 0.0070, label: '신협 - L2' }
+        ],
+        aggressive: [
+            { product_category: '*',       level: 1, rate: 0.0200, label: '공격 - 본인' },
+            { product_category: '*',       level: 2, rate: 0.0070, label: '공격 - 직속 상위' },
+            { product_category: '*',       level: 3, rate: 0.0030, label: '공격 - 차상위' },
+            { product_category: '*',       level: 4, rate: 0.0010, label: '공격 - L4' },
+            { product_category: 'loan',    level: 1, rate: 0.0250, label: '카드매출담보 - 본인' },
+            { product_category: 'loan',    level: 2, rate: 0.0100, label: '카드매출담보 - L2' },
+            { product_category: 'rental',  level: 1, rate: 0.0400, label: '렌탈 - 본인' },
+            { product_category: 'rental',  level: 2, rate: 0.0100, label: '렌탈 - L2' }
+        ]
+    };
+    const set = presets[preset];
+    if (!set) return;
+    if (!confirm(`'${preset === 'standard' ? '기본' : '공격적'}' 프리셋을 적용하시겠습니까?\n동일 상품×레벨이 있으면 덮어씁니다.`)) return;
+
+    let ok = 0, err = 0;
+    for (const p of set) {
+        const { data: existing } = await sb.from('commission_policies').select('id').eq('product_category', p.product_category).eq('level', p.level).maybeSingle();
+        if (existing) {
+            const { error } = await sb.from('commission_policies').update({ ...p, active: true }).eq('id', existing.id);
+            if (error) err++; else ok++;
+        } else {
+            const { error } = await sb.from('commission_policies').insert([{ ...p, active: true }]);
+            if (error) err++; else ok++;
+        }
+    }
+    showToast(`프리셋 적용: ${ok}건 (실패 ${err})`, err ? 'error' : 'success');
+    loadCommissionPolicies();
+    runCommissionSim();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     const ts = document.getElementById('treeSearch');
     if (ts) ts.addEventListener('input', debounce(renderTreeByCurrentView, 200));
 
     const msm = document.getElementById('multiSettleMonthFilter');
     const msl = document.getElementById('multiSettleLevelFilter');
+    const mss = document.getElementById('multiSettleStatusFilter');
     if (msm) msm.addEventListener('change', loadMultiLevelSettlements);
     if (msl) msl.addEventListener('change', loadMultiLevelSettlements);
+    if (mss) mss.addEventListener('change', loadMultiLevelSettlements);
+
+    // 시뮬레이터
+    const simInputs = ['simAmount', 'simProduct', 'simBiz'];
+    simInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', debounce(runCommissionSim, 200));
+    });
+
+    const tps = document.getElementById('topPartnerScope');
+    if (tps) tps.addEventListener('change', renderTopPartners);
 });
 
 // ─── 다단계 정산 내역 ───
@@ -4450,6 +4793,7 @@ async function loadMultiLevelSettlements() {
 
     const monthVal = monthSel?.value || '';
     const levelVal = document.getElementById('multiSettleLevelFilter')?.value || '';
+    const statusVal = document.getElementById('multiSettleStatusFilter')?.value || '';
 
     try {
         let q = sb.from('settlements')
@@ -4461,8 +4805,26 @@ async function loadMultiLevelSettlements() {
             if (levelVal === '4') q = q.gte('level', 4);
             else q = q.eq('level', parseInt(levelVal, 10));
         }
+        if (statusVal) q = q.eq('status', statusVal);
         const { data, error } = await q;
         if (error) throw error;
+
+        // 합계 요약 카드
+        const summary = document.getElementById('settleSummary');
+        if (summary) {
+            const total = (data || []).reduce((s, r) => s + Number(r.total_payout || 0), 0);
+            const pending = (data || []).filter(r => r.status === 'pending').reduce((s, r) => s + Number(r.total_payout || 0), 0);
+            const paid = (data || []).filter(r => r.status === 'paid').reduce((s, r) => s + Number(r.total_payout || 0), 0);
+            const vat = (data || []).reduce((s, r) => s + Number(r.vat_amount || 0), 0);
+            const taxReq = (data || []).filter(r => r.tax_invoice_required && !r.tax_invoice_issued).length;
+            summary.innerHTML = `
+                <div class="ss-card"><div class="v">${formatCurrency(total)}원</div><div class="l">총 분배액</div></div>
+                <div class="ss-card warning"><div class="v">${formatCurrency(pending)}원</div><div class="l">미지급</div></div>
+                <div class="ss-card success"><div class="v">${formatCurrency(paid)}원</div><div class="l">지급 완료</div></div>
+                <div class="ss-card"><div class="v">${formatCurrency(vat)}원</div><div class="l">VAT 합계</div></div>
+                <div class="ss-card danger"><div class="v">${taxReq}건</div><div class="l">세금계산서 미발행</div></div>
+            `;
+        }
 
         if (!data || !data.length) {
             tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;color:var(--gray-500);padding:24px;">정산 내역이 없습니다.</td></tr>';
@@ -4474,8 +4836,18 @@ async function loadMultiLevelSettlements() {
         const { data: ps } = await sb.from('partners').select('id, name').in('id', pIds);
         const nameMap = {};
         (ps || []).forEach(p => { nameMap[p.id] = p.name; });
+        window._multiSettleCache = { data, nameMap };
 
-        tbody.innerHTML = data.map(r => `
+        tbody.innerHTML = data.map(r => {
+            const taxHtml = r.tax_invoice_required
+                ? (r.tax_invoice_issued
+                    ? '<span class="status-badge status-approved">발행</span>'
+                    : `<button class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:11px;" onclick="toggleTaxInvoice(${r.id}, true)">발행</button>`)
+                : '<span style="color:var(--gray-400);">-</span>';
+            const statusHtml = r.status === 'pending'
+                ? `<button class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:11px;color:var(--success);" onclick="markSettlementPaid(${r.id})">지급 처리</button>`
+                : `<span class="status-badge status-${r.status === 'paid' ? 'approved' : 'cancelled'}">${r.status === 'paid' ? '지급완료' : r.status}</span>`;
+            return `
             <tr>
                 <td>${escapeHtml(r.month || '-')}</td>
                 <td>${escapeHtml(nameMap[r.partner_id] || '#' + r.partner_id)}</td>
@@ -4487,17 +4859,68 @@ async function loadMultiLevelSettlements() {
                 <td>${formatCurrency(r.supply_amount || r.commission_amount || 0)}</td>
                 <td>${formatCurrency(r.vat_amount || 0)}</td>
                 <td><strong>${formatCurrency(r.total_payout || 0)}</strong></td>
-                <td>${r.tax_invoice_required ? (r.tax_invoice_issued ? '발행' : '필요') : '-'}</td>
-                <td><span class="status-badge status-${r.status || 'pending'}">${r.status || 'pending'}</span></td>
-            </tr>
-        `).join('');
+                <td>${taxHtml}</td>
+                <td>${statusHtml}</td>
+            </tr>`;
+        }).join('');
     } catch (e) {
         console.error('loadMultiLevelSettlements error:', e);
         tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;color:var(--danger);padding:24px;">조회 실패: ' + escapeHtml(e.message) + '</td></tr>';
     }
 }
 
-window.openPolicyModal = openPolicyModal;
-window.editPolicy = editPolicy;
-window.deletePolicy = deletePolicy;
+async function markSettlementPaid(id) {
+    if (!confirm('이 정산 건을 지급 완료로 처리하시겠습니까?')) return;
+    const { error } = await sb.from('settlements').update({ status: 'paid' }).eq('id', id);
+    if (error) { showToast('실패: ' + error.message, 'error'); return; }
+    showToast('지급 완료 처리되었습니다.', 'success');
+    loadMultiLevelSettlements();
+}
+
+async function toggleTaxInvoice(id, issued) {
+    const { error } = await sb.from('settlements').update({ tax_invoice_issued: issued }).eq('id', id);
+    if (error) { showToast('실패: ' + error.message, 'error'); return; }
+    showToast(issued ? '세금계산서 발행 처리되었습니다.' : '발행 취소되었습니다.', 'success');
+    loadMultiLevelSettlements();
+}
+
+function exportMultiSettleCsv() {
+    const cache = window._multiSettleCache;
+    if (!cache || !cache.data.length) { showToast('데이터가 없습니다.', 'error'); return; }
+    const head = ['월','수령파트너','레벨','고객','오리지네이터','거래액','요율','공급가','VAT','총지급','세금계산서','상태'];
+    const rows = cache.data.map(r => [
+        r.month || '',
+        cache.nameMap[r.partner_id] || ('#' + r.partner_id),
+        'L' + (r.level || 1),
+        r.client_name || '',
+        cache.nameMap[r.originator_partner_id] || '',
+        r.transaction_amount || 0,
+        r.commission_rate ? (Number(r.commission_rate)*100).toFixed(2) + '%' : '',
+        r.supply_amount || r.commission_amount || 0,
+        r.vat_amount || 0,
+        r.total_payout || 0,
+        r.tax_invoice_required ? (r.tax_invoice_issued ? '발행' : '필요') : '',
+        r.status || ''
+    ]);
+    const csv = [head, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `multilevel_settlements_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    showToast('CSV 다운로드 시작', 'success');
+}
+
+window.markSettlementPaid = markSettlementPaid;
+window.toggleTaxInvoice = toggleTaxInvoice;
+window.exportMultiSettleCsv = exportMultiSettleCsv;
+
 window.loadPartnerTree = loadPartnerTree;
+window.markPolicyDirty = markPolicyDirty;
+window.savePolicyRow = savePolicyRow;
+window.deletePolicyRow = deletePolicyRow;
+window.addPolicyRow = addPolicyRow;
+window.applyPolicyPreset = applyPolicyPreset;
+window.runCommissionSim = runCommissionSim;
+window.renderTopPartners = renderTopPartners;

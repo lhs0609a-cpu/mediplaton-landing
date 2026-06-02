@@ -213,6 +213,220 @@
         .data-table td { font-size: 14px; }
         .data-table tbody tr:hover { background: var(--gray-50); }
 
+        /* ─── MLM 대시보드 디자인 ─── */
+        .mlm-hero {
+            background: linear-gradient(135deg, #0E1B6E 0%, #1428A0 50%, #2962FF 100%);
+            border-radius: 16px;
+            padding: 28px 32px;
+            color: white;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mlm-hero::before {
+            content: ''; position: absolute; right: -60px; top: -60px;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .mlm-hero::after {
+            content: ''; position: absolute; left: 30%; bottom: -80px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(41,98,255,0.4) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .mlm-hero-title h2 { font-size: 22px; margin-bottom: 4px; position: relative; z-index: 1; }
+        .mlm-hero-title p { font-size: 13px; opacity: 0.85; margin-bottom: 20px; position: relative; z-index: 1; }
+        .mlm-kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .mlm-kpi {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 16px 18px;
+            transition: all 0.2s;
+        }
+        .mlm-kpi:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+        .mlm-kpi.highlight {
+            background: linear-gradient(135deg, #FACC15, #F59E0B);
+            color: #422006;
+            border-color: rgba(255,255,255,0.4);
+            box-shadow: 0 4px 20px rgba(250,204,21,0.35);
+        }
+        .mlm-kpi-l { font-size: 12px; opacity: 0.85; margin-bottom: 8px; font-weight: 500; }
+        .mlm-kpi-v { font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; }
+        .mlm-kpi-unit { font-size: 14px; margin-left: 4px; opacity: 0.7; font-weight: 600; }
+        .mlm-kpi-s { font-size: 12px; opacity: 0.75; margin-top: 6px; }
+
+        .mlm-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 980px) { .mlm-row-2col { grid-template-columns: 1fr; } }
+
+        .mlm-panel {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(20,40,160,0.04);
+            overflow: hidden;
+        }
+        .mlm-panel-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-100);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .mlm-panel-head h3 { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+        .mlm-panel-body { padding: 16px 20px; }
+
+        /* Top 파트너 랭킹 테이블 */
+        .mlm-rank-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .mlm-rank-table th { font-size: 11px; font-weight: 600; color: var(--gray-500); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--gray-200); text-transform: uppercase; }
+        .mlm-rank-table td { padding: 8px; border-bottom: 1px solid var(--gray-100); }
+        .mlm-rank-table tbody tr:hover { background: var(--gray-50); }
+        .mlm-rank-table .rk { font-weight: 800; color: var(--gray-300); font-size: 15px; width: 24px; }
+        .mlm-rank-table tbody tr:nth-child(1) .rk { color: #FACC15; }
+        .mlm-rank-table tbody tr:nth-child(2) .rk { color: #94A3B8; }
+        .mlm-rank-table tbody tr:nth-child(3) .rk { color: #B45309; }
+        .mlm-rank-table .name-cell { display: flex; align-items: center; gap: 8px; }
+        .mlm-rank-table .name-cell .av {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--primary-light); color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 11px;
+        }
+
+        /* 시뮬레이터 */
+        .sim-form { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .sim-field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px; }
+        .sim-field label { font-size: 11px; color: var(--gray-500); font-weight: 600; text-transform: uppercase; }
+        .sim-field input, .sim-field select {
+            padding: 8px 10px; border: 1px solid var(--gray-300); border-radius: 6px;
+            font-size: 14px; font-family: inherit;
+        }
+        .sim-field span { font-size: 11px; color: var(--gray-500); }
+        .sim-result {
+            background: linear-gradient(135deg, #F8FAFF 0%, #EEF2FF 100%);
+            border: 1px solid #DBE5FF;
+            border-radius: 10px;
+            padding: 16px;
+            min-height: 140px;
+        }
+        .sim-placeholder { color: var(--gray-400); font-size: 13px; text-align: center; padding: 32px 0; }
+        .sim-row {
+            display: grid;
+            grid-template-columns: 48px 1fr 100px 100px;
+            gap: 8px; align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #DBE5FF;
+            font-size: 13px;
+        }
+        .sim-row:last-child { border-bottom: none; }
+        .sim-row .sim-lv {
+            background: var(--primary); color: white;
+            padding: 2px 8px; border-radius: 12px;
+            font-size: 11px; font-weight: 700; text-align: center;
+        }
+        .sim-row .sim-lv.l2 { background: #2962FF; }
+        .sim-row .sim-lv.l3 { background: #6366F1; }
+        .sim-row .sim-rate { color: var(--gray-500); font-size: 12px; text-align: right; }
+        .sim-row .sim-amt { font-weight: 700; color: var(--gray-900); text-align: right; }
+        .sim-total {
+            margin-top: 10px; padding-top: 10px;
+            border-top: 2px solid #1428A0;
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; color: #1428A0;
+        }
+        .sim-total .sim-tv { font-size: 18px; }
+
+        /* 정책 매트릭스 */
+        .policy-help {
+            background: #FFFBEB; border: 1px solid #FDE68A;
+            color: #92400E; padding: 10px 14px; border-radius: 8px;
+            font-size: 12px; margin-bottom: 12px; line-height: 1.6;
+        }
+        .policy-help code { background: rgba(180,83,9,0.1); padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+        .policy-matrix-wrap { overflow-x: auto; }
+        .policy-matrix {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            font-size: 14px; min-width: 720px;
+        }
+        .policy-matrix th {
+            background: var(--gray-50); padding: 10px 12px; text-align: center;
+            font-size: 12px; font-weight: 700; color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .policy-matrix th.sticky-col { text-align: left; }
+        .policy-matrix td {
+            padding: 4px 6px; border-bottom: 1px solid var(--gray-100);
+            text-align: center; position: relative;
+        }
+        .policy-matrix td.cat-cell {
+            text-align: left; padding: 8px 12px;
+            font-weight: 600; color: var(--gray-900);
+        }
+        .policy-matrix td.cat-cell .cat-tag {
+            display: inline-block; background: var(--primary-light); color: var(--primary);
+            padding: 3px 10px; border-radius: 12px; font-size: 12px;
+        }
+        .policy-matrix tr.row-default td.cat-cell .cat-tag {
+            background: #FEF3C7; color: #B45309;
+        }
+        .policy-matrix tr:hover td { background: #FAFBFF; }
+        .policy-cell {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: white; border: 1.5px solid var(--gray-200);
+            border-radius: 8px; padding: 6px 8px;
+            min-width: 80px; transition: all 0.15s;
+        }
+        .policy-cell:hover { border-color: var(--primary); background: var(--primary-light); }
+        .policy-cell input {
+            width: 50px; border: none; background: transparent;
+            font-size: 14px; font-weight: 700; text-align: right;
+            color: var(--gray-900); font-family: inherit;
+            outline: none;
+        }
+        .policy-cell .pct { font-size: 12px; color: var(--gray-500); font-weight: 600; }
+        .policy-cell.empty input { color: var(--gray-300); }
+        .policy-cell.empty { border-style: dashed; opacity: 0.6; }
+        .policy-cell.dirty { border-color: #F59E0B; background: #FFFBEB; box-shadow: 0 0 0 2px rgba(245,158,11,0.15); }
+        .policy-cell.saved { border-color: #10B981; background: #D1FAE5; }
+        .policy-cell.saved .pct { color: #047857; }
+
+        /* 분배 합계 카드 */
+        .settle-summary {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px; margin-bottom: 14px;
+        }
+        .ss-card {
+            background: var(--gray-50); border-radius: 8px; padding: 10px 14px;
+            border-left: 4px solid var(--primary);
+        }
+        .ss-card.danger { border-left-color: var(--danger); }
+        .ss-card.success { border-left-color: var(--success); }
+        .ss-card.warning { border-left-color: var(--warning); }
+        .ss-card .v { font-size: 18px; font-weight: 800; color: var(--gray-900); }
+        .ss-card .l { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+
+        /* 툴바 범례 */
+        .tb-sep { width: 1px; height: 20px; background: var(--gray-200); margin: 0 4px; }
+        .tb-legend { display: inline-flex; gap: 6px; align-items: center; font-size: 11px; color: var(--gray-600); margin-left: 8px; }
+        .lg-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-left: 6px; }
+        .lg-root { background: linear-gradient(135deg, #1428A0, #2962FF); }
+        .lg-l1 { background: linear-gradient(135deg, #2962FF, #4F86FF); }
+        .lg-l2 { background: linear-gradient(135deg, #6366F1, #818CF8); }
+        .lg-l3 { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
+        .lg-pending { background: #FBBF24; }
+
         /* ─ 조직도 차트 (위→아래 분기) ─ */
         .view-toggle { display: inline-flex; border: 1px solid var(--gray-300); border-radius: 6px; overflow: hidden; }
         .vt-btn {
@@ -267,63 +481,140 @@
         .org-col { display: flex; flex-direction: column; align-items: center; }
         .org-card {
             position: relative;
-            width: 220px;
+            width: 244px;
             background: white;
-            border: 2px solid var(--gray-200);
-            border-radius: 10px;
-            padding: 12px 14px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-            transition: all 0.15s;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(15,23,42,0.06), 0 8px 24px rgba(15,23,42,0.04);
+            transition: all 0.2s;
             cursor: pointer;
+            overflow: hidden;
         }
+        .org-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #94A3B8, #CBD5E1);
+        }
+        .org-card.lv-root::before { background: linear-gradient(90deg, #0E1B6E, #2962FF); }
+        .org-card.lv-1::before { background: linear-gradient(90deg, #2962FF, #4F86FF); }
+        .org-card.lv-2::before { background: linear-gradient(90deg, #6366F1, #818CF8); }
+        .org-card.lv-3::before { background: linear-gradient(90deg, #8B5CF6, #A78BFA); }
+        .org-card.lv-4::before { background: linear-gradient(90deg, #C026D3, #E879F9); }
         .org-card:hover {
-            border-color: #1428A0;
-            box-shadow: 0 4px 12px rgba(20,40,160,0.12);
-            transform: translateY(-1px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(20,40,160,0.12), 0 16px 48px rgba(20,40,160,0.08);
         }
-        .org-card.root { border-color: #1428A0; background: linear-gradient(180deg, #F5F8FF 0%, white 60%); }
-        .org-card.pending { border-color: #F59E0B; background: #FFFBEB; }
-        .org-card.rejected { border-color: #EF4444; opacity: 0.7; }
-        .org-card.dim { opacity: 0.3; }
-        .org-card.match { box-shadow: 0 0 0 3px #FACC15, 0 4px 12px rgba(250,204,21,0.4); border-color: #EAB308; }
+        .org-card.pending::before { background: linear-gradient(90deg, #F59E0B, #FCD34D); }
+        .org-card.pending { background: #FFFBEB; }
+        .org-card.rejected { opacity: 0.55; }
+        .org-card.rejected::before { background: linear-gradient(90deg, #DC2626, #FCA5A5); }
+        .org-card.dim { opacity: 0.28; filter: grayscale(0.6); }
+        .org-card.match { box-shadow: 0 0 0 3px #FACC15, 0 8px 24px rgba(250,204,21,0.35); }
 
-        .org-card .oc-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .org-card-body { padding: 14px 14px 12px; }
+        .org-card .oc-head { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
         .org-card .oc-avatar {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: #E8EDFF; color: #1428A0;
+            width: 36px; height: 36px; border-radius: 10px;
+            background: linear-gradient(135deg, #E8EDFF, #C7D2FE);
+            color: #1428A0;
             display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 13px; flex-shrink: 0;
+            font-weight: 800; font-size: 15px; flex-shrink: 0;
+            box-shadow: inset 0 0 0 1px rgba(20,40,160,0.1);
         }
-        .org-card.root .oc-avatar { background: #1428A0; color: white; }
-        .org-card .oc-name { font-size: 14px; font-weight: 700; color: var(--gray-900); flex:1; min-width:0; white-space: nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .org-card.lv-root .oc-avatar { background: linear-gradient(135deg, #0E1B6E, #2962FF); color: white; }
+        .org-card.lv-1 .oc-avatar { background: linear-gradient(135deg, #2962FF, #4F86FF); color: white; }
+        .org-card.lv-2 .oc-avatar { background: linear-gradient(135deg, #6366F1, #818CF8); color: white; }
+        .org-card.lv-3 .oc-avatar { background: linear-gradient(135deg, #8B5CF6, #A78BFA); color: white; }
+        .org-card.lv-4 .oc-avatar { background: linear-gradient(135deg, #C026D3, #E879F9); color: white; }
+        .org-card .oc-name-wrap { flex: 1; min-width: 0; }
+        .org-card .oc-name {
+            font-size: 15px; font-weight: 800; color: var(--gray-900);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            letter-spacing: -0.3px;
+        }
+        .org-card .oc-lvl {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            padding: 1px 6px; border-radius: 4px;
+            background: var(--gray-100); color: var(--gray-600);
+            margin-right: 4px;
+        }
+        .org-card.lv-root .oc-lvl { background: #0E1B6E; color: white; }
+        .org-card.lv-1 .oc-lvl { background: #2962FF; color: white; }
+        .org-card.lv-2 .oc-lvl { background: #6366F1; color: white; }
+        .org-card.lv-3 .oc-lvl { background: #8B5CF6; color: white; }
+        .org-card.lv-4 .oc-lvl { background: #C026D3; color: white; }
+
         .org-card .oc-code {
-            font-family: monospace; font-size: 10px;
-            background: var(--gray-100); padding: 1px 6px; border-radius: 4px;
-            color: var(--gray-700);
+            font-family: 'SF Mono', Consolas, monospace;
+            font-size: 10px; font-weight: 600;
+            background: var(--gray-100); padding: 1px 6px; border-radius: 3px;
+            color: var(--gray-600);
         }
-        .org-card .oc-meta { font-size: 11px; color: var(--gray-500); margin-bottom: 8px; line-height: 1.4; }
-        .org-card .oc-stats { display: flex; gap: 8px; padding-top: 8px; border-top: 1px dashed var(--gray-200); }
-        .org-card .oc-stat { flex:1; text-align: center; }
-        .org-card .oc-stat .v { font-size: 13px; font-weight: 700; color: var(--gray-900); }
-        .org-card .oc-stat .l { font-size: 10px; color: var(--gray-500); margin-top: 1px; }
+        .org-card .oc-meta {
+            font-size: 11px; color: var(--gray-500); margin-bottom: 10px;
+            line-height: 1.5;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .org-card .oc-rate-pill {
+            display: inline-block; font-weight: 700; color: #047857;
+            background: #D1FAE5; padding: 1px 7px; border-radius: 4px; font-size: 11px;
+        }
+        .org-card .oc-biz {
+            display: inline-block; font-size: 10px;
+            padding: 1px 6px; border-radius: 3px; font-weight: 600;
+            background: var(--gray-100); color: var(--gray-600);
+        }
+        .org-card .oc-biz.corp { background: #FEF3C7; color: #92400E; }
+
+        .org-card .oc-stats {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;
+            padding: 10px 0 6px;
+            border-top: 1px solid var(--gray-100);
+        }
+        .org-card .oc-stat { text-align: center; padding: 0 4px; }
+        .org-card .oc-stat .v { font-size: 14px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.3px; }
+        .org-card .oc-stat .l { font-size: 9px; color: var(--gray-500); margin-top: 1px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.4px; }
+        .org-card .oc-line-vol {
+            margin-top: 6px; padding: 8px 0 0;
+            border-top: 1px dashed var(--gray-200);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 11px;
+        }
+        .org-card .oc-line-vol .lbl { color: var(--gray-500); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.4px; }
+        .org-card .oc-line-vol .val { font-weight: 800; color: #1428A0; font-size: 13px; letter-spacing: -0.3px; }
+        .org-card .oc-month-com {
+            margin-top: 6px;
+            padding: 6px 8px; border-radius: 6px;
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 11px;
+        }
+        .org-card .oc-month-com .lbl { color: #92400E; font-weight: 600; }
+        .org-card .oc-month-com .val { font-weight: 800; color: #78350F; }
+
         .org-card .oc-children-count {
-            position: absolute; top: -8px; right: -8px;
-            background: #1428A0; color: white;
-            font-size: 11px; font-weight: 700;
-            padding: 2px 7px; border-radius: 10px;
+            position: absolute; top: 8px; right: 10px;
+            background: rgba(20,40,160,0.95); color: white;
+            font-size: 10px; font-weight: 700;
+            padding: 2px 8px; border-radius: 10px;
             min-width: 22px; text-align: center;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 6px rgba(20,40,160,0.3);
         }
+        .org-card.lv-root .oc-children-count { background: rgba(14,27,110,0.95); }
+
         .org-card .oc-collapse {
-            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
-            width: 20px; height: 20px; border-radius: 50%;
+            position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 24px; border-radius: 50%;
             background: white; border: 1.5px solid var(--gray-300);
             display: flex; align-items: center; justify-content: center;
-            font-size: 12px; color: var(--gray-700); cursor: pointer;
+            font-size: 14px; color: var(--gray-700); cursor: pointer;
             line-height: 1; font-weight: 700;
             transition: all 0.15s;
+            z-index: 2;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
-        .org-card .oc-collapse:hover { border-color: #1428A0; color: #1428A0; }
-        .org-card.collapsed .oc-collapse { background: #1428A0; color: white; border-color: #1428A0; }
+        .org-card .oc-collapse:hover { border-color: var(--primary); color: var(--primary); transform: translateX(-50%) scale(1.1); }
+        .org-card.collapsed .oc-collapse { background: var(--primary); color: white; border-color: var(--primary); }
 
         .org-col-wrap { display: flex; flex-direction: column; align-items: center; }
         .org-children { margin-top: 56px; }
@@ -911,157 +1202,225 @@
                 </div>
             </div>
 
-            <!-- 조직도 + 다단계 정책 -->
-            <div class="data-section" id="partnerTreeSection" style="display: none;">
-                <div class="data-header">
-                    <h2>파트너 조직도 (전체)</h2>
-                    <div class="data-filters">
-                        <input type="text" class="search-input" placeholder="이름/이메일 검색..." id="treeSearch">
-                        <div class="view-toggle">
-                            <button class="vt-btn active" data-view="chart" onclick="setTreeView('chart')">조직도</button>
-                            <button class="vt-btn" data-view="list" onclick="setTreeView('list')">리스트</button>
+            <!-- ═══ 조직도 + 다단계 정책 (고도화) ═══ -->
+            <div class="data-section" id="partnerTreeSection" style="display: none;padding:0;background:transparent;box-shadow:none;">
+
+                <!-- KPI 헤더 (그라데이션) -->
+                <div class="mlm-hero">
+                    <div class="mlm-hero-title">
+                        <h2>다단계 운영 현황</h2>
+                        <p>전체 파트너 조직 · 수수료 흐름 · 정책 관리</p>
+                    </div>
+                    <div class="mlm-kpi-row">
+                        <div class="mlm-kpi">
+                            <div class="mlm-kpi-l">총 파트너</div>
+                            <div class="mlm-kpi-v" id="kpiTotal">0</div>
+                            <div class="mlm-kpi-s"><span id="kpiActive">0</span>명 활성</div>
                         </div>
-                        <button class="btn btn-outline btn-sm" onclick="loadPartnerTree()">새로고침</button>
-                    </div>
-                </div>
-
-                <!-- 조직도 통계 -->
-                <div id="treeStats" style="display:flex;gap:24px;padding:10px 16px;background:var(--gray-50);border-radius:8px;margin-bottom:12px;font-size:13px;color:var(--gray-700);">
-                    <span>총 파트너: <strong id="tsTotal">0</strong>명</span>
-                    <span>루트(미연결): <strong id="tsRoots">0</strong>명</span>
-                    <span>최대 깊이: <strong id="tsMaxDepth">0</strong></span>
-                    <span>총 계약 거래액: <strong id="tsVolume">0</strong>원</span>
-                </div>
-
-                <div class="loading" id="treeLoading"><div class="spinner"></div></div>
-
-                <!-- 차트 뷰: 가로 분기 조직도 -->
-                <div id="treeChartWrap" style="display:none;">
-                    <div class="tree-toolbar">
-                        <button class="btn btn-outline btn-sm" onclick="treeZoom(0.1)">＋</button>
-                        <button class="btn btn-outline btn-sm" onclick="treeZoom(-0.1)">－</button>
-                        <button class="btn btn-outline btn-sm" onclick="treeZoomReset()">100%</button>
-                        <button class="btn btn-outline btn-sm" onclick="treeExpandAll(true)">모두 펼치기</button>
-                        <button class="btn btn-outline btn-sm" onclick="treeExpandAll(false)">모두 접기</button>
-                        <span style="font-size:12px;color:var(--gray-500);margin-left:8px;">드래그로 이동, +/- 로 줌</span>
-                    </div>
-                    <div class="tree-viewport" id="treeViewport">
-                        <div class="tree-canvas" id="treeCanvas">
-                            <svg class="tree-svg" id="treeSvg"></svg>
-                            <div id="treeChart"></div>
+                        <div class="mlm-kpi">
+                            <div class="mlm-kpi-l">조직 구조</div>
+                            <div class="mlm-kpi-v"><span id="kpiRoots">0</span><span class="mlm-kpi-unit">루트</span></div>
+                            <div class="mlm-kpi-s">최대 깊이 <span id="kpiDepth">L0</span></div>
+                        </div>
+                        <div class="mlm-kpi">
+                            <div class="mlm-kpi-l">이번 달 계약</div>
+                            <div class="mlm-kpi-v" id="kpiMonthDeals">0</div>
+                            <div class="mlm-kpi-s">거래액 <span id="kpiMonthVol">0원</span></div>
+                        </div>
+                        <div class="mlm-kpi highlight">
+                            <div class="mlm-kpi-l">이번 달 분배 수수료</div>
+                            <div class="mlm-kpi-v" id="kpiMonthCommission">0원</div>
+                            <div class="mlm-kpi-s">미지급 <span id="kpiPending">0원</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 리스트 뷰: 기존 들여쓰기 표시 -->
-                <div id="treeWrap" style="padding:8px 0;display:none;">
-                    <div id="adminTree"></div>
-                </div>
+                <!-- 2 컬럼: 좌측 Top 파트너 / 우측 시뮬레이터 -->
+                <div class="mlm-row-2col">
+                    <div class="mlm-panel">
+                        <div class="mlm-panel-head">
+                            <h3>Top 파트너 (라인 매출 기준)</h3>
+                            <select class="filter-select" id="topPartnerScope">
+                                <option value="all">전체 누적</option>
+                                <option value="month">이번 달</option>
+                            </select>
+                        </div>
+                        <div class="mlm-panel-body">
+                            <table class="mlm-rank-table">
+                                <thead><tr><th>#</th><th>파트너</th><th>본인</th><th>라인</th><th>합계</th></tr></thead>
+                                <tbody id="topPartnerBody">
+                                    <tr><td colspan="5" style="text-align:center;color:var(--gray-500);padding:24px;">데이터 없음</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                <div class="empty-state" id="treeEmpty" style="display: none;">
-                    <h3>파트너가 없습니다</h3>
-                </div>
-
-                <hr style="margin:32px 0;border:none;border-top:1px solid var(--gray-200);">
-
-                <div class="data-header">
-                    <h2>수수료 정책 (상품 × 레벨)</h2>
-                    <button class="btn btn-primary btn-sm" onclick="openPolicyModal()">+ 정책 추가</button>
-                </div>
-                <p style="color:var(--gray-500);font-size:13px;padding:0 0 12px 0;">
-                    레벨 1 = 실제 계약 데려온 본인 / 레벨 2 = 직속 상위 / 레벨 3 = 그 위 ...<br>
-                    상품 카테고리가 <code>*</code> 인 정책이 폴백(기본)으로 적용됩니다.
-                </p>
-                <table class="data-table" id="policyTable">
-                    <thead>
-                        <tr>
-                            <th>상품 카테고리</th>
-                            <th>레벨</th>
-                            <th>요율</th>
-                            <th>설명</th>
-                            <th>활성</th>
-                            <th>관리</th>
-                        </tr>
-                    </thead>
-                    <tbody id="policyTableBody"></tbody>
-                </table>
-
-                <hr style="margin:32px 0;border:none;border-top:1px solid var(--gray-200);">
-
-                <div class="data-header">
-                    <h2>다단계 정산 내역 (전체 분배 결과)</h2>
-                    <div class="data-filters">
-                        <select class="filter-select" id="multiSettleMonthFilter"></select>
-                        <select class="filter-select" id="multiSettleLevelFilter">
-                            <option value="">전체 레벨</option>
-                            <option value="1">L1 (본인)</option>
-                            <option value="2">L2 (직속 상위)</option>
-                            <option value="3">L3</option>
-                            <option value="4">L4+</option>
-                        </select>
+                    <div class="mlm-panel">
+                        <div class="mlm-panel-head">
+                            <h3>수수료 시뮬레이터</h3>
+                            <span style="font-size:12px;color:var(--gray-500);">실제 분배 방식 미리보기</span>
+                        </div>
+                        <div class="mlm-panel-body">
+                            <div class="sim-form">
+                                <div class="sim-field">
+                                    <label>거래액</label>
+                                    <input type="number" id="simAmount" value="50000000" min="0" step="1000000">
+                                    <span>원</span>
+                                </div>
+                                <div class="sim-field">
+                                    <label>상품</label>
+                                    <select id="simProduct">
+                                        <option value="*">기본(*)</option>
+                                        <option value="loan">카드매출담보</option>
+                                        <option value="credit">신협 데일리론</option>
+                                        <option value="kb">KB 특별한도</option>
+                                        <option value="rental">렌탈</option>
+                                        <option value="deposit">임차보증금</option>
+                                        <option value="purchase">구매자금</option>
+                                    </select>
+                                </div>
+                                <div class="sim-field">
+                                    <label>사업자 여부</label>
+                                    <select id="simBiz">
+                                        <option value="individual">개인 (VAT 없음)</option>
+                                        <option value="corporate">사업자 (VAT 10%)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="sim-result" id="simResult">
+                                <div class="sim-placeholder">정책 입력 후 자동 계산됩니다</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <table class="data-table" id="multiSettleTable">
-                    <thead>
-                        <tr>
-                            <th>월</th>
-                            <th>수령 파트너</th>
-                            <th>L</th>
-                            <th>고객</th>
-                            <th>오리지네이터</th>
-                            <th>거래액</th>
-                            <th>요율</th>
-                            <th>공급가</th>
-                            <th>VAT</th>
-                            <th>총 지급</th>
-                            <th>세금계산서</th>
-                            <th>상태</th>
-                        </tr>
-                    </thead>
-                    <tbody id="multiSettleBody"></tbody>
-                </table>
-            </div>
 
-            <!-- 정책 편집 모달 -->
-            <div class="modal-overlay" id="policyModal">
-                <div class="modal" style="max-width:480px;">
-                    <div class="modal-header">
-                        <h3 id="policyModalTitle">정책 추가</h3>
-                        <button class="modal-close" onclick="document.getElementById('policyModal').classList.remove('active')">&times;</button>
+                <!-- 조직도 본체 -->
+                <div class="mlm-panel" style="margin-top:16px;">
+                    <div class="mlm-panel-head">
+                        <h3>파트너 조직도</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <input type="text" class="search-input" placeholder="이름/이메일 검색..." id="treeSearch">
+                            <div class="view-toggle">
+                                <button class="vt-btn active" data-view="chart" onclick="setTreeView('chart')">조직도</button>
+                                <button class="vt-btn" data-view="list" onclick="setTreeView('list')">리스트</button>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="loadPartnerTree()">↻</button>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <form id="policyForm">
-                            <input type="hidden" id="policyId">
-                            <div class="form-group">
-                                <label>상품 카테고리</label>
-                                <select id="policyProduct">
-                                    <option value="*">* (전체 기본)</option>
-                                    <option value="loan">카드매출 담보대출</option>
-                                    <option value="credit">신협 데일리론</option>
-                                    <option value="kb">KB 특별한도</option>
-                                    <option value="rental">렌탈</option>
-                                    <option value="deposit">임차보증금</option>
-                                    <option value="purchase">구매자금</option>
-                                    <option value="consult">상담</option>
-                                </select>
+
+                    <div class="loading" id="treeLoading"><div class="spinner"></div></div>
+
+                    <!-- 차트 뷰 -->
+                    <div id="treeChartWrap" style="display:none;">
+                        <div class="tree-toolbar">
+                            <button class="btn btn-outline btn-sm" onclick="treeZoom(0.1)">＋</button>
+                            <button class="btn btn-outline btn-sm" onclick="treeZoom(-0.1)">－</button>
+                            <button class="btn btn-outline btn-sm" onclick="treeZoomReset()">맞춤</button>
+                            <span class="tb-sep"></span>
+                            <button class="btn btn-outline btn-sm" onclick="treeExpandAll(true)">모두 펼치기</button>
+                            <button class="btn btn-outline btn-sm" onclick="treeExpandAll(false)">모두 접기</button>
+                            <span class="tb-sep"></span>
+                            <div class="tb-legend">
+                                <span class="lg-dot lg-root"></span>루트
+                                <span class="lg-dot lg-l1"></span>L1
+                                <span class="lg-dot lg-l2"></span>L2
+                                <span class="lg-dot lg-l3"></span>L3+
+                                <span class="lg-dot lg-pending"></span>대기
                             </div>
-                            <div class="form-group">
-                                <label>레벨 (1=본인, 2=직속 상위 ...)</label>
-                                <input type="number" id="policyLevel" min="1" max="10" required>
+                            <span style="font-size:12px;color:var(--gray-500);margin-left:auto;">드래그 = 이동 · Ctrl+휠 = 줌</span>
+                        </div>
+                        <div class="tree-viewport" id="treeViewport">
+                            <div class="tree-canvas" id="treeCanvas">
+                                <svg class="tree-svg" id="treeSvg"></svg>
+                                <div id="treeChart"></div>
                             </div>
-                            <div class="form-group">
-                                <label>요율 (예: 0.015 = 1.5%)</label>
-                                <input type="number" id="policyRate" step="0.0001" min="0" max="1" required>
-                            </div>
-                            <div class="form-group">
-                                <label>설명</label>
-                                <input type="text" id="policyLabel" placeholder="예: 기본 - 본인">
-                            </div>
-                            <div class="form-group">
-                                <label><input type="checkbox" id="policyActive" checked> 활성</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="width:100%;">저장</button>
-                        </form>
+                        </div>
+                    </div>
+
+                    <div id="treeWrap" style="padding:8px 16px;display:none;"><div id="adminTree"></div></div>
+                    <div class="empty-state" id="treeEmpty" style="display: none;"><h3>파트너가 없습니다</h3></div>
+                </div>
+
+                <!-- 수수료 매트릭스 (인라인 편집) -->
+                <div class="mlm-panel" style="margin-top:16px;">
+                    <div class="mlm-panel-head">
+                        <h3>수수료 정책 매트릭스 (상품 × 레벨)</h3>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span style="font-size:12px;color:var(--gray-500);">셀 클릭하면 바로 수정 가능</span>
+                            <button class="btn btn-outline btn-sm" onclick="applyPolicyPreset('standard')">기본 프리셋</button>
+                            <button class="btn btn-outline btn-sm" onclick="applyPolicyPreset('aggressive')">공격적 프리셋</button>
+                            <button class="btn btn-primary btn-sm" onclick="addPolicyRow()">+ 상품 추가</button>
+                        </div>
+                    </div>
+                    <div class="mlm-panel-body">
+                        <div class="policy-help">
+                            <strong>레벨 1</strong> = 실제 계약 데려온 본인 ·
+                            <strong>레벨 2</strong> = 직속 상위 ·
+                            <strong>레벨 3+</strong> = 그 위<br>
+                            상품 카테고리 <code>*</code> = 폴백(기본 정책). 특정 상품 정책이 없으면 <code>*</code> 적용
+                        </div>
+                        <div class="policy-matrix-wrap">
+                            <table class="policy-matrix" id="policyMatrix">
+                                <thead>
+                                    <tr>
+                                        <th class="sticky-col">상품 카테고리</th>
+                                        <th>L1 (본인)</th>
+                                        <th>L2 (직속 상위)</th>
+                                        <th>L3</th>
+                                        <th>L4</th>
+                                        <th>L5</th>
+                                        <th style="width:60px;">관리</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="policyMatrixBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 분배 내역 -->
+                <div class="mlm-panel" style="margin-top:16px;">
+                    <div class="mlm-panel-head">
+                        <h3>다단계 정산 내역</h3>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <select class="filter-select" id="multiSettleMonthFilter"></select>
+                            <select class="filter-select" id="multiSettleLevelFilter">
+                                <option value="">전체 레벨</option>
+                                <option value="1">L1 (본인)</option>
+                                <option value="2">L2 (직속 상위)</option>
+                                <option value="3">L3</option>
+                                <option value="4">L4+</option>
+                            </select>
+                            <select class="filter-select" id="multiSettleStatusFilter">
+                                <option value="">전체 상태</option>
+                                <option value="pending">미지급</option>
+                                <option value="paid">지급완료</option>
+                                <option value="cancelled">취소</option>
+                            </select>
+                            <button class="btn btn-outline btn-sm" onclick="exportMultiSettleCsv()">CSV</button>
+                        </div>
+                    </div>
+                    <div class="mlm-panel-body">
+                        <div class="settle-summary" id="settleSummary"></div>
+                        <table class="data-table" id="multiSettleTable">
+                            <thead>
+                                <tr>
+                                    <th>월</th>
+                                    <th>수령 파트너</th>
+                                    <th>L</th>
+                                    <th>고객</th>
+                                    <th>오리지네이터</th>
+                                    <th>거래액</th>
+                                    <th>요율</th>
+                                    <th>공급가</th>
+                                    <th>VAT</th>
+                                    <th>총 지급</th>
+                                    <th>세금계산서</th>
+                                    <th>상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="multiSettleBody"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
