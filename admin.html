@@ -213,6 +213,121 @@
         .data-table td { font-size: 14px; }
         .data-table tbody tr:hover { background: var(--gray-50); }
 
+        /* ─ 조직도 차트 (위→아래 분기) ─ */
+        .view-toggle { display: inline-flex; border: 1px solid var(--gray-300); border-radius: 6px; overflow: hidden; }
+        .vt-btn {
+            padding: 6px 14px; background: var(--white); border: none;
+            font-size: 13px; cursor: pointer; color: var(--gray-700);
+            border-right: 1px solid var(--gray-300);
+        }
+        .vt-btn:last-child { border-right: none; }
+        .vt-btn.active { background: #1428A0; color: white; }
+        .vt-btn:not(.active):hover { background: var(--gray-50); }
+
+        .tree-toolbar {
+            display: flex; gap: 6px; align-items: center;
+            padding: 8px 12px; background: var(--gray-50);
+            border: 1px solid var(--gray-200); border-bottom: none;
+            border-radius: 8px 8px 0 0;
+        }
+        .tree-viewport {
+            position: relative;
+            overflow: auto;
+            min-height: 480px;
+            max-height: 75vh;
+            background:
+                linear-gradient(var(--gray-100) 1px, transparent 1px) 0 0 / 24px 24px,
+                linear-gradient(90deg, var(--gray-100) 1px, transparent 1px) 0 0 / 24px 24px,
+                #FAFBFC;
+            border: 1px solid var(--gray-200);
+            border-radius: 0 0 8px 8px;
+            cursor: grab;
+        }
+        .tree-viewport.grabbing { cursor: grabbing; }
+        .tree-canvas {
+            position: relative;
+            padding: 40px;
+            min-width: max-content;
+            transform-origin: 0 0;
+            transition: transform 0.15s ease;
+        }
+        .tree-svg {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+        .tree-svg path {
+            fill: none;
+            stroke: #94A3B8;
+            stroke-width: 1.5;
+        }
+
+        .org-row { display: flex; gap: 32px; justify-content: center; }
+        .org-col { display: flex; flex-direction: column; align-items: center; }
+        .org-card {
+            position: relative;
+            width: 220px;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 12px 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .org-card:hover {
+            border-color: #1428A0;
+            box-shadow: 0 4px 12px rgba(20,40,160,0.12);
+            transform: translateY(-1px);
+        }
+        .org-card.root { border-color: #1428A0; background: linear-gradient(180deg, #F5F8FF 0%, white 60%); }
+        .org-card.pending { border-color: #F59E0B; background: #FFFBEB; }
+        .org-card.rejected { border-color: #EF4444; opacity: 0.7; }
+        .org-card.dim { opacity: 0.3; }
+        .org-card.match { box-shadow: 0 0 0 3px #FACC15, 0 4px 12px rgba(250,204,21,0.4); border-color: #EAB308; }
+
+        .org-card .oc-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .org-card .oc-avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #E8EDFF; color: #1428A0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 13px; flex-shrink: 0;
+        }
+        .org-card.root .oc-avatar { background: #1428A0; color: white; }
+        .org-card .oc-name { font-size: 14px; font-weight: 700; color: var(--gray-900); flex:1; min-width:0; white-space: nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .org-card .oc-code {
+            font-family: monospace; font-size: 10px;
+            background: var(--gray-100); padding: 1px 6px; border-radius: 4px;
+            color: var(--gray-700);
+        }
+        .org-card .oc-meta { font-size: 11px; color: var(--gray-500); margin-bottom: 8px; line-height: 1.4; }
+        .org-card .oc-stats { display: flex; gap: 8px; padding-top: 8px; border-top: 1px dashed var(--gray-200); }
+        .org-card .oc-stat { flex:1; text-align: center; }
+        .org-card .oc-stat .v { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+        .org-card .oc-stat .l { font-size: 10px; color: var(--gray-500); margin-top: 1px; }
+        .org-card .oc-children-count {
+            position: absolute; top: -8px; right: -8px;
+            background: #1428A0; color: white;
+            font-size: 11px; font-weight: 700;
+            padding: 2px 7px; border-radius: 10px;
+            min-width: 22px; text-align: center;
+        }
+        .org-card .oc-collapse {
+            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 20px; border-radius: 50%;
+            background: white; border: 1.5px solid var(--gray-300);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: var(--gray-700); cursor: pointer;
+            line-height: 1; font-weight: 700;
+            transition: all 0.15s;
+        }
+        .org-card .oc-collapse:hover { border-color: #1428A0; color: #1428A0; }
+        .org-card.collapsed .oc-collapse { background: #1428A0; color: white; border-color: #1428A0; }
+
+        .org-col-wrap { display: flex; flex-direction: column; align-items: center; }
+        .org-children { margin-top: 56px; }
+
         /* 다단계 트리 */
         .tree-node-admin {
             display: flex; align-items: center; gap: 12px;
@@ -802,13 +917,47 @@
                     <h2>파트너 조직도 (전체)</h2>
                     <div class="data-filters">
                         <input type="text" class="search-input" placeholder="이름/이메일 검색..." id="treeSearch">
+                        <div class="view-toggle">
+                            <button class="vt-btn active" data-view="chart" onclick="setTreeView('chart')">조직도</button>
+                            <button class="vt-btn" data-view="list" onclick="setTreeView('list')">리스트</button>
+                        </div>
                         <button class="btn btn-outline btn-sm" onclick="loadPartnerTree()">새로고침</button>
                     </div>
                 </div>
+
+                <!-- 조직도 통계 -->
+                <div id="treeStats" style="display:flex;gap:24px;padding:10px 16px;background:var(--gray-50);border-radius:8px;margin-bottom:12px;font-size:13px;color:var(--gray-700);">
+                    <span>총 파트너: <strong id="tsTotal">0</strong>명</span>
+                    <span>루트(미연결): <strong id="tsRoots">0</strong>명</span>
+                    <span>최대 깊이: <strong id="tsMaxDepth">0</strong></span>
+                    <span>총 계약 거래액: <strong id="tsVolume">0</strong>원</span>
+                </div>
+
                 <div class="loading" id="treeLoading"><div class="spinner"></div></div>
+
+                <!-- 차트 뷰: 가로 분기 조직도 -->
+                <div id="treeChartWrap" style="display:none;">
+                    <div class="tree-toolbar">
+                        <button class="btn btn-outline btn-sm" onclick="treeZoom(0.1)">＋</button>
+                        <button class="btn btn-outline btn-sm" onclick="treeZoom(-0.1)">－</button>
+                        <button class="btn btn-outline btn-sm" onclick="treeZoomReset()">100%</button>
+                        <button class="btn btn-outline btn-sm" onclick="treeExpandAll(true)">모두 펼치기</button>
+                        <button class="btn btn-outline btn-sm" onclick="treeExpandAll(false)">모두 접기</button>
+                        <span style="font-size:12px;color:var(--gray-500);margin-left:8px;">드래그로 이동, +/- 로 줌</span>
+                    </div>
+                    <div class="tree-viewport" id="treeViewport">
+                        <div class="tree-canvas" id="treeCanvas">
+                            <svg class="tree-svg" id="treeSvg"></svg>
+                            <div id="treeChart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 리스트 뷰: 기존 들여쓰기 표시 -->
                 <div id="treeWrap" style="padding:8px 0;display:none;">
                     <div id="adminTree"></div>
                 </div>
+
                 <div class="empty-state" id="treeEmpty" style="display: none;">
                     <h3>파트너가 없습니다</h3>
                 </div>

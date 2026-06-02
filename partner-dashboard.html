@@ -345,7 +345,72 @@
         }
         .sign-agreement input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
 
-        /* ===== 다단계 라인 트리 ===== */
+        /* ─ 조직도 차트 (위→아래 분기) ─ */
+        .tree-viewport {
+            position: relative; overflow: auto;
+            min-height: 360px; max-height: 70vh;
+            background:
+                linear-gradient(var(--gray-100) 1px, transparent 1px) 0 0 / 24px 24px,
+                linear-gradient(90deg, var(--gray-100) 1px, transparent 1px) 0 0 / 24px 24px,
+                #FAFBFC;
+            border: 1px solid var(--gray-200); border-radius: 8px;
+            cursor: grab;
+        }
+        .tree-viewport.grabbing { cursor: grabbing; }
+        .tree-canvas {
+            position: relative; padding: 40px;
+            min-width: max-content;
+            transform-origin: 0 0;
+            transition: transform 0.15s ease;
+        }
+        .tree-svg {
+            position: absolute; top:0; left:0;
+            width: 100%; height: 100%;
+            pointer-events: none; overflow: visible;
+        }
+        .tree-svg path { fill: none; stroke: #94A3B8; stroke-width: 1.5; }
+
+        .org-row { display: flex; gap: 32px; justify-content: center; }
+        .org-col-wrap { display: flex; flex-direction: column; align-items: center; }
+        .org-children { margin-top: 56px; }
+
+        .org-card {
+            position: relative; width: 220px;
+            background: white; border: 2px solid var(--gray-200);
+            border-radius: 10px; padding: 12px 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            transition: all 0.15s;
+        }
+        .org-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(20,40,160,0.12); transform: translateY(-1px); }
+        .org-card.root { border-color: var(--primary); background: linear-gradient(180deg, #F5F8FF 0%, white 60%); }
+        .org-card.pending { border-color: var(--warning); background: #FFFBEB; }
+        .org-card .oc-head { display:flex; align-items:center; gap: 8px; margin-bottom: 6px; }
+        .org-card .oc-avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--primary-light); color: var(--primary);
+            display:flex; align-items:center; justify-content:center;
+            font-weight: 700; font-size: 13px;
+        }
+        .org-card.root .oc-avatar { background: var(--primary); color: white; }
+        .org-card .oc-name { font-size: 14px; font-weight: 700; color: var(--gray-900); flex:1; min-width:0; white-space: nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .org-card .oc-badge {
+            font-size: 10px; padding: 1px 6px; border-radius: 4px;
+            background: var(--gray-100); color: var(--gray-700);
+        }
+        .org-card .oc-meta { font-size: 11px; color: var(--gray-500); margin-bottom: 8px; line-height: 1.4; }
+        .org-card .oc-stats { display:flex; gap:8px; padding-top:8px; border-top: 1px dashed var(--gray-200); }
+        .org-card .oc-stat { flex:1; text-align:center; }
+        .org-card .oc-stat .v { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+        .org-card .oc-stat .l { font-size: 10px; color: var(--gray-500); margin-top: 1px; }
+        .org-card .oc-children-count {
+            position: absolute; top: -8px; right: -8px;
+            background: var(--primary); color: white;
+            font-size: 11px; font-weight: 700;
+            padding: 2px 7px; border-radius: 10px;
+            min-width: 22px; text-align: center;
+        }
+
+        /* ===== (구) 다단계 라인 트리 (잔존) ===== */
         .tree-node {
             display: flex; align-items: center; gap: 12px;
             padding: 12px 16px; background: var(--white);
@@ -734,12 +799,22 @@
                 <!-- 라인 트리 -->
                 <div class="data-section">
                     <div class="data-header">
-                        <h2>내 하위 라인</h2>
-                        <span style="font-size:13px;color:var(--gray-500);">상위 정보는 노출되지 않습니다</span>
+                        <h2>내 하위 라인 (조직도)</h2>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span style="font-size:13px;color:var(--gray-500);">상위 정보 비공개</span>
+                            <button class="btn btn-outline btn-sm" onclick="myLineZoom(0.1)">＋</button>
+                            <button class="btn btn-outline btn-sm" onclick="myLineZoom(-0.1)">－</button>
+                            <button class="btn btn-outline btn-sm" onclick="myLineZoomReset()">100%</button>
+                        </div>
                     </div>
                     <div class="loading" id="lineLoading"><div class="spinner"></div></div>
-                    <div id="lineTreeWrap" style="padding:8px 0; display:none;">
-                        <div id="lineTree"></div>
+                    <div id="lineTreeWrap" style="display:none;">
+                        <div class="tree-viewport" id="myLineViewport">
+                            <div class="tree-canvas" id="myLineCanvas">
+                                <svg class="tree-svg" id="myLineSvg"></svg>
+                                <div id="lineTree"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="empty-state" id="lineEmpty" style="display: none;">
                         <h3>하위 라인이 없습니다</h3>

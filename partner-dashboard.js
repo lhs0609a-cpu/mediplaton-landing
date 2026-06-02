@@ -2130,12 +2130,13 @@ async function loadMyLine() {
     }
 }
 
+window._myLineState = { zoom: 1, byId: {}, me: null, dealStats: {} };
+
 function renderLineTree(partners, deals) {
     const wrap = document.getElementById('lineTreeWrap');
     const root = document.getElementById('lineTree');
     if (!root) return;
 
-    // partners[] 에서 트리 빌드
     const byId = {};
     partners.forEach(p => { byId[p.id] = Object.assign({}, p, { children: [] }); });
     partners.forEach(p => {
@@ -2160,47 +2161,141 @@ function renderLineTree(partners, deals) {
         document.getElementById('lineEmpty').style.display = 'block';
         return;
     }
-
     if (!meNode.children.length) {
         wrap.style.display = 'none';
         document.getElementById('lineEmpty').style.display = 'block';
         return;
     }
 
+    window._myLineState.byId = byId;
+    window._myLineState.me = meNode;
+    window._myLineState.dealStats = dealStats;
+
     wrap.style.display = 'block';
-    root.innerHTML = renderNodeHtml(meNode, dealStats, 0, true);
+    root.innerHTML = `<div class="org-row">${renderOrgSubtreeMy(meNode, true)}</div>`;
+    setupMyLinePanZoom();
+    requestAnimationFrame(drawMyLineConnectors);
 }
 
-function renderNodeHtml(node, dealStats, displayDepth, isRoot) {
-    const stat = dealStats[node.id] || { count: 0, contracted: 0, volume: 0 };
+function renderOrgSubtreeMy(node, isRoot) {
+    const stat = window._myLineState.dealStats[node.id] || { count: 0, contracted: 0, volume: 0 };
     const initials = (node.name || '?').substring(0, 1);
-    const meLabel = isRoot ? ' (나)' : '';
-    const statusBadge = node.status === 'approved' ? '' : `<span class="tree-depth-pill">${node.status || 'pending'}</span>`;
-    const depthPill = !isRoot ? `<span class="tree-depth-pill">L${displayDepth}</span>` : '';
+    const rootClass = isRoot ? 'root' : '';
+    const pendingClass = node.status === 'pending' ? 'pending' : '';
+    const hasChildren = node.children && node.children.length;
 
-    let html = `
-        <div class="tree-node">
-            <div class="node-avatar">${escapeHtml(initials)}</div>
-            <div class="node-meta">
-                <div class="node-name">${escapeHtml(node.name || '이름 없음')}${meLabel}${depthPill}${statusBadge}</div>
-                <div class="node-sub">${escapeHtml(node.hospital_name || node.business || '')} · 가입 ${(node.created_at || '').substring(0,10)}</div>
+    const card = `
+        <div class="org-card ${rootClass} ${pendingClass}" data-line-node-id="${node.id}">
+            ${hasChildren ? `<div class="oc-children-count">${node.children.length}</div>` : ''}
+            <div class="oc-head">
+                <div class="oc-avatar">${escapeHtml(initials)}</div>
+                <div class="oc-name" title="${escapeHtml(node.name || '')}">
+                    ${escapeHtml(node.name || '이름없음')}${isRoot ? ' (나)' : ''}
+                </div>
             </div>
-            <div class="node-stats">
-                <div class="node-stat"><div class="v">${stat.count}</div><div class="l">등록</div></div>
-                <div class="node-stat"><div class="v">${stat.contracted}</div><div class="l">계약</div></div>
-                <div class="node-stat"><div class="v">${formatCurrency(stat.volume)}</div><div class="l">거래액</div></div>
+            <div class="oc-meta">
+                ${node.status === 'approved' ? '' : `<span class="oc-badge">${escapeHtml(node.status || '')}</span> `}
+                ${escapeHtml(node.hospital_name || node.business || '')}<br>
+                <span style="color:var(--gray-400);">가입 ${(node.created_at || '').substring(0,10)}</span>
+            </div>
+            <div class="oc-stats">
+                <div class="oc-stat"><div class="v">${stat.count}</div><div class="l">등록</div></div>
+                <div class="oc-stat"><div class="v">${stat.contracted}</div><div class="l">계약</div></div>
+                <div class="oc-stat"><div class="v">${formatCurrencyShortLine(stat.volume)}</div><div class="l">거래액</div></div>
             </div>
         </div>
     `;
-    if (node.children && node.children.length) {
-        html += '<div class="tree-children">';
-        node.children.forEach(c => {
-            html += renderNodeHtml(c, dealStats, displayDepth + 1, false);
-        });
-        html += '</div>';
+    let childrenHtml = '';
+    if (hasChildren) {
+        childrenHtml = `<div class="org-children"><div class="org-row">${node.children.map(c => renderOrgSubtreeMy(c, false)).join('')}</div></div>`;
     }
-    return html;
+    return `<div class="org-col-wrap">${card}${childrenHtml}</div>`;
 }
+
+function formatCurrencyShortLine(n) {
+    n = Number(n || 0);
+    if (n >= 100000000) return (n / 100000000).toFixed(1).replace(/\.0$/, '') + '억';
+    if (n >= 10000000) return (n / 10000000).toFixed(1).replace(/\.0$/, '') + '천만';
+    if (n >= 10000) return Math.round(n / 10000) + '만';
+    return n.toLocaleString();
+}
+
+function drawMyLineConnectors() {
+    const svg = document.getElementById('myLineSvg');
+    const canvas = document.getElementById('myLineCanvas');
+    if (!svg || !canvas) return;
+    const canvasRect = canvas.getBoundingClientRect();
+    const scale = window._myLineState.zoom || 1;
+    const w = canvas.scrollWidth, h = canvas.scrollHeight;
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+    let paths = '';
+    document.querySelectorAll('#myLineCanvas .org-card').forEach(card => {
+        const id = parseInt(card.dataset.lineNodeId, 10);
+        const node = window._myLineState.byId[id];
+        if (!node || !node.children || !node.children.length) return;
+        const pRect = card.getBoundingClientRect();
+        const px = (pRect.left + pRect.width/2 - canvasRect.left) / scale;
+        const py = (pRect.bottom - canvasRect.top) / scale;
+        node.children.forEach(child => {
+            const cc = canvas.querySelector(`.org-card[data-line-node-id="${child.id}"]`);
+            if (!cc) return;
+            const cr = cc.getBoundingClientRect();
+            const cx = (cr.left + cr.width/2 - canvasRect.left) / scale;
+            const cy = (cr.top - canvasRect.top) / scale;
+            const midY = (py + cy) / 2;
+            paths += `<path d="M ${px} ${py} L ${px} ${midY} L ${cx} ${midY} L ${cx} ${cy}" />`;
+        });
+    });
+    svg.innerHTML = paths;
+}
+
+function myLineZoom(delta) {
+    const z = Math.max(0.3, Math.min(2, window._myLineState.zoom + delta));
+    window._myLineState.zoom = z;
+    const canvas = document.getElementById('myLineCanvas');
+    if (canvas) canvas.style.transform = `scale(${z})`;
+    requestAnimationFrame(drawMyLineConnectors);
+}
+
+function myLineZoomReset() {
+    window._myLineState.zoom = 1;
+    const canvas = document.getElementById('myLineCanvas');
+    if (canvas) canvas.style.transform = 'scale(1)';
+    const vp = document.getElementById('myLineViewport');
+    if (vp) { vp.scrollLeft = 0; vp.scrollTop = 0; }
+    requestAnimationFrame(drawMyLineConnectors);
+}
+
+function setupMyLinePanZoom() {
+    const vp = document.getElementById('myLineViewport');
+    if (!vp || vp._setup) return;
+    vp._setup = true;
+    let isDown = false, startX, startY, sL, sT;
+    vp.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.org-card')) return;
+        isDown = true; vp.classList.add('grabbing');
+        startX = e.pageX - vp.offsetLeft; startY = e.pageY - vp.offsetTop;
+        sL = vp.scrollLeft; sT = vp.scrollTop;
+    });
+    vp.addEventListener('mouseleave', () => { isDown=false; vp.classList.remove('grabbing'); });
+    vp.addEventListener('mouseup', () => { isDown=false; vp.classList.remove('grabbing'); });
+    vp.addEventListener('mousemove', (e) => {
+        if (!isDown) return; e.preventDefault();
+        vp.scrollLeft = sL - ((e.pageX - vp.offsetLeft) - startX);
+        vp.scrollTop  = sT - ((e.pageY - vp.offsetTop) - startY);
+    });
+    vp.addEventListener('wheel', (e) => {
+        if (!e.ctrlKey) return; e.preventDefault();
+        myLineZoom(e.deltaY < 0 ? 0.1 : -0.1);
+    }, { passive: false });
+    window.addEventListener('resize', () => requestAnimationFrame(drawMyLineConnectors));
+}
+
+window.myLineZoom = myLineZoom;
+window.myLineZoomReset = myLineZoomReset;
 
 function renderLineDeals(lineDeals, partners) {
     const tbody = document.getElementById('lineDealsBody');

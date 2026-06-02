@@ -3901,13 +3901,27 @@ document.addEventListener('DOMContentLoaded', () => {
 // 다단계 조직도 + 수수료 정책 + 분배 정산 (관리자 전용)
 // ═══════════════════════════════════════════════════════════
 
+// 트리 전역 상태
+window._treeState = {
+    view: 'chart',           // 'chart' | 'list'
+    zoom: 1,
+    pan: { x: 0, y: 0 },
+    collapsed: new Set(),    // 접힌 노드 id
+    roots: [],
+    byId: {},
+    dealStats: {},
+    search: ''
+};
+
 async function loadPartnerTree() {
     const loading = document.getElementById('treeLoading');
-    const wrap = document.getElementById('treeWrap');
+    const chartWrap = document.getElementById('treeChartWrap');
+    const listWrap = document.getElementById('treeWrap');
     const empty = document.getElementById('treeEmpty');
     if (!loading) return;
     loading.style.display = 'block';
-    wrap.style.display = 'none';
+    chartWrap.style.display = 'none';
+    listWrap.style.display = 'none';
     empty.style.display = 'none';
 
     try {
@@ -3918,7 +3932,6 @@ async function loadPartnerTree() {
             .order('created_at', { ascending: true });
         if (error) throw error;
 
-        // 계약 카운트 (각 파트너별)
         const { data: deals } = await sb
             .from('consultations')
             .select('partner_id, pipeline_status, transaction_amount');
@@ -3945,16 +3958,29 @@ async function loadPartnerTree() {
             }
         });
 
-        if (!roots.length) {
+        // 상태 저장
+        window._treeState.roots = roots;
+        window._treeState.byId = byId;
+        window._treeState.dealStats = dealStats;
+
+        // 상단 통계
+        const total = (partners || []).length;
+        const maxDepth = Math.max(0, ...(partners || []).map(p => p.depth || 0));
+        const totalVolume = (deals || [])
+            .filter(d => d.pipeline_status === 'contracted')
+            .reduce((s, d) => s + Number(d.transaction_amount || 0), 0);
+        document.getElementById('tsTotal').textContent = total;
+        document.getElementById('tsRoots').textContent = roots.length;
+        document.getElementById('tsMaxDepth').textContent = 'L' + maxDepth;
+        document.getElementById('tsVolume').textContent = formatCurrency(totalVolume);
+
+        if (!total) {
             empty.style.display = 'block';
             loading.style.display = 'none';
             return;
         }
 
-        const searchTerm = (document.getElementById('treeSearch')?.value || '').toLowerCase();
-        const root = document.getElementById('adminTree');
-        root.innerHTML = roots.map(r => renderAdminNode(r, dealStats, searchTerm)).join('');
-        wrap.style.display = 'block';
+        renderTreeByCurrentView();
     } catch (e) {
         console.error('loadPartnerTree error:', e);
         empty.style.display = 'block';
@@ -3963,6 +3989,300 @@ async function loadPartnerTree() {
         loading.style.display = 'none';
     }
 }
+
+function renderTreeByCurrentView() {
+    const view = window._treeState.view;
+    document.getElementById('treeChartWrap').style.display = view === 'chart' ? 'block' : 'none';
+    document.getElementById('treeWrap').style.display = view === 'list' ? 'block' : 'none';
+
+    if (view === 'chart') {
+        renderOrgChart();
+    } else {
+        renderListView();
+    }
+}
+
+function setTreeView(view) {
+    window._treeState.view = view;
+    document.querySelectorAll('.vt-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+    renderTreeByCurrentView();
+}
+
+function renderListView() {
+    const root = document.getElementById('adminTree');
+    const search = (document.getElementById('treeSearch')?.value || '').toLowerCase();
+    root.innerHTML = window._treeState.roots
+        .map(r => renderAdminNode(r, window._treeState.dealStats, search))
+        .join('');
+}
+
+// ─── 가로 분기 조직도 차트 ───
+
+function renderOrgChart() {
+    const chart = document.getElementById('treeChart');
+    const search = (document.getElementById('treeSearch')?.value || '').toLowerCase();
+    window._treeState.search = search;
+
+    const roots = window._treeState.roots;
+    if (!roots.length) {
+        chart.innerHTML = '';
+        return;
+    }
+
+    // 검색 매칭 노드 집합 (매칭된 노드 + 그 조상 표시)
+    const matchedIds = new Set();
+    if (search) {
+        const all = Object.values(window._treeState.byId);
+        all.forEach(p => {
+            const hay = (p.name || '') + ' ' + (p.email || '') + ' ' + (p.referral_code || '');
+            if (hay.toLowerCase().includes(search)) {
+                matchedIds.add(p.id);
+                // 조상 전부 마킹
+                let parent = p.parent_partner_id;
+                while (parent && window._treeState.byId[parent]) {
+                    matchedIds.add(parent);
+                    parent = window._treeState.byId[parent].parent_partner_id;
+                }
+            }
+        });
+    }
+
+    // 루트들을 가로로 배치
+    const rowHtml = `<div class="org-row">${roots.map(r => renderOrgSubtree(r, matchedIds, search)).join('')}</div>`;
+    chart.innerHTML = rowHtml;
+
+    // SVG 연결선 그리기 (DOM 렌더 후)
+    requestAnimationFrame(drawTreeConnectors);
+}
+
+function renderOrgSubtree(node, matchedIds, search) {
+    const stats = window._treeState.dealStats[node.id] || { total: 0, contracted: 0, volume: 0 };
+    const initials = (node.name || '?').substring(0, 1);
+    const isRoot = !node.parent_partner_id;
+    const isCollapsed = window._treeState.collapsed.has(node.id);
+    const hasChildren = node.children && node.children.length;
+    const statusClass = node.status === 'pending' ? 'pending'
+                      : node.status === 'rejected' ? 'rejected'
+                      : '';
+    const rootClass = isRoot ? 'root' : '';
+    const collapsedClass = isCollapsed ? 'collapsed' : '';
+    const dimClass = (search && !matchedIds.has(node.id)) ? 'dim' : '';
+    const matchClass = (search && matchedIds.has(node.id) && (node.name || '').toLowerCase().includes(search.toLowerCase())) ? 'match' : '';
+
+    const rate = node.commission_rate ? (Number(node.commission_rate) * 100).toFixed(2) + '%' : '1.50%';
+    const bizType = node.business_type === 'corporate' ? '사업자' : '개인';
+
+    const card = `
+        <div class="org-card ${rootClass} ${statusClass} ${collapsedClass} ${dimClass} ${matchClass}"
+             data-node-id="${node.id}"
+             onclick="openPartnerDetailFromTree(${node.id}, event)">
+            ${hasChildren ? `<div class="oc-children-count">${node.children.length}</div>` : ''}
+            <div class="oc-head">
+                <div class="oc-avatar">${escapeHtml(initials)}</div>
+                <div class="oc-name" title="${escapeHtml(node.name || '')}">${escapeHtml(node.name || '이름없음')}</div>
+            </div>
+            <div class="oc-meta">
+                <span class="oc-code">${escapeHtml(node.referral_code || '------')}</span>
+                · ${bizType} · ${rate}<br>
+                <span style="color:var(--gray-400);">${escapeHtml(node.email || node.phone || '')}</span>
+            </div>
+            <div class="oc-stats">
+                <div class="oc-stat"><div class="v">${stats.total}</div><div class="l">등록</div></div>
+                <div class="oc-stat"><div class="v">${stats.contracted}</div><div class="l">계약</div></div>
+                <div class="oc-stat"><div class="v">${formatCurrencyShort(stats.volume)}</div><div class="l">거래액</div></div>
+            </div>
+            ${hasChildren ? `<button class="oc-collapse" onclick="toggleNodeCollapse(${node.id}, event)" title="펼치기/접기">${isCollapsed ? '+' : '−'}</button>` : ''}
+        </div>
+    `;
+
+    let childrenHtml = '';
+    if (hasChildren && !isCollapsed) {
+        childrenHtml = `
+            <div class="org-children">
+                <div class="org-row">
+                    ${node.children.map(c => renderOrgSubtree(c, matchedIds, search)).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    return `<div class="org-col-wrap" data-wrap-id="${node.id}">${card}${childrenHtml}</div>`;
+}
+
+function formatCurrencyShort(n) {
+    n = Number(n || 0);
+    if (n >= 100000000) return (n / 100000000).toFixed(1).replace(/\.0$/, '') + '억';
+    if (n >= 10000000) return (n / 10000000).toFixed(1).replace(/\.0$/, '') + '천만';
+    if (n >= 10000) return Math.round(n / 10000) + '만';
+    return n.toLocaleString();
+}
+
+// ─── SVG 연결선 ───
+
+function drawTreeConnectors() {
+    const svg = document.getElementById('treeSvg');
+    const canvas = document.getElementById('treeCanvas');
+    if (!svg || !canvas) return;
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const scale = window._treeState.zoom || 1;
+    const w = canvas.scrollWidth;
+    const h = canvas.scrollHeight;
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+    let paths = '';
+    document.querySelectorAll('.org-card').forEach(card => {
+        const nodeId = parseInt(card.dataset.nodeId, 10);
+        const node = window._treeState.byId[nodeId];
+        if (!node || !node.children || !node.children.length) return;
+        if (window._treeState.collapsed.has(nodeId)) return;
+
+        const parentRect = card.getBoundingClientRect();
+        const px = (parentRect.left + parentRect.width / 2 - canvasRect.left) / scale;
+        const py = (parentRect.bottom - canvasRect.top) / scale;
+
+        node.children.forEach(child => {
+            const childCard = canvas.querySelector(`.org-card[data-node-id="${child.id}"]`);
+            if (!childCard) return;
+            const cr = childCard.getBoundingClientRect();
+            const cx = (cr.left + cr.width / 2 - canvasRect.left) / scale;
+            const cy = (cr.top - canvasRect.top) / scale;
+            // 직각 라인 — 부모 하단 → 중간 가로 → 자식 상단
+            const midY = (py + cy) / 2;
+            paths += `<path d="M ${px} ${py} L ${px} ${midY} L ${cx} ${midY} L ${cx} ${cy}" />`;
+        });
+    });
+
+    svg.innerHTML = paths;
+}
+
+// ─── 접기/펼치기 ───
+
+function toggleNodeCollapse(id, evt) {
+    if (evt) { evt.stopPropagation(); }
+    if (window._treeState.collapsed.has(id)) {
+        window._treeState.collapsed.delete(id);
+    } else {
+        window._treeState.collapsed.add(id);
+    }
+    renderOrgChart();
+}
+
+function treeExpandAll(expand) {
+    if (expand) {
+        window._treeState.collapsed.clear();
+    } else {
+        // 루트 제외 모두 접기
+        Object.values(window._treeState.byId).forEach(p => {
+            if (p.children && p.children.length) window._treeState.collapsed.add(p.id);
+        });
+        // 루트는 펼친 채
+        window._treeState.roots.forEach(r => window._treeState.collapsed.delete(r.id));
+    }
+    renderOrgChart();
+}
+
+// ─── 줌 / 팬 ───
+
+function treeZoom(delta) {
+    const newZoom = Math.max(0.3, Math.min(2, window._treeState.zoom + delta));
+    window._treeState.zoom = newZoom;
+    applyTreeTransform();
+}
+
+function treeZoomReset() {
+    window._treeState.zoom = 1;
+    window._treeState.pan = { x: 0, y: 0 };
+    applyTreeTransform();
+    const vp = document.getElementById('treeViewport');
+    if (vp) { vp.scrollLeft = 0; vp.scrollTop = 0; }
+}
+
+function applyTreeTransform() {
+    const canvas = document.getElementById('treeCanvas');
+    if (!canvas) return;
+    canvas.style.transform = `scale(${window._treeState.zoom})`;
+    requestAnimationFrame(drawTreeConnectors);
+}
+
+// 드래그로 스크롤
+function setupTreePanZoom() {
+    const vp = document.getElementById('treeViewport');
+    if (!vp || vp._panSetup) return;
+    vp._panSetup = true;
+
+    let isDown = false, startX, startY, scrollLeft, scrollTop;
+    vp.addEventListener('mousedown', (e) => {
+        // 카드 클릭은 드래그 안 함
+        if (e.target.closest('.org-card')) return;
+        isDown = true;
+        vp.classList.add('grabbing');
+        startX = e.pageX - vp.offsetLeft;
+        startY = e.pageY - vp.offsetTop;
+        scrollLeft = vp.scrollLeft;
+        scrollTop = vp.scrollTop;
+    });
+    vp.addEventListener('mouseleave', () => { isDown = false; vp.classList.remove('grabbing'); });
+    vp.addEventListener('mouseup', () => { isDown = false; vp.classList.remove('grabbing'); });
+    vp.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - vp.offsetLeft;
+        const y = e.pageY - vp.offsetTop;
+        vp.scrollLeft = scrollLeft - (x - startX);
+        vp.scrollTop = scrollTop - (y - startY);
+    });
+
+    // 휠 + Ctrl 로 줌
+    vp.addEventListener('wheel', (e) => {
+        if (!e.ctrlKey) return;
+        e.preventDefault();
+        treeZoom(e.deltaY < 0 ? 0.1 : -0.1);
+    }, { passive: false });
+
+    // 윈도우 리사이즈 시 연결선 다시 그리기
+    window.addEventListener('resize', () => requestAnimationFrame(drawTreeConnectors));
+}
+
+document.addEventListener('DOMContentLoaded', setupTreePanZoom);
+
+// ─── 카드 클릭 시 상세 (간단 모달 alert 대용) ───
+
+function openPartnerDetailFromTree(id, evt) {
+    if (evt && evt.target && evt.target.classList.contains('oc-collapse')) return;
+    const node = window._treeState.byId[id];
+    if (!node) return;
+    const stats = window._treeState.dealStats[id] || { total: 0, contracted: 0, volume: 0 };
+    const descendants = Object.values(window._treeState.byId)
+        .filter(p => p.path && node.path && p.path.startsWith(node.path + '/'));
+    const lineVolume = descendants.reduce((s, d) => {
+        const ds = window._treeState.dealStats[d.id] || { volume: 0 };
+        return s + Number(ds.volume || 0);
+    }, Number(stats.volume));
+
+    const msg = [
+        `[${node.name}]`,
+        `추천 코드: ${node.referral_code || '-'}`,
+        `이메일: ${node.email || '-'}  ·  연락처: ${node.phone || '-'}`,
+        `소속: ${node.hospital_name || '-'}`,
+        `유형: ${node.business_type === 'corporate' ? '사업자' : '개인'}  ·  기본요율: ${node.commission_rate ? (node.commission_rate*100).toFixed(2)+'%' : '-'}`,
+        `상태: ${node.status}  ·  레벨: L${node.depth ?? 0}`,
+        ``,
+        `직속 자식: ${(node.children||[]).length}명  ·  하위 전체: ${descendants.length}명`,
+        `본인 등록: ${stats.total}건 / 계약: ${stats.contracted}건 / 본인 거래액: ${formatCurrency(stats.volume)}원`,
+        `라인 누적 계약액: ${formatCurrency(lineVolume)}원`
+    ].join('\n');
+    alert(msg);
+}
+
+window.setTreeView = setTreeView;
+window.toggleNodeCollapse = toggleNodeCollapse;
+window.treeExpandAll = treeExpandAll;
+window.treeZoom = treeZoom;
+window.treeZoomReset = treeZoomReset;
+window.openPartnerDetailFromTree = openPartnerDetailFromTree;
 
 function renderAdminNode(node, dealStats, search) {
     const stat = dealStats[node.id] || { total: 0, contracted: 0, volume: 0 };
@@ -4101,7 +4421,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const ts = document.getElementById('treeSearch');
-    if (ts) ts.addEventListener('input', debounce(loadPartnerTree, 250));
+    if (ts) ts.addEventListener('input', debounce(renderTreeByCurrentView, 200));
 
     const msm = document.getElementById('multiSettleMonthFilter');
     const msl = document.getElementById('multiSettleLevelFilter');
