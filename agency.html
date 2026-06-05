@@ -3473,6 +3473,7 @@
             try {
                 // 서버 API 경유 INSERT (IP 자동 기록)
                 let agencyDupCount = 0;
+                let agencyDupIp = null;
                 try {
                     const resp = await fetch('/api/submit', {
                         method: 'POST',
@@ -3485,6 +3486,7 @@
                     }
                     const respJson = await resp.json().catch(() => ({}));
                     agencyDupCount = respJson.duplicateIpCount || 0;
+                    agencyDupIp = respJson.ip || null;
                     console.log('✅ 서버에 가맹점 신청 저장 완료');
                 } catch (dbError) {
                     console.error('서버 저장 오류:', dbError);
@@ -3508,7 +3510,7 @@
                 alert('가맹점 신청이 접수되었습니다!\n본사 담당자가 1영업일 내 연락드립니다.');
                 e.target.reset();
                 if (agencyDupCount >= 2 && typeof window.showDuplicateIpWarning === 'function') {
-                    window.showDuplicateIpWarning(agencyDupCount);
+                    window.showDuplicateIpWarning(agencyDupCount, agencyDupIp);
                 }
             } catch (error) {
                 console.error('폼 제출 오류:', error);

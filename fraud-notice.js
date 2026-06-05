@@ -55,25 +55,35 @@
         inject();
     }
 
+    // 안전한 HTML 이스케이프 (IP/UA 출력 시 XSS 방지)
+    function escHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     // 동일 IP 다회 접수 시 제출자에게 표시하는 강력 경고 모달
     // /api/submit 응답의 duplicateIpCount >= 2 이면 호출
-    window.showDuplicateIpWarning = function (count) {
+    // ip: 응답에서 받은 클라이언트 IP (대문짝만하게 노출)
+    window.showDuplicateIpWarning = function (count, ip) {
         if (!count || count < 2) return;
         // 이미 떠 있으면 중복 방지
         if (document.getElementById('dupIpWarnOverlay')) return;
 
+        var ipStr = ip ? escHtml(ip) : '확인 중...';
+
         var overlay = document.createElement('div');
         overlay.id = 'dupIpWarnOverlay';
         overlay.style.cssText =
-            'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.75);' +
+            'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);' +
             'display:flex;align-items:center;justify-content:center;padding:20px;' +
-            'animation:dupIpFadeIn 0.2s ease-out;';
+            'animation:dupIpFadeIn 0.2s ease-out;overflow-y:auto;';
 
         var box = document.createElement('div');
         box.style.cssText =
-            'max-width:520px;width:100%;background:#fff;border-radius:14px;' +
+            'max-width:560px;width:100%;background:#fff;border-radius:14px;' +
             'border:3px solid #DC2626;padding:0;overflow:hidden;' +
-            'box-shadow:0 20px 50px rgba(220,38,38,0.4);' +
+            'box-shadow:0 20px 50px rgba(220,38,38,0.5);' +
             'animation:dupIpScaleIn 0.25s cubic-bezier(.2,1.4,.4,1);';
 
         box.innerHTML =
@@ -82,9 +92,28 @@
             '<span style="font-size:24px;">🚨</span>' +
             '<span>중복 접수 감지 — 법적 책임 안내</span>' +
             '</div>' +
+
+            // ★ IP 대문짝 노출 영역 ★
+            '<div style="background:linear-gradient(135deg,#7F1D1D 0%,#DC2626 100%);' +
+            'color:#fff;padding:22px 20px;text-align:center;border-bottom:3px solid #991B1B;">' +
+            '<div style="font-size:12px;letter-spacing:2px;opacity:0.85;margin-bottom:8px;font-weight:600;">' +
+            '귀하의 접속 IP 주소' +
+            '</div>' +
+            '<div style="font-family:\'Courier New\',monospace;font-size:34px;font-weight:900;' +
+            'letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,0.4);' +
+            'background:rgba(0,0,0,0.25);padding:10px 16px;border-radius:8px;' +
+            'border:2px solid rgba(255,255,255,0.3);display:inline-block;' +
+            'animation:dupIpPulse 1.5s ease-in-out infinite;">' +
+            ipStr +
+            '</div>' +
+            '<div style="font-size:11px;margin-top:10px;opacity:0.9;">' +
+            '⚠ 이 IP는 서버 로그·데이터베이스에 영구 기록됩니다' +
+            '</div>' +
+            '</div>' +
+
             '<div style="padding:20px;color:#1F2937;line-height:1.65;font-size:14px;">' +
-            '<p style="margin:0 0 14px;font-size:15px;">' +
-            '귀하의 IP 주소에서 <strong style="color:#DC2626;font-size:17px;">' + count + '건</strong>의 접수 기록이 확인되었습니다.</p>' +
+            '<p style="margin:0 0 14px;font-size:15px;text-align:center;">' +
+            '해당 IP로 총 <strong style="color:#DC2626;font-size:22px;">' + count + '건</strong>의 접수가 확인되었습니다.</p>' +
 
             '<div style="background:#FEF2F2;border-left:4px solid #DC2626;padding:12px 14px;border-radius:6px;margin-bottom:14px;">' +
             '<strong style="color:#991B1B;display:block;margin-bottom:6px;">⚠️ 동일 IP·동일 디바이스에서 반복 접수가 기록되었습니다.</strong>' +
@@ -116,7 +145,8 @@
             sty.id = 'dupIpKeyframes';
             sty.textContent =
                 '@keyframes dupIpFadeIn{from{opacity:0}to{opacity:1}}' +
-                '@keyframes dupIpScaleIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}';
+                '@keyframes dupIpScaleIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}' +
+                '@keyframes dupIpPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0.4)}50%{box-shadow:0 0 0 8px rgba(255,255,255,0)}}';
             document.head.appendChild(sty);
         }
 

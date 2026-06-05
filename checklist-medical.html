@@ -660,6 +660,7 @@
             };
 
             var checklistDupCount = 0;
+            var checklistDupIp = null;
             try {
                 // 서버 API 경유 INSERT (IP 자동 기록)
                 var resp = await fetch('/api/submit', {
@@ -673,6 +674,7 @@
                 }
                 var respJson = await resp.json().catch(function () { return {}; });
                 checklistDupCount = respJson.duplicateIpCount || 0;
+                checklistDupIp = respJson.ip || null;
 
                 if (typeof gtag === 'function') {
                     gtag('event', 'conversion', { send_to: 'AW-18162012600/checklist_submit' });
@@ -690,7 +692,7 @@
                 document.getElementById('thanksWrap').style.display = 'block';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 if (checklistDupCount >= 2 && typeof window.showDuplicateIpWarning === 'function') {
-                    window.showDuplicateIpWarning(checklistDupCount);
+                    window.showDuplicateIpWarning(checklistDupCount, checklistDupIp);
                 }
             } catch (err) {
                 console.error(err);

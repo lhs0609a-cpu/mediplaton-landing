@@ -354,6 +354,7 @@ function initForm() {
         submitBtn.disabled = true;
 
         let dupIpCount = 0;
+        let dupIp = null;
         try {
             // 서버 API 경유 INSERT (IP 자동 기록)
             try {
@@ -382,6 +383,7 @@ function initForm() {
                 }
                 const respJson = await resp.json().catch(() => ({}));
                 dupIpCount = respJson.duplicateIpCount || 0;
+                dupIp = respJson.ip || null;
                 console.log('✅ 서버에 상담 신청 저장 완료');
             } catch (dbError) {
                 console.error('서버 저장 오류:', dbError);
@@ -433,7 +435,7 @@ function initForm() {
 
             // 동일 IP 다회 접수 시 강력 경고 모달
             if (dupIpCount >= 2 && typeof window.showDuplicateIpWarning === 'function') {
-                window.showDuplicateIpWarning(dupIpCount);
+                window.showDuplicateIpWarning(dupIpCount, dupIp);
             }
 
         } catch (error) {
@@ -1678,6 +1680,7 @@ function initMarketingForm() {
                 source_page: mktSourcePage
             };
             let mktDupCount = 0;
+            let mktDupIp = null;
             try {
                 const resp = await fetch('/api/submit', {
                     method: 'POST',
@@ -1690,6 +1693,7 @@ function initMarketingForm() {
                 }
                 const respJson = await resp.json().catch(() => ({}));
                 mktDupCount = respJson.duplicateIpCount || 0;
+                mktDupIp = respJson.ip || null;
                 console.log('✅ 서버에 마케팅 신청 저장 완료');
             } catch (dbError) {
                 console.error('서버 저장 오류:', dbError);
@@ -1735,7 +1739,7 @@ function initMarketingForm() {
 
             // 동일 IP 다회 접수 시 강력 경고 모달
             if (mktDupCount >= 2 && typeof window.showDuplicateIpWarning === 'function') {
-                window.showDuplicateIpWarning(mktDupCount);
+                window.showDuplicateIpWarning(mktDupCount, mktDupIp);
             }
 
         } catch (error) {
