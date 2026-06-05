@@ -3356,6 +3356,7 @@
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
+    <script src="fraud-notice.js"></script>
 
     <script>
         // 라이트박스
@@ -3470,16 +3471,20 @@
             };
 
             try {
-                if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-                    try {
-                        const sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                        await sbClient.from('agency_inquiries').insert(payload);
-                        console.log('✅ Supabase에 가맹점 신청 데이터 저장 완료');
-                    } catch (dbError) {
-                        console.error('Supabase 저장 오류:', dbError);
-                        saveToLocalBackup('agency_inquiries', payload);
+                // 서버 API 경유 INSERT (IP 자동 기록)
+                try {
+                    const resp = await fetch('/api/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'agency', payload })
+                    });
+                    if (!resp.ok) {
+                        const err = await resp.json().catch(() => ({}));
+                        throw new Error(err.error || 'submit failed');
                     }
-                } else {
+                    console.log('✅ 서버에 가맹점 신청 저장 완료');
+                } catch (dbError) {
+                    console.error('서버 저장 오류:', dbError);
                     saveToLocalBackup('agency_inquiries', payload);
                 }
 

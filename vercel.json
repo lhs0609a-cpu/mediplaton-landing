@@ -12,6 +12,9 @@
   "functions": {
     "api/sync-hira.js": {
       "maxDuration": 60
+    },
+    "api/submit.js": {
+      "maxDuration": 10
     }
   }
 }

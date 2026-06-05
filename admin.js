@@ -495,9 +495,21 @@ async function loadConsultations() {
             return;
         }
 
+        // 통합 IP 카운트 (모든 폼 테이블 합산)
+        const ipCounts = await fetchIpCounts();
+
         table.style.display = 'table';
-        tbody.innerHTML = data.map(row => `
-            <tr>
+        tbody.innerHTML = data.map(row => {
+            const ip = row.ip_address || '';
+            const dupCount = ip ? (ipCounts[ip] || 0) : 0;
+            const isDup = dupCount >= 2;
+            const ipCell = ip
+                ? `<span style="font-family:monospace;font-size:12px;">${escapeHtml(ip)}</span>` +
+                  (isDup ? ` <span class="dup-ip-badge" title="이 IP로 ${dupCount}건 접수됨" style="display:inline-block;margin-left:4px;padding:2px 6px;background:#FEE2E2;color:#B91C1C;border-radius:4px;font-size:11px;font-weight:700;">🚨 ${dupCount}건</span>` : '')
+                : '<span style="color:#9CA3AF;">—</span>';
+            const rowStyle = isDup ? ' style="background:#FFF7ED;"' : '';
+            return `
+            <tr${rowStyle}>
                 <td>${formatDate(row.created_at)}</td>
                 <td>${getSourceBadge(row.source_page || 'consultation')}</td>
                 <td><strong>${escapeHtml(row.name)}</strong></td>
@@ -506,6 +518,7 @@ async function loadConsultations() {
                 <td>${getRevenueLabel(row.revenue)}</td>
                 <td>${getRegionLabel(row.region)}</td>
                 <td>${getProductLabel(row.product)}</td>
+                <td>${ipCell}</td>
                 <td><span class="status-badge status-${row.status}">${getStatusLabel(row.status)}</span></td>
                 <td>
                     <div class="action-btns">
@@ -513,11 +526,32 @@ async function loadConsultations() {
                     </div>
                 </td>
             </tr>
-        `).join('');
+        `;}).join('');
     } catch (error) {
         console.error('Load consultations error:', error);
         loading.style.display = 'none';
         showToast('데이터를 불러오는데 실패했습니다.', 'error');
+    }
+}
+
+// 통합 IP 카운트 캐시 (탭 전환 시 1회만 조회)
+let _ipCountsCache = null;
+let _ipCountsCacheAt = 0;
+async function fetchIpCounts() {
+    const now = Date.now();
+    if (_ipCountsCache && (now - _ipCountsCacheAt) < 30000) return _ipCountsCache;
+    try {
+        const { data, error } = await sb.from('ip_submission_counts').select('*');
+        if (error) throw error;
+        const map = {};
+        (data || []).forEach(r => { map[r.ip_address] = r.total_count; });
+        _ipCountsCache = map;
+        _ipCountsCacheAt = now;
+        return map;
+    } catch (e) {
+        console.warn('IP 카운트 조회 실패:', e.message);
+        _ipCountsCache = {};
+        return {};
     }
 }
 
@@ -1002,7 +1036,10 @@ async function viewConsultation(id) {
             </span>
         </div>
         ` : ''}
+        <div id="ipForensicBlock" style="border-top:2px solid var(--gray-200);margin-top:12px;padding-top:12px;"></div>
     `;
+
+    renderIpForensic(data.ip_address, data.user_agent, data.id);
 
     const statusSelect = document.getElementById('statusSelect');
     statusSelect.innerHTML = `
@@ -1014,6 +1051,94 @@ async function viewConsultation(id) {
     statusSelect.value = data.status;
 
     document.getElementById('detailModal').classList.add('active');
+}
+
+// 상세 모달 IP 포렌식 블록 렌더링
+async function renderIpForensic(ip, ua, currentId) {
+    const block = document.getElementById('ipForensicBlock');
+    if (!block) return;
+
+    if (!ip) {
+        block.innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label">접속 IP</span>
+                <span class="detail-value" style="color:#9CA3AF;">기록 없음 (구 버전 접수)</span>
+            </div>`;
+        return;
+    }
+
+    // 동일 IP의 다른 접수 건 조회 (모든 폼 테이블 union)
+    const tables = ['consultations', 'marketing_inquiries', 'partner_inquiries', 'promo_inquiries', 'agency_inquiries'];
+    const others = [];
+    await Promise.all(tables.map(async (t) => {
+        try {
+            const { data } = await sb.from(t)
+                .select('id, name, phone, created_at')
+                .eq('ip_address', ip)
+                .order('created_at', { ascending: false })
+                .limit(20);
+            (data || []).forEach(r => {
+                if (!(t === 'consultations' && r.id === currentId)) {
+                    others.push({ ...r, table: t });
+                }
+            });
+        } catch (_) {}
+    }));
+    others.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    const total = others.length + 1;
+    const dupHtml = others.length === 0 ? '' : `
+        <div style="margin-top:12px;padding:12px;background:${total >= 2 ? '#FEF2F2' : '#F9FAFB'};border:1px solid ${total >= 2 ? '#FCA5A5' : '#E5E7EB'};border-radius:8px;">
+            <div style="font-weight:700;color:${total >= 2 ? '#B91C1C' : '#374151'};margin-bottom:8px;">
+                🚨 이 IP로 접수된 다른 건 ${others.length}개 (총 ${total}건)
+            </div>
+            <div style="max-height:200px;overflow-y:auto;">
+                <table style="width:100%;font-size:12px;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#fff;">
+                            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid #E5E7EB;">테이블</th>
+                            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid #E5E7EB;">성함</th>
+                            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid #E5E7EB;">연락처</th>
+                            <th style="text-align:left;padding:4px 8px;border-bottom:1px solid #E5E7EB;">접수시각</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${others.slice(0, 30).map(r => `
+                            <tr>
+                                <td style="padding:4px 8px;border-bottom:1px solid #F3F4F6;">${r.table}</td>
+                                <td style="padding:4px 8px;border-bottom:1px solid #F3F4F6;">${escapeHtml(r.name || '')}</td>
+                                <td style="padding:4px 8px;border-bottom:1px solid #F3F4F6;">${escapeHtml(r.phone || '')}</td>
+                                <td style="padding:4px 8px;border-bottom:1px solid #F3F4F6;">${formatDate(r.created_at)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>`;
+
+    const warnBox = total >= 2 ? `
+        <div style="margin-top:12px;padding:12px;background:#FFFBEB;border:1px solid #F59E0B;border-radius:8px;color:#78350F;font-size:13px;line-height:1.6;">
+            <div style="font-weight:700;margin-bottom:6px;">⚠️ 허위 접수 의심 — 대응 안내</div>
+            동일 IP <code style="background:#FEF3C7;padding:2px 6px;border-radius:4px;font-family:monospace;">${escapeHtml(ip)}</code> 에서
+            <strong>${total}건</strong> 접수되었습니다. 명백한 허위·장난·타인 명의 접수일 경우:<br>
+            ① 사이버범죄 신고시스템(<a href="https://ecrm.police.go.kr" target="_blank" rel="noopener" style="color:#B45309;text-decoration:underline;">ecrm.police.go.kr</a>)에 IP 주소와 함께 진정 접수<br>
+            ② 통신사 IP 발신자 추적 영장 → 형법 제314조(업무방해), 제347조(사기), 정보통신망법 제70조<br>
+            ③ 명백한 영업방해 입증 시 손해배상 청구 가능
+        </div>` : '';
+
+    block.innerHTML = `
+        <div class="detail-row">
+            <span class="detail-label">접속 IP</span>
+            <span class="detail-value" style="font-family:monospace;">${escapeHtml(ip)}</span>
+        </div>
+        ${ua ? `
+        <div class="detail-row">
+            <span class="detail-label">User-Agent</span>
+            <span class="detail-value" style="font-size:11px;color:#6B7280;word-break:break-all;">${escapeHtml(ua)}</span>
+        </div>` : ''}
+        ${dupHtml}
+        ${warnBox}
+    `;
 }
 
 async function viewPartner(id) {

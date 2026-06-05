@@ -354,28 +354,34 @@ function initForm() {
         submitBtn.disabled = true;
 
         try {
-            // Supabase 연동
-            if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-                try {
-                    const sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                    await sbClient.from('consultations').insert({
-                        name: data.name,
-                        phone: data.phone,
-                        business: data.business,
-                        revenue: data.revenue,
-                        region: data.region,
-                        product: data.product || '',
-                        message: data.message || '',
-                        preferred_time: data.preferred_time || '',
-                        inflow_channel: data.inflow_channel || '',
-                        source_page: sourcePage
-                    });
-                    console.log('✅ Supabase에 상담 신청 데이터 저장 완료');
-                } catch (dbError) {
-                    console.error('Supabase 저장 오류:', dbError);
-                    saveToLocalBackup('consultations', { ...data, source_page: sourcePage });
+            // 서버 API 경유 INSERT (IP 자동 기록)
+            try {
+                const resp = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'consultation',
+                        payload: {
+                            name: data.name,
+                            phone: data.phone,
+                            business: data.business,
+                            revenue: data.revenue,
+                            region: data.region,
+                            product: data.product || '',
+                            message: data.message || '',
+                            preferred_time: data.preferred_time || '',
+                            inflow_channel: data.inflow_channel || '',
+                            source_page: sourcePage
+                        }
+                    })
+                });
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({}));
+                    throw new Error(err.error || 'submit failed');
                 }
-            } else {
+                console.log('✅ 서버에 상담 신청 저장 완료');
+            } catch (dbError) {
+                console.error('서버 저장 오류:', dbError);
                 saveToLocalBackup('consultations', { ...data, source_page: sourcePage });
             }
 
@@ -1651,50 +1657,33 @@ function initMarketingForm() {
         submitBtn.disabled = true;
 
         try {
-            // Supabase insert
+            // 서버 API 경유 INSERT (IP 자동 기록)
             const mktSourcePage = window.location.pathname.split('/').pop() || 'marketing.html';
-            if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-                try {
-                    const sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                    await sb.from('marketing_inquiries').insert({
-                        name: data.name,
-                        phone: data.phone,
-                        business_type: data.business_type,
-                        clinic_size: data.clinic_size,
-                        interests: interests,
-                        preferred_time: data.preferred_time || '',
-                        inflow_channel: data.inflow_channel || '',
-                        source_page: mktSourcePage
-                    });
-                    console.log('✅ Supabase에 마케팅 신청 데이터 저장 완료');
-                } catch (dbError) {
-                    console.error('Supabase 저장 오류:', dbError);
-                    saveToLocalBackup('marketing_inquiries', {
-                        name: data.name,
-                        phone: data.phone,
-                        business_type: data.business_type,
-                        clinic_size: data.clinic_size,
-                        interests: interests,
-                        preferred_time: data.preferred_time || '',
-                        inflow_channel: data.inflow_channel || '',
-                        source_page: mktSourcePage
-                    });
-                }
-            } else {
-                console.log('=== 마케팅 신청 데이터 ===');
-                console.table({ ...data, interests: interests.join(', ') });
-                saveToLocalBackup('marketing_inquiries', {
-                    name: data.name,
-                    phone: data.phone,
-                    business_type: data.business_type,
-                    clinic_size: data.clinic_size,
-                    interests: interests,
-                    preferred_time: data.preferred_time || '',
-                    inflow_channel: data.inflow_channel || '',
-                    source_page: mktSourcePage
+            const mktPayload = {
+                name: data.name,
+                phone: data.phone,
+                business_type: data.business_type,
+                clinic_size: data.clinic_size,
+                interests: interests,
+                preferred_time: data.preferred_time || '',
+                inflow_channel: data.inflow_channel || '',
+                source_page: mktSourcePage
+            };
+            try {
+                const resp = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'marketing', payload: mktPayload })
                 });
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({}));
+                    throw new Error(err.error || 'submit failed');
+                }
+                console.log('✅ 서버에 마케팅 신청 저장 완료');
+            } catch (dbError) {
+                console.error('서버 저장 오류:', dbError);
+                saveToLocalBackup('marketing_inquiries', mktPayload);
             }
-
             // Google Sheets
             if (typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && typeof isGoogleSheetsConfigured === 'function' && isGoogleSheetsConfigured()) {
                 try {

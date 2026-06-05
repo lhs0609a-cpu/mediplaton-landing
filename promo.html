@@ -2823,29 +2823,31 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Supabase 연동
-            if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-                try {
-                    const sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                    await sbClient.from('promo_inquiries').insert({
-                        name: data.name,
-                        phone: data.phone,
-                        business_type: data.business_type,
-                        monthly_sales: data.monthly_sales,
-                        preferred_time: data.preferred_time,
-                        inflow_channel: data.inflow_channel,
-                        source_page: 'promo'
-                    });
-                    console.log('✅ Supabase에 프로모션 신청 데이터 저장 완료');
-                } catch (dbError) {
-                    console.error('Supabase 저장 오류:', dbError);
-                    if (typeof saveToLocalBackup === 'function') {
-                        saveToLocalBackup('promo_inquiries', { ...data, source_page: 'promo' });
-                    }
+            // 서버 API 경유 INSERT (IP 자동 기록)
+            const promoPayload = {
+                name: data.name,
+                phone: data.phone,
+                business_type: data.business_type,
+                monthly_sales: data.monthly_sales,
+                preferred_time: data.preferred_time,
+                inflow_channel: data.inflow_channel,
+                source_page: 'promo'
+            };
+            try {
+                const resp = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'promo', payload: promoPayload })
+                });
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({}));
+                    throw new Error(err.error || 'submit failed');
                 }
-            } else {
+                console.log('✅ 서버에 프로모션 신청 저장 완료');
+            } catch (dbError) {
+                console.error('서버 저장 오류:', dbError);
                 if (typeof saveToLocalBackup === 'function') {
-                    saveToLocalBackup('promo_inquiries', { ...data, source_page: 'promo' });
+                    saveToLocalBackup('promo_inquiries', promoPayload);
                 }
             }
 
@@ -3096,6 +3098,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js" onerror="console.log('config.js 없음')"></script>
+    <script src="fraud-notice.js"></script>
     <script src="analytics-tracker.js"></script>
 </body>
 </html>

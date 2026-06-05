@@ -3331,6 +3331,7 @@
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
+    <script src="fraud-notice.js"></script>
 
     <script>
         // 라이트박스
@@ -3427,38 +3428,30 @@
             btn.disabled = true;
 
             try {
-                // Supabase 연동
-                if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-                    try {
-                        const sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                        await sbClient.from('partner_inquiries').insert({
-                            name: data.name,
-                            phone: data.phone,
-                            occupation: data.occupation,
-                            expected_leads: data.expected_leads || '',
-                            preferred_time: data.preferred_time || '',
-                            inflow_channel: data.inflow_channel || '',
-                            source_page: 'partner'
-                        });
-                        console.log('✅ Supabase에 파트너 신청 데이터 저장 완료');
-                    } catch (dbError) {
-                        console.error('Supabase 저장 오류:', dbError);
-                        saveToLocalBackup('partner_inquiries', {
-                            name: data.name, phone: data.phone,
-                            occupation: data.occupation, expected_leads: data.expected_leads || '',
-                            preferred_time: data.preferred_time || '',
-                            inflow_channel: data.inflow_channel || '',
-                            source_page: 'partner'
-                        });
-                    }
-                } else {
-                    saveToLocalBackup('partner_inquiries', {
-                        name: data.name, phone: data.phone,
-                        occupation: data.occupation, expected_leads: data.expected_leads || '',
-                        preferred_time: data.preferred_time || '',
-                        inflow_channel: data.inflow_channel || '',
-                        source_page: 'partner'
+                // 서버 API 경유 INSERT (IP 자동 기록)
+                const partnerPayload = {
+                    name: data.name,
+                    phone: data.phone,
+                    occupation: data.occupation,
+                    expected_leads: data.expected_leads || '',
+                    preferred_time: data.preferred_time || '',
+                    inflow_channel: data.inflow_channel || '',
+                    source_page: 'partner'
+                };
+                try {
+                    const resp = await fetch('/api/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'partner_inquiry', payload: partnerPayload })
                     });
+                    if (!resp.ok) {
+                        const err = await resp.json().catch(() => ({}));
+                        throw new Error(err.error || 'submit failed');
+                    }
+                    console.log('✅ 서버에 파트너 신청 저장 완료');
+                } catch (dbError) {
+                    console.error('서버 저장 오류:', dbError);
+                    saveToLocalBackup('partner_inquiries', partnerPayload);
                 }
 
                 // Google Sheets 연동

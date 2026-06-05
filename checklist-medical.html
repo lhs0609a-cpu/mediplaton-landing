@@ -564,6 +564,7 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
+    <script src="fraud-notice.js"></script>
     <script>
     (function() {
         var form = document.getElementById('checklistForm');
@@ -659,12 +660,15 @@
             };
 
             try {
-                if (typeof SUPABASE_CONFIG !== 'undefined' && typeof isSupabaseConfigured === 'function' && isSupabaseConfigured()) {
-                    var sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                    var res = await sb.from('consultations').insert(payload);
-                    if (res && res.error) throw res.error;
-                } else {
-                    try { localStorage.setItem('checklist_backup_' + Date.now(), JSON.stringify(payload)); } catch (_) {}
+                // 서버 API 경유 INSERT (IP 자동 기록)
+                var resp = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'consultation', payload: payload })
+                });
+                if (!resp.ok) {
+                    var errJson = await resp.json().catch(function () { return {}; });
+                    throw new Error(errJson.error || 'submit failed');
                 }
 
                 if (typeof gtag === 'function') {
