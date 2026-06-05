@@ -659,6 +659,7 @@
                 source_page: 'checklist-medical.html'
             };
 
+            var checklistDupCount = 0;
             try {
                 // 서버 API 경유 INSERT (IP 자동 기록)
                 var resp = await fetch('/api/submit', {
@@ -670,6 +671,8 @@
                     var errJson = await resp.json().catch(function () { return {}; });
                     throw new Error(errJson.error || 'submit failed');
                 }
+                var respJson = await resp.json().catch(function () { return {}; });
+                checklistDupCount = respJson.duplicateIpCount || 0;
 
                 if (typeof gtag === 'function') {
                     gtag('event', 'conversion', { send_to: 'AW-18162012600/checklist_submit' });
@@ -686,6 +689,9 @@
                 document.getElementById('wrap').style.display = 'none';
                 document.getElementById('thanksWrap').style.display = 'block';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (checklistDupCount >= 2 && typeof window.showDuplicateIpWarning === 'function') {
+                    window.showDuplicateIpWarning(checklistDupCount);
+                }
             } catch (err) {
                 console.error(err);
                 showError('전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요. (오류: ' + (err.message || '알 수 없음') + ')');

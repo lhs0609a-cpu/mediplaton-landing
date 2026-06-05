@@ -353,6 +353,7 @@ function initForm() {
         submitBtn.innerHTML = '<span class="loading-spinner"></span> 신청 중...';
         submitBtn.disabled = true;
 
+        let dupIpCount = 0;
         try {
             // 서버 API 경유 INSERT (IP 자동 기록)
             try {
@@ -379,6 +380,8 @@ function initForm() {
                     const err = await resp.json().catch(() => ({}));
                     throw new Error(err.error || 'submit failed');
                 }
+                const respJson = await resp.json().catch(() => ({}));
+                dupIpCount = respJson.duplicateIpCount || 0;
                 console.log('✅ 서버에 상담 신청 저장 완료');
             } catch (dbError) {
                 console.error('서버 저장 오류:', dbError);
@@ -427,6 +430,11 @@ function initForm() {
 
             openModal(successModal);
             consultForm.reset();
+
+            // 동일 IP 다회 접수 시 강력 경고 모달
+            if (dupIpCount >= 2 && typeof window.showDuplicateIpWarning === 'function') {
+                window.showDuplicateIpWarning(dupIpCount);
+            }
 
         } catch (error) {
             console.error('폼 제출 오류:', error);
@@ -1669,6 +1677,7 @@ function initMarketingForm() {
                 inflow_channel: data.inflow_channel || '',
                 source_page: mktSourcePage
             };
+            let mktDupCount = 0;
             try {
                 const resp = await fetch('/api/submit', {
                     method: 'POST',
@@ -1679,6 +1688,8 @@ function initMarketingForm() {
                     const err = await resp.json().catch(() => ({}));
                     throw new Error(err.error || 'submit failed');
                 }
+                const respJson = await resp.json().catch(() => ({}));
+                mktDupCount = respJson.duplicateIpCount || 0;
                 console.log('✅ 서버에 마케팅 신청 저장 완료');
             } catch (dbError) {
                 console.error('서버 저장 오류:', dbError);
@@ -1721,6 +1732,11 @@ function initMarketingForm() {
             successModal?.classList.add('active');
             document.body.style.overflow = 'hidden';
             form.reset();
+
+            // 동일 IP 다회 접수 시 강력 경고 모달
+            if (mktDupCount >= 2 && typeof window.showDuplicateIpWarning === 'function') {
+                window.showDuplicateIpWarning(mktDupCount);
+            }
 
         } catch (error) {
             console.error('폼 제출 오류:', error);
