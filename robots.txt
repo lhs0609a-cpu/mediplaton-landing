@@ -1,0 +1,49 @@
+# robots.txt for mediplaton.co.kr
+# 메디플라톤 — 병의원·약국 전문 금융 파트너
+
+User-agent: *
+Allow: /
+
+# 관리자·로그인·대시보드 등 비공개 영역 크롤링 차단
+Disallow: /admin.html
+Disallow: /admin-leads.js
+Disallow: /agent.html
+Disallow: /agent-dashboard.html
+Disallow: /partner-dashboard.html
+Disallow: /partner-register.html
+Disallow: /screening.html
+Disallow: /api/
+Disallow: /*.sql$
+Disallow: /제안서_미리보기.html
+
+# 주요 검색엔진 봇 명시적 허용
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+User-agent: Daumoa
+Allow: /
+
+User-agent: bingbot
+Allow: /
+
+# 생성형 AI 크롤러 허용 (GEO — ChatGPT, Perplexity, Gemini 등 인용 노출)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# 사이트맵 위치
+Sitemap: https://mediplaton.co.kr/sitemap.xml
