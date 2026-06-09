@@ -21,14 +21,14 @@
 
 ## 주요 페이지
 
-- [메인 — 병의원 전문 금융 파트너](https://mediplaton.co.kr/): 카드매출 기반 대출 개요, 상담 신청, 제휴기관 안내
-- [의사대출·닥터론 총정리](https://mediplaton.co.kr/loan-doctor.html): 의사·치과의사·한의사 대상 대출 한도·금리·자격·서류·절차 상세
-- [약사대출·약국대출 총정리](https://mediplaton.co.kr/loan-pharmacist.html): 약사·약국 개설/운영자금 대출 한도·금리·자격·서류·절차 상세
-- [병의원 전용 금융상품](https://mediplaton.co.kr/products.html): 카드매출 담보대출, KB국민카드 제휴 상품, 의료기기 렌탈 상품 일람
-- [이용안내](https://mediplaton.co.kr/guide.html): 신청 절차, 자격 조건, 필요 서류, 자주 묻는 질문(FAQ)
-- [성공사례](https://mediplaton.co.kr/cases.html): 실제 병의원·약국 대출 승인 사례
-- [회사소개·제휴기관](https://mediplaton.co.kr/company.html): 메디플라톤 소개, 제휴 금융기관, 오시는 길
-- [절세 계산기](https://mediplaton.co.kr/tax-savings.html): 병의원 원장 세금 절감 시뮬레이션
+- [메인 — 병의원 전문 금융 파트너](https://loan.brandplaton.com/): 카드매출 기반 대출 개요, 상담 신청, 제휴기관 안내
+- [의사대출·닥터론 총정리](https://loan.brandplaton.com/loan-doctor.html): 의사·치과의사·한의사 대상 대출 한도·금리·자격·서류·절차 상세
+- [약사대출·약국대출 총정리](https://loan.brandplaton.com/loan-pharmacist.html): 약사·약국 개설/운영자금 대출 한도·금리·자격·서류·절차 상세
+- [병의원 전용 금융상품](https://loan.brandplaton.com/products.html): 카드매출 담보대출, KB국민카드 제휴 상품, 의료기기 렌탈 상품 일람
+- [이용안내](https://loan.brandplaton.com/guide.html): 신청 절차, 자격 조건, 필요 서류, 자주 묻는 질문(FAQ)
+- [성공사례](https://loan.brandplaton.com/cases.html): 실제 병의원·약국 대출 승인 사례
+- [회사소개·제휴기관](https://loan.brandplaton.com/company.html): 메디플라톤 소개, 제휴 금융기관, 오시는 길
+- [절세 계산기](https://loan.brandplaton.com/tax-savings.html): 병의원 원장 세금 절감 시뮬레이션
 
 ## 자주 묻는 질문 (FAQ)
 
