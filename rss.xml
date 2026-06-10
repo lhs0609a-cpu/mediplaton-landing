@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>메디플라톤 | 병의원·약국 전문 금융</title>
+    <link>https://loan.brandplaton.com/</link>
+    <atom:link href="https://loan.brandplaton.com/rss.xml" rel="self" type="application/rss+xml" />
+    <description>의사·치과의사·한의사·약사 원장님을 위한 카드매출 기반 대출(의사대출·닥터론·약사대출·약국대출). 신협중앙회·KB국민카드 정식 제휴, DSR 별도 산정, 한도 최대 3억원, 금리 연 5.3%~6.9%.</description>
+    <language>ko</language>
+    <copyright>© 2026 메디플라톤</copyright>
+    <lastBuildDate>Wed, 10 Jun 2026 09:00:00 +0900</lastBuildDate>
+    <generator>Mediplaton</generator>
+
+    <item>
+      <title>의사대출·닥터론 한도·금리·조건 총정리</title>
+      <link>https://loan.brandplaton.com/loan-doctor.html</link>
+      <guid isPermaLink="true">https://loan.brandplaton.com/loan-doctor.html</guid>
+      <pubDate>Wed, 10 Jun 2026 09:00:00 +0900</pubDate>
+      <description>의사·치과의사·한의사 대상 카드매출 기반 대출. 한도 최대 3억원, 금리 연 5.3%~6.9%, DSR 한도와 별도 산정, 평균 3영업일 입금. 자격·서류·신청 절차 상세 안내.</description>
+    </item>
+
+    <item>
+      <title>약사대출·약국대출 한도·금리·조건 총정리</title>
+      <link>https://loan.brandplaton.com/loan-pharmacist.html</link>
+      <guid isPermaLink="true">https://loan.brandplaton.com/loan-pharmacist.html</guid>
+      <pubDate>Wed, 10 Jun 2026 09:00:00 +0900</pubDate>
+      <description>약사·약국 대상 카드매출 기반 대출. 약국 개설·인수·운영자금. 한도 최대 3억원, 금리 연 5.3%~6.9%, DSR 별도 산정. 자격·서류·절차 안내.</description>
+    </item>
+
+    <item>
+      <title>병의원 전용 금융상품 안내</title>
+      <link>https://loan.brandplaton.com/products.html</link>
+      <guid isPermaLink="true">https://loan.brandplaton.com/products.html</guid>
+      <pubDate>Tue, 09 Jun 2026 09:00:00 +0900</pubDate>
+      <description>카드매출 담보대출, KB국민카드 제휴 상품, 의료기기 렌탈 등 병의원·약국 원장님을 위한 금융상품 일람.</description>
+    </item>
+
+    <item>
+      <title>이용안내 — 신청 절차·자격·서류·FAQ</title>
+      <link>https://loan.brandplaton.com/guide.html</link>
+      <guid isPermaLink="true">https://loan.brandplaton.com/guide.html</guid>
+      <pubDate>Mon, 08 Jun 2026 09:00:00 +0900</pubDate>
+      <description>의사대출·약사대출 신청 절차, 자격 조건, 필요 서류, 자주 묻는 질문(FAQ)을 한눈에.</description>
+    </item>
+
+    <item>
+      <title>병의원·약국 대출 성공사례</title>
+      <link>https://loan.brandplaton.com/cases.html</link>
+      <guid isPermaLink="true">https://loan.brandplaton.com/cases.html</guid>
+      <pubDate>Sun, 07 Jun 2026 09:00:00 +0900</pubDate>
+      <description>DSR에 막혔던 원장님 1,700명 이상 상담, 심사 승인율 약 83%. 실제 병의원·약국 대출 승인 사례.</description>
+    </item>
+
+    <item>
+      <title>메디플라톤 회사소개 및 제휴기관</title>
+      <link>https://loan.brandplaton.com/company.html</link>
+      <guid isPermaLink="true">https://loan.brandplaton.com/company.html</guid>
+      <pubDate>Sat, 06 Jun 2026 09:00:00 +0900</pubDate>
+      <description>신협중앙회·KB국민카드 등 정식 제휴 금융기관 안내, 메디플라톤 소개, 오시는 길.</description>
+    </item>
+
+    <item>
+      <title>병의원 원장 절세 계산기</title>
+      <link>https://loan.brandplaton.com/tax-savings.html</link>
+      <guid isPermaLink="true">https://loan.brandplaton.com/tax-savings.html</guid>
+      <pubDate>Fri, 05 Jun 2026 09:00:00 +0900</pubDate>
+      <description>병의원 원장님을 위한 세금 절감 시뮬레이션 계산기.</description>
+    </item>
+
+  </channel>
+</rss>
