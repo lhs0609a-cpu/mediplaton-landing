@@ -556,10 +556,31 @@ section.hero .hero-trust span {
     background: var(--primary);
 }
 
+.nav-link.nav-link--food {
+    color: #EA580C;
+    font-weight: 600;
+    background: #FFF7ED;
+    border-radius: 6px;
+    padding: 6px 14px !important;
+}
+
+.nav-link.nav-link--food:hover {
+    color: var(--white);
+    background: #EA580C;
+}
+
 .mobile-nav--tax {
     color: var(--primary) !important;
     font-weight: 700 !important;
     background: var(--primary-50);
+    border-radius: 8px;
+    padding: 12px 16px !important;
+}
+
+.mobile-nav--food {
+    color: #EA580C !important;
+    font-weight: 700 !important;
+    background: #FFF7ED;
     border-radius: 8px;
     padding: 12px 16px !important;
 }
@@ -3999,7 +4020,8 @@ div.product-cta .btn {
         font-size: 14px;
     }
 
-    .nav-link.nav-link--tax {
+    .nav-link.nav-link--tax,
+    .nav-link.nav-link--food {
         padding: 6px 10px !important;
     }
 
