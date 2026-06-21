@@ -692,8 +692,6 @@
             color: var(--gray-700);
         }
 
-        .partner-chip .emoji { font-size: 16px; }
-
         /* ===== LOCKIN SECTION ===== */
         .lockin-section {
             padding: var(--space-10) var(--space-4);
@@ -1250,6 +1248,147 @@
             color: var(--gray-700);
         }
 
+        /* ===== PHOTO COMPONENTS ===== */
+        .hero-visual {
+            margin: var(--space-5) auto 0;
+            max-width: 360px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.15);
+            position: relative;
+        }
+
+        .hero-visual img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-visual .visual-caption {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: var(--space-4) var(--space-3) var(--space-3);
+            background: linear-gradient(180deg, transparent 0%, rgba(10,22,40,0.85) 100%);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        /* Partner banner */
+        .partner-banner {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto var(--space-5);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .partner-banner img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .partner-banner .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(15,34,102,0.82) 0%, rgba(26,58,143,0.45) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: var(--space-4);
+        }
+
+        .partner-banner .banner-overlay strong {
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+
+        .partner-banner .banner-overlay span {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: var(--space-1);
+        }
+
+        /* Benefit card photos */
+        .benefit-card { padding: 0; overflow: hidden; }
+        .benefit-card .benefit-photo {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+        .benefit-card .benefit-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-5) var(--space-4);
+        }
+
+        /* Quality gallery */
+        .quality-section {
+            padding: var(--space-10) var(--space-4);
+            background: #fff;
+            text-align: center;
+        }
+
+        .quality-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .quality-item {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quality-item:first-child { grid-column: 1 / -1; }
+
+        .quality-item img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .quality-item:first-child img { height: 180px; }
+
+        .quality-item .q-label {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: var(--space-4) var(--space-3) var(--space-2);
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        /* Process step photos */
+        .lockin-step { padding: 0; overflow: hidden; }
+        .lockin-step .step-photo {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+        .lockin-step .step-body { padding: var(--space-5) var(--space-4); }
+        .lockin-step .lockin-step-number { margin-top: calc(-1 * var(--space-8) - 4px); position: relative; z-index: 1; border: 3px solid #fff; }
+
         /* ===== RESPONSIVE ===== */
         @media (min-width: 768px) {
             .hero { padding: 48px 24px; }
@@ -1335,6 +1474,11 @@
                     상담료 0원
                 </span>
             </div>
+
+            <div class="hero-visual">
+                <img src="images/food/food-hero-fresh.jpg" alt="병원 급식에 공급되는 신선 식자재" loading="eager" width="900" height="600">
+                <div class="visual-caption">매일 아침 입고되는 신선 채소 그대로, 병원 식탁까지</div>
+            </div>
         </div>
     </section>
 
@@ -1361,13 +1505,19 @@
 
     <!-- ===== PARTNER LOGOS ===== -->
     <section class="partner-section">
-        <h2 class="section-title">국내 TOP 5 식자재 업체 공식 유통 코드 보유</h2>
+        <div class="partner-banner">
+            <img src="images/food/food-warehouse.jpg" alt="전국 식자재 물류 센터" loading="lazy" width="900" height="600">
+            <div class="banner-overlay">
+                <strong>국내 TOP 5 식자재 업체<br>공식 유통 코드 보유</strong>
+                <span>대형 물류망을 통한 전국 정기 배송</span>
+            </div>
+        </div>
         <div class="partner-grid">
-            <span class="partner-chip"><span class="emoji">🏢</span> CJ프레시웨이</span>
-            <span class="partner-chip"><span class="emoji">🏢</span> 아워홈</span>
-            <span class="partner-chip"><span class="emoji">🏢</span> 삼성웰스토리</span>
-            <span class="partner-chip"><span class="emoji">🏢</span> 사조푸디스트</span>
-            <span class="partner-chip"><span class="emoji">🏢</span> 현대그린푸드</span>
+            <span class="partner-chip">CJ프레시웨이</span>
+            <span class="partner-chip">아워홈</span>
+            <span class="partner-chip">삼성웰스토리</span>
+            <span class="partner-chip">사조푸디스트</span>
+            <span class="partner-chip">현대그린푸드</span>
         </div>
     </section>
 
@@ -1446,39 +1596,56 @@
 
         <div class="benefit-grid">
             <div class="benefit-card featured">
-                <div class="benefit-icon orange">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                    </svg>
-                </div>
-                <div class="benefit-content">
-                    <h3>식자재비 최대 15% 절감</h3>
-                    <p>유통 중간 마진 제거. <span class="key">CJ·아워홈·삼성 공식 코드</span>로 동일 품질을 더 낮은 단가에 공급</p>
+                <img class="benefit-photo" src="images/food/food-produce-shelf.jpg" alt="원가에 공급되는 신선 식자재" loading="lazy" width="900" height="600">
+                <div class="benefit-body">
+                    <div class="benefit-content">
+                        <h3>식자재비 최대 15% 절감</h3>
+                        <p>유통 중간 마진 제거. <span class="key">CJ·아워홈·삼성 공식 코드</span>로 동일 품질을 더 낮은 단가에 공급</p>
+                    </div>
                 </div>
             </div>
 
             <div class="benefit-card">
-                <div class="benefit-icon blue">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
-                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                    </svg>
-                </div>
-                <div class="benefit-content">
-                    <h3>대출 금리 추가 우대</h3>
-                    <p>식자재 연동 계약 시 <span class="key">금리 0.3~0.5%p 추가 인하</span>. 1억 기준 연 30~50만원 이자 절감</p>
+                <img class="benefit-photo" src="images/photo-financial-analysis.jpg" alt="대출 금리 분석 상담" loading="lazy" width="900" height="600">
+                <div class="benefit-body">
+                    <div class="benefit-content">
+                        <h3>대출 금리 추가 우대</h3>
+                        <p>식자재 연동 계약 시 <span class="key">금리 0.3~0.5%p 추가 인하</span>. 1억 기준 연 30~50만원 이자 절감</p>
+                    </div>
                 </div>
             </div>
 
             <div class="benefit-card">
-                <div class="benefit-icon green">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
+                <img class="benefit-photo" src="images/photo-consultation-hero.jpg" alt="자금과 식자재 통합 관리 상담" loading="lazy" width="900" height="600">
+                <div class="benefit-body">
+                    <div class="benefit-content">
+                        <h3>원스톱 관리</h3>
+                        <p>자금 + 식자재를 한 담당자가 관리. <span class="key">청구·납품·정산 일원화</span>로 원장님 업무 부담 최소화</p>
+                    </div>
                 </div>
-                <div class="benefit-content">
-                    <h3>원스톱 관리</h3>
-                    <p>자금 + 식자재를 한 담당자가 관리. <span class="key">청구·납품·정산 일원화</span>로 원장님 업무 부담 최소화</p>
-                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== QUALITY GALLERY ===== -->
+    <section class="quality-section">
+        <span class="section-eyebrow green">눈으로 확인하세요</span>
+        <h2 class="section-title">
+            대기업과 똑같은 식자재,<br>원장님 식탁에 그대로 오릅니다
+        </h2>
+
+        <div class="quality-grid">
+            <div class="quality-item">
+                <img src="images/food/food-market.jpg" alt="당일 입고 신선 농산물" loading="lazy" width="900" height="600">
+                <div class="q-label">당일 입고 신선 농·축·수산물</div>
+            </div>
+            <div class="quality-item">
+                <img src="images/food/food-veg-premium.jpg" alt="엄선된 친환경 채소" loading="lazy" width="900" height="600">
+                <div class="q-label">엄선된 친환경 채소</div>
+            </div>
+            <div class="quality-item">
+                <img src="images/food/food-meal.jpg" alt="균형 잡힌 환자식 식단" loading="lazy" width="900" height="600">
+                <div class="q-label">균형 잡힌 환자식 식단</div>
             </div>
         </div>
     </section>
@@ -1580,27 +1747,39 @@
 
         <div class="lockin-steps">
             <div class="lockin-step">
-                <div class="lockin-step-number">1</div>
-                <h3>무료 상담 신청</h3>
-                <p>아래 양식 작성 또는 전화 한 통. 현재 식자재 거래 현황과 대출 니즈를 파악합니다</p>
+                <img class="step-photo" src="images/photo-consultation-doctor.jpg" alt="병원 원장 상담" loading="lazy" width="900" height="600">
+                <div class="step-body">
+                    <div class="lockin-step-number">1</div>
+                    <h3>무료 상담 신청</h3>
+                    <p>아래 양식 작성 또는 전화 한 통. 현재 식자재 거래 현황과 대출 니즈를 파악합니다</p>
+                </div>
             </div>
             <div class="lockin-arrow">▼</div>
             <div class="lockin-step">
-                <div class="lockin-step-number">2</div>
-                <h3>맞춤 견적 + 한도 안내</h3>
-                <p>기존 식자재 견적서 대비 할인 단가 제안. 동시에 카드매출 기반 대출 한도·금리 안내</p>
+                <img class="step-photo" src="images/food/food-finance.jpg" alt="맞춤 견적과 대출 한도 산출" loading="lazy" width="900" height="600">
+                <div class="step-body">
+                    <div class="lockin-step-number">2</div>
+                    <h3>맞춤 견적 + 한도 안내</h3>
+                    <p>기존 식자재 견적서 대비 할인 단가 제안. 동시에 카드매출 기반 대출 한도·금리 안내</p>
+                </div>
             </div>
             <div class="lockin-arrow">▼</div>
             <div class="lockin-step">
-                <div class="lockin-step-number">3</div>
-                <h3>패키지 계약 체결</h3>
-                <p>대출 + 식자재 동시 계약 시 금리 우대·단가 할인 이중 혜택 적용</p>
+                <img class="step-photo" src="images/food/food-contract.jpg" alt="패키지 계약 체결" loading="lazy" width="900" height="600">
+                <div class="step-body">
+                    <div class="lockin-step-number">3</div>
+                    <h3>패키지 계약 체결</h3>
+                    <p>대출 + 식자재 동시 계약 시 금리 우대·단가 할인 이중 혜택 적용</p>
+                </div>
             </div>
             <div class="lockin-arrow">▼</div>
             <div class="lockin-step">
-                <div class="lockin-step-number">4</div>
-                <h3>대출 입금 + 식자재 납품 개시</h3>
-                <p>대출금 평균 3영업일 입금. 식자재는 계약 즉시 정기 배송 시작</p>
+                <img class="step-photo" src="images/food/food-crates.jpg" alt="식자재 정기 배송 개시" loading="lazy" width="900" height="600">
+                <div class="step-body">
+                    <div class="lockin-step-number">4</div>
+                    <h3>대출 입금 + 식자재 납품 개시</h3>
+                    <p>대출금 평균 3영업일 입금. 식자재는 계약 즉시 정기 배송 시작</p>
+                </div>
             </div>
         </div>
     </section>
