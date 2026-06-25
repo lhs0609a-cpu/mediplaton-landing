@@ -234,9 +234,12 @@
             var buckets = [0, 0, 0, 0]; // 0-25, 25-50, 50-75, 75-100
             var depthSum = 0;
             rows.forEach(function(r) {
-                if (r.analytics_sessions.is_bounce) bounces++;
-                timeSum += (r.time_on_page || 0);
-                var d = r.scroll_depth || 0; depthSum += d;
+                var t = r.time_on_page || 0;
+                var d = r.scroll_depth || 0;
+                // 이탈 = 체류 15초 미만 AND 스크롤 25% 미만 (실질 참여 없이 떠남)
+                if (t < 15 && d < 25) bounces++;
+                timeSum += t;
+                depthSum += d;
                 if (d < 25) buckets[0]++; else if (d < 50) buckets[1]++; else if (d < 75) buckets[2]++; else buckets[3]++;
             });
 
@@ -278,9 +281,33 @@
             el('stClicks').textContent = pts.length;
             el('heatCount').textContent = pts.length + '개 클릭';
 
+            // 0건이면 원인 안내 — 다른 디바이스/페이지에 클릭이 있는지 전체 카운트 조회
+            var hint = '';
+            if (pts.length === 0) {
+                var totalRes = await sb.from('analytics_events')
+                    .select('id', { count: 'exact', head: true })
+                    .eq('event_type', 'heatmap_click');
+                var totalAll = totalRes.count || 0;
+                if (totalAll === 0) {
+                    hint = '아직 수집된 클릭이 한 건도 없습니다. 클릭 좌표 추적은 최근 배포되어, 이후 방문자가 클릭해야 점이 찍힙니다.<br><b>지금 확인하려면:</b> 새 탭에서 사이트를 열고 아무 곳이나 클릭한 뒤, 이 화면에서 [불러오기]를 다시 누르세요.';
+                } else {
+                    hint = '선택한 조건(이 페이지 · ' + device + ')에는 클릭이 없지만, 전체적으로 <b>' + totalAll + '건</b>이 수집돼 있습니다. <b>디바이스</b>나 <b>페이지</b>를 바꿔보세요.';
+                }
+            }
+
             var w = REF_WIDTH[device];
             var stage = el('heatStage');
             stage.innerHTML = '';
+            // 이전 안내배너 제거 (중복 누적 방지)
+            var prev = document.querySelectorAll('.heat-hint');
+            for (var pi = 0; pi < prev.length; pi++) prev[pi].remove();
+            if (hint) {
+                var banner = document.createElement('div');
+                banner.className = 'heat-hint';
+                banner.style.cssText = 'padding:14px 16px;background:#fef9e7;border:1px solid #f5d76e;border-radius:8px;margin-bottom:14px;font-size:13px;line-height:1.6;color:#7a5c00;';
+                banner.innerHTML = '💡 ' + hint;
+                el('heatStage').parentElement.insertBefore(banner, el('heatStage'));
+            }
             stage.style.width = w + 'px';
             stage.style.maxWidth = '100%';
 

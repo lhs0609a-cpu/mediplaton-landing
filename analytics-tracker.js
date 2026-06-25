@@ -178,45 +178,53 @@
         }, { passive: true });
     }
 
-    // ─── Heartbeat (30초마다) ───
-    function startHeartbeat() {
-        heartbeatTimer = setInterval(function() {
-            if (!sessionId || !pageviewTs) return;
-            var elapsed = Math.round((Date.now() - pageStart) / 1000);
+    // ─── 체류시간·스크롤 저장 (PATCH) ───
+    // keepalive fetch 사용: 페이지 이탈 중에도 전송 보장 + 헤더 설정 가능
+    //   (sendBeacon은 POST만 가능 → PATCH 불가, apikey 헤더 불가 → 저장 실패했었음)
+    function flush(useKeepalive) {
+        if (!sessionId || !pageviewTs) return;
+        var elapsed = Math.round((Date.now() - pageStart) / 1000);
+        var url = SUPABASE_CONFIG.url + '/rest/v1/analytics_pageviews?session_id=eq.' + sessionId +
+                  '&entered_at=eq.' + encodeURIComponent(pageviewTs);
+        try {
+            fetch(url, {
+                method: 'PATCH',
+                keepalive: !!useKeepalive,
+                headers: {
+                    'apikey': SUPABASE_CONFIG.anonKey,
+                    'Authorization': 'Bearer ' + SUPABASE_CONFIG.anonKey,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({ time_on_page: elapsed, scroll_depth: maxScroll })
+            }).catch(function() {});
             sb.from('analytics_sessions').update({ last_active_at: new Date().toISOString() }).eq('id', sessionId);
-            sb.from('analytics_pageviews').update({ time_on_page: elapsed, scroll_depth: maxScroll })
-                .eq('session_id', sessionId).eq('entered_at', pageviewTs);
-        }, 30000);
+        } catch (e) {}
     }
 
-    // ─── 탭 비활성 시 heartbeat 중지 ───
+    // ─── Heartbeat (10초마다 — 짧은 방문도 데이터 확보) ───
+    function startHeartbeat() {
+        if (heartbeatTimer) return;
+        heartbeatTimer = setInterval(function() { flush(false); }, 10000);
+    }
+
+    // ─── 탭 비활성/전환 시 즉시 저장 ───
     function initVisibility() {
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 clearInterval(heartbeatTimer);
                 heartbeatTimer = null;
-                if (sessionId && pageviewTs) {
-                    var elapsed = Math.round((Date.now() - pageStart) / 1000);
-                    sb.from('analytics_pageviews').update({ time_on_page: elapsed, scroll_depth: maxScroll })
-                        .eq('session_id', sessionId).eq('entered_at', pageviewTs);
-                    sb.from('analytics_sessions').update({ last_active_at: new Date().toISOString() }).eq('id', sessionId);
-                }
+                flush(true); // 이탈 가능성 → keepalive로 확실히 전송
             } else {
-                if (!heartbeatTimer) startHeartbeat();
+                startHeartbeat();
             }
         });
     }
 
-    // ─── 페이지 이탈 시 마지막 데이터 저장 ───
+    // ─── 페이지 이탈 시 마지막 저장 (pagehide가 beforeunload보다 신뢰도 높음) ───
     function initUnload() {
-        window.addEventListener('beforeunload', function() {
-            if (!sessionId || !pageviewTs) return;
-            var elapsed = Math.round((Date.now() - pageStart) / 1000);
-            // REST API로 직접 PATCH (sendBeacon)
-            var headers = { 'apikey': SUPABASE_CONFIG.anonKey, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
-            var pvUrl = SUPABASE_CONFIG.url + '/rest/v1/analytics_pageviews?session_id=eq.' + sessionId + '&entered_at=eq.' + encodeURIComponent(pageviewTs);
-            navigator.sendBeacon(pvUrl, new Blob([JSON.stringify({ time_on_page: elapsed, scroll_depth: maxScroll })], { type: 'application/json' }));
-        });
+        window.addEventListener('pagehide', function() { flush(true); });
+        window.addEventListener('beforeunload', function() { flush(true); });
     }
 
     // ─── 초기화 ───
