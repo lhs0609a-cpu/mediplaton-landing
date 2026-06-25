@@ -17126,3 +17126,42 @@ textarea {
 .cta-band .related-links { margin-top: 26px; font-size: 14px; color: rgba(255,255,255,.8); }
 .cta-band .related-links a { color: #FFD54A; text-decoration: none; }
 .cta-band .related-links a:hover { text-decoration: underline; }
+
+/* ===== 상담폼 전환율 개선 (이름·연락처만 필수, 추가정보 접이식) ===== */
+.form-quick-note {
+    font-size: 14px;
+    color: var(--gray-600);
+    background: var(--primary-50);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 4px 0 16px;
+    line-height: 1.5;
+}
+.form-quick-note strong { color: var(--primary); }
+
+.form-optional {
+    margin-bottom: 8px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.form-optional > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--gray-50);
+    user-select: none;
+    transition: background .15s;
+}
+.form-optional > summary:hover { background: var(--gray-100); }
+.form-optional > summary::-webkit-details-marker { display: none; }
+.form-optional[open] > summary {
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 14px;
+}
+.form-optional > .form-row,
+.form-optional > .form-group { padding-left: 16px; padding-right: 16px; }
+.form-optional > .form-group.full { padding-bottom: 14px; }

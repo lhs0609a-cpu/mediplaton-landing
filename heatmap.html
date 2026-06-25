@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>히트맵 분석 | 메디플라톤 관리자</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --blue: #1A3A8F; --gray-50: #f8fafc; --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0; --gray-500: #64748b; --gray-700: #334155;
+            --gray-900: #0f172a; --red: #ef4444; --green: #16a34a;
+        }
+        body { font-family: 'Pretendard', -apple-system, sans-serif; background: var(--gray-100); color: var(--gray-900); }
+
+        /* ── 로그인 ── */
+        .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-card { background: #fff; border-radius: 16px; padding: 36px; width: 100%; max-width: 380px; box-shadow: 0 10px 40px rgba(0,0,0,.08); }
+        .login-card h1 { font-size: 20px; margin-bottom: 6px; }
+        .login-card p { color: var(--gray-500); font-size: 13px; margin-bottom: 24px; }
+        .login-card input { width: 100%; padding: 12px 14px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 14px; margin-bottom: 12px; }
+        .btn { background: var(--blue); color: #fff; border: none; padding: 12px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .btn:hover { opacity: .92; }
+        .btn-outline { background: #fff; color: var(--gray-700); border: 1px solid var(--gray-200); }
+        .btn-sm { padding: 8px 14px; font-size: 13px; }
+        .err { color: var(--red); font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+        /* ── 대시보드 ── */
+        .hidden { display: none !important; }
+        .topbar { background: #fff; border-bottom: 1px solid var(--gray-200); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+        .topbar h1 { font-size: 17px; }
+        .topbar .sub { color: var(--gray-500); font-size: 12px; font-weight: 400; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+        .controls { background: #fff; border-radius: 12px; padding: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 20px; }
+        .field { display: flex; flex-direction: column; gap: 4px; }
+        .field label { font-size: 12px; color: var(--gray-500); font-weight: 600; }
+        .field select, .field input { padding: 9px 12px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 14px; background: #fff; }
+
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .stat { background: #fff; border-radius: 12px; padding: 18px; }
+        .stat .num { font-size: 26px; font-weight: 800; color: var(--blue); }
+        .stat .lbl { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+        .panel { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .panel h2 { font-size: 15px; margin-bottom: 4px; }
+        .panel .desc { font-size: 12px; color: var(--gray-500); margin-bottom: 16px; }
+
+        /* 스크롤 깊이 막대 */
+        .scroll-bars { display: flex; flex-direction: column; gap: 8px; }
+        .scroll-row { display: flex; align-items: center; gap: 12px; }
+        .scroll-row .seg-lbl { width: 90px; font-size: 13px; color: var(--gray-700); flex-shrink: 0; }
+        .scroll-row .bar-track { flex: 1; background: var(--gray-100); border-radius: 6px; height: 24px; overflow: hidden; }
+        .scroll-row .bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #1A3A8F); border-radius: 6px; transition: width .4s; }
+        .scroll-row .seg-val { width: 70px; text-align: right; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+        .scroll-summary { margin-top: 14px; padding: 12px 14px; background: var(--gray-50); border-radius: 8px; font-size: 14px; }
+        .scroll-summary b { color: var(--blue); }
+
+        /* 히트맵 캔버스 영역 */
+        .heat-stage { position: relative; margin: 0 auto; border: 1px solid var(--gray-200); border-radius: 8px; overflow: hidden; background: var(--gray-50); }
+        .heat-stage iframe { display: block; border: 0; background: #fff; }
+        .heat-stage canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+        .heat-legend { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--gray-500); margin-top: 12px; }
+        .heat-legend .grad { width: 160px; height: 12px; border-radius: 6px; background: linear-gradient(90deg, rgba(0,0,255,.6), cyan, lime, yellow, red); }
+
+        /* 클릭 랭킹 */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--gray-100); font-size: 13px; }
+        th { color: var(--gray-500); font-weight: 600; font-size: 12px; }
+        td .cnt { font-weight: 700; color: var(--blue); }
+        .muted { color: var(--gray-500); font-size: 13px; }
+        .loading { text-align: center; padding: 40px; color: var(--gray-500); }
+    </style>
+</head>
+<body>
+    <!-- ════════ 로그인 ════════ -->
+    <div class="login-wrap" id="loginView">
+        <div class="login-card">
+            <h1>🔥 히트맵 분석</h1>
+            <p>메디플라톤 관리자 전용 · 방문자 행동 분석</p>
+            <input type="email" id="email" placeholder="관리자 이메일" autocomplete="username">
+            <input type="password" id="password" placeholder="비밀번호" autocomplete="current-password">
+            <button class="btn" style="width:100%" id="loginBtn">로그인</button>
+            <div class="err" id="loginErr"></div>
+        </div>
+    </div>
+
+    <!-- ════════ 대시보드 ════════ -->
+    <div id="dashView" class="hidden">
+        <div class="topbar">
+            <h1>🔥 히트맵 분석 <span class="sub">방문자가 어디를 클릭하고 어디까지 읽는지</span></h1>
+            <button class="btn btn-outline btn-sm" id="logoutBtn">로그아웃</button>
+        </div>
+
+        <div class="container">
+            <!-- 컨트롤 -->
+            <div class="controls">
+                <div class="field">
+                    <label>분석할 페이지</label>
+                    <select id="pageSelect"></select>
+                </div>
+                <div class="field">
+                    <label>디바이스</label>
+                    <select id="deviceSelect">
+                        <option value="desktop">데스크탑 (1280px)</option>
+                        <option value="mobile">모바일 (390px)</option>
+                        <option value="tablet">태블릿 (768px)</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>기간</label>
+                    <select id="periodSelect">
+                        <option value="7">최근 7일</option>
+                        <option value="30" selected>최근 30일</option>
+                        <option value="90">최근 90일</option>
+                        <option value="9999">전체</option>
+                    </select>
+                </div>
+                <button class="btn" id="loadBtn">불러오기</button>
+            </div>
+
+            <!-- 요약 통계 -->
+            <div class="stats">
+                <div class="stat"><div class="num" id="stSessions">–</div><div class="lbl">세션 수</div></div>
+                <div class="stat"><div class="num" id="stBounce">–</div><div class="lbl">이탈률</div></div>
+                <div class="stat"><div class="num" id="stTime">–</div><div class="lbl">평균 체류시간</div></div>
+                <div class="stat"><div class="num" id="stClicks">–</div><div class="lbl">수집된 클릭 수</div></div>
+            </div>
+
+            <!-- 스크롤 깊이 -->
+            <div class="panel">
+                <h2>📊 스크롤 깊이 — "어디까지 읽고 나가는지"</h2>
+                <p class="desc">방문자가 페이지의 몇 %까지 내려보고 이탈했는지 분포입니다. 윗 구간만 높고 아래가 비면, 사람들이 끝까지 안 읽고 나가는 것.</p>
+                <div class="scroll-bars" id="scrollBars"><div class="loading">데이터를 불러오세요</div></div>
+                <div class="scroll-summary hidden" id="scrollSummary"></div>
+            </div>
+
+            <!-- 히트맵 -->
+            <div class="panel">
+                <h2>🔥 클릭 히트맵 — "화면 어디를 클릭하는지"</h2>
+                <p class="desc">빨간색일수록 클릭이 몰린 곳. 정작 중요한 버튼(상담신청)이 차갑고 엉뚱한 곳이 뜨거우면 동선에 문제가 있는 것. <span class="muted">※ 가로 위치는 정확, 세로 위치는 화면폭에 따라 근사치입니다.</span></p>
+                <div class="heat-stage" id="heatStage"><div class="loading">데이터를 불러오세요</div></div>
+                <div class="heat-legend"><span>적음</span><div class="grad"></div><span>많음</span><span id="heatCount" style="margin-left:auto"></span></div>
+            </div>
+
+            <!-- 클릭 랭킹 -->
+            <div class="panel">
+                <h2>🏆 가장 많이 클릭된 요소 TOP 15</h2>
+                <p class="desc">버튼·링크별 클릭 순위. 무엇이 사람들의 관심을 끄는지, 무엇이 무시당하는지 보여줍니다.</p>
+                <table>
+                    <thead><tr><th style="width:40px">#</th><th>요소 텍스트</th><th style="width:80px">태그</th><th style="width:90px">클릭 수</th></tr></thead>
+                    <tbody id="rankBody"><tr><td colspan="4" class="muted">데이터를 불러오세요</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════ 스크립트 ════════ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script>
+    (function() {
+        'use strict';
+        var sb = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+        // 분석 대상 페이지 목록 (사이트 주요 페이지)
+        var PAGES = [
+            ['/', '메인 (index)'], ['/index.html', '메인 (index)'],
+            ['/food-loan.html', '식자재+대출'], ['/loan-doctor.html', '의사대출'],
+            ['/loan-pharmacist.html', '약사대출'], ['/products.html', '상품안내'],
+            ['/marketing-medical.html', '무료마케팅(의료)'], ['/guide.html', '이용가이드'],
+            ['/cases.html', '성공사례'], ['/company.html', '회사소개']
+        ];
+        var REF_WIDTH = { desktop: 1280, mobile: 390, tablet: 768 };
+
+        var el = function(id) { return document.getElementById(id); };
+
+        // ── 로그인 ──
+        async function checkAuth() {
+            var res = await sb.auth.getSession();
+            if (res.data.session) showDash();
+        }
+        async function login() {
+            el('loginErr').textContent = '';
+            var email = el('email').value.trim(), pw = el('password').value;
+            if (!email || !pw) { el('loginErr').textContent = '이메일과 비밀번호를 입력하세요.'; return; }
+            var r = await sb.auth.signInWithPassword({ email: email, password: pw });
+            if (r.error) { el('loginErr').textContent = '로그인 실패: ' + r.error.message; return; }
+            showDash();
+        }
+        function showDash() {
+            el('loginView').classList.add('hidden');
+            el('dashView').classList.remove('hidden');
+            var sel = el('pageSelect');
+            sel.innerHTML = '';
+            PAGES.forEach(function(p) {
+                var o = document.createElement('option'); o.value = p[0]; o.textContent = p[1] + '  (' + p[0] + ')';
+                sel.appendChild(o);
+            });
+            loadAll();
+        }
+        async function logout() { await sb.auth.signOut(); location.reload(); }
+
+        // ── 데이터 로드 ──
+        async function loadAll() {
+            var page = el('pageSelect').value;
+            var device = el('deviceSelect').value;
+            var days = parseInt(el('periodSelect').value, 10);
+            var since = new Date(Date.now() - days * 86400000).toISOString();
+
+            el('heatStage').innerHTML = '<div class="loading">불러오는 중…</div>';
+            el('scrollBars').innerHTML = '<div class="loading">불러오는 중…</div>';
+
+            await Promise.all([
+                loadStatsAndScroll(page, device, since),
+                loadHeatmap(page, device, since),
+                loadRanking(page, since)
+            ]);
+        }
+
+        // 통계 + 스크롤 깊이 (pageviews 기반)
+        async function loadStatsAndScroll(page, device, since) {
+            // 해당 페이지 페이지뷰 (스크롤·체류) — 세션 조인으로 디바이스 필터
+            var pv = await sb.from('analytics_pageviews')
+                .select('scroll_depth, time_on_page, session_id, analytics_sessions!inner(device_type, is_bounce)')
+                .eq('page_url', page).gte('entered_at', since).limit(5000);
+            var rows = (pv.data || []).filter(function(r) {
+                return r.analytics_sessions && r.analytics_sessions.device_type === device;
+            });
+
+            var n = rows.length;
+            var bounces = 0, timeSum = 0;
+            var buckets = [0, 0, 0, 0]; // 0-25, 25-50, 50-75, 75-100
+            var depthSum = 0;
+            rows.forEach(function(r) {
+                if (r.analytics_sessions.is_bounce) bounces++;
+                timeSum += (r.time_on_page || 0);
+                var d = r.scroll_depth || 0; depthSum += d;
+                if (d < 25) buckets[0]++; else if (d < 50) buckets[1]++; else if (d < 75) buckets[2]++; else buckets[3]++;
+            });
+
+            el('stSessions').textContent = n;
+            el('stBounce').textContent = n ? Math.round(bounces / n * 100) + '%' : '–';
+            el('stTime').textContent = n ? Math.round(timeSum / n) + '초' : '–';
+
+            // 스크롤 막대
+            var labels = ['0–25% (상단)', '25–50%', '50–75%', '75–100% (끝)'];
+            var max = Math.max.apply(null, buckets.concat([1]));
+            var html = '';
+            for (var i = 0; i < 4; i++) {
+                var pct = n ? Math.round(buckets[i] / n * 100) : 0;
+                html += '<div class="scroll-row"><span class="seg-lbl">' + labels[i] + '</span>' +
+                    '<div class="bar-track"><div class="bar-fill" style="width:' + (buckets[i] / max * 100) + '%"></div></div>' +
+                    '<span class="seg-val">' + pct + '% (' + buckets[i] + ')</span></div>';
+            }
+            el('scrollBars').innerHTML = html || '<div class="muted">데이터 없음</div>';
+            if (n) {
+                var avg = Math.round(depthSum / n);
+                var msg = '평균적으로 방문자는 페이지의 <b>' + avg + '%</b> 지점까지 읽고 나갑니다. ';
+                if (avg < 35) msg += '⚠️ 대부분 상단만 보고 이탈 — 첫 화면 메시지나 로딩속도 점검이 시급합니다.';
+                else if (avg < 60) msg += '중간쯤에서 이탈이 많습니다 — 그 지점 콘텐츠를 점검하세요.';
+                else msg += '👍 비교적 끝까지 읽는 편입니다.';
+                el('scrollSummary').innerHTML = msg;
+                el('scrollSummary').classList.remove('hidden');
+            } else {
+                el('scrollSummary').classList.add('hidden');
+            }
+        }
+
+        // 클릭 히트맵 (events 기반)
+        async function loadHeatmap(page, device, since) {
+            var ev = await sb.from('analytics_events')
+                .select('click_x, click_y')
+                .eq('page_url', page).eq('event_type', 'heatmap_click').eq('device_type', device)
+                .gte('created_at', since).not('click_x', 'is', null).limit(10000);
+            var pts = ev.data || [];
+            el('stClicks').textContent = pts.length;
+            el('heatCount').textContent = pts.length + '개 클릭';
+
+            var w = REF_WIDTH[device];
+            var stage = el('heatStage');
+            stage.innerHTML = '';
+            stage.style.width = w + 'px';
+            stage.style.maxWidth = '100%';
+
+            // 실제 페이지를 iframe으로 띄우고 그 위에 히트맵 캔버스
+            var iframe = document.createElement('iframe');
+            iframe.src = page === '/' ? 'index.html' : page.replace(/^\//, '');
+            iframe.width = w;
+            iframe.scrolling = 'no';
+            stage.appendChild(iframe);
+
+            iframe.onload = function() {
+                var h = 1200;
+                try {
+                    var doc = iframe.contentDocument || iframe.contentWindow.document;
+                    h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 800);
+                } catch (e) {}
+                iframe.height = h;
+                iframe.style.height = h + 'px';
+                drawHeat(stage, pts, w, h);
+            };
+            // iframe 로드 실패 대비 — 3초 후 흰 배경에라도 렌더
+            setTimeout(function() {
+                if (!stage.querySelector('canvas')) {
+                    var h = 1600; iframe.height = h; iframe.style.height = h + 'px';
+                    drawHeat(stage, pts, w, h);
+                }
+            }, 3000);
+        }
+
+        // 히트맵 렌더링 (의존성 없는 자체 구현)
+        function drawHeat(stage, pts, w, h) {
+            var old = stage.querySelector('canvas'); if (old) old.remove();
+            var canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+            stage.appendChild(canvas);
+            var ctx = canvas.getContext('2d');
+            if (!pts.length) return;
+
+            // 1) 그레이스케일 밀도 누적
+            var radius = device_radius();
+            ctx.globalCompositeOperation = 'lighter';
+            pts.forEach(function(p) {
+                var x = (p.click_x / 100) * w;
+                var y = Math.min(p.click_y, h - 1);
+                var g = ctx.createRadialGradient(x, y, 0, x, y, radius);
+                g.addColorStop(0, 'rgba(0,0,0,0.18)');
+                g.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = g;
+                ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
+            });
+
+            // 2) 알파 → 컬러 그라데이션 매핑
+            var img = ctx.getImageData(0, 0, w, h);
+            var d = img.data;
+            var grad = buildGradient();
+            for (var i = 0; i < d.length; i += 4) {
+                var a = d[i + 3];
+                if (a === 0) continue;
+                var v = Math.min(255, a * 2); // 강도 부스트
+                var c = grad[v];
+                d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2];
+                d[i + 3] = Math.min(220, a * 3);
+            }
+            ctx.putImageData(img, 0, 0);
+
+            function device_radius() { return w < 500 ? 22 : 34; }
+        }
+
+        // 파랑→청록→초록→노랑→빨강 색상 룩업테이블
+        function buildGradient() {
+            var c = document.createElement('canvas'); c.width = 256; c.height = 1;
+            var x = c.getContext('2d');
+            var g = x.createLinearGradient(0, 0, 256, 0);
+            g.addColorStop(0.0, 'rgba(0,0,255,1)');
+            g.addColorStop(0.35, 'rgba(0,255,255,1)');
+            g.addColorStop(0.55, 'rgba(0,255,0,1)');
+            g.addColorStop(0.75, 'rgba(255,255,0,1)');
+            g.addColorStop(1.0, 'rgba(255,0,0,1)');
+            x.fillStyle = g; x.fillRect(0, 0, 256, 1);
+            var data = x.getImageData(0, 0, 256, 1).data;
+            var table = [];
+            for (var i = 0; i < 256; i++) table.push([data[i*4], data[i*4+1], data[i*4+2]]);
+            return table;
+        }
+
+        // 클릭 랭킹 (요소별)
+        async function loadRanking(page, since) {
+            var ev = await sb.from('analytics_events')
+                .select('element_text, element_tag, event_type')
+                .eq('page_url', page).gte('created_at', since)
+                .in('event_type', ['click', 'cta_click', 'form_submit']).limit(10000);
+            var rows = ev.data || [];
+            var map = {};
+            rows.forEach(function(r) {
+                var key = (r.element_text || '(텍스트 없음)') + '|' + (r.element_tag || '');
+                if (!map[key]) map[key] = { text: r.element_text || '(텍스트 없음)', tag: r.element_tag || '', n: 0 };
+                map[key].n++;
+            });
+            var arr = Object.keys(map).map(function(k) { return map[k]; });
+            arr.sort(function(a, b) { return b.n - a.n; });
+            arr = arr.slice(0, 15);
+            var html = '';
+            arr.forEach(function(r, i) {
+                html += '<tr><td>' + (i+1) + '</td><td>' + escapeHtml(r.text.substring(0, 60)) + '</td>' +
+                    '<td class="muted">' + r.tag + '</td><td><span class="cnt">' + r.n + '</span></td></tr>';
+            });
+            el('rankBody').innerHTML = html || '<tr><td colspan="4" class="muted">클릭 데이터 없음</td></tr>';
+        }
+
+        function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+        // ── 이벤트 바인딩 ──
+        el('loginBtn').addEventListener('click', login);
+        el('password').addEventListener('keydown', function(e) { if (e.key === 'Enter') login(); });
+        el('logoutBtn').addEventListener('click', logout);
+        el('loadBtn').addEventListener('click', loadAll);
+        checkAuth();
+    })();
+    </script>
+</body>
+</html>

@@ -295,14 +295,10 @@ function initForm() {
         const sourcePage = window.location.pathname.split('/').pop() || 'index.html';
 
         // Validate required fields with individual error messages
+        // [전환율 개선] 이름·연락처만 필수. 나머지는 선택(전화 상담 시 확인)
         const requiredFields = [
             { name: 'name', label: '성함' },
-            { name: 'phone', label: '연락처' },
-            { name: 'business', label: '업종' },
-            { name: 'revenue', label: '월 카드매출' },
-            { name: 'region', label: '지역' },
-            { name: 'preferred_time', label: '상담 가능 시간' },
-            { name: 'inflow_channel', label: '유입 경로' }
+            { name: 'phone', label: '연락처' }
         ];
         let isValid = true;
         let firstErrorField = null;

@@ -1198,10 +1198,13 @@
                                 <span class="field-error" id="phone-error" role="alert"></span>
                             </div>
                         </div>
+                        <p class="form-quick-note">성함과 연락처만 남기시면 전문가가 직접 전화드려 안내합니다. <strong>30초면 충분합니다.</strong></p>
+                        <details class="form-optional">
+                            <summary>+ 추가 정보 입력 (선택 — 입력하시면 더 빠르고 정확한 상담)</summary>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="business">업종 <span class="required">*</span></label>
-                                <select id="business" name="business" required aria-invalid="false" aria-describedby="business-error">
+                                <label for="business">업종</label>
+                                <select id="business" name="business" aria-invalid="false" aria-describedby="business-error">
                                     <option value="">선택해주세요</option>
                                     <option value="hospital">병원/의원</option>
                                     <option value="dental">치과</option>
@@ -1216,8 +1219,8 @@
                                 <span class="field-error" id="business-error" role="alert"></span>
                             </div>
                             <div class="form-group">
-                                <label for="revenue">월 카드매출 <span class="required">*</span></label>
-                                <select id="revenue" name="revenue" required aria-invalid="false" aria-describedby="revenue-error">
+                                <label for="revenue">월 카드매출</label>
+                                <select id="revenue" name="revenue" aria-invalid="false" aria-describedby="revenue-error">
                                     <option value="">선택해주세요</option>
                                     <option value="under3000">3천만원 미만</option>
                                     <option value="3000-5000">3천~5천만원</option>
@@ -1231,8 +1234,8 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="region">지역 <span class="required">*</span></label>
-                                <select id="region" name="region" required aria-invalid="false" aria-describedby="region-error">
+                                <label for="region">지역</label>
+                                <select id="region" name="region" aria-invalid="false" aria-describedby="region-error">
                                     <option value="">선택해주세요</option>
                                     <option value="seoul">서울</option>
                                     <option value="gyeonggi">경기</option>
@@ -1270,8 +1273,8 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="preferred_time">상담 가능 시간 <span class="required">*</span></label>
-                                <select id="preferred_time" name="preferred_time" required aria-invalid="false" aria-describedby="preferred_time-error">
+                                <label for="preferred_time">상담 가능 시간</label>
+                                <select id="preferred_time" name="preferred_time" aria-invalid="false" aria-describedby="preferred_time-error">
                                     <option value="">선택해주세요</option>
                                     <option value="09-10">오전 9시~10시</option>
                                     <option value="10-12">오전 10시~12시</option>
@@ -1283,8 +1286,8 @@
                                 <span class="field-error" id="preferred_time-error" role="alert"></span>
                             </div>
                             <div class="form-group">
-                                <label for="inflow_channel">유입 경로 <span class="required">*</span></label>
-                                <select id="inflow_channel" name="inflow_channel" required aria-invalid="false" aria-describedby="inflow_channel-error">
+                                <label for="inflow_channel">유입 경로</label>
+                                <select id="inflow_channel" name="inflow_channel" aria-invalid="false" aria-describedby="inflow_channel-error">
                                     <option value="">선택해주세요</option>
                                     <option value="blog">블로그</option>
                                     <option value="search">검색</option>
@@ -1299,6 +1302,7 @@
                             <label for="message">문의사항</label>
                             <textarea id="message" name="message" rows="3" placeholder="궁금하신 점이나 상황을 간단히 적어주세요"></textarea>
                         </div>
+                        </details>
                         <div class="form-agreement">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="agree" name="agree" required>

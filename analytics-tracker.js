@@ -14,6 +14,7 @@
     var maxScroll = 0;
     var heartbeatTimer = null;
     var pageStart = Date.now();
+    var deviceType = null; // 히트맵 디바이스 필터용 (init에서 채움)
 
     // ─── UUID 생성 (클라이언트 사이드) ───
     function genUUID() {
@@ -144,6 +145,27 @@
         }, true);
     }
 
+    // ─── 히트맵 클릭 좌표 추적 (모든 클릭) ───
+    // 페이지 어디를 클릭하든 좌표를 기록 → heatmap.html에서 분포도 렌더링
+    function initHeatmapTracking() {
+        document.addEventListener('click', function(e) {
+            if (!sessionId) return;
+            // 좌표 정보가 없는 합성 클릭(키보드 엔터 등)은 제외
+            if (!e.pageX && !e.pageY) return;
+            var docW = document.documentElement.scrollWidth || window.innerWidth || 1;
+            var xPct = Math.max(0, Math.min(100, (e.pageX / docW) * 100));
+            sb.from('analytics_events').insert({
+                session_id: sessionId,
+                event_type: 'heatmap_click',
+                page_url: pagePath(),
+                click_x: Math.round(xPct * 100) / 100,
+                click_y: Math.round(e.pageY),
+                viewport_w: window.innerWidth,
+                device_type: deviceType
+            });
+        }, true);
+    }
+
     // ─── 스크롤 깊이 추적 ───
     function initScrollTracking() {
         window.addEventListener('scroll', function() {
@@ -200,9 +222,11 @@
     // ─── 초기화 ───
     async function init() {
         try {
+            deviceType = getDevice().device;
             await initSession();
             await trackPageview();
             initClickTracking();
+            initHeatmapTracking();
             initScrollTracking();
             startHeartbeat();
             initVisibility();
