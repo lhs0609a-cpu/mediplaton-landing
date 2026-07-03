@@ -36,6 +36,18 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- 부가 서비스 — 지급대행·식자재 -->
+  <url>
+    <loc>https://loan.brandplaton.com/payment-agency.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://loan.brandplaton.com/food-loan.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- 이용안내·정보 -->
   <url>
     <loc>https://loan.brandplaton.com/guide.html</loc>

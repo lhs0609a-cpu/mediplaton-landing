@@ -585,6 +585,28 @@ section.hero .hero-trust span {
     padding: 12px 16px !important;
 }
 
+/* 지급대행 - 독립 네비게이션 강조 */
+.nav-link.nav-link--pay {
+    color: #0D9488;
+    font-weight: 600;
+    background: #F0FDFA;
+    border-radius: 6px;
+    padding: 6px 14px !important;
+}
+
+.nav-link.nav-link--pay:hover {
+    color: var(--white);
+    background: #0D9488;
+}
+
+.mobile-nav--pay {
+    color: #0D9488 !important;
+    font-weight: 700 !important;
+    background: #F0FDFA;
+    border-radius: 8px;
+    padding: 12px 16px !important;
+}
+
 /* 파트너 모집 링크 - outline style (secondary CTA) */
 .nav-item.highlight .nav-link.partner-link {
     background: transparent;
@@ -4021,7 +4043,8 @@ div.product-cta .btn {
     }
 
     .nav-link.nav-link--tax,
-    .nav-link.nav-link--food {
+    .nav-link.nav-link--food,
+    .nav-link.nav-link--pay {
         padding: 6px 10px !important;
     }
 
