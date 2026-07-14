@@ -437,12 +437,14 @@ section.hero .hero-trust span {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
 }
 
 /* 실제 로고 이미지 */
 .logo-img {
     height: 40px;
     width: auto;
+    max-width: none;
     display: block;
     background: transparent;
 }
