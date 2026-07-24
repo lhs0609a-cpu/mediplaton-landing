@@ -17190,3 +17190,87 @@ textarea {
 .form-optional > .form-row,
 .form-optional > .form-group { padding-left: 16px; padding-right: 16px; }
 .form-optional > .form-group.full { padding-bottom: 14px; }
+
+/* ── 대출 정보센터 (SEO 콘텐츠 허브) ────────────────────── */
+.answer-box {
+    background: linear-gradient(135deg, rgba(26, 58, 143, 0.06), rgba(26, 58, 143, 0.02));
+    border-left: 4px solid #1A3A8F;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 0 0 24px;
+}
+.answer-box .answer-lead { margin: 0; font-size: 1.05rem; line-height: 1.75; color: #1f2937; }
+.answer-box .answer-lead strong { color: #1A3A8F; }
+
+.link-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+.link-grid li { margin: 0; }
+.link-grid li a {
+    display: block;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    color: #1f2937;
+    text-decoration: none;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.link-grid li a:hover {
+    border-color: #1A3A8F;
+    box-shadow: 0 4px 14px rgba(26, 58, 143, .1);
+    transform: translateY(-1px);
+}
+
+/* 정보센터 허브 */
+.hub-cat { margin-bottom: 44px; }
+.hub-cat > h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+.hub-cat > h2 .hub-count {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+.hub-cat > p.hub-desc { color: #6b7280; margin: 0 0 18px; font-size: .95rem; }
+.hub-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+}
+.hub-list li { margin: 0; }
+.hub-list a {
+    display: block;
+    height: 100%;
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.hub-list a:hover {
+    border-color: #1A3A8F;
+    box-shadow: 0 6px 18px rgba(26, 58, 143, .1);
+    transform: translateY(-2px);
+}
+.hub-list a strong { display: block; color: #111827; font-size: 1rem; line-height: 1.45; margin-bottom: 6px; }
+.hub-list a span { display: block; color: #6b7280; font-size: .875rem; line-height: 1.6; }
+
+@media (max-width: 640px) {
+    .link-grid, .hub-list { grid-template-columns: 1fr; }
+    .answer-box { padding: 16px 18px; }
+}

@@ -1,9 +1,13 @@
-{
-  "name": "mediplaton",
-  "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "@supabase/supabase-js": "^2.49.1",
-    "@xmldom/xmldom": "^0.9.5"
-  }
+﻿{
+    "name":  "mediplaton",
+    "version":  "1.0.0",
+    "private":  true,
+    "dependencies":  {
+                         "@supabase/supabase-js":  "^2.49.1",
+                         "@xmldom/xmldom":  "^0.9.5"
+                     },
+    "scripts":  {
+                    "seo:build":  "node seo/build.js \u0026\u0026 node seo/build-hub.js \u0026\u0026 node seo/patch-nav.js \u0026\u0026 node seo/build-sitemap.js \u0026\u0026 node seo/build-llms.js",
+                    "seo:verify":  "node seo/verify.js"
+                }
 }
