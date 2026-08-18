@@ -13,5 +13,8 @@ module.exports = [].concat(
     require('./data/pharmacy-care.js'), // 약국·의료 인접 직역
     require('./data/purpose-ext.js'),   // 자금 목적별 확장
     require('./data/cases-ext.js'),     // 상황별 확장
-    require('./data/terms-ext.js')      // 용어·상품 확장
+    require('./data/terms-ext.js'),     // 용어·상품 확장
+    require('./data/regions-seoul.js'), // 지역 세분화 — 서울
+    require('./data/regions-metro.js'), // 지역 세분화 — 경기·인천·지방
+    require('./data/combo.js')          // 조합 — 진료과목 × 자금용도
 );
