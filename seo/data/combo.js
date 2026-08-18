@@ -581,6 +581,12 @@ const COMBO = {
 },
 };
 
+// 추가 조합 병합 (파일 분리 — 형식 동일)
+Object.assign(COMBO, require('./combo-extra.js'));
+const EXTRA2 = require('./combo-extra2.js');
+Object.assign(SPEC, EXTRA2.spec);
+Object.assign(COMBO, EXTRA2.combo);
+
 // ── 페이지 생성 ────────────────────────────────────────────
 const pages = [];
 Object.keys(COMBO).forEach((key) => {

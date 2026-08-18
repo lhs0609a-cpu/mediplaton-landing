@@ -104,7 +104,7 @@ Q. 개설 예정자도 가능? A. 약국·병원 개설 예정자는 신용 기�
 
 <!-- LOAN-INFO-INDEX:START -->
 
-## 대출 정보센터 (152개 문서)
+## 대출 정보센터 (201개 문서)
 
 병의원·약국 자금 조달 지식베이스. 전체 목록: https://loan.brandplaton.com/loan-info.html
 
