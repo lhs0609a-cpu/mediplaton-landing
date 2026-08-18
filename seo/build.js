@@ -37,15 +37,17 @@ pages.forEach((p) => { byslug[p.slug] = p; });
 function render(p) {
     const url = `${SITE}/${p.slug}.html`;
     const kw = p.keywords.join(', ');
+    // 요약표 제목용 짧은 이름 — h1 의 부제(— 뒤)를 떼고 쓴다
+    const shortName = p.short || p.h1.split(' — ')[0].trim();
 
     // 한눈에 보기 표
     const summary = p.summary && p.summary.length ? `
     <section class="section">
         <div class="container">
-            <h2>${esc(p.h1)} 한눈에 보기</h2>
+            <h2>${esc(shortName)} 한눈에 보기</h2>
             <div class="table-wrap">
                 <table class="data-table">
-                    <caption class="sr-only">${esc(p.h1)} 핵심 요약</caption>
+                    <caption class="sr-only">${esc(shortName)} 핵심 요약</caption>
                     <tbody>
 ${p.summary.map(([k, v]) => `                        <tr><th scope="row">${k}</th><td>${v}</td></tr>`).join('\n')}
                     </tbody>
@@ -208,7 +210,7 @@ ${related}
 
     <section class="section cta-band">
         <div class="container">
-            <h2>${esc(p.ctaTitle || p.h1 + ', 한도부터 확인하세요')}</h2>
+            <h2>${esc(p.ctaTitle || shortName + ', 한도부터 확인하세요')}</h2>
             <p>신용점수에 영향 없는 한도 조회. 고객 부담 수수료 0원. 평균 3영업일 내 결과 안내.</p>
             <div class="page-hero-actions">
                 <a href="index.html#consultation" class="btn btn-primary btn-lg">무료 한도 조회</a>

@@ -7,5 +7,11 @@ module.exports = [].concat(
     require('./data/purpose.js'),  // 자금 목적별
     require('./data/cases.js'),    // 상황별
     require('./data/regions.js'),  // 지역별
-    require('./data/guides.js')    // 비교·가이드
+    require('./data/guides.js'),   // 비교·가이드
+    require('./data/specialties.js'),   // 진료과목별 1차
+    require('./data/specialties2.js'),  // 진료과목별 2차
+    require('./data/pharmacy-care.js'), // 약국·의료 인접 직역
+    require('./data/purpose-ext.js'),   // 자금 목적별 확장
+    require('./data/cases-ext.js'),     // 상황별 확장
+    require('./data/terms-ext.js')      // 용어·상품 확장
 );

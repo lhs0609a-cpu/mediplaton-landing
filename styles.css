@@ -17100,15 +17100,16 @@ textarea {
     background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
     color: #fff; padding: 64px 0 56px;
 }
-.page-hero .breadcrumb { font-size: 14px; opacity: .85; margin-bottom: 16px; }
+.page-hero .breadcrumb { font-size: 14px; color: rgba(255, 255, 255, .85); opacity: 1; margin-bottom: 16px; }
 .page-hero .breadcrumb a { color: #fff; text-decoration: none; }
 .page-hero .breadcrumb a:hover { text-decoration: underline; }
 .page-hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; line-height: 1.25; margin: 0 0 18px; }
-.page-hero-sub { font-size: clamp(15px, 2vw, 19px); line-height: 1.7; max-width: 760px; opacity: .96; margin: 0 0 28px; }
+.page-hero-sub { font-size: clamp(15px, 2vw, 19px); line-height: 1.7; max-width: 760px; color: rgba(255, 255, 255, .95); margin: 0 0 28px; }
 .page-hero-sub strong { color: #FFD54A; font-weight: 700; }
 .page-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-.breadcrumb { color: #5a6b8c; }
 
+/* 섹션 상하 여백 — 미정의로 섹션끼리 붙어 보이던 문제 수정 */
+.section { padding: 76px 0; }
 .section-alt { background: #f5f7fb; }
 .section h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 800; color: #14213d; margin: 0 0 24px; }
 .section h3 { font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; color: #14213d; margin: 28px 0 14px; }
@@ -17151,6 +17152,31 @@ textarea {
 .cta-band .related-links { margin-top: 26px; font-size: 14px; color: rgba(255,255,255,.8); }
 .cta-band .related-links a { color: #FFD54A; text-decoration: none; }
 .cta-band .related-links a:hover { text-decoration: underline; }
+
+/* --- 파란 배경(page-hero / cta-band) 위 버튼 가독성 --- */
+/* .btn-outline 기본값이 짙은 남색이라 파란 배경에서 글자가 보이지 않던 문제 */
+.page-hero .btn-outline,
+.cta-band .btn-outline {
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    color: #FFFFFF;
+}
+.page-hero .btn-outline:hover,
+.cta-band .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+/* --- SEO 랜딩 모바일 여백/타이포 --- */
+@media (max-width: 768px) {
+    .section { padding: 48px 0; }
+    .page-hero { padding: 44px 0 40px; }
+    .page-hero-actions .btn { width: 100%; justify-content: center; }
+    .data-table { font-size: 14px; }
+    .data-table th, .data-table td { padding: 12px 12px; }
+    .data-table tbody th[scope="row"] { width: 38%; }
+}
 
 /* ===== 상담폼 전환율 개선 (이름·연락처만 필수, 추가정보 접이식) ===== */
 .form-quick-note {

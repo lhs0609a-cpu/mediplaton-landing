@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>메타 광고 소재 — 병원·약국 단말기 0원</title>
+<style>
+  @font-face{font-family:'NotoKR';src:local('Noto Sans KR'),local('NotoSansKR');}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:#5a5a5a;}
+  body{
+    font-family:'Noto Sans KR','NotoKR','Malgun Gothic',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:"tnum";
+  }
+  .creative{
+    position:relative;overflow:hidden;margin:0 auto 40px;
+    background:#fff;color:#0B1440;
+  }
+  body.solo{background:#fff;}
+  body.solo .creative{margin:0;}
+
+  /* ---------- tokens ---------- */
+  :root{
+    --navy:#0B1440;
+    --navy2:#141C55;
+    --brand:#1428A0;
+    --blue:#2962FF;
+    --toss:#3182F6;
+    --naver:#03C75A;
+    --gold:#FFD43B;
+    --ink:#0B1440;
+    --gray:#5A6480;
+    --line:#E3E7F2;
+  }
+
+  .bg-dark{background:radial-gradient(120% 90% at 78% 8%,#26379C 0%,#141C55 45%,#070C28 100%);color:#fff;}
+  .bg-light{background:linear-gradient(180deg,#F4F7FF 0%,#E8EEFF 100%);}
+  .bg-white{background:#fff;}
+
+  .glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;pointer-events:none;}
+
+  .pad{position:absolute;inset:0;display:flex;flex-direction:column;}
+
+  /* ---------- shared bits ---------- */
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:.5em;
+    font-weight:800;letter-spacing:-.02em;
+    border-radius:999px;
+  }
+  .dot{width:.5em;height:.5em;border-radius:50%;background:var(--naver);display:inline-block;}
+  .hl{font-weight:900;letter-spacing:-.045em;line-height:1.06;}
+  .hl.lh{line-height:1.24;}
+  .zero{color:var(--gold);}
+  .mark{
+    background:linear-gradient(180deg,transparent 62%, rgba(255,212,59,.85) 62%, rgba(255,212,59,.85) 94%, transparent 94%);
+    padding:0 .05em;
+  }
+  .brandrow{display:flex;align-items:center;gap:.6em;font-weight:800;}
+  .chip{
+    display:inline-flex;align-items:center;gap:.4em;border-radius:999px;
+    font-weight:800;letter-spacing:-.02em;white-space:nowrap;
+  }
+  .chip-naver{background:#03C75A;color:#fff;}
+  .chip-toss{background:#3182F6;color:#fff;}
+  .cta{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+    font-weight:900;letter-spacing:-.03em;border-radius:999px;
+    background:linear-gradient(90deg,#FFD43B,#FFB020);color:#241A00;
+    box-shadow:0 12px 34px rgba(255,180,32,.35);
+  }
+  .cta-solid{background:#0B1440;color:#fff;box-shadow:0 14px 34px rgba(11,20,64,.28);}
+  .fine{opacity:.62;font-weight:600;letter-spacing:-.02em;line-height:1.45;}
+  .logo{height:1em;width:auto;display:block;}
+
+  .price-strike{position:relative;display:inline-block;color:rgba(255,255,255,.45);font-weight:800;}
+  .price-strike::after{
+    content:"";position:absolute;left:-2%;right:-2%;top:52%;height:.09em;
+    background:#FF4D4D;transform:rotate(-8deg);border-radius:99px;
+  }
+
+  .card{background:#fff;border-radius:28px;box-shadow:0 18px 50px rgba(11,20,64,.10);}
+  .term{filter:drop-shadow(0 30px 50px rgba(0,0,0,.45));}
+  .term-l{filter:drop-shadow(0 24px 44px rgba(11,20,64,.22));}
+
+  .stack{display:flex;flex-direction:column;}
+  .row{display:flex;align-items:center;}
+  .spacer{flex:1;}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ C1 : 1080x1080 ============================================================ -->
+<section class="creative bg-dark" id="c1" style="width:1080px;height:1080px;">
+  <div class="glow" style="width:620px;height:620px;background:#2E6BFF;right:-160px;top:-190px;"></div>
+  <div class="glow" style="width:520px;height:520px;background:#03C75A;opacity:.28;left:-200px;bottom:-220px;"></div>
+
+  <div class="pad" style="padding:74px 76px 66px;">
+    <div class="row" style="justify-content:space-between;">
+      <span class="eyebrow" style="font-size:27px;padding:14px 26px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.24);">
+        <i class="dot"></i>병원 · 의원 · 약국 전용
+      </span>
+      <span class="brandrow" style="font-size:26px;opacity:.9;">메디플라톤</span>
+    </div>
+
+    <div style="height:40px;"></div>
+
+    <h1 class="hl" style="font-size:108px;">
+      단말기 <span class="zero">0원</span><br>
+      홈페이지 <span class="zero">0원</span>
+    </h1>
+
+    <div style="height:30px;"></div>
+
+    <p style="font-size:33px;font-weight:700;letter-spacing:-.035em;line-height:1.45;opacity:.92;max-width:600px;">
+      네이버페이 · 토스페이 결제단말기를<br>
+      <b style="color:#FFD43B;">기기값 · 설치비 없이</b> 놓아드리고,<br>
+      <b>40만원 상당 병원 홈페이지</b>까지<br>무상으로 만들어 드립니다.
+    </p>
+
+    <div class="row" style="gap:12px;margin-top:32px;">
+      <span class="chip chip-naver" style="font-size:25px;padding:13px 26px;">네이버페이</span>
+      <span class="chip chip-toss" style="font-size:25px;padding:13px 26px;">토스페이</span>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div>
+      <div class="cta" style="font-size:35px;padding:27px 50px;">1분 무료 설치 상담 →</div>
+      <p class="fine" style="font-size:20px;margin-top:20px;">
+        ※ 3년 의무사용 약정 · 병원/의원/약국 사업자 대상 · 심사 후 설치
+      </p>
+    </div>
+  </div>
+
+  <img class="term" src="img/pg-terminal-smart-front.png"
+       style="position:absolute;right:26px;bottom:196px;width:336px;transform:rotate(-6deg);">
+</section>
+
+
+<!-- ============================================================ C2 : 1080x1350 ============================================================ -->
+<section class="creative bg-light" id="c2" style="width:1080px;height:1350px;">
+  <div class="pad" style="padding:78px 78px 62px;">
+    <span class="eyebrow" style="font-size:28px;padding:14px 28px;background:#0B1440;color:#fff;align-self:flex-start;">
+      원장님만 보세요
+    </span>
+
+    <div style="height:40px;"></div>
+
+    <h1 class="hl lh" style="font-size:84px;color:#0B1440;">
+      단말기만 바꿨는데<br>
+      <span class="mark">병원 홈페이지</span>가<br>
+      생겼습니다.
+    </h1>
+
+    <div style="height:26px;"></div>
+    <p style="font-size:34px;font-weight:700;color:#3C466B;letter-spacing:-.035em;line-height:1.45;">
+      네이버페이 · 토스페이 단말기로 교체하시면<br>
+      제작비 <b style="color:#1428A0;">40만원 상당</b>의 홈페이지를 <b style="color:#1428A0;">무상</b>으로 만들어 드립니다.
+    </p>
+
+    <div style="height:32px;"></div>
+
+    <div class="stack" style="gap:16px;">
+      <div class="card row" style="padding:29px 38px;gap:28px;">
+        <div style="width:74px;height:74px;border-radius:22px;background:#03C75A;color:#fff;font-size:34px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">01</div>
+        <div>
+          <div style="font-size:34px;font-weight:900;letter-spacing:-.04em;">단말기 비용 0원</div>
+          <div style="font-size:26px;font-weight:600;color:#5A6480;margin-top:6px;letter-spacing:-.03em;">기기값 · 설치비 없이 바로 세팅</div>
+        </div>
+      </div>
+      <div class="card row" style="padding:29px 38px;gap:28px;">
+        <div style="width:74px;height:74px;border-radius:22px;background:#3182F6;color:#fff;font-size:34px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">02</div>
+        <div>
+          <div style="font-size:34px;font-weight:900;letter-spacing:-.04em;">홈페이지 제작 0원</div>
+          <div style="font-size:26px;font-weight:600;color:#5A6480;margin-top:6px;letter-spacing:-.03em;">40만원 상당 · 모바일 최적화 · 지도/예약 연결</div>
+        </div>
+      </div>
+      <div class="card row" style="padding:29px 38px;gap:28px;">
+        <div style="width:74px;height:74px;border-radius:22px;background:#1428A0;color:#fff;font-size:34px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">03</div>
+        <div>
+          <div style="font-size:34px;font-weight:900;letter-spacing:-.04em;">조건은 3년 약정 하나</div>
+          <div style="font-size:26px;font-weight:600;color:#5A6480;margin-top:6px;letter-spacing:-.03em;">3년만 사용하시면 됩니다. 그 외 부담 없음</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="row" style="justify-content:space-between;align-items:center;gap:24px;">
+      <div class="cta cta-solid" style="font-size:36px;padding:30px 54px;">지금 무료 신청하기 →</div>
+      <img class="term-l" src="img/pg-terminal.png" style="width:290px;">
+    </div>
+    <p class="fine" style="font-size:20px;color:#5A6480;margin-top:22px;">
+      ※ 3년 의무사용 약정 · 병원/의원/약국 사업자 대상 · 심사 후 설치
+    </p>
+  </div>
+</section>
+
+
+<!-- ============================================================ C3 : 1080x1350  (비교형) ============================================================ -->
+<section class="creative bg-white" id="c3" style="width:1080px;height:1350px;">
+  <div style="position:absolute;left:0;right:0;top:0;height:470px;background:radial-gradient(120% 140% at 20% 0%,#26379C 0%,#0B1440 70%);"></div>
+  <div class="pad" style="padding:80px 76px 72px;">
+    <span class="eyebrow" style="font-size:27px;padding:13px 26px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.28);color:#fff;align-self:flex-start;">
+      <i class="dot"></i>병원 · 약국 개원/리뉴얼 필독
+    </span>
+    <div style="height:34px;"></div>
+    <h1 class="hl" style="font-size:82px;color:#fff;">
+      홈페이지 <span class="price-strike">40만원</span><br>
+      단말기 <span class="price-strike">설치비</span> → <span class="zero">전부 0원</span>
+    </h1>
+    <div style="height:26px;"></div>
+    <p style="font-size:30px;font-weight:700;color:rgba(255,255,255,.82);letter-spacing:-.035em;">
+      결제 단말기 교체 한 번으로 끝납니다.
+    </p>
+
+    <div style="height:56px;"></div>
+
+    <div class="row" style="gap:22px;align-items:stretch;">
+      <div style="flex:1;border-radius:28px;background:#F3F5FA;border:3px solid #E3E7F2;padding:38px 34px;">
+        <div style="font-size:28px;font-weight:900;color:#96A0BC;letter-spacing:-.04em;">따로따로 하면</div>
+        <div style="height:24px;"></div>
+        <div style="font-size:27px;font-weight:700;color:#5A6480;line-height:2.0;letter-spacing:-.03em;">
+          단말기 구입 · 설치비<br>
+          홈페이지 제작비 40만원<br>
+          디자인 · 문구 직접 준비<br>
+          업체 2~3곳 따로 관리
+        </div>
+        <div style="height:26px;"></div>
+        <div style="font-size:40px;font-weight:900;color:#96A0BC;letter-spacing:-.04em;">비용 + 시간 소모</div>
+      </div>
+
+      <div style="flex:1;border-radius:28px;background:#0B1440;padding:38px 34px;color:#fff;box-shadow:0 24px 60px rgba(11,20,64,.28);">
+        <div style="font-size:28px;font-weight:900;color:#FFD43B;letter-spacing:-.04em;">메디플라톤으로 하면</div>
+        <div style="height:24px;"></div>
+        <div style="font-size:27px;font-weight:700;line-height:2.0;letter-spacing:-.03em;">
+          단말기 · 설치비 <b style="color:#FFD43B;">0원</b><br>
+          홈페이지 제작 <b style="color:#FFD43B;">0원</b><br>
+          기획 · 디자인 <b style="color:#FFD43B;">대행</b><br>
+          담당 매니저 <b style="color:#FFD43B;">1명</b>
+        </div>
+        <div style="height:26px;"></div>
+        <div style="font-size:40px;font-weight:900;color:#FFD43B;letter-spacing:-.04em;">실부담 0원</div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="row" style="gap:14px;">
+      <span class="chip chip-naver" style="font-size:25px;padding:13px 26px;">네이버페이 단말기</span>
+      <span class="chip chip-toss" style="font-size:25px;padding:13px 26px;">토스페이 단말기</span>
+    </div>
+    <div style="height:24px;"></div>
+    <div class="cta" style="font-size:36px;padding:30px 0;align-self:stretch;">우리 병원 무료 대상인지 확인 →</div>
+    <p class="fine" style="font-size:20px;color:#5A6480;margin-top:20px;">
+      ※ 3년 의무사용 약정 · 병원/의원/약국 사업자 대상 · 심사 후 설치
+    </p>
+  </div>
+</section>
+
+
+<!-- ============================================================ C4 : 1080x1920  (스토리/릴스) ============================================================ -->
+<section class="creative bg-dark" id="c4" style="width:1080px;height:1920px;">
+  <div class="glow" style="width:760px;height:760px;background:#2E6BFF;right:-240px;top:-200px;"></div>
+  <div class="glow" style="width:600px;height:600px;background:#03C75A;opacity:.3;left:-240px;top:900px;"></div>
+
+  <!-- Meta 스토리 세이프존: 상단 270px / 하단 300px 비움 -->
+  <div class="pad" style="padding:270px 80px 300px;">
+    <span class="eyebrow" style="font-size:28px;padding:15px 28px;background:#FFD43B;color:#241A00;align-self:flex-start;">
+      병원 · 약국 원장님 주목
+    </span>
+    <div style="height:34px;"></div>
+
+    <h1 class="hl" style="font-size:88px;">
+      아직도<br>
+      <span style="color:#03C75A;">네이버페이</span> 결제<br>
+      안 되는 병원이세요?
+    </h1>
+
+    <div style="height:38px;"></div>
+    <p style="font-size:34px;font-weight:700;letter-spacing:-.035em;line-height:1.45;opacity:.9;">
+      환자는 이미 페이로 결제합니다.<br>
+      단말기, <b style="color:#FFD43B;">0원으로</b> 바꿔드릴게요.
+    </p>
+
+    <div style="height:26px;"></div>
+    <img class="term" src="img/pg-terminal-smart-front.png" style="width:290px;align-self:center;transform:rotate(-5deg);">
+    <div style="height:26px;"></div>
+
+    <div class="stack" style="gap:14px;">
+      <div class="row" style="gap:20px;background:rgba(255,255,255,.10);border:2px solid rgba(255,255,255,.18);border-radius:22px;padding:22px 30px;">
+        <span style="font-size:32px;">✅</span>
+        <span style="font-size:33px;font-weight:800;letter-spacing:-.04em;">단말기 값 · 설치비 <b class="zero">0원</b></span>
+      </div>
+      <div class="row" style="gap:20px;background:rgba(255,255,255,.10);border:2px solid rgba(255,255,255,.18);border-radius:22px;padding:22px 30px;">
+        <span style="font-size:32px;">✅</span>
+        <span style="font-size:33px;font-weight:800;letter-spacing:-.04em;">40만원 홈페이지 제작 <b class="zero">0원</b></span>
+      </div>
+      <div class="row" style="gap:20px;background:rgba(255,255,255,.10);border:2px solid rgba(255,255,255,.18);border-radius:22px;padding:22px 30px;">
+        <span style="font-size:32px;">✅</span>
+        <span style="font-size:33px;font-weight:800;letter-spacing:-.04em;">조건은 <b class="zero">3년 약정</b> 하나뿐</span>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="cta" style="font-size:38px;padding:30px 0;align-self:stretch;">무료 설치 신청 →</div>
+    <p class="fine" style="font-size:21px;margin-top:18px;text-align:center;">
+      ※ 3년 의무사용 약정 · 병원/의원/약국 사업자 대상 · 심사 후 설치
+    </p>
+  </div>
+</section>
+
+
+<!-- ============================================================ C5 : 1080x1080  (가격 후킹) ============================================================ -->
+<section class="creative bg-white" id="c5" style="width:1080px;height:1080px;">
+  <div class="pad" style="padding:80px 78px 70px;">
+    <div class="row" style="justify-content:space-between;">
+      <span class="eyebrow" style="font-size:26px;padding:13px 26px;background:#E8EEFF;color:#1428A0;">병원 · 약국 한정</span>
+      <span class="brandrow" style="font-size:25px;color:#5A6480;">메디플라톤</span>
+    </div>
+
+    <div style="height:52px;"></div>
+
+    <div class="row" style="gap:28px;align-items:center;">
+      <div style="position:relative;display:inline-block;">
+        <div style="font-size:96px;font-weight:900;color:#C3CADB;letter-spacing:-.05em;">40만원</div>
+        <div style="position:absolute;left:-3%;right:-3%;top:50%;height:10px;background:#FF4D4D;border-radius:99px;transform:rotate(-8deg);"></div>
+      </div>
+      <div style="font-size:76px;font-weight:900;color:#C3CADB;">→</div>
+      <div style="font-size:120px;font-weight:900;color:#1428A0;letter-spacing:-.05em;">0원</div>
+    </div>
+
+    <div style="height:34px;"></div>
+
+    <h1 class="hl" style="font-size:76px;color:#0B1440;">
+      병원 홈페이지,<br>
+      왜 <span class="mark">돈 주고</span> 만드세요?
+    </h1>
+
+    <div style="height:28px;"></div>
+    <p style="font-size:32px;font-weight:700;color:#3C466B;letter-spacing:-.035em;line-height:1.45;">
+      네이버페이 · 토스페이 단말기만 설치하시면<br>
+      홈페이지 제작비는 저희가 부담합니다.
+    </p>
+
+    <div class="spacer"></div>
+
+    <div class="row" style="justify-content:space-between;align-items:flex-end;gap:20px;">
+      <div style="flex:1;">
+        <div class="cta cta-solid" style="font-size:34px;padding:28px 46px;">무료 대상 확인하기 →</div>
+        <p class="fine" style="font-size:19px;color:#5A6480;margin-top:18px;">
+          ※ 3년 의무사용 약정 · 병원/의원/약국 사업자 대상 · 심사 후 설치
+        </p>
+      </div>
+      <img class="term-l" src="img/pg-terminal.png" style="width:300px;">
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ C6 : 1080x1350  (체크리스트) ============================================================ -->
+<section class="creative bg-light" id="c6" style="width:1080px;height:1350px;">
+  <div class="pad" style="padding:86px 78px 74px;">
+    <span class="eyebrow" style="font-size:28px;padding:14px 28px;background:#0B1440;color:#fff;align-self:flex-start;">
+      30초 자가 체크
+    </span>
+    <div style="height:38px;"></div>
+
+    <h1 class="hl lh" style="font-size:78px;color:#0B1440;">
+      하나라도<br>
+      해당되면<br>
+      <span class="mark">단말기 · 홈페이지 0원</span>
+    </h1>
+
+    <div style="height:34px;"></div>
+
+    <div class="stack" style="gap:18px;">
+      <div class="card row" style="padding:32px 36px;gap:24px;">
+        <span style="font-size:36px;color:#1428A0;font-weight:900;">☑</span>
+        <span style="font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1.35;">환자가 네이버페이 · 토스로 결제 되냐고 물어본 적 있다</span>
+      </div>
+      <div class="card row" style="padding:32px 36px;gap:24px;">
+        <span style="font-size:36px;color:#1428A0;font-weight:900;">☑</span>
+        <span style="font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1.35;">병원 홈페이지가 없거나, 몇 년째 그대로다</span>
+      </div>
+      <div class="card row" style="padding:32px 36px;gap:24px;">
+        <span style="font-size:36px;color:#1428A0;font-weight:900;">☑</span>
+        <span style="font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1.35;">단말기 임대료 · 관리비를 매달 내고 있다</span>
+      </div>
+      <div class="card row" style="padding:32px 36px;gap:24px;">
+        <span style="font-size:36px;color:#1428A0;font-weight:900;">☑</span>
+        <span style="font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1.35;">앞으로 3년 이상 이 자리에서 운영할 계획이다</span>
+      </div>
+    </div>
+
+    <div style="height:40px;"></div>
+    <div style="border-radius:26px;background:#0B1440;color:#fff;padding:34px 40px;">
+      <div style="font-size:34px;font-weight:900;letter-spacing:-.04em;">
+        네 개 중 하나만 체크하셨어도 <span class="zero">무상 설치 대상</span>입니다.
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="cta" style="font-size:36px;padding:30px 0;align-self:stretch;">1분 만에 신청하기 →</div>
+    <p class="fine" style="font-size:20px;color:#5A6480;margin-top:20px;">
+      ※ 3년 의무사용 약정 · 병원/의원/약국 사업자 대상 · 심사 후 설치
+    </p>
+  </div>
+</section>
+
+<script>
+  // ?id=c1 → 해당 소재만 남기고 body 크기를 정확히 맞춤 (스크린샷용)
+  var id = new URLSearchParams(location.search).get('id');
+  if (id) {
+    document.body.classList.add('solo');
+    document.querySelectorAll('.creative').forEach(function(el){
+      if (el.id !== id) el.remove();
+    });
+  }
+</script>
+</body>
+</html>
