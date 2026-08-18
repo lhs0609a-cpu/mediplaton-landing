@@ -16,5 +16,7 @@ module.exports = [].concat(
     require('./data/terms-ext.js'),     // 용어·상품 확장
     require('./data/regions-seoul.js'), // 지역 세분화 — 서울
     require('./data/regions-metro.js'), // 지역 세분화 — 경기·인천·지방
-    require('./data/combo.js')          // 조합 — 진료과목 × 자금용도
+    require('./data/combo.js'),         // 조합 — 진료과목 × 자금용도
+    require('./data/guides-ext.js'),    // 실무 가이드 확장 1차
+    require('./data/guides-ext2.js')    // 실무 가이드 확장 2차
 );
