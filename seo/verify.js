@@ -1,4 +1,4 @@
-﻿const fs=require('fs'),path=require('path');
+const fs=require('fs'),path=require('path');
 const pages=require('./pages.js');
 let bad=0, jsonld=0;
 const slugs=new Set(pages.map(p=>p.slug));
