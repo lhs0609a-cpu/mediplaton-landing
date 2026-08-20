@@ -1,89 +1,302 @@
 ================================================================
-약사 전문 대출 · 메타광고 이미지 10종 · 제미나이 프롬프트
+약사 전문 대출 · 메타광고 이미지 10종 · 제미나이 한글 프롬프트
 메디플라톤 | loan.brandplaton.com/loan-pharmacist.html
 ================================================================
 
-[사용법] 아래 프롬프트는 전부 '텍스트 없는 배경'으로 나옵니다.
-         한글은 제미나이가 뭉개므로, 카피는 캔바에서 Pretendard로 얹으세요.
-         글자까지 넣으려면 프롬프트 끝에 이 문장 추가:
-         Add Korean text "OOO" in bold Pretendard ExtraBold.
+[사용법]
+1) 제미나이(Nano Banana / Gemini 이미지 생성)에 아래 블록을 통째로 복붙
+2) 한글이 깨지면 "글자가 깨졌습니다. 한글 맞춤법을 정확히 지켜 다시
+   그려주세요. 텍스트 외 다른 요소는 그대로 유지하세요." 라고 재요청
+3) 보통 2~4회 안에 정타가 나옵니다
+
+[브랜드 컬러] 네이비 #1A3A8F / 블루 #2962FF / 흰색 #FFFFFF / 포인트 앰버 #FF9800
+[폰트 느낌] Pretendard ExtraBold 같은 굵은 한국어 산세리프(고딕)
 
 ================================================================
-01. 거절 도장 반전
-카피: 의사는 되고, 약사는 안 된다고요?
-서브: 닥터론에서 빠진 약사님 전용 - 최대 4억
-----------------------------------------------------------------
-A dramatic top-down flat-lay on a deep navy desk surface. On the left, a stack of loan application papers stamped with a large red rejection ink stamp, slightly crumpled, cold desaturated tones. On the right, the same document pristine and lit with warm bright light, stamped with a bold blue approval stamp. A clean vertical light beam divides the two halves. A white pharmacist coat sleeve and a mortar-and-pestle rest subtly on the bright side. Strong chiaroscuro lighting, left side dark and cold, right side bright and hopeful. Empty clean space across the top third. Style: premium Korean fintech advertising, high contrast, sharp focus, 8k advertising photography. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO text, NO letters, NO numbers, NO logos anywhere. No watermark, no distorted hands, no cluttered background.
+01. 거절 도장 반전  ★1순위
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+짙은 네이비색 책상을 바로 위에서 내려다본 구도. 화면을 세로로 정확히
+반 나눠서, 왼쪽은 차갑고 어둡게, 오른쪽은 밝고 따뜻하게 표현해줘.
+왼쪽에는 구겨진 대출 신청서 서류 더미가 있고 그 위에 빨간색 거절
+도장이 크게 찍혀 있어. 채도가 낮고 회색빛이 도는 침울한 분위기.
+오른쪽에는 똑같은 서류가 반듯하게 펴져 있고 그 위에 파란색 승인
+도장이 선명하게 찍혀 있어. 따뜻한 빛이 서류를 비추고, 옆에는 약사의
+흰 가운 소매와 약절구가 살짝 놓여 있어. 두 영역 사이에는 세로로
+가느다란 빛줄기가 지나가.
+
+[이미지에 넣을 한글 텍스트]
+- 화면 상단 중앙, 아주 크고 굵은 흰색 고딕체로: "의사는 되고,"
+- 바로 아래 줄, 같은 크기의 밝은 파란색(#82B1FF) 굵은 고딕체로: "약사는 안 된다고요?"
+- 화면 하단, 작고 흰 고딕체 한 줄로: "닥터론에서 빠진 약사님 전용 · 최대 4억"
+- 그 아래 파란색 알약 모양 버튼 안에 흰 글씨로: "30초 한도조회"
+
+[스타일]
+한국 핀테크 광고 스타일, 명암 대비가 강한 시네마틱 조명, 고급스럽고
+신뢰감 있는 톤, 8k 광고 사진 퀄리티. 세로 4:5 비율.
+
+[주의]
+한글 맞춤법을 정확하게 지켜서 또렷하게 렌더링해줘. 위에 지정한 문구
+외에 다른 글자나 로고, 워터마크는 절대 넣지 마. 손 모양 왜곡 없이.
 
 ================================================================
 02. 면허증 = 4억
-카피: 그 약사 면허증, 4억짜리입니다
-서브: 면허 + 카드매출만 있으면 됩니다
-----------------------------------------------------------------
-Extreme close-up macro shot of an elegant embossed professional license certificate lying on a dark navy leather surface, shallow depth of field, gold foil seal catching the light. A soft blue glow emanates from the certificate as if it holds monetary value. Beside it, out of focus, a stack of neatly banded cash and a folded white pharmacist coat. Cinematic side lighting, rich shadows, luxurious and authoritative mood. Generous clean negative space in the upper half. Style: premium Korean fintech advertising, sharp focus, 8k advertising photography. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO text, NO letters, NO numbers, NO logos anywhere. No watermark, no gibberish text.
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+어두운 네이비색 가죽 위에 놓인 고급스러운 자격증(면허증) 클로즈업.
+엠보싱 처리된 종이에 금박 인장이 빛을 받아 반짝이고, 얕은 심도로
+가장자리는 흐릿해. 면허증에서 은은한 파란 빛이 새어나와서 마치
+그 자체가 큰 가치를 지닌 것처럼 보이게 해줘. 옆에는 초점이 나간
+상태로 띠지로 묶인 지폐 다발과 곱게 접힌 흰 가운이 놓여 있어.
+측면에서 들어오는 시네마틱 조명, 깊은 그림자, 묵직하고 권위 있는 분위기.
+
+[이미지에 넣을 한글 텍스트]
+- 화면 상단 여백에 굵은 흰색 고딕체로: "그 약사 면허증,"
+- 바로 아래, 훨씬 더 크게 금빛이 도는 흰색 굵은 고딕체로: "4억짜리입니다"
+- 화면 하단에 작은 흰 글씨 한 줄로: "면허 + 카드매출만 있으면 됩니다"
+
+[스타일]
+프리미엄 한국 금융 광고, 럭셔리한 질감, 선명한 초점, 8k 광고 사진.
+컬러: 네이비 #1A3A8F, 블루 #2962FF, 흰색. 세로 4:5 비율.
+
+[주의]
+한글 맞춤법을 정확하게 지켜 또렷하게 써줘. 지정한 문구 외에
+면허증 안이나 배경에 임의의 글자를 만들어 넣지 마. 워터마크 금지.
 
 ================================================================
-03. 초대형 숫자 임팩트   [릴스용은 4:5 -> 9:16]
-카피: 최대 4억
-서브: 약사 전용 대출 · DSR 별도 산정
-----------------------------------------------------------------
-A minimalist bold advertising key visual. A massive oversized abstract numeral shape occupying 60% of the frame, constructed from glossy deep navy material with a vivid blue #2962FF gradient edge and a subtle chrome bevel, floating in the center. Behind it, a heavily blurred bokeh interior of a modern bright pharmacy with white shelving and a green cross sign, reduced to soft light shapes. Dramatic rim lighting on the shape, soft shadow beneath. Ultra clean, generous white breathing room along the bottom. Style: premium Korean fintech advertising, high contrast, 8k. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO readable text or logos. No watermark, no clutter.
+03. 초대형 숫자 임팩트  ★3순위  (릴스용은 9:16으로)
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+극도로 미니멀한 광고 키비주얼. 화면 한가운데에 "4억"이라는 한글
+숫자가 화면의 60%를 차지할 만큼 거대하게 떠 있어. 글자는 광택 있는
+짙은 네이비 재질로 만들어졌고, 가장자리에는 선명한 파란색(#2962FF)
+그라데이션과 얇은 크롬 베벨이 들어가 입체적으로 보여. 글자 뒤쪽에는
+현대적이고 밝은 약국 내부가 아주 흐릿한 보케로 처리돼 있어. 흰색
+진열장과 녹색 십자 간판이 부드러운 빛 덩어리로만 보이게 해줘.
+글자 테두리를 따라 강한 림라이트가 들어오고 아래에 부드러운 그림자.
+
+[이미지에 넣을 한글 텍스트]
+- 화면 중앙 초대형 입체 글자: "4억"
+- 그 바로 위 작은 흰 글씨로: "약사 전용 대출"
+- 화면 하단 흰색 띠 안에 네이비 굵은 글씨로: "DSR 한도와 별도 산정"
+
+[스타일]
+프리미엄 한국 핀테크 광고, 강한 명암 대비, 극도로 깔끔한 여백,
+8k 3D 렌더. 세로 4:5 비율. (릴스용은 9:16 세로 비율로)
+
+[주의]
+"4억" 한글을 정확한 자모로 또렷하게 렌더링해줘. 지정한 문구 외에
+다른 글자, 로고, 워터마크는 넣지 마.
 
 ================================================================
 04. 안도하는 약사
-카피: 약사님, 이번엔 승인입니다
-서브: 은행에서 거절된 약사님 상담 사례 다수
-----------------------------------------------------------------
-Editorial advertising portrait of a confident Korean pharmacist in a crisp white coat, mid-30s to 40s, standing behind a modern pharmacy counter, looking down at a smartphone with a genuine relieved smile. Soft warm key light on the face, cool blue ambient light from the pharmacy shelves behind creating depth. Background: clean minimal pharmacy interior, softly out of focus, white and blue tones. A subtle blue notification glow reflects on the face. Natural authentic expression, not a stock-photo grin. Waist-up framing, subject on the right third, large empty space on the left. Style: premium Korean advertising photography, sharp focus, 8k. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO text or logos. No distorted hands, no fake brand logos.
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+현대적인 약국 카운터 뒤에 서 있는 30대 후반~40대 한국인 약사의
+광고용 인물 사진. 빳빳한 흰 가운을 입고 있고, 스마트폰을 내려다보며
+진심으로 안도하는 미소를 짓고 있어. 억지스러운 스톡사진 웃음이 아니라
+자연스럽고 진짜 같은 표정이어야 해. 얼굴에는 따뜻한 키라이트가 닿고,
+뒤쪽 약국 진열장에서 차가운 파란 조명이 들어와 깊이감을 만들어.
+배경은 깔끔하고 미니멀한 약국 내부가 부드럽게 아웃포커싱된 상태.
+휴대폰 화면의 파란 알림 빛이 얼굴에 은은하게 반사돼.
+인물은 화면 오른쪽에 배치하고 왼쪽은 넓게 비워줘.
+
+[이미지에 넣을 한글 텍스트]
+- 화면 왼쪽 빈 공간 위쪽에 굵은 흰색 고딕체로: "약사님,"
+- 그 아래 훨씬 크게 밝은 파란색 굵은 고딕체로: "이번엔 승인입니다"
+- 화면 하단에 작은 흰 글씨로: "은행에서 거절된 약사님 상담 사례 다수"
+
+[스타일]
+프리미엄 한국 광고 사진, 선명한 초점, 자연스러운 피부 표현, 8k.
+컬러: 네이비 #1A3A8F, 블루 #2962FF, 흰색. 세로 4:5 비율.
+
+[주의]
+한글 맞춤법 정확하게. 손가락 왜곡 없이. 실제 은행이나 브랜드 로고는
+넣지 말고, 지정한 문구 외 다른 글자도 넣지 마.
 
 ================================================================
-05. 은행 vs 약사 전문
-카피: 시중은행 X · 약사 전문 O
-서브: 왜 약사님만 번번이 막혔을까요
-----------------------------------------------------------------
-A clean split-screen infographic-style advertising visual. Left half: cold grey concrete texture, a closed heavy bank door, desaturated and gloomy. Right half: bright deep navy #1A3A8F to vivid blue #2962FF gradient, an open glass door with warm light pouring through, optimistic. A crisp vertical divider line down the exact center with a subtle glow. Minimal, iconographic, poster-like. Two clean empty rectangular zones, one centered on each half. Style: premium Korean fintech advertising, high contrast, flat modern graphic design, 8k. Aspect ratio 4:5. Render NO text, NO letters, NO numbers, NO logos anywhere. No watermark, no clutter.
+05. 은행 vs 약사 전문 비교
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+화면을 세로로 정확히 반 나눈 비교형 인포그래픽 광고 이미지.
+왼쪽 절반은 차가운 회색 콘크리트 질감 배경에, 굳게 닫힌 묵직한
+은행 문이 있어. 채도가 낮고 우울한 분위기.
+오른쪽 절반은 네이비(#1A3A8F)에서 선명한 파랑(#2962FF)으로 이어지는
+밝은 그라데이션 배경에, 활짝 열린 유리문 사이로 따뜻한 빛이
+쏟아져 들어와. 희망적이고 밝은 분위기.
+가운데 경계선은 얇고 선명한 세로선에 은은한 빛이 감돌아.
+미니멀하고 아이콘적인 포스터 느낌.
+
+[이미지에 넣을 한글 텍스트]
+- 화면 최상단 가로 전체에 굵은 흰 고딕체로: "왜 약사님만 번번이 막혔을까요"
+- 왼쪽 절반 중앙에 큰 회색 X 표시와 그 아래 회색 글씨로: "시중은행"
+- 오른쪽 절반 중앙에 큰 흰색 체크 표시와 그 아래 흰 굵은 글씨로: "약사 전문"
+- 화면 하단 중앙 파란 버튼 안 흰 글씨로: "최대 4억 한도조회"
+
+[스타일]
+프리미엄 한국 핀테크 광고, 플랫하고 모던한 그래픽 디자인,
+강한 명암 대비, 8k. 세로 4:5 비율.
+
+[주의]
+한글 맞춤법 정확하게, 또렷하게. 지정한 문구 외 다른 글자나
+실제 은행 로고는 절대 넣지 마.
 
 ================================================================
 06. 약국 인수 자금
-카피: 권리금 3억, 어디서 구하셨나요?
-서브: 약국 인수·개국 자금 최대 4억
-----------------------------------------------------------------
-Wide cinematic shot of a Korean pharmacy storefront at blue hour, an illuminated green cross sign glowing, warm interior light spilling onto a wet reflective sidewalk. In the foreground, slightly out of focus, a hand holding a set of shop keys on a keyring. Moody premium urban atmosphere, deep navy sky, teal and amber color grading. The storefront sits in the lower two-thirds, leaving the sky area clean and dark. Style: cinematic Korean advertising photography, sharp focus, 8k. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO readable text or brand logos. No distorted hands, no watermark.
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+해질 무렵 블루아워의 한국 약국 외관을 넓게 담은 시네마틱 사진.
+녹색 십자 간판에 불이 들어와 빛나고, 따뜻한 실내 조명이 비에 젖어
+반사되는 인도 위로 흘러나와. 화면 앞쪽에는 초점이 살짝 나간 상태로
+열쇠고리에 걸린 가게 열쇠 꾸러미를 든 손이 보여. 도시적이고 묵직한
+프리미엄 분위기, 짙은 네이비 하늘, 청록과 앰버가 섞인 색보정.
+약국 외관은 화면 아래 3분의 2에 배치하고, 위쪽 하늘은 어둡게 비워줘.
+
+[이미지에 넣을 한글 텍스트]
+- 어두운 하늘 부분에 굵은 흰색 고딕체 두 줄로: "권리금 3억," / "어디서 구하셨나요?"
+- 화면 하단에 작은 흰 글씨 한 줄로: "약국 인수·개국 자금 최대 4억"
+
+[스타일]
+시네마틱 한국 광고 사진, 선명한 초점, 깊은 색감, 8k. 세로 4:5 비율.
+
+[주의]
+한글 맞춤법 정확하게. 간판이나 배경에 임의의 글자를 만들어 넣지 말고,
+지정한 문구만 렌더링해줘. 손가락 왜곡 없이. 워터마크 금지.
 
 ================================================================
 07. 카드매출이 담보
-카피: 약국 카드매출이 곧 담보입니다
-서브: DSR 한도와 별도로 산정
-----------------------------------------------------------------
-A sleek 3D data-visualization key visual. A rising bar chart made of glossy deep navy and vivid blue #2962FF blocks ascending from left to right, each block subtly resembling a stacked card receipt. A translucent blue shield with a soft glow hovers protectively over the tallest bars. Dark navy gradient studio background with a soft floor reflection and volumetric blue light rays. Ultra-clean fintech aesthetic, glass and metal materials. Empty clean space along the top. Style: premium 3D render, high contrast, 8k. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO text, NO numbers, NO labels, NO logos anywhere. No watermark, no clutter.
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+세련된 3D 데이터 시각화 키비주얼. 왼쪽에서 오른쪽으로 계단처럼
+올라가는 막대그래프가 있고, 각 막대는 광택 있는 짙은 네이비와
+선명한 파랑(#2962FF) 블록으로 되어 있어. 막대 하나하나가 카드
+전표를 쌓아올린 것처럼 미묘하게 보이게 해줘. 가장 높은 막대 위에는
+반투명한 파란 방패가 은은하게 빛나며 떠 있어 보호하는 느낌.
+배경은 짙은 네이비 그라데이션 스튜디오, 바닥에 부드러운 반사,
+파란 볼류메트릭 광선. 유리와 메탈 재질의 초정밀 핀테크 미감.
+
+[이미지에 넣을 한글 텍스트]
+- 화면 상단 여백에 굵은 흰색 고딕체 두 줄로: "약국 카드매출이" / "곧 담보입니다"
+- 화면 하단 파란 띠 안에 흰 굵은 글씨로: "DSR 한도와 별도로 산정"
+
+[스타일]
+프리미엄 3D 렌더, 강한 명암 대비, 극도로 깔끔함, 8k. 세로 4:5 비율.
+
+[주의]
+한글 맞춤법 정확하게. 그래프 축이나 막대 위에 숫자·라벨 같은
+임의의 글자는 넣지 마. 지정한 문구만. 워터마크 금지.
 
 ================================================================
-08. 30초 한도조회   [스토리용은 4:5 -> 9:16]
-카피: 30초면 내 한도가 나옵니다
-서브: 면허증 한 장, 그게 전부
-----------------------------------------------------------------
-A premium product-style mockup shot. A modern smartphone floats at a slight angle in the center, held by a clean hand, the screen glowing bright blue. The screen shows a blank clean blue-and-white app interface with a large empty card area in the middle. Around the phone, subtle floating UI elements: a circular progress ring, a checkmark bubble, a stopwatch icon, all in white and blue #2962FF glass material. Deep navy gradient background with soft blue volumetric glow. Sharp product photography lighting. Style: premium fintech advertising, 8k. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO text, NO letters, NO numbers on the screen or anywhere. No distorted hands, no watermark.
+08. 30초 한도조회  (스토리용은 9:16으로)
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+프리미엄 제품 목업 사진. 화면 한가운데 최신형 스마트폰이 살짝 기울어
+떠 있고, 깔끔한 손이 그것을 들고 있어. 화면은 밝은 파란빛으로 빛나고,
+파랑과 흰색으로 된 심플한 앱 화면이 보여. 폰 주위로 흰색과
+파란색(#2962FF) 유리 재질의 UI 요소들이 떠다녀. 원형 진행률 링,
+체크마크 말풍선, 스톱워치 아이콘. 배경은 짙은 네이비 그라데이션에
+부드러운 파란 볼류메트릭 광채. 선명한 제품 촬영 조명.
+
+[이미지에 넣을 한글 텍스트]
+- 화면 상단에 굵은 흰 고딕체로, "30초"만 아주 크고 밝은 파란색으로
+  강조해서: "30초면 내 한도가 나옵니다"
+- 스마트폰 화면 중앙 카드 안에 네이비 굵은 글씨로: "최대 4억"
+- 화면 하단에 작은 흰 글씨로: "면허증 한 장, 그게 전부"
+
+[스타일]
+프리미엄 핀테크 광고, 제품 사진 조명, 8k. 세로 4:5 비율.
+(스토리용은 9:16 비율, 폰을 중앙에 두고 위아래 여백을 넓게)
+
+[주의]
+한글 맞춤법 정확하게. 폰 화면에 지정한 문구 외의 잡다한 텍스트나
+가짜 앱 아이콘은 넣지 마. 손가락 왜곡 없이. 워터마크 금지.
 
 ================================================================
-09. 부결 문자 vs 승인 문자
-카피: 또 "부결"이라는 문자, 받으셨죠
-서브: 약사님은 원래 심사 기준이 다릅니다
-----------------------------------------------------------------
-A minimalist mobile-messaging-inspired advertising visual. Two chat message bubbles float in the center of a dark navy gradient background. The upper bubble is grey, cracked like broken glass, tilted and falling away, desaturated. The lower bubble is vivid blue #2962FF, crisp and glowing with a soft blue halo and a small white checkmark badge on its corner. Both bubbles are completely empty inside. Subtle particle dust and shallow depth of field. Emotional storytelling through shape and color only. Style: premium minimal fintech advertising, high contrast, 8k. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO text, NO letters, NO numbers, NO logos anywhere. No watermark.
+09. 부결 문자 vs 승인 문자  ★2순위
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+문자 메시지 화면에서 착안한 미니멀 광고 이미지. 짙은 네이비
+그라데이션 배경 한가운데 말풍선 두 개가 떠 있어.
+위쪽 말풍선은 회색이고, 유리처럼 금이 쫙 가 있으며 기울어져 아래로
+떨어지는 중이야. 채도가 낮고 생기가 없어.
+아래쪽 말풍선은 선명한 파란색(#2962FF)이고, 반듯하고 또렷하게 빛나며
+부드러운 파란 후광이 감돌아. 모서리에는 작은 흰색 체크 배지가 붙어 있어.
+은은한 입자 먼지와 얕은 심도.
+
+[이미지에 넣을 한글 텍스트]
+- 위쪽 깨진 회색 말풍선 안에 회색 글씨로: "부결되었습니다"
+- 아래쪽 파란 말풍선 안에 흰 굵은 글씨로: "승인되었습니다"
+- 화면 최상단에 굵은 흰 고딕체로: "또 이 문자, 받으셨죠"
+- 화면 하단에 작은 흰 글씨로: "약사님은 원래 심사 기준이 다릅니다"
+
+[스타일]
+프리미엄 미니멀 핀테크 광고, 강한 명암 대비, 감성적인 색채 연출, 8k.
+세로 4:5 비율.
+
+[주의]
+한글 맞춤법을 정확하게 지켜 또렷하게 써줘. 말풍선 안에 지정한 문구
+외에 시간 표시나 잡다한 글자는 넣지 마. 워터마크 금지.
 
 ================================================================
 10. 개국 준비 약사
-카피: 자리는 정했는데, 자금이 남았죠
-서브: 개국·인테리어·재고까지 한 번에
-----------------------------------------------------------------
-Cinematic wide shot of an empty unfinished retail space with bare concrete floors and large glass windows, soft daylight streaming in. In the center, a Korean pharmacist in a white coat stands with their back partly to camera, holding a rolled blueprint, looking up at the empty space with quiet determination. Faint translucent blue holographic outlines of future pharmacy shelving overlay the empty room like an architectural projection. Cool blue and warm daylight contrast, hopeful aspirational mood, lens flare from the window. Figure in the lower third, large clean bright area above. Style: cinematic Korean advertising photography, sharp focus, 8k. Palette: deep navy #1A3A8F, vivid blue #2962FF, white. Aspect ratio 4:5. Render NO text or logos. No distorted hands, no watermark.
+================================================================
+한국 금융 광고용 이미지를 만들어줘.
+
+[장면]
+아직 공사가 안 된 텅 빈 상가 내부를 넓게 담은 시네마틱 사진.
+민낯의 콘크리트 바닥과 큰 통유리창으로 부드러운 자연광이 쏟아져 들어와.
+화면 중앙에 흰 가운을 입은 한국인 약사가 카메라를 등지고 반쯤 돌아선
+채 도면을 말아 쥐고 빈 공간을 올려다보고 있어. 조용한 결의가 느껴지는
+자세. 텅 빈 공간 위로 미래에 들어설 약국 진열장의 반투명한 파란
+홀로그램 윤곽선이 건축 투시도처럼 겹쳐 보여. 차가운 파랑과 따뜻한
+자연광의 대비, 희망적이고 벅찬 분위기, 창가에서 들어오는 렌즈 플레어.
+인물은 화면 아래 3분의 1에 배치하고 위쪽은 밝게 비워줘.
+
+[이미지에 넣을 한글 텍스트]
+- 위쪽 밝은 여백에 굵은 네이비색 고딕체 두 줄로: "자리는 정했는데," / "자금이 남았죠"
+- 화면 하단에 작은 네이비 글씨로: "개국·인테리어·재고까지 한 번에, 최대 4억"
+
+[스타일]
+시네마틱 한국 광고 사진, 선명한 초점, 밝고 희망적인 톤, 8k.
+컬러: 네이비 #1A3A8F, 블루 #2962FF, 흰색. 세로 4:5 비율.
+
+[주의]
+한글 맞춤법 정확하게. 도면이나 벽에 임의의 글자를 만들어 넣지 마.
+손가락 왜곡 없이. 워터마크 금지.
 
 ================================================================
-이미지 하단 필수 고지
-----------------------------------------------------------------
+한글이 깨졌을 때 쓰는 재요청 문장 (그대로 복붙)
+================================================================
+글자가 깨졌어. 이미지의 구도·색감·조명은 그대로 유지하고,
+한글 텍스트만 아래 문구로 정확하게 다시 렌더링해줘.
+받침과 자모를 정확히 지켜서 또렷한 굵은 고딕체로 써줘.
+지정하지 않은 글자는 하나도 넣지 마.
+문구: "여기에 해당 소재의 카피를 그대로 붙여넣기"
+
+================================================================
+이미지 하단 필수 고지 (캔바에서 작게 넣기)
+================================================================
 메디플라톤 | 대출 조건은 신용도에 따라 차등 적용 | 금리 연 5.3%~6.9%
 과도한 빚은 당신에게 큰 불행을 안겨줍니다.
 
-집행 순서: 01 · 09 · 03 먼저 3종 -> CTR 상위 1~2개 남기고 나머지 투입
+집행 순서: 01 · 09 · 03 먼저 3종 → CTR 상위 1~2개 남기고 나머지 투입
 주의: loan-pharmacist.html 한도가 아직 "3억"으로 4군데 표기 중
 ================================================================

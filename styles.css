@@ -17300,3 +17300,52 @@ textarea {
     .link-grid, .hub-list { grid-template-columns: 1fr; }
     .answer-box { padding: 16px 18px; }
 }
+
+/* ===== 결제단말기 메뉴 (Npay 커넥트 · 토스 프론트 랜딩) ===== */
+.nav-link.nav-link--terminal {
+    color: #1D4ED8;
+    font-weight: 600;
+    background: #EFF6FF;
+    border-radius: 6px;
+    padding: 6px 14px !important;
+}
+.nav-link.nav-link--terminal:hover {
+    color: #1E3A8A;
+    background: #DBEAFE;
+}
+.mobile-nav--terminal {
+    color: #1D4ED8 !important;
+    font-weight: 700 !important;
+    background: #EFF6FF;
+    border-radius: 8px;
+    padding: 12px 16px !important;
+}
+
+/* ===== 헤더 가로 넘침 방지 =====
+   메뉴가 11개를 넘어가면 1440px 화면에서도 .nav-list 가 부모를 넘어
+   가로 스크롤(문서폭 1520px)이 생기던 문제. 좁아질수록 단계적으로 조인다. */
+.header-inner { gap: 16px; min-width: 0; }
+.main-nav { min-width: 0; flex: 0 1 auto; }
+.nav-list { flex-wrap: nowrap; }
+.header-actions { flex: 0 0 auto; }
+
+@media (min-width: 1025px) and (max-width: 1560px) {
+    .nav-list { gap: 2px; }
+    .nav-link { padding: 9px 7px; font-size: 14px; }
+    .nav-link.nav-link--food,
+    .nav-link.nav-link--pay,
+    .nav-link.nav-link--tax,
+    .nav-link.nav-link--terminal { padding: 6px 9px !important; }
+    .header-cta { padding: 11px 16px; font-size: 13.5px; }
+    .logo-img { height: 32px; }
+}
+@media (min-width: 1025px) and (max-width: 1300px) {
+    .nav-list { gap: 0; }
+    .nav-link { padding: 9px 5px; font-size: 13px; }
+    .nav-link.nav-link--food,
+    .nav-link.nav-link--pay,
+    .nav-link.nav-link--tax,
+    .nav-link.nav-link--terminal { padding: 5px 7px !important; font-size: 12.5px; }
+    .header-cta { padding: 10px 12px; font-size: 12.5px; }
+    .logo-img { height: 28px; }
+}
