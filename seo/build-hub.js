@@ -132,7 +132,7 @@ ${chromeTop}
             </p>
             <div class="page-hero-actions">
                 <a href="index.html#consultation" class="btn btn-primary btn-lg">30초 한도 조회</a>
-                <a href="tel:0507-1434-3226" class="btn btn-outline btn-lg">전화 상담 0507-1434-3226</a>
+                <a href="tel:0507-1375-2717" class="btn btn-outline btn-lg">전화 상담 0507-1375-2717</a>
             </div>
         </div>
     </section>

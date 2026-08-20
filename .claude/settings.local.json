@@ -37,7 +37,29 @@
       "WebFetch(domain:platonmg.imweb.me)",
       "WebFetch(domain:modoovillage.co.kr)",
       "Bash(git checkout:*)",
-      "Bash(powershell -ExecutionPolicy Bypass -File:*)"
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "Bash(git stash pop:*)",
+      "Bash(git stash:*)",
+      "Bash(git pull:*)",
+      "Bash(git revert:*)",
+      "Bash(del:*)",
+      "Bash(node -e:*)",
+      "Bash(npm install:*)",
+      "Bash(npx supabase:*)",
+      "Bash(python3:*)",
+      "Bash(printf:*)",
+      "Bash(done)",
+      "Bash(grep:*)",
+      "Bash(cd:*)",
+      "Bash(git status:*)",
+      "WebFetch(domain:pixabay.com)",
+      "WebFetch(domain:www.pexels.com)",
+      "WebFetch(domain:unsplash.com)",
+      "WebFetch(domain:images.unsplash.com)",
+      "WebFetch(domain:images.pexels.com)",
+      "Bash(explorer \"G:\\\\내 드라이브\\\\landingpage\\\\pgandplt\")",
+      "Bash(start \"\" \"G:\\\\내 드라이브\\\\landingpage\\\\pgandplt\\\\supabase-migration-preferred-time.sql\")",
+      "Bash(start \"\" \"G:\\\\내 드라이브\\\\landingpage\\\\pgandplt\")"
     ]
   }
 }

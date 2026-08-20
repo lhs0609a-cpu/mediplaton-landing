@@ -476,7 +476,7 @@
                 <div class="lead-detail-row"><div class="label">계약 상태</div><div class="value"><span class="badge" style="background:#D1FAE5;color:#065F46;">서명 완료</span> <button class="btn btn-sm" id="viewContractBtn" style="margin-left:8px;">계약서 보기</button></div></div>
             </div>
             <p style="margin-top:16px;font-size:12px;color:var(--gray-500);">
-                ※ 계좌 정보 변경이 필요하시면 관리자에게 문의해 주세요. (0507-1434-3226)<br>
+                ※ 계좌 정보 변경이 필요하시면 관리자에게 문의해 주세요. (0507-1375-2717)<br>
                 ※ 본 시스템의 모든 활동은 로그로 기록됩니다.
             </p>
         `;

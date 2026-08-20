@@ -208,7 +208,7 @@
                         return;
                     }
                     if (lower.includes('invalid login') || lower.includes('invalid_credentials')) {
-                        throw new Error('이미 가입된 이메일이지만 비밀번호가 일치하지 않습니다. 로그인 탭에서 시도하시거나 관리자(0507-1434-3226)에게 비밀번호 재설정을 요청해 주세요.');
+                        throw new Error('이미 가입된 이메일이지만 비밀번호가 일치하지 않습니다. 로그인 탭에서 시도하시거나 관리자(0507-1375-2717)에게 비밀번호 재설정을 요청해 주세요.');
                     }
                     throw signInErr;
                 }

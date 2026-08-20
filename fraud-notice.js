@@ -130,7 +130,7 @@
 
             '<div style="background:#F3F4F6;padding:10px 12px;border-radius:6px;font-size:12px;color:#4B5563;margin-bottom:16px;">' +
             '✅ 정상 접수(가족·동료가 같은 와이파이에서 별도 신청 등)이시면 문의 시 말씀해 주세요. ' +
-            '<br>📞 본사: <strong>0507-1434-3226</strong>' +
+            '<br>📞 본사: <strong>0507-1375-2717</strong>' +
             '</div>' +
 
             '<button id="dupIpCloseBtn" type="button" style="' +

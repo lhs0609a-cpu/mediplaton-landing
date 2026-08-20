@@ -1,0 +1,408 @@
+/* ==========================================================================
+   design-v2.css — 디자인 리파인 레이어
+   --------------------------------------------------------------------------
+   styles.css 뒤에 로드되어 "보이는 품질"만 끌어올린다.
+   원칙:
+     1. 레이아웃(display / grid-template / flex-direction / width)은 건드리지 않는다.
+     2. 토큰(:root) 재정의로 17,000줄 전체에 한 번에 반영시킨다.
+     3. 개별 컴포넌트는 깊이·여백·타이포만 다듬는다.
+   메인페이지(index.html)에는 로드하지 않는다.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. 토큰 재정의 — 여기가 가장 큰 레버리지
+   ========================================================================== */
+:root {
+    /* --- 잉크 스케일: 순수 회색 → 살짝 푸른기가 도는 뉴트럴 --- */
+    --gray-50:  #F8FAFC;
+    --gray-100: #F2F5F9;
+    --gray-200: #E9EDF4;
+    --gray-300: #D6DDE8;
+    --gray-400: #99A3B5;
+    --gray-500: #6E7891;
+    --gray-600: #4A5568;
+    --gray-700: #333D52;
+    --gray-800: #1C2536;
+    --gray-900: #0D1424;
+
+    /* --- 경계선: 얇고 옅게. 진한 선은 싸구려로 보인다 --- */
+    --border:       #E9EDF4;
+    --border-light: #F2F5F9;
+
+    /* --- 배경 --- */
+    --bg-subtle:   #F8FAFC;
+    --bg-gradient: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+
+    /* --- 그림자: 단일 그림자 → 2겹 레이어링. 깊이감의 핵심 --- */
+    --shadow-sm:    0 1px 2px rgba(13,20,36,.04);
+    --shadow:       0 1px 3px rgba(13,20,36,.04), 0 4px 12px rgba(13,20,36,.045);
+    --shadow-md:    0 2px 6px rgba(13,20,36,.045), 0 10px 26px rgba(13,20,36,.06);
+    --shadow-lg:    0 3px 10px rgba(13,20,36,.05), 0 18px 46px rgba(13,20,36,.08);
+    --shadow-xl:    0 6px 18px rgba(13,20,36,.06), 0 32px 76px rgba(13,20,36,.11);
+    --shadow-card:  0 1px 3px rgba(13,20,36,.04), 0 6px 18px rgba(20,40,160,.045);
+    --shadow-hover: 0 4px 12px rgba(13,20,36,.06), 0 22px 52px rgba(20,40,160,.11);
+
+    /* --- 라운드: 한 단계씩 키운다 --- */
+    --radius-sm: 10px;
+    --radius:    16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+
+    /* --- 섹션 리듬: 여백이 곧 격 --- */
+    --section-padding: 120px;
+
+    /* --- 이징: 스프링 계열로 교체 --- */
+    --transition:        all .24s cubic-bezier(.2,.8,.2,1);
+    --transition-slow:   all .38s cubic-bezier(.2,.8,.2,1);
+    --transition-bounce: all .42s cubic-bezier(.34,1.4,.64,1);
+
+    /* --- v2 전용 --- */
+    --v2-ease:  cubic-bezier(.2,.8,.2,1);
+    --v2-spring: cubic-bezier(.34,1.4,.64,1);
+}
+
+/* ==========================================================================
+   2. 타이포그래피 — 자간을 조이면 즉시 고급스러워진다
+   ========================================================================== */
+body {
+    letter-spacing: -.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'ss01', 'tnum';
+    color: var(--gray-800);
+}
+
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+p  { text-wrap: pretty; }
+
+.section-title,
+.page-title,
+.hero-title {
+    letter-spacing: -.042em;
+    line-height: 1.2;
+    font-weight: 800;
+    color: var(--gray-900);
+}
+.hero-title { font-size: clamp(38px, 5.6vw, 62px); }
+.section-title { font-size: clamp(30px, 4.4vw, 46px); }
+
+.section-subtitle,
+.section-desc,
+.hero-subtitle,
+.hero-description {
+    letter-spacing: -.014em;
+    line-height: 1.78;
+    color: var(--gray-600);
+}
+.hero-subtitle, .hero-description { font-size: clamp(16.5px, 1.8vw, 19px); }
+
+h3, .card-title, .feature-title { letter-spacing: -.032em; line-height: 1.42; }
+h4 { letter-spacing: -.028em; }
+
+.section-header { margin-bottom: 64px; }
+.section-label,
+.section-badge,
+.eyebrow {
+    letter-spacing: .09em;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 12.5px;
+}
+
+/* 강조 텍스트가 촌스럽게 튀지 않도록 */
+.highlight, .text-primary, .accent-text { letter-spacing: inherit; }
+
+/* ==========================================================================
+   3. 섹션 리듬
+   ========================================================================== */
+section { padding-top: var(--section-padding); padding-bottom: var(--section-padding); }
+section.hero, .hero { padding-top: 92px; padding-bottom: 112px; }
+
+/* 이미 인라인/자체 패딩을 가진 특수 섹션은 건드리지 않는다 */
+.header, header, .footer, footer, .breadcrumb, .modal-overlay, .sticky-cta,
+.announce, .topbar, .notice-bar {
+    padding-top: revert; padding-bottom: revert;
+}
+
+/* ==========================================================================
+   4. 카드 — 깊이와 호버
+   ========================================================================== */
+.card,
+.feature-card,
+.product-card,
+.case-card,
+.guide-card,
+.info-card,
+.stat-card,
+.service-card,
+.benefit-card,
+.step-card,
+.review-card,
+.faq-item,
+.content-card,
+.list-card,
+.hub-card,
+.region-card,
+.combo-card {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    background: #fff;
+    transition: transform .34s var(--v2-ease), box-shadow .34s var(--v2-ease), border-color .34s var(--v2-ease);
+}
+.card:hover,
+.feature-card:hover,
+.product-card:hover,
+.case-card:hover,
+.guide-card:hover,
+.info-card:hover,
+.service-card:hover,
+.benefit-card:hover,
+.hub-card:hover,
+.region-card:hover,
+.combo-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: #DDE4EF;
+}
+
+/* 카드 안 아이콘 박스 */
+.card-icon, .feature-icon, .service-icon, .benefit-icon, .icon-box {
+    border-radius: 16px;
+}
+
+/* ==========================================================================
+   5. 버튼 — 여백, 무게, 스프링
+   ========================================================================== */
+.btn, .button, .cta-button, .btn-primary, .btn-secondary, .btn-outline {
+    border-radius: 14px;
+    font-weight: 800;
+    letter-spacing: -.022em;
+    transition: transform .24s var(--v2-spring), box-shadow .24s var(--v2-ease), background .2s ease;
+}
+.btn-lg, .btn-large { padding: 18px 36px; font-size: 17px; }
+
+.btn-primary {
+    background: linear-gradient(135deg, #1428A0 0%, #2962FF 100%);
+    box-shadow: 0 2px 6px rgba(20,40,160,.18), 0 12px 30px rgba(20,40,160,.24);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(20,40,160,.2), 0 20px 44px rgba(20,40,160,.32);
+}
+.btn-secondary, .btn-outline {
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+.btn-secondary:hover, .btn-outline:hover {
+    transform: translateY(-2px);
+    border-color: #CBD5E5;
+    box-shadow: var(--shadow-md);
+}
+
+/* 헤더 CTA */
+.header-cta {
+    border-radius: 12px;
+    font-weight: 800;
+    letter-spacing: -.022em;
+    box-shadow: 0 2px 6px rgba(20,40,160,.16), 0 8px 22px rgba(20,40,160,.18);
+    transition: transform .22s var(--v2-spring), box-shadow .22s var(--v2-ease);
+}
+.header-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(20,40,160,.2), 0 14px 32px rgba(20,40,160,.26); }
+
+/* ==========================================================================
+   6. 헤더 — 유리질
+   ========================================================================== */
+.header, header.header {
+    background: rgba(255,255,255,.74);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: saturate(180%) blur(18px);
+    border-bottom: 1px solid rgba(233,237,244,.86);
+    box-shadow: none;
+}
+.header.scrolled, .header.sticky {
+    background: rgba(255,255,255,.86);
+    box-shadow: 0 1px 3px rgba(13,20,36,.04), 0 8px 28px rgba(13,20,36,.06);
+}
+.nav-link { font-weight: 700; letter-spacing: -.022em; transition: color .2s ease; }
+.nav-dropdown {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+.nav-dropdown a { transition: background .18s ease, color .18s ease; }
+
+/* ==========================================================================
+   7. 히어로 — 평평한 흰 배경에 깊이를 준다
+   ========================================================================== */
+.hero {
+    background:
+        radial-gradient(900px 520px at 82% 8%, rgba(41,98,255,.07), transparent 62%),
+        radial-gradient(700px 460px at 6% 92%, rgba(20,40,160,.05), transparent 62%),
+        linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+}
+.hero::before { opacity: .5; }
+.hero-badge, .hero-badges .badge {
+    border-radius: 999px;
+    font-weight: 800;
+    letter-spacing: -.018em;
+    box-shadow: var(--shadow-sm);
+}
+.hero-image img, .hero-visual img { border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); }
+
+/* ==========================================================================
+   8. 폼 — 입력창이 싸구려면 전체가 싸구려로 보인다
+   ========================================================================== */
+input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
+input[type="search"], input[type="date"], select, textarea, .form-control, .form-input {
+    border-radius: 13px;
+    border: 1.5px solid var(--border);
+    padding: 15px 17px;
+    font-size: 16px;
+    letter-spacing: -.015em;
+    background: #fff;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+input:focus, select:focus, textarea:focus, .form-control:focus, .form-input:focus {
+    outline: none;
+    border-color: #2962FF;
+    box-shadow: 0 0 0 4px rgba(41,98,255,.12);
+}
+input::placeholder, textarea::placeholder { color: var(--gray-400); }
+label, .form-label { font-weight: 700; letter-spacing: -.022em; color: var(--gray-700); }
+
+/* ==========================================================================
+   9. 표 — 선을 지우고 여백으로 구분한다
+   ========================================================================== */
+table { border-collapse: separate; border-spacing: 0; }
+.table-wrap, .table-container, .table-responsive {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    overflow-x: auto;
+}
+th {
+    background: var(--gray-50);
+    font-weight: 800;
+    letter-spacing: -.018em;
+    font-size: 14.5px;
+    color: var(--gray-700);
+    border-bottom: 1px solid var(--border);
+}
+td { border-bottom: 1px solid var(--border-light); letter-spacing: -.012em; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background .18s ease; }
+tbody tr:hover { background: var(--gray-50); }
+
+/* ==========================================================================
+   10. FAQ / 아코디언
+   ========================================================================== */
+.faq-item, details {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: box-shadow .26s var(--v2-ease), border-color .26s var(--v2-ease);
+}
+.faq-item.active, .faq-item[open], details[open] {
+    box-shadow: var(--shadow-md);
+    border-color: #DDE4EF;
+}
+.faq-question, summary {
+    font-weight: 800;
+    letter-spacing: -.03em;
+    line-height: 1.45;
+}
+.faq-answer, details > p { line-height: 1.82; color: var(--gray-600); }
+
+/* ==========================================================================
+   11. 배지 · 태그 · 칩
+   ========================================================================== */
+.badge, .tag, .chip, .label-pill, .pill {
+    border-radius: 999px;
+    font-weight: 800;
+    letter-spacing: -.015em;
+}
+
+/* ==========================================================================
+   12. 푸터
+   ========================================================================== */
+.footer {
+    background: #0D1424;
+    border-top: none;
+}
+.footer a { transition: color .2s ease, opacity .2s ease; }
+.footer-cert-badge {
+    border-radius: 999px;
+    letter-spacing: -.018em;
+    font-weight: 700;
+}
+.footer-partner-logos img { transition: opacity .25s ease, filter .25s ease; }
+
+/* ==========================================================================
+   13. 이미지 · 미디어
+   ========================================================================== */
+figure img, .content-image img, .article-image img, .thumb img {
+    border-radius: var(--radius);
+}
+
+/* ==========================================================================
+   14. 스크롤바 (데스크톱)
+   ========================================================================== */
+@media (pointer: fine) {
+    * { scrollbar-width: thin; scrollbar-color: #CBD5E5 transparent; }
+    *::-webkit-scrollbar { width: 10px; height: 10px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb { background: #D6DDE8; border-radius: 999px; border: 3px solid #fff; }
+    *::-webkit-scrollbar-thumb:hover { background: #B9C4D6; }
+}
+
+/* ==========================================================================
+   15. 선택 영역 · 포커스 링
+   ========================================================================== */
+::selection { background: rgba(41,98,255,.18); color: #0D1424; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid #2962FF;
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+/* ==========================================================================
+   16. 스크롤 리빌 (v2-reveal.js 와 함께 동작)
+   ========================================================================== */
+.v2-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .72s var(--v2-ease), transform .72s var(--v2-ease);
+    will-change: opacity, transform;
+}
+.v2-reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .v2-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ==========================================================================
+   17. 반응형 보정
+   ========================================================================== */
+@media (max-width: 1024px) {
+    :root { --section-padding: 88px; }
+}
+@media (max-width: 768px) {
+    :root { --section-padding: 68px; }
+    .hero, section.hero { padding-top: 62px; padding-bottom: 72px; }
+    .section-header { margin-bottom: 42px; }
+    .card, .feature-card, .product-card, .case-card, .guide-card, .info-card {
+        border-radius: var(--radius);
+    }
+    .card:hover, .feature-card:hover, .product-card:hover,
+    .case-card:hover, .guide-card:hover, .info-card:hover { transform: none; }
+}
+@media (max-width: 480px) {
+    :root { --section-padding: 56px; }
+    .hero-title { font-size: clamp(30px, 8.4vw, 40px); }
+    .section-title { font-size: clamp(25px, 6.8vw, 33px); }
+}
