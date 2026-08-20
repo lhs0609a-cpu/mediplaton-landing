@@ -269,12 +269,12 @@
 }
 .hl-wall-p { font-size: 16px; line-height: 1.7; letter-spacing: -.014em; color: var(--hl-ink-3); margin: 0; }
 .hl-wall-grid {
-    display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px;
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px;
     background: var(--hl-line); border: 1px solid var(--hl-line);
     border-radius: 22px; overflow: hidden;
 }
 .hl-wall-i {
-    background: #fff; aspect-ratio: 16/7;
+    background: #fff; aspect-ratio: 16/7; min-width: 0; overflow: hidden;
     display: grid; place-items: center; padding: 18px 16px;
     transition: background .25s var(--hl-ease);
 }
@@ -287,5 +287,5 @@
 .hl-wall-i:hover img { opacity: 1; filter: grayscale(0); }
 .hl-wall-foot { text-align: center; margin-top: 26px; font-size: 13.5px; color: var(--hl-ink-4); letter-spacing: -.01em; }
 
-@media (max-width: 1024px) { .hl-wall-grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 640px)  { .hl-wall-grid { grid-template-columns: repeat(3, 1fr); border-radius: 16px; } .hl-wall .container { padding-top: 60px; padding-bottom: 60px; } }
+@media (max-width: 1024px) { .hl-wall-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 640px)  { .hl-wall-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 16px; } .hl-wall .container { padding-top: 60px; padding-bottom: 60px; } }
