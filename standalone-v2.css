@@ -321,7 +321,21 @@ body[data-v2] .float-btn {
 body[data-v2] .float-btn:hover { transform: translateY(-3px) scale(1.04); }
 
 /* ==========================================================================
-   9. 마무리
+   9. 대비 사고 수정
+   --------------------------------------------------------------------------
+   .text-red 가 다크 섹션(#111827) 위에서 rgb(55,65,81) 로 렌더링돼
+   대비 1.6:1, 사실상 보이지 않던 문제. agency · partner 두 곳에서 발생.
+   (같은 자리의 .text-gold 는 #448AFF 로 읽히므로 그대로 둔다)
+   ========================================================================== */
+body[data-v2="agency"] .problem-section .text-red,
+body[data-v2="partner"] .problem-section .text-red,
+body[data-v2="agency"] .problem-title .text-red,
+body[data-v2="partner"] .problem-title .text-red {
+    color: #FF8A7A;
+}
+
+/* ==========================================================================
+   10. 마무리
    ========================================================================== */
 body[data-v2] ::selection { background: rgba(41,98,255,.18); color: var(--v2-ink); }
 body[data-v2] a:focus-visible,
