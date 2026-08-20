@@ -105,6 +105,37 @@ function urgOf(p) {
     return URG[p.cat] || DEFAULT_URG;
 }
 
+
+// ── 거래 병의원 로고 월 ───────────────────────────────────
+// images/portfolio 에 있는 실제 거래처 로고 39개. 페이지마다 시작점을 돌려
+// 같은 조합이 반복되지 않게 한다.
+const NL = String.fromCharCode(10);
+const LOGOS = (() => {
+    const a = [];
+    for (let i = 1; i <= 35; i++) a.push(`hospital-${String(i).padStart(2, '0')}.png`);
+    for (let i = 36; i <= 39; i++) a.push(`hospital-${i}.jpg`);
+    return a;
+})();
+function logoWall(p) {
+    const start = hashOf(p.slug) % LOGOS.length;
+    const items = [];
+    for (let i = 0; i < 12; i++) items.push(LOGOS[(start + i) % LOGOS.length]);
+    return `
+    <section class="hl-wall">
+        <div class="container">
+            <div class="hl-wall-head">
+                <span class="hl-wall-tag">Clients</span>
+                <h2 class="hl-wall-h">이미 함께하고 있는 병의원입니다</h2>
+                <p class="hl-wall-p">전국 1,700곳 이상의 병의원·약국이 메디플라톤을 통해 자금을 조달했습니다.</p>
+            </div>
+            <div class="hl-wall-grid">
+${items.map((f) => `                <div class="hl-wall-i"><img src="images/portfolio/${f}" alt="거래 병의원" loading="lazy"></div>`).join(NL)}
+            </div>
+            <p class="hl-wall-foot">일부만 표기했으며, 로고는 각 의료기관의 자산입니다.</p>
+        </div>
+    </section>`;
+}
+
 // ── 페이지 렌더 ────────────────────────────────────────────
 function render(p) {
     const url = `${SITE}/${p.slug}.html`;
@@ -365,6 +396,8 @@ ${blocks}
             </div>
         </div>
     </section>
+
+${logoWall(p)}
 
     <!-- 절차 -->
     <section class="section section-alt">
