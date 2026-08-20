@@ -17329,7 +17329,14 @@ textarea {
 .nav-list { flex-wrap: nowrap; }
 .header-actions { flex: 0 0 auto; }
 
-@media (min-width: 1025px) and (max-width: 1560px) {
+/* 헤더 컨테이너만 넓게 — 본문은 1200px 를 유지하되 메뉴 12개가 들어갈 폭을 준다.
+   컨테이너가 1200px 로 묶여 있어 1920px 화면에서도 .nav-list 가 357px 넘쳐
+   CTA 버튼 위로 겹쳐 그려지던 문제. */
+@media (min-width: 1441px) {
+    .header .container { max-width: 1400px; }
+}
+
+@media (min-width: 1025px) {
     .nav-list { gap: 2px; }
     .nav-link { padding: 9px 7px; font-size: 14px; }
     .nav-link.nav-link--food,
