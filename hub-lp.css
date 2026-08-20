@@ -1,0 +1,253 @@
+/* ==========================================================================
+   hub-lp.css — 콘텐츠 허브 216개 페이지 전환 레이어
+   --------------------------------------------------------------------------
+   seo/build.js 가 생성하는 모든 페이지에 로드된다.
+   styles.css → design-v2.css → hub-lp.css 순서.
+   레이아웃은 건드리지 않고, 전환에 필요한 블록을 추가로 얹는다.
+   모든 클래스는 .hl- 프리픽스.
+   ========================================================================== */
+
+:root {
+    --hl-ink:   #0A0C12;
+    --hl-ink-2: #3D4655;
+    --hl-ink-3: #737C8C;
+    --hl-ink-4: #A6AEBC;
+    --hl-line:  #EAEDF2;
+    --hl-line2: #F2F4F8;
+    --hl-paper: #FFFFFF;
+    --hl-paper2:#FAFBFC;
+    --hl-accent:#2962FF;
+    --hl-brand: #1428A0;
+    --hl-accw:  #F0F5FF;
+    --hl-ok:    #0BA05A;
+    --hl-okw:   #EEFBF4;
+    --hl-hot:   #E03131;
+    --hl-hotw:  #FFF5F5;
+    --hl-ease:  cubic-bezier(.22,.85,.24,1);
+    --hl-spring:cubic-bezier(.34,1.42,.64,1);
+    --hl-e1: 0 1px 2px rgba(10,12,18,.03), 0 3px 8px rgba(10,12,18,.03);
+    --hl-e2: 0 1px 3px rgba(10,12,18,.035), 0 10px 24px rgba(10,12,18,.05);
+    --hl-e3: 0 2px 6px rgba(10,12,18,.04), 0 22px 52px rgba(10,12,18,.08);
+}
+
+/* ==========================================================================
+   1. 히어로 — 후킹 배지 · 지표
+   ========================================================================== */
+.hl-hook {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.24);
+    color: #fff; font-size: 13.5px; font-weight: 700; letter-spacing: -.018em;
+    padding: 9px 16px; border-radius: 999px; margin-bottom: 20px;
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.hl-hook i {
+    width: 6px; height: 6px; border-radius: 50%; background: #FF6B6B; flex: 0 0 auto;
+    box-shadow: 0 0 0 0 rgba(255,107,107,.5); animation: hl-pulse 2s infinite;
+}
+@keyframes hl-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,107,107,.5); }
+    70%  { box-shadow: 0 0 0 7px rgba(255,107,107,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,107,107,0); }
+}
+
+/* 히어로 하단 지표 */
+.hl-metrics {
+    display: flex; gap: 0; flex-wrap: wrap;
+    margin-top: 34px; padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,.16);
+}
+.hl-metric { padding-right: 38px; margin-right: 38px; border-right: 1px solid rgba(255,255,255,.16); }
+.hl-metric:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.hl-metric-n {
+    font-size: 27px; font-weight: 800; letter-spacing: -.048em; line-height: 1.1;
+    color: #fff; font-variant-numeric: tabular-nums;
+}
+.hl-metric-t { font-size: 13px; color: rgba(255,255,255,.68); margin-top: 5px; letter-spacing: -.012em; }
+
+/* 히어로 신뢰 칩 */
+.hl-hero-trust { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+.hl-hero-trust span {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12.5px; font-weight: 600; letter-spacing: -.014em;
+    color: rgba(255,255,255,.86);
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px; padding: 7px 13px;
+}
+
+/* ==========================================================================
+   2. 제휴 로고 스트립
+   ========================================================================== */
+.hl-strip { padding: 30px 0; border-bottom: 1px solid var(--hl-line); background: #fff; }
+.hl-strip-lbl {
+    text-align: center; font-size: 11.5px; font-weight: 800; letter-spacing: .11em;
+    text-transform: uppercase; color: var(--hl-ink-4); margin: 0 0 20px;
+}
+.hl-strip-row { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.hl-strip-row img {
+    height: 23px; width: auto; opacity: .38; filter: grayscale(1);
+    transition: opacity .3s var(--hl-ease), filter .3s var(--hl-ease);
+}
+.hl-strip-row img:hover { opacity: .85; filter: grayscale(0); }
+
+/* ==========================================================================
+   3. 긴급성 · 손실 회피 밴드
+   ========================================================================== */
+.hl-urgency { background: var(--hl-paper2); border-top: 1px solid var(--hl-line); border-bottom: 1px solid var(--hl-line); }
+.hl-urgency .container { padding-top: 72px; padding-bottom: 72px; }
+.hl-urg-in { display: grid; grid-template-columns: 1.15fr .85fr; gap: 52px; align-items: center; }
+.hl-urg-tag {
+    display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--hl-hot);
+    background: var(--hl-hotw); border: 1px solid #FFD9D9;
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 18px;
+}
+.hl-urg-h {
+    font-size: clamp(24px, 3vw, 34px); font-weight: 800;
+    letter-spacing: -.044em; line-height: 1.28; color: var(--hl-ink); margin: 0 0 16px;
+}
+.hl-urg-p { font-size: 16.5px; line-height: 1.76; letter-spacing: -.014em; color: var(--hl-ink-2); margin: 0; }
+.hl-urg-p strong { font-weight: 700; color: var(--hl-ink); }
+
+.hl-urg-card {
+    background: #fff; border: 1px solid var(--hl-line); border-radius: 22px;
+    padding: 30px 32px; box-shadow: var(--hl-e2);
+}
+.hl-urg-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--hl-line2); }
+.hl-urg-row:last-child { border-bottom: none; }
+.hl-urg-k { font-size: 15px; font-weight: 600; color: var(--hl-ink-3); letter-spacing: -.02em; }
+.hl-urg-v { font-size: 16.5px; font-weight: 800; letter-spacing: -.03em; color: var(--hl-ink); font-variant-numeric: tabular-nums; }
+.hl-urg-v--bad { color: var(--hl-hot); }
+.hl-urg-v--ok  { color: var(--hl-ok); }
+
+/* ==========================================================================
+   4. 비교표 — 은행 vs 메디플라톤
+   ========================================================================== */
+.hl-vs { border: 1px solid var(--hl-line); border-radius: 26px; overflow: hidden; background: #fff; box-shadow: var(--hl-e2); }
+.hl-vs-row { display: grid; grid-template-columns: .9fr 1.1fr 1.1fr; }
+.hl-vs-row > div { padding: 20px 24px; border-bottom: 1px solid var(--hl-line2); }
+.hl-vs-row:last-child > div { border-bottom: none; }
+.hl-vs-row--h > div { background: var(--hl-paper2); font-size: 12.5px; font-weight: 800; letter-spacing: -.012em; padding: 18px 24px; }
+.hl-vs-row--h .hl-vs-c { background: var(--hl-accw); color: var(--hl-brand); }
+.hl-vs-k { font-size: 14px; font-weight: 700; color: var(--hl-ink-3); letter-spacing: -.02em; }
+.hl-vs-b { font-size: 15px; color: var(--hl-ink-3); letter-spacing: -.012em; line-height: 1.6; }
+.hl-vs-c { font-size: 15.5px; font-weight: 700; color: var(--hl-ink); letter-spacing: -.022em; line-height: 1.6; background: #FBFCFE; }
+
+/* ==========================================================================
+   5. 절차 4단계
+   ========================================================================== */
+.hl-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; position: relative; }
+.hl-steps::before { content: ''; position: absolute; left: 22px; right: 22px; top: 21px; height: 1px; background: var(--hl-line); }
+.hl-step-n {
+    width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center;
+    background: #fff; border: 1px solid var(--hl-line); box-shadow: var(--hl-e1);
+    font-size: 15.5px; font-weight: 800; letter-spacing: -.03em; color: var(--hl-ink);
+    margin-bottom: 20px; position: relative; z-index: 2;
+}
+.hl-step h3 { font-size: 17.5px; font-weight: 700; letter-spacing: -.03em; margin: 0 0 8px; color: var(--hl-ink); }
+.hl-step p { font-size: 14.5px; line-height: 1.68; color: var(--hl-ink-3); margin: 0; letter-spacing: -.008em; }
+
+/* ==========================================================================
+   6. 최종 CTA 패널 (기존 .cta-band 대체)
+   ========================================================================== */
+.hl-final { background: #fff; }
+.hl-final .container { padding-top: 100px; padding-bottom: 100px; }
+.hl-final-panel {
+    position: relative; overflow: hidden; text-align: center;
+    border-radius: 34px; border: 1px solid var(--hl-line); padding: 78px 44px;
+    background:
+        radial-gradient(680px 400px at 15% 8%, rgba(11,160,90,.07), transparent 62%),
+        radial-gradient(800px 440px at 87% 94%, rgba(41,98,255,.11), transparent 62%),
+        var(--hl-paper2);
+}
+.hl-final-badge {
+    display: inline-flex; align-items: center; gap: 9px; background: #fff;
+    border: 1px solid var(--hl-line); border-radius: 999px; padding: 9px 19px;
+    font-size: 13px; font-weight: 700; color: var(--hl-ink-2); margin-bottom: 26px; box-shadow: var(--hl-e1);
+}
+.hl-final-badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--hl-hot); animation: hl-pulse 2s infinite; }
+.hl-final h2 {
+    font-size: clamp(26px, 3.7vw, 44px) !important; font-weight: 800;
+    letter-spacing: -.048em !important; line-height: 1.2; margin: 0 0 18px; color: var(--hl-ink) !important;
+}
+.hl-final > .container > .hl-final-panel > p {
+    font-size: clamp(16px, 1.4vw, 19px); line-height: 1.74; letter-spacing: -.016em;
+    color: var(--hl-ink-2); margin: 0 auto 34px; max-width: 46em;
+}
+.hl-final .page-hero-actions { justify-content: center; }
+.hl-final-list { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+.hl-final-list span {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 14px; font-weight: 600; color: var(--hl-ink-2); letter-spacing: -.014em;
+}
+.hl-final-list span::before {
+    content: ''; width: 16px; height: 16px; border-radius: 50%; flex: 0 0 auto;
+    background: var(--hl-okw) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%230BA05A' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7'/%3E%3C/svg%3E") center/10px no-repeat;
+}
+
+/* ==========================================================================
+   7. 법적 고지
+   ========================================================================== */
+.hl-notice { background: var(--hl-paper2); border-top: 1px solid var(--hl-line); padding: 46px 0; }
+.hl-notice h4 { font-size: 13px; font-weight: 800; color: var(--hl-ink-2); margin: 0 0 12px; letter-spacing: -.016em; }
+.hl-notice ul { margin: 0; padding-left: 18px; }
+.hl-notice li { font-size: 13px; line-height: 1.9; color: var(--hl-ink-3); letter-spacing: -.004em; }
+
+/* ==========================================================================
+   8. 모바일 고정 CTA
+   ========================================================================== */
+.hl-dock {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    background: rgba(255,255,255,.95);
+    -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--hl-line); padding: 11px 16px;
+    display: none; gap: 10px; align-items: center; box-shadow: 0 -4px 20px rgba(10,12,18,.07);
+}
+.hl-dock-txt { flex: 1; min-width: 0; }
+.hl-dock-t1 { font-size: 11.5px; font-weight: 800; color: var(--hl-accent); letter-spacing: -.014em; }
+.hl-dock-t2 {
+    font-size: 14.5px; font-weight: 800; letter-spacing: -.03em; color: var(--hl-ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.hl-dock-btn {
+    flex: 0 0 auto; background: var(--hl-accent); color: #fff; text-decoration: none;
+    font-size: 14.5px; font-weight: 700; letter-spacing: -.024em;
+    padding: 13px 22px; border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(41,98,255,.2), 0 10px 24px rgba(41,98,255,.24);
+    transition: transform .2s var(--hl-spring);
+}
+.hl-dock-btn:hover { transform: translateY(-2px); }
+
+/* ==========================================================================
+   9. 반응형
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .hl-urg-in { grid-template-columns: 1fr; gap: 34px; }
+    .hl-final .container { padding-top: 76px; padding-bottom: 76px; }
+    .hl-final-panel { padding: 60px 32px; }
+}
+@media (max-width: 820px) {
+    body { padding-bottom: 74px; }
+    .hl-dock { display: flex; }
+    .hl-steps { grid-template-columns: 1fr; gap: 26px; }
+    .hl-steps::before { display: none; }
+    .hl-vs-row { grid-template-columns: 1fr; }
+    .hl-vs-row--h { display: none; }
+    .hl-vs-k { padding-bottom: 2px !important; font-size: 13px; }
+    .hl-vs-b::before { content: '은행 — '; font-weight: 700; color: var(--hl-ink-4); }
+    .hl-vs-c::before { content: '메디플라톤 — '; font-weight: 800; color: var(--hl-brand); }
+    .hl-metrics { margin-top: 26px; padding-top: 22px; }
+    .hl-metric { padding-right: 22px; margin-right: 22px; }
+    .hl-metric-n { font-size: 22px; }
+    .hl-strip-row { gap: 26px; }
+    .hl-strip-row img { height: 19px; }
+}
+@media (max-width: 520px) {
+    .hl-final-panel { padding: 48px 22px; border-radius: 24px; }
+    .hl-urgency .container { padding-top: 56px; padding-bottom: 56px; }
+    .hl-urg-card { padding: 24px 22px; }
+    .hl-metrics { gap: 18px 0; }
+    .hl-metric { border-right: none; padding-right: 0; margin-right: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hl-hook i, .hl-final-badge i { animation: none; }
+}
