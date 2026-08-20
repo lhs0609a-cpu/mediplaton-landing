@@ -463,9 +463,43 @@
             <h2>단말기 하나 바꾸는 데<br>드는 비용, 0원입니다</h2>
             <p class="pt-lead">성함과 연락처만 남겨주시면 담당자가 연락드려<br>우리 매장에 맞는 조건을 안내해드립니다. 상담은 무료입니다.</p>
             <div class="pt-btns">
-                <a href="tel:0507-1375-2717" class="pt-btn pt-btn--accent">전화로 바로 신청 0507-1375-2717</a>
-                <a href="#compare" class="pt-btn pt-btn--ghost">단말기 비교 다시 보기</a>
+                <a href="tel:0507-1375-2717" class="pt-btn pt-btn--ghost">전화로 바로 신청 0507-1375-2717</a>
             </div>
+
+            <form class="pt-form-wrap" id="ptForm" novalidate>
+                <div class="pt-form-t">0원 설치 신청</div>
+                <p class="pt-form-d">아래 세 가지만 남겨주시면 담당자가 연락드립니다.</p>
+
+                <div class="pt-field">
+                    <label for="ptName">성함 <i>*</i></label>
+                    <input type="text" id="ptName" name="name" placeholder="홍길동" autocomplete="name" required>
+                </div>
+                <div class="pt-field">
+                    <label for="ptPhone">연락처 <i>*</i></label>
+                    <input type="tel" id="ptPhone" name="phone" placeholder="010-0000-0000" autocomplete="tel" inputmode="numeric" required>
+                </div>
+                <div class="pt-field">
+                    <label for="ptBiz">업종 <i>*</i></label>
+                    <select id="ptBiz" name="business" required>
+                        <option value="">선택해주세요</option>
+                        <option>음식점 · 주점</option>
+                        <option>카페 · 베이커리</option>
+                        <option>소매점 · 마트</option>
+                        <option>약국 · 의원</option>
+                        <option>미용 · 뷰티</option>
+                        <option>학원 · 교육</option>
+                        <option>기타</option>
+                    </select>
+                </div>
+
+                <div class="pt-agree">
+                    <input type="checkbox" id="ptAgree" required>
+                    <label for="ptAgree">개인정보 수집·이용에 동의합니다. 수집 항목은 성함·연락처·업종이며 상담 목적으로만 이용됩니다. <a href="/privacy.html" target="_blank" rel="noopener">개인정보처리방침</a></label>
+                </div>
+
+                <button type="submit" class="pt-btn pt-btn--accent" id="ptSubmit">신청하기</button>
+                <p class="pt-form-msg" id="ptMsg" role="status" aria-live="polite"></p>
+            </form>
         </div>
     </div>
 </section>
@@ -523,6 +557,60 @@
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -7% 0px' });
     for (var j = 0; j < items.length; j++) io.observe(items[j]);
+})();
+</script>
+
+<script>
+(function () {
+    var form = document.getElementById('ptForm');
+    if (!form) return;
+    var btn = document.getElementById('ptSubmit');
+    var msg = document.getElementById('ptMsg');
+    var PHONE = /^01[0-9][-\s]?\d{3,4}[-\s]?\d{4}$/;
+
+    function show(text, kind) { msg.textContent = text; msg.className = 'pt-form-msg ' + (kind || ''); }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name  = form.name.value.trim();
+        var phone = form.phone.value.trim();
+        var biz   = form.business.value;
+        var agree = document.getElementById('ptAgree').checked;
+
+        if (!name)  { show('성함을 입력해주세요.', 'err'); form.name.focus(); return; }
+        if (!PHONE.test(phone.replace(/\s/g, ''))) { show('연락처를 정확히 입력해주세요.', 'err'); form.phone.focus(); return; }
+        if (!biz)   { show('업종을 선택해주세요.', 'err'); form.business.focus(); return; }
+        if (!agree) { show('개인정보 수집·이용에 동의해주세요.', 'err'); return; }
+
+        var original = btn.textContent;
+        btn.textContent = '신청 중...';
+        btn.disabled = true;
+        show('', '');
+
+        fetch('/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'consultation',
+                payload: {
+                    name: name, phone: phone, business: biz,
+                    revenue: '', region: '', product: '결제단말기 0원 설치',
+                    message: '', preferred_time: '', inflow_channel: '',
+                    source_page: 'pay-terminal.html'
+                }
+            })
+        }).then(function (r) {
+            if (!r.ok) throw new Error('bad status');
+            form.reset();
+            show('신청이 접수되었습니다. 담당자가 곧 연락드리겠습니다.', 'ok');
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-18162012600' });
+        }).catch(function () {
+            show('전송에 실패했습니다. 0507-1375-2717로 전화 주시면 바로 도와드리겠습니다.', 'err');
+        }).finally(function () {
+            btn.textContent = original;
+            btn.disabled = false;
+        });
+    });
 })();
 </script>
 

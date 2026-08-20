@@ -660,3 +660,38 @@
     .pt-strip-row img { height: 20px; }
     .pt-vs-head, .pt-vs-body { padding-left: 26px; padding-right: 26px; }
 }
+
+/* ==========================================================================
+   20. 신청 폼
+   ========================================================================== */
+.pt-form-wrap {
+    max-width: 560px; margin: 40px auto 0; text-align: left;
+    background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: 40px 38px; box-shadow: var(--e3);
+}
+.pt-form-t { font-size: 20px; font-weight: 800; letter-spacing: -.034em; margin-bottom: 6px; }
+.pt-form-d { font-size: 14.5px; color: var(--ink-3); letter-spacing: -.012em; margin-bottom: 26px; }
+.pt-field { margin-bottom: 16px; }
+.pt-field label { display: block; font-size: 13.5px; font-weight: 700; letter-spacing: -.02em; color: var(--ink-2); margin-bottom: 7px; }
+.pt-field label i { font-style: normal; color: var(--hot); }
+.pt-field input, .pt-field select {
+    width: 100%; font-family: inherit; font-size: 16px; letter-spacing: -.015em;
+    padding: 15px 16px; border-radius: 13px; border: 1.5px solid var(--line);
+    background: #fff; color: var(--ink);
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+.pt-field input:focus, .pt-field select:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(41,98,255,.12);
+}
+.pt-field input::placeholder { color: var(--ink-4); }
+.pt-agree { display: flex; gap: 10px; align-items: flex-start; margin: 20px 0 22px; }
+.pt-agree input { width: 18px; height: 18px; margin-top: 2px; flex: 0 0 auto; accent-color: var(--accent); }
+.pt-agree label { font-size: 13.5px; line-height: 1.6; color: var(--ink-3); letter-spacing: -.012em; }
+.pt-agree a { color: var(--ink-2); text-decoration: underline; }
+.pt-form-wrap .pt-btn { width: 100%; }
+.pt-form-msg { margin-top: 16px; font-size: 14.5px; font-weight: 600; text-align: center; letter-spacing: -.014em; display: none; }
+.pt-form-msg.ok { display: block; color: var(--naver-2); }
+.pt-form-msg.err { display: block; color: var(--hot); }
+@media (max-width: 520px) {
+    .pt-form-wrap { padding: 30px 22px; border-radius: var(--r); }
+}
