@@ -411,6 +411,24 @@
     width: 54%; height: 22px; border-radius: 50%; background: rgba(10,12,18,.1); filter: blur(18px);
 }
 
+/* --- 사진용 스테이지 ---
+   네이버페이는 자체 단말기를 만들지 않는다(현장결제는 기존 단말기의 QR 기능).
+   따라서 제품 컷 대신 실제 결제 장면을 쓴다. 컷아웃 PNG 기준 규칙을 되돌린다. */
+.pt-stage--photo { padding: 0; overflow: hidden; display: block; }
+.pt-stage--photo::after { display: none; }
+/* 그리드 아이템으로 두면 height:100% 가 auto 로 풀려 사진이 사라진다. 절대 배치로 채운다. */
+.pt-stage--photo img {
+    position: absolute; inset: 0;
+    max-height: none; width: 100%; height: 100%;
+    object-fit: cover; filter: none; border-radius: 0;
+}
+.pt-stage-cap {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+    padding: 44px 26px 22px;
+    font-size: 14.5px; font-weight: 600; letter-spacing: -.016em; color: #fff;
+    background: linear-gradient(180deg, transparent, rgba(6,9,16,.78));
+}
+
 .pt-feat {
     background: #fff; border: 1px solid var(--line); border-radius: var(--r);
     padding: 38px 34px;
