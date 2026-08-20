@@ -1,0 +1,346 @@
+/* ==========================================================================
+   standalone-v2.css — 독립 스타일 랜딩 페이지 리파인 레이어
+   --------------------------------------------------------------------------
+   styles.css 를 쓰지 않고 각자 <style> 블록을 가진 6개 페이지 전용.
+   inline <style> 뒤에 로드되어야 하므로 </head> 직전에 링크한다.
+
+   대상 (body[data-v2] 로 스코프):
+     agency  · partner   — 파란 그라디언트 히어로
+     promo               — 남색 다크 히어로
+     payagency · food    — 라이트 히어로
+     mkt                 — 사진 배경 히어로
+   레이아웃은 건드리지 않는다. 깊이 · 타이포 · 대비만 다듬는다.
+   ========================================================================== */
+
+body[data-v2] {
+    --v2-line:   #E9EDF4;
+    --v2-line-2: #F2F5F9;
+    --v2-ink:    #0D1424;
+    --v2-ink-2:  #4A5568;
+    --v2-ink-3:  #6E7891;
+    --v2-blue:   #2962FF;
+    --v2-navy:   #1428A0;
+
+    --v2-e1: 0 1px 2px rgba(13,20,36,.04), 0 4px 12px rgba(13,20,36,.045);
+    --v2-e2: 0 2px 6px rgba(13,20,36,.045), 0 12px 30px rgba(13,20,36,.07);
+    --v2-e3: 0 4px 12px rgba(13,20,36,.06), 0 26px 62px rgba(13,20,36,.11);
+
+    --v2-ease:   cubic-bezier(.2,.8,.2,1);
+    --v2-spring: cubic-bezier(.34,1.4,.64,1);
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -.011em;
+}
+
+/* ==========================================================================
+   1. 타이포 — 큰 글자일수록 자간을 조인다
+   ========================================================================== */
+body[data-v2] h1, body[data-v2] h2, body[data-v2] h3, body[data-v2] h4 { text-wrap: balance; }
+body[data-v2] p { text-wrap: pretty; }
+
+body[data-v2] .hero-title,
+body[data-v2] .hero h1,
+body[data-v2] .biz-hero h1 { letter-spacing: -.048em; line-height: 1.18; font-weight: 800; }
+
+body[data-v2] .section-title,
+body[data-v2] section h2 { letter-spacing: -.042em; line-height: 1.26; font-weight: 800; }
+
+body[data-v2] h3 { letter-spacing: -.032em; }
+
+body[data-v2] .hero-subtitle,
+body[data-v2] .section-desc,
+body[data-v2] .section-subtitle { letter-spacing: -.015em; line-height: 1.76; }
+
+body[data-v2] .section-eyebrow,
+body[data-v2] .section-badge,
+body[data-v2] .hero-badge {
+    letter-spacing: .08em;
+    font-weight: 800;
+}
+
+/* ==========================================================================
+   2. 히어로 — 납작한 단색/그라디언트에 깊이를 넣는다
+   ========================================================================== */
+body[data-v2] .hero,
+body[data-v2] .biz-hero { position: relative; isolation: isolate; }
+
+/* --- 어두운 히어로 공통 텍스처 --- */
+body[data-v2="agency"] .hero::before,
+body[data-v2="partner"] .hero::before,
+body[data-v2="promo"] .hero::before {
+    content: '';
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(circle at 50% 32%, #000 0%, transparent 76%);
+    mask-image: radial-gradient(circle at 50% 32%, #000 0%, transparent 76%);
+}
+
+/* --- agency / partner: 밋밋한 2색 그라디언트 → 메시 --- */
+body[data-v2="agency"] .hero,
+body[data-v2="partner"] .hero {
+    background-image:
+        radial-gradient(980px 560px at 82% 4%, rgba(70,130,255,.5), transparent 62%),
+        radial-gradient(760px 520px at 6% 96%, rgba(10,24,90,.55), transparent 62%),
+        linear-gradient(140deg, #142F7E 0%, #1A3A8F 46%, #2E5BC5 100%);
+}
+
+/* --- promo: 더 깊은 남색 --- */
+body[data-v2="promo"] .hero {
+    background-image:
+        radial-gradient(880px 520px at 84% 6%, rgba(41,98,255,.34), transparent 62%),
+        radial-gradient(720px 480px at 8% 94%, rgba(26,58,143,.5), transparent 62%),
+        linear-gradient(140deg, #070E1C 0%, #0F2266 52%, #1A3A8F 100%);
+}
+
+/* --- payment-agency / food-loan: 라이트 히어로에 은은한 색조 --- */
+body[data-v2="payagency"] .hero,
+body[data-v2="food"] .hero {
+    background-image:
+        radial-gradient(880px 520px at 84% 2%, rgba(41,98,255,.075), transparent 62%),
+        radial-gradient(720px 480px at 8% 96%, rgba(20,40,160,.055), transparent 62%),
+        linear-gradient(180deg, #F6F9FF 0%, #FFFFFF 62%);
+}
+
+/* --- marketing-medical: 파란 오버레이가 너무 진해 사진이 죽는다 --- */
+body[data-v2="mkt"] .biz-hero-bg::after,
+body[data-v2="mkt"] .biz-hero-overlay {
+    background: linear-gradient(122deg, rgba(9,16,38,.9) 0%, rgba(16,32,92,.78) 46%, rgba(26,58,143,.6) 100%) !important;
+}
+body[data-v2="mkt"] .biz-hero { padding-bottom: 84px; }
+body[data-v2="mkt"] .biz-hero-card {
+    border-radius: 18px;
+    box-shadow: 0 8px 22px rgba(0,0,0,.28), 0 26px 58px rgba(0,0,0,.32);
+    transition: transform .34s var(--v2-ease), box-shadow .34s var(--v2-ease);
+}
+body[data-v2="mkt"] .biz-hero-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,.34), 0 34px 72px rgba(0,0,0,.4); }
+
+/* --- 히어로 배지 --- */
+body[data-v2] .hero-badge {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 10px rgba(13,20,36,.08);
+}
+
+/* ==========================================================================
+   3. 히어로 지표 칩
+   ========================================================================== */
+body[data-v2] .hero-stat {
+    border-radius: 16px;
+    transition: transform .3s var(--v2-ease), box-shadow .3s var(--v2-ease);
+}
+body[data-v2="payagency"] .hero-stat,
+body[data-v2="food"] .hero-stat {
+    background: #fff;
+    border: 1px solid var(--v2-line);
+    box-shadow: var(--v2-e1);
+}
+body[data-v2="agency"] .hero-stat,
+body[data-v2="partner"] .hero-stat,
+body[data-v2="promo"] .hero-stat {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.16);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+body[data-v2] .hero-stat:hover { transform: translateY(-3px); }
+body[data-v2] .hero-stat-value { letter-spacing: -.042em; font-weight: 900; }
+body[data-v2] .hero-stat-label { letter-spacing: -.015em; }
+
+/* ==========================================================================
+   4. 카드 — 6개 페이지가 서로 다른 이름을 쓰므로 접미사로 잡는다
+   ========================================================================== */
+body[data-v2] .target-card,
+body[data-v2] .why-card,
+body[data-v2] .testimonial-card,
+body[data-v2] .example-card,
+body[data-v2] .benefit-card,
+body[data-v2] .industry-card,
+body[data-v2] .problem-item,
+body[data-v2] .result-item,
+body[data-v2] .pain-item,
+body[data-v2] .proof-item,
+body[data-v2] .quality-item,
+body[data-v2] .bundle-item,
+body[data-v2] .breakdown-item,
+body[data-v2] .dsr-item,
+body[data-v2] .check-item,
+body[data-v2] .solution-box,
+body[data-v2] .roi-box,
+body[data-v2] .mkt-pain-card,
+body[data-v2] .mkt-loan-card,
+body[data-v2] .mkt-fee-docs-card {
+    border-radius: 20px;
+    border: 1px solid var(--v2-line);
+    box-shadow: var(--v2-e1);
+    transition: transform .34s var(--v2-ease), box-shadow .34s var(--v2-ease), border-color .34s var(--v2-ease);
+}
+body[data-v2] .target-card:hover,
+body[data-v2] .why-card:hover,
+body[data-v2] .testimonial-card:hover,
+body[data-v2] .example-card:hover,
+body[data-v2] .benefit-card:hover,
+body[data-v2] .industry-card:hover,
+body[data-v2] .pain-item:hover,
+body[data-v2] .proof-item:hover,
+body[data-v2] .quality-item:hover,
+body[data-v2] .mkt-pain-card:hover,
+body[data-v2] .mkt-loan-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--v2-e3);
+    border-color: #DDE4EF;
+}
+
+/* 어두운 섹션 안의 카드는 흰 테두리로 */
+body[data-v2] section[class*="dark"] .why-card,
+body[data-v2] section[class*="dark"] .target-card,
+body[data-v2] .hero .check-item {
+    border-color: rgba(255,255,255,.14);
+    box-shadow: 0 6px 18px rgba(0,0,0,.22);
+}
+
+/* 아이콘 박스 */
+body[data-v2] .pain-icon-box,
+body[data-v2] .benefit-icon,
+body[data-v2] .icon-box { border-radius: 15px; }
+
+/* ==========================================================================
+   5. 버튼
+   ========================================================================== */
+body[data-v2] .btn,
+body[data-v2] .btn-cta,
+body[data-v2] .hero-cta,
+body[data-v2] .header-cta,
+body[data-v2] .btn-primary,
+body[data-v2] .btn-secondary,
+body[data-v2] .btn-call,
+body[data-v2] .mkt-btn-primary,
+body[data-v2] .mkt-btn-outline {
+    border-radius: 14px;
+    font-weight: 800;
+    letter-spacing: -.024em;
+    transition: transform .24s var(--v2-spring), box-shadow .24s var(--v2-ease), background .2s ease, border-color .2s ease;
+}
+body[data-v2] .btn-cta,
+body[data-v2] .btn-primary,
+body[data-v2] .mkt-btn-primary {
+    box-shadow: 0 2px 6px rgba(41,98,255,.2), 0 14px 32px rgba(41,98,255,.26);
+}
+body[data-v2] .btn-cta:hover,
+body[data-v2] .btn-primary:hover,
+body[data-v2] .mkt-btn-primary:hover,
+body[data-v2] .hero-cta:hover,
+body[data-v2] .header-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(41,98,255,.24), 0 24px 48px rgba(41,98,255,.32);
+}
+body[data-v2] .btn-call,
+body[data-v2] .btn-secondary,
+body[data-v2] .btn-primary-outline {
+    border: 1.5px solid var(--v2-line);
+    box-shadow: var(--v2-e1);
+}
+body[data-v2] .btn-call:hover,
+body[data-v2] .btn-secondary:hover,
+body[data-v2] .btn-primary-outline:hover {
+    transform: translateY(-2px);
+    border-color: #CBD5E5;
+    box-shadow: var(--v2-e2);
+}
+/* 어두운 배경 위 보조 버튼 */
+body[data-v2="agency"] .hero .btn-secondary,
+body[data-v2="partner"] .hero .btn-secondary,
+body[data-v2="promo"] .hero .btn-secondary,
+body[data-v2="promo"] .hero .btn-call {
+    background: rgba(255,255,255,.08);
+    border: 1.5px solid rgba(255,255,255,.28);
+    color: #fff;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+/* ==========================================================================
+   6. 폼
+   ========================================================================== */
+body[data-v2] input[type="text"],
+body[data-v2] input[type="tel"],
+body[data-v2] input[type="email"],
+body[data-v2] input[type="number"],
+body[data-v2] select,
+body[data-v2] textarea {
+    border-radius: 13px;
+    border: 1.5px solid var(--v2-line);
+    padding: 15px 17px;
+    font-size: 16px;
+    letter-spacing: -.015em;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+body[data-v2] input:focus,
+body[data-v2] select:focus,
+body[data-v2] textarea:focus {
+    outline: none;
+    border-color: var(--v2-blue);
+    box-shadow: 0 0 0 4px rgba(41,98,255,.12);
+}
+body[data-v2] label { font-weight: 700; letter-spacing: -.022em; }
+
+/* ==========================================================================
+   7. FAQ
+   ========================================================================== */
+body[data-v2] .faq-item {
+    border-radius: 16px;
+    border: 1px solid var(--v2-line);
+    transition: box-shadow .26s var(--v2-ease), border-color .26s var(--v2-ease);
+}
+body[data-v2] .faq-item.active,
+body[data-v2] .faq-item[open] {
+    box-shadow: var(--v2-e2);
+    border-color: #DDE4EF;
+}
+body[data-v2] .faq-question { font-weight: 800; letter-spacing: -.03em; line-height: 1.45; }
+body[data-v2] .faq-answer { line-height: 1.82; }
+
+/* ==========================================================================
+   8. 하단 고정 CTA · 플로팅 버튼
+   ========================================================================== */
+body[data-v2] .fixed-cta,
+body[data-v2] .mobile-sticky-cta {
+    background: rgba(255,255,255,.95);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: saturate(180%) blur(18px);
+    border-top: 1px solid var(--v2-line);
+    box-shadow: 0 -6px 24px rgba(13,20,36,.08);
+}
+body[data-v2] .float-btn {
+    box-shadow: 0 4px 12px rgba(13,20,36,.16), 0 12px 28px rgba(13,20,36,.18);
+    transition: transform .24s var(--v2-spring), box-shadow .24s var(--v2-ease);
+}
+body[data-v2] .float-btn:hover { transform: translateY(-3px) scale(1.04); }
+
+/* ==========================================================================
+   9. 마무리
+   ========================================================================== */
+body[data-v2] ::selection { background: rgba(41,98,255,.18); color: var(--v2-ink); }
+body[data-v2] a:focus-visible,
+body[data-v2] button:focus-visible {
+    outline: 2px solid var(--v2-blue);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+body[data-v2] img { max-width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+    body[data-v2] * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+@media (max-width: 768px) {
+    body[data-v2] .target-card:hover,
+    body[data-v2] .why-card:hover,
+    body[data-v2] .benefit-card:hover,
+    body[data-v2] .pain-item:hover,
+    body[data-v2] .industry-card:hover,
+    body[data-v2] .mkt-pain-card:hover { transform: none; }
+}
