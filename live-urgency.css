@@ -1,0 +1,110 @@
+/* ==========================================================================
+   live-urgency.css — 상담 마감 카운트다운 바 + 실시간 접수 알림
+   ========================================================================== */
+
+/* ── 카운트다운 바 (화면 하단 고정) ───────────────────── */
+.lu-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+    background: linear-gradient(90deg, #0A0C12 0%, #16203A 52%, #0A0C12 100%);
+    color: #fff;
+    border-top: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 -6px 28px rgba(10,12,18,.28);
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+.lu-bar-in {
+    max-width: 1140px; margin: 0 auto;
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 24px;
+}
+.lu-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #FF4D4D; flex: 0 0 auto;
+    box-shadow: 0 0 0 0 rgba(255,77,77,.6); animation: lu-pulse 1.8s infinite;
+}
+@keyframes lu-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,77,77,.55); }
+    70%  { box-shadow: 0 0 0 8px rgba(255,77,77,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,77,77,0); }
+}
+.lu-label {
+    font-size: 14px; font-weight: 700; letter-spacing: -.02em;
+    color: rgba(255,255,255,.82); white-space: nowrap;
+}
+.lu-clock {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-variant-numeric: tabular-nums; margin-right: auto;
+}
+.lu-clock b {
+    display: inline-block; min-width: 40px; text-align: center;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16);
+    border-radius: 8px; padding: 6px 6px;
+    font-size: 18px; font-weight: 800; letter-spacing: -.03em; color: #fff;
+}
+.lu-clock i { font-style: normal; font-size: 16px; font-weight: 800; color: rgba(255,255,255,.45); }
+.lu-cta {
+    flex: 0 0 auto; background: #FF4D4D; color: #fff; text-decoration: none;
+    font-size: 14.5px; font-weight: 800; letter-spacing: -.024em;
+    padding: 12px 22px; border-radius: 11px;
+    box-shadow: 0 2px 6px rgba(255,77,77,.28), 0 10px 24px rgba(255,77,77,.3);
+    transition: transform .2s cubic-bezier(.34,1.42,.64,1), background .18s ease;
+}
+.lu-cta:hover { transform: translateY(-2px); background: #F03535; }
+
+/* 하단 고정 요소가 이미 있는 페이지에서는 겹치지 않게 위로 올린다 */
+body:has(.hl-dock) .lu-bar,
+body:has(.pt-dock) .lu-bar,
+body:has(.px-dock) .lu-bar { bottom: 66px; }
+
+/* ── 실시간 접수 알림 ─────────────────────────────────── */
+.lu-toasts {
+    position: fixed; left: 20px; bottom: 90px; z-index: 69;
+    display: flex; flex-direction: column; gap: 10px;
+    pointer-events: none;
+}
+.lu-toast {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,.97);
+    -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px);
+    border: 1px solid #EAEDF2; border-radius: 14px;
+    padding: 13px 18px 13px 14px;
+    box-shadow: 0 2px 8px rgba(10,12,18,.06), 0 16px 40px rgba(10,12,18,.14);
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
+    max-width: 330px;
+    opacity: 0; transform: translateY(10px) scale(.97);
+    transition: opacity .38s cubic-bezier(.22,.85,.24,1), transform .38s cubic-bezier(.22,.85,.24,1);
+}
+.lu-toast.is-in { opacity: 1; transform: none; }
+.lu-toast-ic {
+    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+    background: #EEFBF4; color: #0BA05A;
+    display: grid; place-items: center; font-size: 14px; font-weight: 800;
+}
+.lu-toast--sum .lu-toast-ic { background: #F0F5FF; color: #2962FF; font-size: 15px; }
+.lu-toast-tx {
+    font-size: 14px; line-height: 1.45; letter-spacing: -.016em; color: #3D4655;
+    word-break: keep-all;
+}
+.lu-toast-tx b { font-weight: 800; color: #0A0C12; }
+.lu-toast-tx em {
+    display: block; font-style: normal; font-size: 12px; color: #A6AEBC; margin-top: 2px;
+}
+
+/* ── 반응형 ───────────────────────────────────────────── */
+@media (max-width: 820px) {
+    .lu-bar-in { padding: 10px 16px; gap: 10px; }
+    .lu-label { font-size: 12.5px; }
+    .lu-clock b { min-width: 34px; font-size: 16px; padding: 5px 4px; }
+    .lu-cta { padding: 11px 16px; font-size: 13.5px; }
+    .lu-toasts { left: 12px; right: 12px; bottom: 84px; }
+    .lu-toast { max-width: none; }
+}
+@media (max-width: 520px) {
+    .lu-label { display: none; }
+    .lu-clock { margin-right: auto; }
+    .lu-toasts { bottom: 78px; }
+    .lu-toast { padding: 11px 14px 11px 12px; }
+    .lu-toast-tx { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .lu-dot { animation: none; }
+    .lu-toast { transition: opacity .2s linear; transform: none; }
+}
