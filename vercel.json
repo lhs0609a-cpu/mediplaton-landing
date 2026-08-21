@@ -18,6 +18,9 @@
     },
     "api/stats.js": {
       "maxDuration": 10
+    },
+    "api/presence.js": {
+      "maxDuration": 10
     }
   }
 }

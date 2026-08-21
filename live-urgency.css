@@ -108,3 +108,29 @@ body:has(.px-dock) .lu-bar { bottom: 66px; }
     .lu-dot { animation: none; }
     .lu-toast { transition: opacity .2s linear; transform: none; }
 }
+
+/* ── 접속자 수 칩 ─────────────────────────────────────── */
+.lu-viewers {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 700; letter-spacing: -.018em;
+    color: rgba(255,255,255,.9);
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px; padding: 7px 14px; white-space: nowrap;
+}
+.lu-viewers[hidden] { display: none; }
+.lu-viewers b { color: #6BE39A; font-weight: 800; font-variant-numeric: tabular-nums; }
+.lu-eye {
+    width: 14px; height: 14px; flex: 0 0 auto; border-radius: 50%;
+    background: rgba(107,227,154,.18);
+    box-shadow: inset 0 0 0 1.5px #6BE39A;
+    position: relative;
+}
+.lu-eye::after {
+    content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 5px; height: 5px; border-radius: 50%; background: #6BE39A;
+}
+
+/* 토스트 퇴장 */
+.lu-toast.is-out { opacity: 0; transform: translateY(-6px) scale(.98); }
+
+@media (max-width: 1100px) { .lu-viewers { display: none; } }

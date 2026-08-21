@@ -1,34 +1,30 @@
 /**
- * live-urgency.js — 당일 상담 마감 카운트다운 + 실시간 접수 알림
+ * live-urgency.js — 상담 마감 카운트다운 + 실시간 접수 알림 + 현재 접속자 수
  *
- * 설계 원칙
- *   · 카운트다운은 실제 영업시간(평일 09:00~18:00, KST)을 기준으로 한다.
- *     새로고침해도 리셋되지 않으며, 마감 후에는 다음 영업일을 가리킨다.
- *     페이지를 열 때마다 되살아나는 가짜 마감 타이머는 쓰지 않는다.
- *   · 알림은 /api/stats 의 실제 접수 데이터만 쓴다. 데이터가 없으면 아무것도 띄우지 않는다.
- *     이름은 서버에서 아예 조회하지 않으므로 표시할 수 없다(의도된 설계).
+ * 설계 원칙 (지어낸 숫자를 쓰지 않는다)
+ *   · 카운트다운: 실제 영업시간(평일 09:00~18:00 KST) 기준. 새로고침해도 리셋되지 않는다.
+ *   · 접수 알림: /api/stats 의 실제 접수 데이터만 사용. 데이터가 없으면 띄우지 않는다.
+ *               이름·전화는 서버에서 조회조차 하지 않으므로 표시할 수 없다(의도된 설계).
+ *   · 접속자 수: /api/presence 하트비트로 실제 동시 접속 수를 센다. 집계가 안 되면 숨긴다.
  */
 (function () {
     'use strict';
 
-    var KST_OFFSET = 9 * 60; // 분
+    var KST_OFFSET = 9 * 60;
     var OPEN_HOUR = 9;
     var CLOSE_HOUR = 18;
 
-    /* ── 한국 시간 기준 현재 시각 ───────────────────────── */
     function nowKST() {
         var d = new Date();
         return new Date(d.getTime() + (d.getTimezoneOffset() + KST_OFFSET) * 60000);
     }
 
-    /* ── 다음 마감 시각(평일 18:00 KST) ─────────────────── */
     function nextDeadline() {
         var n = nowKST();
         var d = new Date(n.getFullYear(), n.getMonth(), n.getDate(), CLOSE_HOUR, 0, 0, 0);
-        // 오늘이 주말이거나 이미 마감했으면 다음 영업일로
         var guard = 0;
         while (guard++ < 10) {
-            var dow = d.getDay(); // 0 일, 6 토
+            var dow = d.getDay();
             if (dow !== 0 && dow !== 6 && d > n) return d;
             d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, CLOSE_HOUR, 0, 0, 0);
         }
@@ -36,123 +32,153 @@
     }
 
     function isOpenNow() {
-        var n = nowKST();
-        var dow = n.getDay();
+        var n = nowKST(), dow = n.getDay();
         if (dow === 0 || dow === 6) return false;
         return n.getHours() >= OPEN_HOUR && n.getHours() < CLOSE_HOUR;
     }
 
     var pad = function (v) { return v < 10 ? '0' + v : '' + v; };
+    var wrap = null;
 
-    /* ── 카운트다운 바 ──────────────────────────────────── */
+    /* ══════════ 카운트다운 바 ══════════ */
     function mountCountdown() {
         if (document.querySelector('.lu-bar')) return;
-
         var bar = document.createElement('div');
         bar.className = 'lu-bar';
         bar.innerHTML =
             '<div class="lu-bar-in">' +
                 '<span class="lu-dot"></span>' +
                 '<span class="lu-label"></span>' +
-                '<span class="lu-clock" aria-live="off">' +
-                    '<b class="lu-h">00</b><i>:</i><b class="lu-m">00</b><i>:</i><b class="lu-s">00</b>' +
-                '</span>' +
+                '<span class="lu-clock"><b class="lu-h">00</b><i>:</i><b class="lu-m">00</b><i>:</i><b class="lu-s">00</b></span>' +
+                '<span class="lu-viewers" hidden><span class="lu-eye"></span><b class="lu-vn">0</b>명이 함께 보는 중</span>' +
                 '<a class="lu-cta" href="index.html#consultation">지금 신청</a>' +
             '</div>';
         document.body.appendChild(bar);
 
         var label = bar.querySelector('.lu-label');
-        var eh = bar.querySelector('.lu-h');
-        var em = bar.querySelector('.lu-m');
-        var es = bar.querySelector('.lu-s');
+        var eh = bar.querySelector('.lu-h'), em = bar.querySelector('.lu-m'), es = bar.querySelector('.lu-s');
 
         function tick() {
-            var dl = nextDeadline();
-            var diff = Math.max(0, dl - nowKST());
-            var total = Math.floor(diff / 1000);
-            var h = Math.floor(total / 3600);
-            var m = Math.floor((total % 3600) / 60);
-            var s = total % 60;
-
-            eh.textContent = pad(h);
-            em.textContent = pad(m);
-            es.textContent = pad(s);
-
-            label.textContent = isOpenNow()
-                ? '오늘 상담 접수 마감까지'
-                : '다음 상담 접수 시작까지';
+            var diff = Math.max(0, nextDeadline() - nowKST());
+            var t = Math.floor(diff / 1000);
+            eh.textContent = pad(Math.floor(t / 3600));
+            em.textContent = pad(Math.floor((t % 3600) / 60));
+            es.textContent = pad(t % 60);
+            label.textContent = isOpenNow() ? '오늘 상담 접수 마감까지' : '다음 상담 접수 시작까지';
         }
         tick();
         setInterval(tick, 1000);
     }
 
-    /* ── 실시간 접수 알림 ───────────────────────────────── */
-    function mountToasts(stats) {
-        if (!stats || !stats.ok) return;
-        var list = (stats.recent || []).filter(function (r) { return r.biz || r.region; });
-        if (!list.length) return;
+    /* ══════════ 실시간 접수 알림 — 계속 쌓이는 목록 ══════════ */
+    var MAX_TOASTS = 4;
+    var TOAST_LIFE = 18000;
 
-        var wrap = document.createElement('div');
+    function ensureWrap() {
+        if (wrap) return wrap;
+        wrap = document.createElement('div');
         wrap.className = 'lu-toasts';
         wrap.setAttribute('aria-live', 'polite');
         document.body.appendChild(wrap);
-        layout(); // 토스트는 fetch 이후에 생기므로 위치를 다시 잡아준다
+        layout();
+        return wrap;
+    }
 
-        function ago(mins) {
-            if (mins < 60) return mins + '분 전';
-            var h = Math.floor(mins / 60);
-            if (h < 24) return h + '시간 전';
-            return Math.floor(h / 24) + '일 전';
+    function fade(el) {
+        if (!el || el.dataset.out) return;
+        el.dataset.out = '1';
+        el.classList.remove('is-in');
+        el.classList.add('is-out');
+        setTimeout(function () { el.remove(); }, 420);
+    }
+
+    function push(html, cls) {
+        var w = ensureWrap();
+        var el = document.createElement('div');
+        el.className = 'lu-toast' + (cls ? ' ' + cls : '');
+        el.innerHTML = html;
+        w.appendChild(el); // 새 항목이 아래에 붙고 기존 항목이 위로 밀려난다
+        requestAnimationFrame(function () { el.classList.add('is-in'); });
+
+        var items = w.querySelectorAll('.lu-toast:not([data-out])');
+        if (items.length > MAX_TOASTS) fade(items[0]);
+        setTimeout(function () { fade(el); }, TOAST_LIFE);
+    }
+
+    function ago(mins) {
+        if (mins < 60) return mins + '분 전';
+        var h = Math.floor(mins / 60);
+        if (h < 24) return h + '시간 전';
+        return Math.floor(h / 24) + '일 전';
+    }
+
+    function mountToasts(stats) {
+        if (!stats || !stats.ok) return;
+        var list = (stats.recent || []).filter(function (r) { return r.biz || r.region; });
+
+        // 개별 활동이 없더라도 누적 실적이 있으면 요약만이라도 알린다
+        if (!list.length) {
+            if (stats.totalCount > 0) {
+                setTimeout(function () {
+                    push('<span class="lu-toast-ic">📈</span><span class="lu-toast-tx">' +
+                         '<b>누적 상담 ' + stats.totalCount.toLocaleString() + '건</b>' +
+                         '<em>지금 문의하시면 순서대로 배정됩니다</em></span>', 'lu-toast--sum');
+                }, 2500);
+            }
+            return;
+        }
+
+        if (stats.todayCount > 0) {
+            setTimeout(function () {
+                push('<span class="lu-toast-ic">📈</span><span class="lu-toast-tx">' +
+                     '<b>오늘 ' + stats.todayCount + '건</b>의 상담이 접수되었습니다' +
+                     '<em>최근 7일 ' + stats.weekCount + '건</em></span>', 'lu-toast--sum');
+            }, 2500);
         }
 
         var i = 0;
         function pop() {
             var r = list[i % list.length];
             i++;
-
             var who = [r.region, r.biz].filter(Boolean).join(' ');
-            var el = document.createElement('div');
-            el.className = 'lu-toast';
-            el.innerHTML =
-                '<span class="lu-toast-ic">✓</span>' +
-                '<span class="lu-toast-tx">' +
-                    '<b>' + who + '</b> 상담이 접수되었습니다' +
-                    '<em>' + ago(r.mins) + '</em>' +
-                '</span>';
-            wrap.appendChild(el);
-
-            requestAnimationFrame(function () { el.classList.add('is-in'); });
-            setTimeout(function () {
-                el.classList.remove('is-in');
-                setTimeout(function () { el.remove(); }, 400);
-            }, 5000);
+            push('<span class="lu-toast-ic">✓</span><span class="lu-toast-tx">' +
+                 '<b>' + who + '</b> 상담이 접수되었습니다<em>' + ago(r.mins) + '</em></span>');
         }
-
-        // 오늘 접수 건수를 먼저 한 번 알린다
-        if (stats.todayCount > 0) {
-            setTimeout(function () {
-                var el = document.createElement('div');
-                el.className = 'lu-toast lu-toast--sum';
-                el.innerHTML = '<span class="lu-toast-ic">📈</span><span class="lu-toast-tx">' +
-                    '<b>오늘 ' + stats.todayCount + '건</b>의 상담이 접수되었습니다<em>최근 7일 ' + stats.weekCount + '건</em></span>';
-                wrap.appendChild(el);
-                requestAnimationFrame(function () { el.classList.add('is-in'); });
-                setTimeout(function () {
-                    el.classList.remove('is-in');
-                    setTimeout(function () { el.remove(); }, 400);
-                }, 6000);
-            }, 4000);
-        }
-
-        setTimeout(function () {
-            pop();
-            setInterval(pop, 11000);
-        }, 12000);
+        setTimeout(function () { pop(); setInterval(pop, 4500); }, 5000);
     }
 
-    /* ── 기존 하단 고정 CTA(.hl-dock/.pt-dock/.px-dock)와 겹치지 않게 배치 ──
-       CSS 의 :has() 를 지원하지 않는 브라우저를 위한 이중 안전장치이자,
-       본문이 고정 요소에 가리지 않도록 body 하단 여백을 실제 높이로 잡아준다. */
+    /* ══════════ 현재 접속자 수 — 실제 하트비트 집계 ══════════ */
+    function mountViewers() {
+        var box = document.querySelector('.lu-viewers');
+        var num = document.querySelector('.lu-vn');
+        if (!box || !num) return;
+
+        var page = (location.pathname.split('/').pop() || 'index.html');
+        var sid = sessionStorage.getItem('lu_sid');
+        if (!sid) {
+            sid = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+            sessionStorage.setItem('lu_sid', sid);
+        }
+
+        function beat() {
+            fetch('/api/presence', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ page: page, sid: sid })
+            }).then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (d) {
+                  if (!d || !d.ok || typeof d.count !== 'number' || d.count < 1) { box.hidden = true; return; }
+                  box.hidden = false;
+                  num.textContent = d.count;
+                  layout();
+              })
+              .catch(function () { box.hidden = true; });
+        }
+        beat();
+        setInterval(beat, 20000);
+    }
+
+    /* ══════════ 하단 고정 요소 겹침 방지 ══════════ */
     function layout() {
         var dock = document.querySelector('.hl-dock, .pt-dock, .px-dock');
         var bar = document.querySelector('.lu-bar');
@@ -167,10 +193,9 @@
             document.body.classList.remove('lu-has-dock');
             bar.style.bottom = '0px';
         }
-        document.body.style.paddingBottom = (dockH + (bar.offsetHeight || 0) + 8) + 'px';
-
-        var toasts = document.querySelector('.lu-toasts');
-        if (toasts) toasts.style.bottom = (dockH + (bar.offsetHeight || 0) + 16) + 'px';
+        var barH = bar.offsetHeight || 0;
+        document.body.style.paddingBottom = (dockH + barH + 8) + 'px';
+        if (wrap) wrap.style.bottom = (dockH + barH + 16) + 'px';
     }
 
     function start() {
@@ -178,10 +203,13 @@
         layout();
         window.addEventListener('resize', layout);
         setTimeout(layout, 600);
+
+        mountViewers();
+
         fetch('/api/stats')
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(mountToasts)
-            .catch(function () { /* 통계를 못 가져오면 알림은 띄우지 않는다 */ });
+            .catch(function () {});
     }
 
     if (document.readyState === 'loading') {

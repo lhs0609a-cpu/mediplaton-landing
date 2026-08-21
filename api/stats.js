@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
     const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!SUPABASE_URL || !SERVICE_KEY) {
         // 설정이 없으면 조용히 빈 값을 준다. 프런트는 이 경우 알림을 띄우지 않는다.
-        return res.status(200).json({ ok: false, todayCount: 0, weekCount: 0, recent: [] });
+        return res.status(200).json({ ok: false, todayCount: 0, weekCount: 0, totalCount: 0, recent: [] });
     }
 
     try {
@@ -49,13 +49,15 @@ module.exports = async function handler(req, res) {
         const now = new Date();
         const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
         const weekAgo = new Date(now.getTime() - 7 * 864e5).toISOString();
+        const recentWindow = new Date(now.getTime() - 90 * 864e5).toISOString();
 
-        const [todayQ, weekQ, recentQ] = await Promise.all([
+        const [todayQ, weekQ, recentQ, totalQ] = await Promise.all([
             supabase.from('consultations').select('id', { count: 'exact', head: true }).gte('created_at', dayStart),
             supabase.from('consultations').select('id', { count: 'exact', head: true }).gte('created_at', weekAgo),
             // 개인 식별 컬럼은 아예 선택하지 않는다
             supabase.from('consultations').select('business, region, created_at')
-                .gte('created_at', weekAgo).order('created_at', { ascending: false }).limit(40)
+                .gte('created_at', recentWindow).order('created_at', { ascending: false }).limit(60),
+            supabase.from('consultations').select('id', { count: 'exact', head: true })
         ]);
 
         // 진단 모드 — 왜 비어 있는지 확인용. 개인정보는 절대 내보내지 않는다.
@@ -73,17 +75,19 @@ module.exports = async function handler(req, res) {
                 columns: cols,                       // 컬럼 이름만, 값은 제외
                 todayCount: todayQ.count,
                 weekCount: weekQ.count,
-                recentRows: (recentQ.data || []).length
+                recentRows: (recentQ.data || []).length,
+                totalCount: totalQ.count
             });
         }
 
         const todayCount = todayQ.count || 0;
         const weekCount = weekQ.count || 0;
+        const totalCount = totalQ.count || 0;
         const rows = recentQ.data || [];
 
         // 표본이 너무 적으면 개별 활동을 노출하지 않는다
         let recent = [];
-        if (rows.length >= 5) {
+        if (rows.length >= 3) {
             recent = rows.map((r) => {
                 const biz = safeBiz(r.business);
                 const region = coarseRegion(r.region);
@@ -93,9 +97,9 @@ module.exports = async function handler(req, res) {
             }).filter(Boolean).slice(0, 20);
         }
 
-        return res.status(200).json({ ok: true, todayCount, weekCount, recent });
+        return res.status(200).json({ ok: true, todayCount, weekCount, totalCount, recent });
     } catch (e) {
         console.error('stats error', e && e.message);
-        return res.status(200).json({ ok: false, todayCount: 0, weekCount: 0, recent: [] });
+        return res.status(200).json({ ok: false, todayCount: 0, weekCount: 0, totalCount: 0, recent: [] });
     }
 };
