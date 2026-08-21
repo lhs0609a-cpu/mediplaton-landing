@@ -49,14 +49,14 @@ module.exports = async function handler(req, res) {
         const now = new Date();
         const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
         const weekAgo = new Date(now.getTime() - 7 * 864e5).toISOString();
-        const recentWindow = new Date(now.getTime() - 90 * 864e5).toISOString();
 
         const [todayQ, weekQ, recentQ, totalQ] = await Promise.all([
             supabase.from('consultations').select('id', { count: 'exact', head: true }).gte('created_at', dayStart),
             supabase.from('consultations').select('id', { count: 'exact', head: true }).gte('created_at', weekAgo),
             // 개인 식별 컬럼은 아예 선택하지 않는다
+            // 기간 제한 없이 전체를 최신순으로 (알림이 계속 순환하도록)
             supabase.from('consultations').select('business, region, created_at')
-                .gte('created_at', recentWindow).order('created_at', { ascending: false }).limit(60),
+                .order('created_at', { ascending: false }).limit(100),
             supabase.from('consultations').select('id', { count: 'exact', head: true })
         ]);
 
@@ -92,9 +92,11 @@ module.exports = async function handler(req, res) {
                 const biz = safeBiz(r.business);
                 const region = coarseRegion(r.region);
                 if (!biz && !region) return null;
-                const mins = Math.max(1, Math.round((now - new Date(r.created_at)) / 60000));
-                return { biz, region, mins };
-            }).filter(Boolean).slice(0, 20);
+                const d = new Date(r.created_at);
+                const mins = Math.max(1, Math.round((now - d) / 60000));
+                const ym = d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0');
+                return { biz, region, mins, ym };
+            }).filter(Boolean).slice(0, 60);
         }
 
         return res.status(200).json({ ok: true, todayCount, weekCount, totalCount, recent });

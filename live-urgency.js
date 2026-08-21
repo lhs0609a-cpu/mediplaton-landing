@@ -105,11 +105,15 @@
         setTimeout(function () { fade(el); }, TOAST_LIFE);
     }
 
-    function ago(mins) {
+    // 오래된 건은 '312일 전' 대신 실제 접수 연월로 표기한다(사실 그대로, 보기도 낫다)
+    function ago(r) {
+        var mins = r.mins;
         if (mins < 60) return mins + '분 전';
         var h = Math.floor(mins / 60);
         if (h < 24) return h + '시간 전';
-        return Math.floor(h / 24) + '일 전';
+        var d = Math.floor(h / 24);
+        if (d <= 30) return d + '일 전';
+        return r.ym ? r.ym + ' 접수' : '';
     }
 
     function mountToasts(stats) {
@@ -142,7 +146,7 @@
             i++;
             var who = [r.region, r.biz].filter(Boolean).join(' ');
             push('<span class="lu-toast-ic">✓</span><span class="lu-toast-tx">' +
-                 '<b>' + who + '</b> 상담이 접수되었습니다<em>' + ago(r.mins) + '</em></span>');
+                 '<b>' + who + '</b> 상담이 접수되었습니다<em>' + ago(r) + '</em></span>');
         }
         setTimeout(function () { pop(); setInterval(pop, 4500); }, 5000);
     }
