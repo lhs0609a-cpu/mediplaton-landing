@@ -155,3 +155,28 @@ body:has(.px-dock) .lu-bar { bottom: 66px; }
 @media (prefers-reduced-motion: reduce) {
     .lu-bar.is-hot .lu-clock b { animation: none; }
 }
+
+/* ── 제휴 기관 이번 달 잔여 한도 ──────────────────────── */
+.lu-quota { display: inline-flex; align-items: center; gap: 16px; margin-right: auto; }
+.lu-quota[hidden] { display: none; }
+.lu-q-lbl { font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,.6); letter-spacing: -.016em; white-space: nowrap; }
+.lu-q-i { display: inline-flex; align-items: center; gap: 8px; }
+.lu-q-n {
+    font-size: 12.5px; font-weight: 800; color: rgba(255,255,255,.85);
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16);
+    border-radius: 6px; padding: 4px 9px; white-space: nowrap;
+}
+.lu-q-v { font-size: 19px; font-weight: 800; letter-spacing: -.04em; color: #FFD84D; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lu-q-bar { width: 84px; height: 6px; border-radius: 999px; background: rgba(255,255,255,.14); overflow: hidden; }
+.lu-q-bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFD84D, #FF9E3D); transition: width .8s cubic-bezier(.22,.85,.24,1); }
+.lu-bar.is-hot .lu-q-bar i { background: linear-gradient(90deg, #FF6B6B, #FF4D4D); }
+.lu-bar.is-hot .lu-q-v { color: #FF8A8A; }
+
+/* 한도를 띄우면 시계는 작게 */
+.lu-bar.has-quota .lu-clock { margin-right: 0; }
+.lu-bar.has-quota .lu-clock b { min-width: 30px; font-size: 14px; padding: 4px 4px; }
+.lu-bar.has-quota .lu-label { display: none; }
+
+@media (max-width: 1240px) { .lu-q-bar { display: none; } }
+@media (max-width: 900px)  { .lu-q-lbl { display: none; } .lu-quota { gap: 10px; } }
+@media (max-width: 640px)  { .lu-bar.has-quota .lu-clock { display: none; } }

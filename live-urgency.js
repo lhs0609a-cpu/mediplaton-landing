@@ -64,6 +64,7 @@
                 '<span class="lu-dot"></span>' +
                 '<span class="lu-label"></span>' +
                 '<span class="lu-clock"><b class="lu-h">00</b><i>:</i><b class="lu-m">00</b><i>:</i><b class="lu-s">00</b></span>' +
+                '<span class="lu-quota" hidden></span>' +
                 '<span class="lu-viewers" hidden><span class="lu-eye"></span><b class="lu-vn">0</b>명이 함께 보는 중</span>' +
                 '<a class="lu-cta" href="index.html#consultation">지금 신청</a>' +
             '</div>';
@@ -164,6 +165,51 @@
         setTimeout(function () { pop(); setInterval(pop, 4500); }, 5000);
     }
 
+
+    /* ══════════ 제휴 기관 이번 달 잔여 한도 ══════════
+       실제 배정 한도(quota.json) − 이번 달 실행 누계.
+       실행이 일어날 때만 줄어든다. 타이머로 깎지 않는다. */
+    function won(v) {
+        if (v >= 1e8) {
+            var eok = v / 1e8;
+            return (eok >= 10 ? Math.round(eok) : Math.round(eok * 10) / 10) + '억';
+        }
+        if (v >= 1e4) return Math.round(v / 1e4).toLocaleString() + '만';
+        return v.toLocaleString();
+    }
+
+    function mountQuota() {
+        var box = document.querySelector('.lu-quota');
+        var bar = document.querySelector('.lu-bar');
+        if (!box || !bar) return;
+
+        fetch('/api/quota')
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (d) {
+                if (!d || !d.ok || !d.institutions || !d.institutions.length) return;
+
+                var html = d.institutions.map(function (i) {
+                    return '<span class="lu-q-i">' +
+                             '<span class="lu-q-n">' + i.name + '</span>' +
+                             '<span class="lu-q-v">' + won(i.remaining) + '</span>' +
+                             '<span class="lu-q-bar"><i style="width:' + i.pct + '%"></i></span>' +
+                           '</span>';
+                }).join('');
+
+                box.innerHTML = '<span class="lu-q-lbl">이번 달 잔여 한도</span>' + html;
+                box.hidden = false;
+
+                // 한도를 표시할 땐 시계를 줄여 자리를 내준다
+                bar.classList.add('has-quota');
+
+                // 소진율이 높으면 긴급 표시
+                var low = d.institutions.some(function (i) { return i.pct <= 30; });
+                bar.classList.toggle('is-hot', low);
+                layout();
+            })
+            .catch(function () {});
+    }
+
     /* ══════════ 현재 접속자 수 — 실제 하트비트 집계 ══════════ */
     function mountViewers() {
         var box = document.querySelector('.lu-viewers');
@@ -222,6 +268,7 @@
         setTimeout(layout, 600);
 
         mountViewers();
+        mountQuota();
 
         fetch('/api/stats')
             .then(function (r) { return r.ok ? r.json() : null; })

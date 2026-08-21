@@ -21,6 +21,9 @@
     },
     "api/presence.js": {
       "maxDuration": 10
+    },
+    "api/quota.js": {
+      "maxDuration": 10
     }
   }
 }
