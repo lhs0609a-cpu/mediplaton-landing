@@ -12,23 +12,37 @@
 
     var KST_OFFSET = 9 * 60;
     var OPEN_HOUR = 9;
-    var CLOSE_HOUR = 18;
+    var CLOSE_HOUR = 18;   // 상담 접수 마감
+    // 당일 상담사 배정 컷오프. 이 시각 이후 접수분은 다음 영업일로 넘어간다.
+    // ※ 실제 운영 규칙과 반드시 일치시켜야 한다. 다르면 이 값만 고치면 된다.
+    var ASSIGN_CUTOFF_HOUR = 16;
 
     function nowKST() {
         var d = new Date();
         return new Date(d.getTime() + (d.getTimezoneOffset() + KST_OFFSET) * 60000);
     }
 
+    function isBizDay(d) { var w = d.getDay(); return w !== 0 && w !== 6; }
+
+    /** 다음에 걸리는 마감을 돌려준다.
+     *  1순위 당일 배정 컷오프(16:00) → 2순위 접수 마감(18:00) → 다음 영업일 컷오프 */
     function nextDeadline() {
         var n = nowKST();
-        var d = new Date(n.getFullYear(), n.getMonth(), n.getDate(), CLOSE_HOUR, 0, 0, 0);
+        var today = function (h) { return new Date(n.getFullYear(), n.getMonth(), n.getDate(), h, 0, 0, 0); };
+
+        if (isBizDay(n)) {
+            var cut = today(ASSIGN_CUTOFF_HOUR);
+            if (n < cut) return { at: cut, kind: 'assign' };
+            var close = today(CLOSE_HOUR);
+            if (n < close) return { at: close, kind: 'close' };
+        }
+        var d = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, ASSIGN_CUTOFF_HOUR, 0, 0, 0);
         var guard = 0;
         while (guard++ < 10) {
-            var dow = d.getDay();
-            if (dow !== 0 && dow !== 6 && d > n) return d;
-            d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, CLOSE_HOUR, 0, 0, 0);
+            if (isBizDay(d)) return { at: d, kind: 'next' };
+            d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, ASSIGN_CUTOFF_HOUR, 0, 0, 0);
         }
-        return d;
+        return { at: d, kind: 'next' };
     }
 
     function isOpenNow() {
@@ -58,13 +72,19 @@
         var label = bar.querySelector('.lu-label');
         var eh = bar.querySelector('.lu-h'), em = bar.querySelector('.lu-m'), es = bar.querySelector('.lu-s');
 
+        var LABELS = {
+            assign: '오늘 상담사 배정 마감까지',
+            close:  '오늘 접수 마감까지',
+            next:   '다음 영업일 배정 마감까지'
+        };
         function tick() {
-            var diff = Math.max(0, nextDeadline() - nowKST());
-            var t = Math.floor(diff / 1000);
+            var dl = nextDeadline();
+            var t = Math.floor(Math.max(0, dl.at - nowKST()) / 1000);
             eh.textContent = pad(Math.floor(t / 3600));
             em.textContent = pad(Math.floor((t % 3600) / 60));
             es.textContent = pad(t % 60);
-            label.textContent = isOpenNow() ? '오늘 상담 접수 마감까지' : '다음 상담 접수 시작까지';
+            label.textContent = LABELS[dl.kind];
+            bar.classList.toggle('is-hot', dl.kind === 'assign' && t < 7200); // 2시간 이내
         }
         tick();
         setInterval(tick, 1000);
@@ -105,20 +125,9 @@
         setTimeout(function () { fade(el); }, TOAST_LIFE);
     }
 
-    // 오래된 건은 '312일 전' 대신 실제 접수 연월로 표기한다(사실 그대로, 보기도 낫다)
-    function ago(r) {
-        var mins = r.mins;
-        if (mins < 60) return mins + '분 전';
-        var h = Math.floor(mins / 60);
-        if (h < 24) return h + '시간 전';
-        var d = Math.floor(h / 24);
-        if (d <= 30) return d + '일 전';
-        return r.ym ? r.ym + ' 접수' : '';
-    }
-
     function mountToasts(stats) {
         if (!stats || !stats.ok) return;
-        var list = (stats.recent || []).filter(function (r) { return r.biz || r.region; });
+        var list = (stats.recent || []).filter(function (r) { return r.name || r.biz || r.region; });
 
         // 개별 활동이 없더라도 누적 실적이 있으면 요약만이라도 알린다
         if (!list.length) {
@@ -144,9 +153,13 @@
         function pop() {
             var r = list[i % list.length];
             i++;
-            var who = [r.region, r.biz].filter(Boolean).join(' ');
+            // 예: "경기 치과 김○○님" / 부가정보로 마스킹 연락처
+            var head = [r.region, r.biz].filter(Boolean).join(' ');
+            var who = r.name ? (head ? head + ' ' + r.name + '님' : r.name + '님') : head;
+            var sub = r.phone ? r.phone : '';
             push('<span class="lu-toast-ic">✓</span><span class="lu-toast-tx">' +
-                 '<b>' + who + '</b> 상담이 접수되었습니다<em>' + ago(r) + '</em></span>');
+                 '<b>' + who + '</b> 상담이 접수되었습니다' +
+                 (sub ? '<em>' + sub + '</em>' : '') + '</span>');
         }
         setTimeout(function () { pop(); setInterval(pop, 4500); }, 5000);
     }

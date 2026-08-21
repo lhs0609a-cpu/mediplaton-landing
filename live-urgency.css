@@ -134,3 +134,24 @@ body:has(.px-dock) .lu-bar { bottom: 66px; }
 .lu-toast.is-out { opacity: 0; transform: translateY(-6px) scale(.98); }
 
 @media (max-width: 1100px) { .lu-viewers { display: none; } }
+
+/* ── 배정 마감 2시간 이내 — 시각적으로 조인다 ────────── */
+.lu-bar.is-hot {
+    background: linear-gradient(90deg, #2A0A0A 0%, #4A0F12 52%, #2A0A0A 100%);
+    border-top-color: rgba(255,77,77,.35);
+}
+.lu-bar.is-hot .lu-label { color: #FFC9C9; }
+.lu-bar.is-hot .lu-clock b {
+    background: rgba(255,77,77,.18);
+    border-color: rgba(255,77,77,.45);
+    color: #fff;
+    animation: lu-beat 1s ease-in-out infinite;
+}
+.lu-bar.is-hot .lu-clock i { color: rgba(255,201,201,.6); }
+@keyframes lu-beat {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.045); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .lu-bar.is-hot .lu-clock b { animation: none; }
+}

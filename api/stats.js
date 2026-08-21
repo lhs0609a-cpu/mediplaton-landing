@@ -51,6 +51,23 @@ function safeBiz(raw) {
     return null;
 }
 
+/** 이름 마스킹 — 첫 글자만 남긴다. 홍길동 → 홍○○, 김철 → 김○ */
+function maskName(raw) {
+    if (!raw || typeof raw !== 'string') return null;
+    const n = raw.trim().replace(/\s+/g, '');
+    if (!n) return null;
+    if (n.length === 1) return n + '○';
+    return n[0] + '○'.repeat(Math.min(n.length - 1, 2));
+}
+
+/** 연락처 마스킹 — 가운데 자리를 가린다. 01012345678 → 010-****-5678 */
+function maskPhone(raw) {
+    if (!raw || typeof raw !== 'string') return null;
+    const d = raw.replace(/\D/g, '');
+    if (d.length < 9) return null;
+    return d.slice(0, 3) + '-****-' + d.slice(-4);
+}
+
 module.exports = async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
@@ -75,7 +92,7 @@ module.exports = async function handler(req, res) {
             supabase.from('consultations').select('id', { count: 'exact', head: true }).gte('created_at', weekAgo),
             // 개인 식별 컬럼은 아예 선택하지 않는다
             // 기간 제한 없이 전체를 최신순으로 (알림이 계속 순환하도록)
-            supabase.from('consultations').select('business, region, created_at')
+            supabase.from('consultations').select('name, phone, business, region, created_at')
                 .order('created_at', { ascending: false }).limit(100),
             supabase.from('consultations').select('id', { count: 'exact', head: true })
         ]);
@@ -116,11 +133,11 @@ module.exports = async function handler(req, res) {
             recent = rows.map((r) => {
                 const biz = safeBiz(r.business);
                 const region = coarseRegion(r.region);
-                if (!biz && !region) return null;
-                const d = new Date(r.created_at);
-                const mins = Math.max(1, Math.round((now - d) / 60000));
-                const ym = d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0');
-                return { biz, region, mins, ym };
+                const name = maskName(r.name);
+                const phone = maskPhone(r.phone);
+                if (!name && !biz && !region) return null;
+                // 접수 시점은 표시하지 않기로 해 응답에서 제외한다
+                return { name, phone, biz, region };
             }).filter(Boolean).slice(0, 60);
         }
 
