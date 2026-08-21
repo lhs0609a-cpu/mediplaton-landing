@@ -58,6 +58,25 @@ module.exports = async function handler(req, res) {
                 .gte('created_at', weekAgo).order('created_at', { ascending: false }).limit(40)
         ]);
 
+        // 진단 모드 — 왜 비어 있는지 확인용. 개인정보는 절대 내보내지 않는다.
+        if (req.query && (req.query.debug === '1')) {
+            const probe = await supabase.from('consultations').select('*').limit(1);
+            const cols = probe.data && probe.data[0] ? Object.keys(probe.data[0]) : [];
+            return res.status(200).json({
+                debug: true,
+                envConfigured: true,
+                todayErr: todayQ.error ? todayQ.error.message : null,
+                weekErr: weekQ.error ? weekQ.error.message : null,
+                recentErr: recentQ.error ? recentQ.error.message : null,
+                probeErr: probe.error ? probe.error.message : null,
+                totalRowsSeen: (probe.data || []).length,
+                columns: cols,                       // 컬럼 이름만, 값은 제외
+                todayCount: todayQ.count,
+                weekCount: weekQ.count,
+                recentRows: (recentQ.data || []).length
+            });
+        }
+
         const todayCount = todayQ.count || 0;
         const weekCount = weekQ.count || 0;
         const rows = recentQ.data || [];
