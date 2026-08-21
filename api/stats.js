@@ -73,6 +73,11 @@ module.exports = async function handler(req, res) {
                 probeErr: probe.error ? probe.error.message : null,
                 totalRowsSeen: (probe.data || []).length,
                 columns: cols,                       // 컬럼 이름만, 값은 제외
+                // 업종·지역은 분류 값이라 개인 식별 정보가 아니다. 매핑 실패 원인 파악용.
+                sampleBiz: [...new Set((recentQ.data || []).map(r => r.business).filter(Boolean))].slice(0, 12),
+                sampleRegion: [...new Set((recentQ.data || []).map(r => r.region).filter(Boolean))].slice(0, 12),
+                nullBiz: (recentQ.data || []).filter(r => !r.business).length,
+                nullRegion: (recentQ.data || []).filter(r => !r.region).length,
                 todayCount: todayQ.count,
                 weekCount: weekQ.count,
                 recentRows: (recentQ.data || []).length,
