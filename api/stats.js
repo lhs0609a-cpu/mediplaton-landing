@@ -11,23 +11,43 @@
  */
 const { createClient } = require('@supabase/supabase-js');
 
+const REGION_MAP = {
+    seoul: '서울', busan: '부산', daegu: '대구', incheon: '인천', gwangju: '광주',
+    daejeon: '대전', ulsan: '울산', sejong: '세종', gyeonggi: '경기', gangwon: '강원',
+    chungbuk: '충북', chungnam: '충남', jeonbuk: '전북', jeonnam: '전남',
+    gyeongbuk: '경북', gyeongnam: '경남', jeju: '제주'
+};
 const WIDE = ['서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종',
     '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'];
 
-/** '서울특별시 강남구 …' → '서울' 처럼 광역 단위로만 축약 */
+/** DB 값은 영문 코드(seoul) 또는 한글('서울특별시 …') 둘 다 올 수 있다. 광역 단위로만 축약. */
 function coarseRegion(raw) {
     if (!raw || typeof raw !== 'string') return null;
+    const key = raw.trim().toLowerCase();
+    if (REGION_MAP[key]) return REGION_MAP[key];
     const s = raw.replace(/\s/g, '');
     for (const w of WIDE) if (s.startsWith(w)) return w;
     return null;
 }
 
-/** 업종 문자열을 미리 정한 표시용 라벨로만 매핑 (자유입력 그대로 내보내지 않는다) */
-const BIZ = ['의원', '병원', '치과', '한의원', '약국', '피부과', '성형외과',
+const BIZ_MAP = {
+    dental: '치과', pharmacy: '약국', oriental: '한의원', hospital: '병원',
+    clinic: '의원', plastic: '성형외과', derma: '피부과', internal: '내과',
+    ortho: '정형외과', eye: '안과', ent: '이비인후과', ped: '소아과',
+    vet: '동물병원', obgyn: '산부인과', urology: '비뇨의학과', psych: '정신건강의학과',
+    retail: '소매업', education: '교육업', food: '요식업', beauty: '뷰티',
+    lodging: '숙박업', 're-hotel': '숙박업', service: '서비스업',
+    refi: '대환', other: null
+};
+const BIZ_KO = ['의원', '병원', '치과', '한의원', '약국', '피부과', '성형외과',
     '정형외과', '내과', '안과', '이비인후과', '소아과', '동물병원'];
+
+/** 영문 코드 우선 매핑, 아니면 한글 포함 여부. 미분류('other')는 표시하지 않는다. */
 function safeBiz(raw) {
     if (!raw || typeof raw !== 'string') return null;
-    for (const b of BIZ) if (raw.includes(b)) return b;
+    const key = raw.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(BIZ_MAP, key)) return BIZ_MAP[key];
+    for (const b of BIZ_KO) if (raw.includes(b)) return b;
     return null;
 }
 
