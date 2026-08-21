@@ -96,6 +96,7 @@
         wrap.className = 'lu-toasts';
         wrap.setAttribute('aria-live', 'polite');
         document.body.appendChild(wrap);
+        layout(); // 토스트는 fetch 이후에 생기므로 위치를 다시 잡아준다
 
         function ago(mins) {
             if (mins < 60) return mins + '분 전';
@@ -149,8 +150,34 @@
         }, 12000);
     }
 
+    /* ── 기존 하단 고정 CTA(.hl-dock/.pt-dock/.px-dock)와 겹치지 않게 배치 ──
+       CSS 의 :has() 를 지원하지 않는 브라우저를 위한 이중 안전장치이자,
+       본문이 고정 요소에 가리지 않도록 body 하단 여백을 실제 높이로 잡아준다. */
+    function layout() {
+        var dock = document.querySelector('.hl-dock, .pt-dock, .px-dock');
+        var bar = document.querySelector('.lu-bar');
+        if (!bar) return;
+
+        var dockH = 0;
+        if (dock && getComputedStyle(dock).display !== 'none') {
+            dockH = dock.offsetHeight || 0;
+            document.body.classList.add('lu-has-dock');
+            bar.style.bottom = dockH + 'px';
+        } else {
+            document.body.classList.remove('lu-has-dock');
+            bar.style.bottom = '0px';
+        }
+        document.body.style.paddingBottom = (dockH + (bar.offsetHeight || 0) + 8) + 'px';
+
+        var toasts = document.querySelector('.lu-toasts');
+        if (toasts) toasts.style.bottom = (dockH + (bar.offsetHeight || 0) + 16) + 'px';
+    }
+
     function start() {
         mountCountdown();
+        layout();
+        window.addEventListener('resize', layout);
+        setTimeout(layout, 600);
         fetch('/api/stats')
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(mountToasts)

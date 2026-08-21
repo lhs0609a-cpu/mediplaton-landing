@@ -269,6 +269,7 @@ ${rel.map((s) => `                <li><a href="${s}.html">${esc(byslug[s].h1)}</
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="design-v2.css">
     <link rel="stylesheet" href="hub-lp.css">
+    <link rel="stylesheet" href="live-urgency.css">
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
